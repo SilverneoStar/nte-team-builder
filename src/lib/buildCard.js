@@ -492,7 +492,7 @@ function shade(hex, amt) {
 }
 
 /** Renders the build card and returns the canvas. */
-export async function renderBuildCard(build, { base = '/' } = {}) {
+export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   await ensureFonts();
   const c = build.character;
   const el = ELEMENT_BY_ID[c.element];
@@ -514,9 +514,11 @@ export async function renderBuildCard(build, { base = '/' } = {}) {
   ]);
 
   const canvas = document.createElement('canvas');
-  canvas.width = BUILD_W;
-  canvas.height = BUILD_H;
+  canvas.width = Math.round(BUILD_W * scale);
+  canvas.height = Math.round(BUILD_H * scale);
   const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, BUILD_W, BUILD_H);
   drawBandBackdrop(ctx, BUILD_W, BUILD_H, BANDS);
 

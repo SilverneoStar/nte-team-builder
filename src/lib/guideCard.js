@@ -216,7 +216,7 @@ function outlined(ctx, text, x, y, font, fill, width = 6) {
 
 // ---------- card ----------
 
-export async function renderGuideCard(character, { base = '/' } = {}) {
+export async function renderGuideCard(character, { base = '/', scale = 2 } = {}) {
   await ensureFonts();
   const c = character;
   const el = ELEMENT_BY_ID[c.element];
@@ -248,9 +248,11 @@ export async function renderGuideCard(character, { base = '/' } = {}) {
   const W = GUIDE_CARD_W;
   const H = GUIDE_CARD_H;
   const canvas = document.createElement('canvas');
-  canvas.width = W;
-  canvas.height = H;
+  canvas.width = Math.round(W * scale);
+  canvas.height = Math.round(H * scale);
   const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, W, H);
   drawBandBackdrop(ctx, W, H, BANDS);
 

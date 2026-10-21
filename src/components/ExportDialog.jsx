@@ -3,45 +3,78 @@ import { TEAM_LAYOUTS, canvasToBlob, renderTeamCard } from '../lib/teamCard.js';
 
 const BASE = import.meta.env.BASE_URL;
 
-// The team image layout is remembered on this device.
-const LAYOUT_KEY = 'nte-team-card-layout';
-const savedLayout = () => {
+// Choices remembered on this device.
+const load = (key, ok, fallback) => {
   try {
-    const v = localStorage.getItem(LAYOUT_KEY);
-    return TEAM_LAYOUTS.some((l) => l.id === v) ? v : 'row';
+    const v = localStorage.getItem(key);
+    return v != null && ok(v) ? v : fallback;
   } catch {
-    return 'row';
+    return fallback;
+  }
+};
+const save = (key, v) => {
+  try {
+    localStorage.setItem(key, String(v));
+  } catch {
+    /* storage unavailable */
   }
 };
 
+const LAYOUT_KEY = 'nte-team-card-layout';
+const SCALE_KEY = 'nte-export-scale';
+
+// Same layout at every size, just more pixels.
+export const EXPORT_SIZES = [
+  { scale: 1, label: 'Standard', hint: '1×' },
+  { scale: 2, label: 'HD', hint: '2×' },
+  { scale: 3, label: 'Max', hint: '3×' },
+];
+
 const slug = (name) => (name || 'team').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'team';
 
-// Shows a rendered card with ways to save, copy or share it. By default it
-// renders the team card; pass `render`, `title`, `name` and `suffix` for others.
-export default function ExportDialog({ team, onClose, render, title = 'Team image', name, suffix = 'nte-team' }) {
+/**
+ * Shows a rendered card with ways to save, copy or share it.
+ * - Default: the team card, with its layout picker.
+ * - `render(opts)`: any other card; `title`, `name` and `suffix` describe it.
+ * - `types` [{ id, label, title, suffix }] + `typeKey`: several cards to pick from
+ *   (the pick is remembered under `typeKey`); `render` gets `opts.type`.
+ * Every export has a size picker; `render` gets `opts.scale`.
+ */
+export default function ExportDialog({
+  team, onClose, render, title = 'Team image', name, suffix = 'nte-team', types = null, typeKey = null, initialType = null,
+}) {
   const label = name ?? team?.name;
-  const fileName = () => `${slug(label)}-${suffix}${layout === 'grid' ? '-2x2' : layout === 'side' ? '-2x2-side' : ''}.png`;
+  const [type, setType] = useState(() => {
+    if (!types) return null;
+    const ok = (v) => types.some((t) => t.id === v);
+    if (initialType && ok(initialType)) return initialType;
+    return typeKey ? load(typeKey, ok, types[0].id) : types[0].id;
+  });
+  const current = types?.find((t) => t.id === type);
+  const shownTitle = current?.title ?? title;
+  const shownSuffix = current?.suffix ?? suffix;
+  // Only the team image (no custom render) offers a layout choice.
+  const [layout, setLayout] = useState(() => (render ? null : load(LAYOUT_KEY, (v) => TEAM_LAYOUTS.some((l) => l.id === v), 'row')));
+  const [scale, setScale] = useState(() => Number(load(SCALE_KEY, (v) => EXPORT_SIZES.some((s) => String(s.scale) === v), '2')));
   const [url, setUrl] = useState(null);
   const [blob, setBlob] = useState(null);
+  const [px, setPx] = useState(null);
   const [status, setStatus] = useState('');
-  // Only the team image (no custom render) offers a layout choice.
-  const [layout, setLayout] = useState(() => (render ? null : savedLayout()));
-  const pickLayout = (id) => {
-    setLayout(id);
-    try {
-      localStorage.setItem(LAYOUT_KEY, id);
-    } catch {
-      /* storage unavailable */
-    }
-  };
   const closeRef = useRef(null);
+
+  const fileName = () => `${slug(label)}-${shownSuffix}${layout === 'grid' ? '-2x2' : layout === 'side' ? '-2x2-side' : ''}${scale === 2 ? '' : `-${scale}x`}.png`;
 
   useEffect(() => {
     let cancelled = false;
     let objectUrl;
     setUrl(null);
-    (render ? render({ base: BASE }) : renderTeamCard(team, { base: BASE, layout }))
-      .then(canvasToBlob)
+    setStatus('');
+    const opts = { base: BASE, scale, type };
+    (render ? render(opts) : renderTeamCard(team, { ...opts, layout }))
+      .then((canvas) => {
+        if (!cancelled) setPx([canvas.width, canvas.height]);
+        return canvasToBlob(canvas);
+      })
       .then((b) => {
         if (cancelled || !b) return;
         objectUrl = URL.createObjectURL(b);
@@ -57,7 +90,7 @@ export default function ExportDialog({ team, onClose, render, title = 'Team imag
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team, layout]);
+  }, [team, layout, scale, type]);
 
   useEffect(() => {
     closeRef.current?.focus();
@@ -87,13 +120,43 @@ export default function ExportDialog({ team, onClose, render, title = 'Team imag
     }
   }
 
+  const pickType = (id) => {
+    setType(id);
+    if (typeKey) save(typeKey, id);
+  };
+  const pickLayout = (id) => {
+    setLayout(id);
+    save(LAYOUT_KEY, id);
+  };
+  const pickScale = (s) => {
+    setScale(s);
+    save(SCALE_KEY, s);
+  };
+
   return (
     <div className="dialog-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="dialog" role="dialog" aria-modal="true" aria-labelledby="export-title">
         <header className="dialog__head">
-          <h2 id="export-title" className="section-title">{title}</h2>
+          <h2 id="export-title" className="section-title">{shownTitle}</h2>
           <button ref={closeRef} className="btn btn--quiet" onClick={onClose}>Close</button>
         </header>
+
+        {types && (
+          <div className="type-pick" role="radiogroup" aria-label="Card type">
+            {types.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="radio"
+                aria-checked={type === t.id}
+                className={`type-pick__opt${type === t.id ? ' is-on' : ''}`}
+                onClick={() => pickType(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {layout && (
           <div className="layout-pick" role="radiogroup" aria-label="Image layout">
@@ -118,10 +181,29 @@ export default function ExportDialog({ team, onClose, render, title = 'Team imag
 
         <div className="dialog__preview">
           {url ? (
-            <img src={url} alt={`${title} for ${label}`} />
+            <img src={url} alt={`${shownTitle} for ${label}`} />
           ) : (
             <p className="muted">{status || 'Creating image…'}</p>
           )}
+        </div>
+
+        <div className="size-pick">
+          <span className="size-pick__label">Size</span>
+          <div className="size-pick__opts" role="radiogroup" aria-label="Image size">
+            {EXPORT_SIZES.map((s) => (
+              <button
+                key={s.scale}
+                type="button"
+                role="radio"
+                aria-checked={scale === s.scale}
+                className={`size-pick__opt${scale === s.scale ? ' is-on' : ''}`}
+                onClick={() => pickScale(s.scale)}
+              >
+                {s.label} <span className="muted">{s.hint}</span>
+              </button>
+            ))}
+          </div>
+          <span className="size-pick__px muted">{px ? `${px[0]} × ${px[1]} px` : ''}</span>
         </div>
 
         <div className="dialog__actions">

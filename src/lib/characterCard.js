@@ -132,7 +132,7 @@ function chip(ctx, x, y, text, { bg, fg, dots = [] }) {
   return w;
 }
 
-export async function renderCharacterCard(character, { base = '/' } = {}) {
+export async function renderCharacterCard(character, { base = '/', scale = 2 } = {}) {
   await ensureFonts();
   const c = character;
   const el = ELEMENT_BY_ID[c.element];
@@ -159,9 +159,11 @@ export async function renderCharacterCard(character, { base = '/' } = {}) {
   const mateImg = Object.fromEntries(mates.map((id, i) => [id, rest[alt.cartridges.length + i]]));
 
   const canvas = document.createElement('canvas');
-  canvas.width = CHAR_CARD_W;
-  canvas.height = CHAR_CARD_H;
+  canvas.width = Math.round(CHAR_CARD_W * scale);
+  canvas.height = Math.round(CHAR_CARD_H * scale);
   const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, CHAR_CARD_W, CHAR_CARD_H);
   drawBandBackdrop(ctx, CHAR_CARD_W, CHAR_CARD_H, BANDS);
 

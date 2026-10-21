@@ -4796,3 +4796,85 @@ th[aria-sort='descending'] .th-btn {
     margin: 4px 0 0;
   }
 }
+
+/* Export dialog: card type picker (segmented) and image size picker */
+.type-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+  width: fit-content;
+  max-width: 100%;
+}
+.type-pick__opt {
+  padding: 7px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.type-pick__opt.is-on {
+  background: var(--accent);
+  color: #fff;
+}
+.size-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 12px;
+}
+.size-pick__label {
+  font: 600 0.72rem var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.size-pick__opts {
+  display: inline-flex;
+  gap: 6px;
+}
+.size-pick__opt {
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.size-pick__opt .muted {
+  font-weight: 500;
+}
+.size-pick__opt.is-on {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+.size-pick__px {
+  font: 500 0.78rem var(--font-mono);
+}
+@media (max-width: 640px) {
+  .type-pick {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    width: 100%;
+    border-radius: 14px;
+  }
+  .type-pick__opt {
+    padding: 8px 4px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+  }
+  .dialog__preview {
+    min-height: 120px;
+  }
+}

@@ -206,7 +206,7 @@ function consolePanel(ctx, x, y, w, h, build, cartImg) {
 }
 
 /** Renders the farm card and returns the canvas (null without material data). */
-export async function renderFarmCard(character, { base = '/' } = {}) {
+export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) {
   const list = farmList(character.id);
   if (!list) return null;
   await ensureFonts();
@@ -225,9 +225,11 @@ export async function renderFarmCard(character, { base = '/' } = {}) {
   const cartImg = build?.cartridge ? await loadImage(`${base}icons/cartridges/${build.cartridge}.webp`) : null;
 
   const canvas = document.createElement('canvas');
-  canvas.width = FARM_W;
-  canvas.height = FARM_H;
+  canvas.width = Math.round(FARM_W * scale);
+  canvas.height = Math.round(FARM_H * scale);
   const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, FARM_W, FARM_H);
   drawBandBackdrop(ctx, FARM_W, FARM_H, BANDS);
 
@@ -379,7 +381,7 @@ function circleImage(ctx, img, x, y, d, ring) {
 }
 
 /** Renders the farming card for one Arc (Lv 20 → 80), or null without data. */
-export async function renderArcFarmCard(arc, { base = '/' } = {}) {
+export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
   const cost = arcAscensionCost(arc);
   if (!cost) return null;
   await ensureFonts();
@@ -417,9 +419,11 @@ export async function renderArcFarmCard(arc, { base = '/' } = {}) {
   const userImgs = rest.slice(names.length);
 
   const canvas = document.createElement('canvas');
-  canvas.width = FARM_W;
-  canvas.height = ARC_FARM_H;
+  canvas.width = Math.round(FARM_W * scale);
+  canvas.height = Math.round(ARC_FARM_H * scale);
   const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, FARM_W, ARC_FARM_H);
   ctx.fillStyle = K.bg;
   ctx.fillRect(0, 0, FARM_W, ARC_FARM_H);

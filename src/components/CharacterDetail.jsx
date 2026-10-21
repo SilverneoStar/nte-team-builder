@@ -45,6 +45,13 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   const signature = ARCS.find((a) => a.signature === c.id);
   const arcCount = ARCS.filter((a) => a.type === c.arcType).length;
   const phone = useMedia(PHONE);
+  // Cards the Export card button offers, in picker order.
+  const cardTypes = [
+    CHARACTER_CONSOLE[c.id] && { id: 'build', label: 'Build', title: 'Build image', suffix: 'nte-build' },
+    farmList(c.id) && { id: 'farming', label: 'Farming', title: 'Farming list image', suffix: 'nte-farming-list' },
+    CHARACTER_CONSOLE[c.id] && { id: 'guide', label: 'Guide', title: 'Build guide image', suffix: 'nte-build-guide' },
+    presets.length > 0 && { id: 'teams', label: 'Teams', title: 'Character teams image', suffix: 'nte-teams' },
+  ].filter(Boolean);
 
   // Page sections: stacked on wider screens, swipeable slides on phones.
   const overview = (
@@ -130,9 +137,6 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
       <section>
         <div className="featured-head">
           <h3 className="mini-title">Featured in</h3>
-          <button type="button" className="btn btn--quiet btn--small" onClick={() => setSharing({ teams: true })}>
-            <ExportIcon size={14} />Share teams card
-          </button>
         </div>
         <FeaturedTeams presets={presets} />
       </section>
@@ -219,19 +223,6 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
     <>
       <AscensionPlanner key={c.id} character={c} />
 
-      {farmList(c.id) && (
-        <section className="farm-cta" aria-labelledby="farm-cta-title">
-          <div className="farm-cta__text">
-            <h3 id="farm-cta-title" className="mini-title">Farming list</h3>
-            <p className="muted small">
-              Every material to ascend {c.name} to Lv 80 and max all skills, grouped by where to farm it.
-            </p>
-          </div>
-          <button type="button" className="btn" onClick={() => setSharing({ farm: true })}>
-            <ExportIcon />Share farming list
-          </button>
-        </section>
-      )}
     </>
   );
   const myBuild = CHARACTER_CONSOLE[c.id] ? (
@@ -259,16 +250,16 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           )}
         </div>
         <div className="detail__head-actions">
-          {CHARACTER_CONSOLE[c.id] && (
+          {cardTypes.length > 0 && (
             <button
               type="button"
               className="btn btn--quiet detail__export"
-              onClick={() => setSharing({ guide: true })}
-              title="Export a build guide image"
-              aria-label={`Export ${c.name} build guide image`}
+              onClick={() => setSharing({ card: true })}
+              title="Export a card image"
+              aria-label={`Export a ${c.name} card image`}
             >
               <ExportIcon size={18} />
-              <span className="detail__export-label">Build guide</span>
+              <span className="detail__export-label">Export card</span>
             </button>
           )}
           <button className="btn btn--quiet detail__close" onClick={onClose} aria-label="Close details">×</button>
@@ -307,31 +298,34 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         <button className="btn btn--primary" onClick={onAdd} disabled={inActiveTeam || teamFull}>
           {inActiveTeam ? 'Already in current team' : teamFull ? 'Current team is full' : 'Add to current team'}
         </button>
-        {CHARACTER_CONSOLE[c.id] && (
-          <button className="btn" onClick={() => setSharing({ recommended: true })}>
-            <ExportIcon />Share recommended build
-          </button>
-        )}
       </div>
-      {sharing && (
+      {sharing?.card && (
         <ExportDialog
-          title={sharing.guide ? 'Build guide image' : sharing.teams ? 'Character teams image' : sharing.farm ? 'Farming list image' : sharing.mine ? 'My build image' : 'Recommended build image'}
           name={c.name}
-          suffix={sharing.guide ? 'nte-build-guide' : sharing.teams ? 'nte-teams' : sharing.farm ? 'nte-farming-list' : sharing.mine ? 'my-nte-build' : 'nte-build'}
+          types={cardTypes}
+          typeKey="nte-character-card-type"
           onClose={() => setSharing(false)}
           render={(opts) => {
-            if (sharing.guide) return renderGuideCard(c, opts);
-            if (sharing.teams) return renderCharacterCard(c, opts);
-            if (sharing.farm) return renderFarmCard(c, opts);
-            if (sharing.mine) {
-              const mine = myBuildCurrent(sharing.mine);
-              return renderBuildCard(characterBuild(c, { current: mine, source: 'My build', recStats: mine.cartStats }), opts);
-            }
+            if (opts.type === 'guide') return renderGuideCard(c, opts);
+            if (opts.type === 'teams') return renderCharacterCard(c, opts);
+            if (opts.type === 'farming') return renderFarmCard(c, opts);
             const best = bestBuild(c);
             return renderBuildCard(
               characterBuild(c, { current: best, source: 'Recommended build', recStats: best?.cartStats }),
               opts,
             );
+          }}
+        />
+      )}
+      {sharing?.mine && (
+        <ExportDialog
+          title="My build image"
+          name={c.name}
+          suffix="my-nte-build"
+          onClose={() => setSharing(false)}
+          render={(opts) => {
+            const mine = myBuildCurrent(sharing.mine);
+            return renderBuildCard(characterBuild(c, { current: mine, source: 'My build', recStats: mine.cartStats }), opts);
           }}
         />
       )}

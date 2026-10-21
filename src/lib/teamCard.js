@@ -418,7 +418,7 @@ function gearTiles(ctx, x, y, w, o) {
  * team: { name, members, loadouts }; base: URL prefix for /characters/<id>.webp;
  * layout: 'row' (1x4, default) or 'grid' (2x2).
  */
-export async function renderTeamCard(team, { base = '/', layout = 'row' } = {}) {
+export async function renderTeamCard(team, { base = '/', layout = 'row', scale = 2 } = {}) {
   const side = layout === 'side';
   const grid = layout === 'grid' || side;
   const W = side ? SIDE_W : grid ? GRID_W : CARD_W;
@@ -459,9 +459,8 @@ export async function renderTeamCard(team, { base = '/', layout = 'row' } = {}) 
   ]);
 
   const canvas = document.createElement('canvas');
-  const scale = 2; // sharp on high-density screens
-  canvas.width = W * scale;
-  canvas.height = H * scale;
+  canvas.width = Math.round(W * scale);
+  canvas.height = Math.round(H * scale);
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
   // Best resampling when portraits are scaled onto the card.
