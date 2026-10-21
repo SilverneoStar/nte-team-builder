@@ -18,7 +18,8 @@ import { drawLinksBlock } from './cardLinks.js';
 import { loadoutOf } from './teamsReducer.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
-  drawBandBackdrop, goldCells,
+  drawBandBackdrop, goldCells, fitLine,
+  loadRoleIcons, drawRoles
 } from './teamCard.js';
 
 export const BUILD_W = 1600;
@@ -31,7 +32,7 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#9b9eab',
+  muted: '#bfc3cf',
   pink: '#e8488c',
   pinkSoft: 'rgba(232, 72, 140, 0.18)',
   gold: '#f2c14e',
@@ -200,7 +201,7 @@ function altLine(ctx, x, y, right, label, items) {
     }
     ctx.font = `600 16px ${BODY}`;
     ctx.fillStyle = K.fg;
-    const name = wrap(ctx, it.name, right - cx, 1)[0];
+    const name = fitLine(ctx, it.name, right - cx, 11);
     ctx.fillText(name, cx, y);
     cx += ctx.measureText(name).width;
     if (it.note) {
@@ -513,6 +514,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     build.arc ? loadImage(`${base}arcs/hd/${build.arc.id}.webp`) : null,
   ]);
 
+  const roleIcons = await loadRoleIcons(base, c.roles);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(BUILD_W * scale);
   canvas.height = Math.round(BUILD_H * scale);
@@ -571,9 +573,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, px + 86, ly);
-  ctx.fillStyle = K.muted;
-  ctx.font = `500 18px ${BODY}`;
-  ctx.fillText(` · ${c.roles.join(' / ')}`, px + 86 + ctx.measureText(el.name).width + 6, ly);
+  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly,
+    { font: `500 18px ${BODY}`, color: K.muted, size: 22 });
 
   ly += 36;
   ctx.font = `500 16px ${BODY}`;
@@ -756,7 +757,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     const tx = ax + AS + 16;
     ctx.fillStyle = K.fg;
     ctx.font = `700 22px ${BODY}`;
-    const nm = wrap(ctx, a.name, LCX + LCW - tx - 150, 1)[0];
+    const nm = fitLine(ctx, a.name, LCX + LCW - tx - 150, 14);
     ctx.fillText(nm, tx, arcY + 66);
     const tag = arcTag(a, c) === 'sig' ? 'Signature' : build.source === 'Recommended build' ? 'Recommended' : build.arcState;
     ctx.font = `700 13px ${MONO}`;

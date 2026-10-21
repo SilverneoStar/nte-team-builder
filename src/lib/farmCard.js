@@ -13,6 +13,7 @@ import { CHARACTER_BY_ID } from '../data/characters.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
   drawBandBackdrop, goldCells,
+  loadRoleIcons, drawRoles
 } from './teamCard.js';
 import { drawLinksLine } from './cardLinks.js';
 import { fmt } from './format.js';
@@ -26,7 +27,7 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#9b9eab',
+  muted: '#bfc3cf',
   pink: '#e8488c',
 };
 
@@ -224,6 +225,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   const build = bestBuild(c);
   const cartImg = build?.cartridge ? await loadImage(`${base}icons/cartridges/${build.cartridge}.webp`) : null;
 
+  const roleIcons = await loadRoleIcons(base, c.roles);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(FARM_W * scale);
   canvas.height = Math.round(FARM_H * scale);
@@ -276,9 +278,8 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, px + 86, ly);
-  ctx.fillStyle = K.muted;
-  ctx.font = `500 18px ${BODY}`;
-  ctx.fillText(` · ${c.roles.join(' / ')}`, px + 86 + ctx.measureText(el.name).width + 6, ly);
+  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly,
+    { font: `500 18px ${BODY}`, color: K.muted, size: 22 });
 
   // What the totals cover
   ly += 44;

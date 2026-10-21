@@ -25,7 +25,7 @@ const C = {
   panel2: '#1f2432',
   line: '#2b3242',
   fg: '#e7eaf2',
-  muted: '#9aa3b7',
+  muted: '#bec5d4',
   accent: '#8e9cff',
   sig: '#f3d03e',
   num: '#ffc061',
@@ -121,6 +121,53 @@ export function goldCells(ctx, x, y, cells, size, gap) {
     roundRect(ctx, cx, cy, size, size, Math.max(2, size * 0.18));
     ctx.fill();
   }
+}
+
+/** Role icons for a character's roles: { role: img }. */
+export async function loadRoleIcons(base, roles) {
+  const imgs = await Promise.all(roles.map((r) => loadImage(`${base}icons/roles/${r.toLowerCase()}.webp`)));
+  return Object.fromEntries(roles.map((r, i) => [r, imgs[i]]));
+}
+
+/**
+ * Roles as icon + name pairs on one line, separated by " · ", starting at x.
+ * Returns the x after the last role.
+ */
+export function drawRoles(ctx, roles, icons, x, y, { font, color, size = 20, gap = 6, sep = 16 }) {
+  ctx.font = font;
+  ctx.fillStyle = color;
+  let cx = x;
+  roles.forEach((role, i) => {
+    if (i > 0) {
+      ctx.fillText('·', cx + sep / 2 - 3, y);
+      cx += sep;
+    }
+    const img = icons?.[role];
+    if (img) ctx.drawImage(img, cx, y - size + 3, size, size);
+    cx += img ? size + gap : 0;
+    ctx.fillText(role, cx, y);
+    cx += ctx.measureText(role).width;
+  });
+  return cx;
+}
+
+/**
+ * One line of text that fits maxWidth: the font steps down from its current
+ * size (as set in ctx.font) to `min` before anything is cut. Leaves ctx.font
+ * at the size used and returns the text to draw (with "…" only if even the
+ * smallest size is too wide).
+ */
+export function fitLine(ctx, text, maxWidth, min = 11) {
+  const m = /(\d+(?:\.\d+)?)px/.exec(ctx.font);
+  if (!m) return wrap(ctx, text, maxWidth, 1)[0];
+  let size = parseFloat(m[1]);
+  const base = ctx.font;
+  const at = (s) => base.replace(m[0], `${s}px`);
+  while (size > min && ctx.measureText(text).width > maxWidth) {
+    size = Math.max(min, size - 1);
+    ctx.font = at(size);
+  }
+  return ctx.measureText(text).width > maxWidth ? wrap(ctx, text, maxWidth, 1)[0] : text;
 }
 
 export function wrap(ctx, text, maxWidth, lines) {
@@ -344,7 +391,7 @@ const METRICS = {
   row: {
     r: 58, cy: 86, shift: 0, nameFont: 22, gearFont: 15, gearLine: 19, bonusLine: 17, bonusName: 12, bonusNum: 14, alwaysTwoLines: false,
     aw: { w: 34, h: 20, step: 24, font: 11, rr: 14, rStep: 34 }, elFont: 13, elIcon: 20, rank: 24, roleFont: 14, roleIcon: 16, roleGap: 0,
-    dupFont: 12, label: 11, tiles: false,
+    dupFont: 12, label: 12, tiles: false,
   },
   grid: {
     r: 74, cy: 104, shift: 34, nameFont: 28, gearFont: 18, gearLine: 22, bonusLine: 27, bonusName: 16, bonusNum: 18, alwaysTwoLines: true,
@@ -488,7 +535,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const titleW = W - PAD * 2 - 300;
   let titleSize = 58;
   ctx.font = `800 ${titleSize}px ${DISPLAY}`;
-  while (titleSize > 40 && ctx.measureText(titleText).width > titleW) {
+  while (titleSize > 30 && ctx.measureText(titleText).width > titleW) {
     titleSize -= 2;
     ctx.font = `800 ${titleSize}px ${DISPLAY}`;
   }
@@ -631,7 +678,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     ctx.fillStyle = C.fg;
     const d = M.shift;
     ctx.font = `700 ${M.nameFont}px ${BODY}`;
-    ctx.fillText(wrap(ctx, c.name, cw - 24, 1)[0], cx, top + 176 + d);
+    ctx.fillText(fitLine(ctx, c.name, cw - 24, 16), cx, top + 176 + d);
     ctx.font = `${M.tiles ? 600 : 500} ${M.elFont}px ${MONO}`;
     ctx.fillStyle = el;
     const elName = ELEMENT_BY_ID[c.element].name.toUpperCase();
@@ -759,7 +806,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
           fs -= 0.5;
           ctx.font = `500 ${fs}px ${MONO}`;
         }
-        ctx.fillText(wrap(ctx, name, colW - vw - 5, 1)[0], bx, yy);
+        ctx.fillText(fitLine(ctx, name, colW - vw - 5, 9), bx, yy);
         ctx.fillStyle = C.num;
         ctx.font = `700 ${M.bonusNum}px ${MONO}`;
         ctx.textAlign = 'right';
@@ -878,7 +925,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     let y = top + 54;
     ctx.fillStyle = C.fg;
     ctx.font = `700 34px ${BODY}`;
-    ctx.fillText(wrap(ctx, c.name, dw, 1)[0], dx, y);
+    ctx.fillText(fitLine(ctx, c.name, dw, 20), dx, y);
     y += 36;
     let fx = dx;
     const elIcon = elIcons[c.element];
@@ -948,7 +995,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
           ctx.font = `500 ${fs}px ${MONO}`;
         }
         ctx.fillStyle = C.label;
-        ctx.fillText(wrap(ctx, name, bw - vw - 6, 1)[0], bx, yy);
+        ctx.fillText(fitLine(ctx, name, bw - vw - 6, 10), bx, yy);
         ctx.fillStyle = C.num;
         ctx.font = `700 17px ${MONO}`;
         ctx.textAlign = 'right';

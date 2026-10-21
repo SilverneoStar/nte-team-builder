@@ -13,7 +13,8 @@ import { analyzeTeam } from './analyze.js';
 import { alternativesFor, cartTile, drawOrb, statLabel } from './buildCard.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import {
-  BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
+  BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap, fitLine,
+  loadRoleIcons, drawRoles
 } from './teamCard.js';
 
 export const CHAR_CARD_W = 1080;
@@ -25,7 +26,7 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#9b9eab',
+  muted: '#bfc3cf',
   label: '#cfd2dc',
   pink: '#e8488c',
   gold: '#f2c14e',
@@ -100,7 +101,7 @@ function iconLine(ctx, img, x, y, size, name, note, maxX, nameFont = `600 19px $
   let cx = x + (img ? size + 10 : 0);
   ctx.font = nameFont;
   ctx.fillStyle = K.fg;
-  const nm = wrap(ctx, name, maxX - cx, 1)[0];
+  const nm = fitLine(ctx, name, maxX - cx, 12);
   ctx.fillText(nm, cx, y);
   cx += ctx.measureText(nm).width;
   if (note) {
@@ -158,6 +159,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   const altCartImgs = rest.slice(0, alt.cartridges.length);
   const mateImg = Object.fromEntries(mates.map((id, i) => [id, rest[alt.cartridges.length + i]]));
 
+  const roleIcons = await loadRoleIcons(base, c.roles);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(CHAR_CARD_W * scale);
   canvas.height = Math.round(CHAR_CARD_H * scale);
@@ -200,17 +202,15 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   let ly = TOP + PH + 66;
   ctx.font = `italic 900 54px ${DISPLAY}`;
   ctx.fillStyle = K.fg;
-  ctx.fillText(wrap(ctx, c.name.toUpperCase(), COL, 1)[0], LX, ly);
+  ctx.fillText(fitLine(ctx, c.name.toUpperCase(), COL, 30), LX, ly);
   ly += 40;
   drawRank(ctx, c.rarity, LX, ly - 8, 32);
-  if (elIcon) ctx.drawImage(elIcon, LX + 42, ly - 22, 28, 28);
+  if (elIcon) ctx.drawImage(elIcon, LX + 42, ly - 24, 32, 32);
   ctx.font = `700 19px ${BODY}`;
   ctx.fillStyle = elColor;
-  ctx.fillText(el.name, LX + 78, ly);
+  ctx.fillText(el.name, LX + 82, ly);
   const ew = ctx.measureText(el.name).width;
-  ctx.font = `500 18px ${BODY}`;
-  ctx.fillStyle = K.muted;
-  ctx.fillText(` · ${c.roles.join(' / ')}`, LX + 82 + ew, ly);
+  drawRoles(ctx, c.roles, roleIcons, LX + 94 + ew, ly, { font: `500 18px ${BODY}`, color: K.muted, size: 22 });
 
   // ---- Left: recommended build ----
   ly += 30;
@@ -239,7 +239,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
     cartTile(ctx, ix, y, 46, cartImg);
     ctx.font = `700 20px ${BODY}`;
     ctx.fillStyle = K.fg;
-    ctx.fillText(wrap(ctx, `${CARTRIDGE_BY_ID[best.cartridge].name} ×4`, iw - 58, 1)[0], ix + 58, y + 30);
+    ctx.fillText(fitLine(ctx, `${CARTRIDGE_BY_ID[best.cartridge].name} ×4`, iw - 58, 14), ix + 58, y + 30);
     y += 46;
     if (alt.cartridges.length) {
       y += 26;
@@ -338,7 +338,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
     const tx = RX + 20;
     ctx.font = `700 21px ${BODY}`;
     ctx.fillStyle = K.fg;
-    const tname = wrap(ctx, p.name, COL - 40 - (p.idea ? 100 : 0), 1)[0];
+    const tname = fitLine(ctx, p.name, COL - 40 - (p.idea ? 100 : 0), 14);
     ctx.fillText(tname, tx, ry + 36);
     if (p.idea) {
       const nx = tx + ctx.measureText(tname).width + 10;
@@ -371,7 +371,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
       ctx.textAlign = 'center';
       ctx.font = `${id === c.id ? 700 : 500} 14px ${BODY}`;
       ctx.fillStyle = id === c.id ? K.gold : K.label;
-      ctx.fillText(wrap(ctx, m.name, step - 6, 1)[0], cx, cy + R + 20);
+      ctx.fillText(fitLine(ctx, m.name, step - 6, 10), cx, cy + R + 20);
       ctx.textAlign = 'left';
     });
     // Reactions

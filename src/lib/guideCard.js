@@ -17,7 +17,8 @@ import { teamsFor } from './characterCard.js';
 import { fillStatText } from './statText.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import {
-  BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, goldCells, loadImage, roundRect, wrap,
+  BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, goldCells, loadImage, roundRect, wrap, fitLine,
+  loadRoleIcons, drawRoles
 } from './teamCard.js';
 
 export const GUIDE_CARD_W = 1080;
@@ -28,7 +29,7 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#9b9eab',
+  muted: '#bfc3cf',
   label: '#cfd2dc',
   pink: '#e8488c',
   gold: '#f2c14e',
@@ -247,6 +248,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
 
   const W = GUIDE_CARD_W;
   const H = GUIDE_CARD_H;
+  const roleIcons = await loadRoleIcons(base, c.roles);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(W * scale);
   canvas.height = Math.round(H * scale);
@@ -313,9 +315,12 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     ctx.fillText(c.arcType, fx + 34, hy);
   }
   hy += 38;
-  ctx.font = `500 19px ${BODY}`;
-  ctx.fillStyle = K.muted;
-  ctx.fillText(wrap(ctx, [c.roles.join(' / '), c.faction].filter(Boolean).join('  ·  '), HW, 1)[0], LX, hy);
+  const rx = drawRoles(ctx, c.roles, roleIcons, LX, hy, { font: `500 19px ${BODY}`, color: K.muted, size: 22 });
+  if (c.faction) {
+    ctx.font = `500 19px ${BODY}`;
+    ctx.fillStyle = K.muted;
+    ctx.fillText(fitLine(ctx, `  ·  ${c.faction}`, LX + HW - rx, 13), rx, hy);
+  }
 
   const GY = PY + PH + 26;
   const BOTTOM = H - 104;
@@ -342,7 +347,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       cartTile(ctx, ix, y, tileSize, img);
       ctx.font = `700 ${tileSize > 56 ? 26 : 22}px ${BODY}`;
       ctx.fillStyle = K.fg;
-      ctx.fillText(wrap(ctx, cart.name, iw - tileSize - 16, 1)[0], ix + tileSize + 16, y + tileSize / 2 + 9);
+      ctx.fillText(fitLine(ctx, cart.name, iw - tileSize - 16, 15), ix + tileSize + 16, y + tileSize / 2 + 9);
       y += tileSize + 26;
       label(ctx, '2PC', ix, y, K.gold);
       statLines(ctx, cart.two, ix + LBL, y, iw - LBL, 1, LH);
@@ -449,7 +454,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       tag(ctx, m.tag, mx, ry + 16, TAG_STYLE[m.tag] ?? TAG_STYLE.STANDARD);
       ctx.font = `600 19px ${BODY}`;
       ctx.fillStyle = K.fg;
-      const t = wrap(ctx, m.arc.name, iw - S - 16 - 64, 1)[0];
+      const t = fitLine(ctx, m.arc.name, iw - S - 16 - 64, 13);
       ctx.fillText(t, mx, ry + nameY);
       const tw = ctx.measureText(t).width;
       ctx.font = `600 14px ${MONO}`;
@@ -478,7 +483,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       }
       ctx.font = `700 19px ${BODY}`;
       ctx.fillStyle = K.fg;
-      const name = wrap(ctx, p.name, iw - (p.idea ? 96 : 0), 1)[0];
+      const name = fitLine(ctx, p.name, iw - (p.idea ? 96 : 0), 13);
       ctx.fillText(name, ix, y + 16);
       if (p.idea) tag(ctx, 'KIT IDEA', ix + ctx.measureText(name).width + 10, y + 15, TAG_STYLE['BATTLE PASS']);
       const R = Math.min(26, (rowH - 44) / 2);
