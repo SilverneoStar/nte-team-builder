@@ -1201,7 +1201,7 @@ button {
   font-style: italic;
   font-size: 22px;
   stroke: #ffffff;
-  stroke-width: 2.4px;
+  stroke-width: 1.1px;
   stroke-linejoin: round;
   paint-order: stroke fill;
 }

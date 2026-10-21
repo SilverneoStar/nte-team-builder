@@ -26,10 +26,12 @@ export default function RankBadge({ rank, size = 22 }) {
         </linearGradient>
       </defs>
       <circle cx="16" cy="16" r="15" className="rank-badge__disc" />
+      {/* Placed by the letters' measured ink box (italic glyphs sit off their
+          advance width), so S, A and B are centred in the disc. */}
       <text
-        x="16.5"
-        y="23.5"
-        textAnchor="middle"
+        x="8.5"
+        y="24"
+        textAnchor="start"
         className="rank-badge__letter"
         fill={`url(#${id})`}
       >

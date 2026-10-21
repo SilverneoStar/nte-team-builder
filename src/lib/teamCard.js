@@ -312,19 +312,22 @@ export function drawRank(ctx, rank, x, centerY, size) {
   ctx.stroke();
   const fs = size * 0.69;
   ctx.font = `italic 900 ${fs}px ${RANK_FONT}`;
-  ctx.textAlign = 'center';
+  ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
-  const base = centerY + fs * 0.36;
+  // Centre the letter's ink, not its advance width (italic glyphs lean right).
+  const mt = ctx.measureText(rank);
+  const lx = cx - (mt.actualBoundingBoxRight - mt.actualBoundingBoxLeft) / 2;
+  const base = centerY + (mt.actualBoundingBoxAscent - mt.actualBoundingBoxDescent) / 2;
   const g = ctx.createLinearGradient(cx - r * 0.3, centerY - r, cx + r * 0.3, centerY + r);
   g.addColorStop(0, stops[0]);
   g.addColorStop(0.5, stops[1]);
   g.addColorStop(1, stops[2]);
   ctx.lineJoin = 'round';
-  ctx.lineWidth = size * 0.075;
+  ctx.lineWidth = size * 0.045;
   ctx.strokeStyle = '#ffffff';
-  ctx.strokeText(rank, cx + 0.5, base);
+  ctx.strokeText(rank, lx, base);
   ctx.fillStyle = g;
-  ctx.fillText(rank, cx + 0.5, base);
+  ctx.fillText(rank, lx, base);
   ctx.restore();
 }
 
