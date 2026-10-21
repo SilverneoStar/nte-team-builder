@@ -26,8 +26,10 @@ export default function MaxStats({ stats }) {
           </tbody>
         </table>
         <p className="muted small stats__estimate">
-          Estimated from Level 1 stats, may be adjusted later. Advanced attributes (CRIT, Cycle, Break, DMG
-          bonuses) will be added with in-game values.
+          {stats.fromPeers
+            ? `${stats.upcoming ? 'Not announced yet' : 'In-game values not added yet'}: estimated from the average of released ${stats.fromPeers}. Subject to change.`
+            : 'Estimated from Level 1 stats, may be adjusted later.'}{' '}
+          Advanced attributes (CRIT, Cycle, Break, DMG bonuses) will be added with in-game values.
         </p>
       </>
     );

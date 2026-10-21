@@ -65,7 +65,31 @@ const ESTIMATED = Object.fromEntries(
   }]),
 );
 
-export const MAX_STATS = { ...ESTIMATED, ...MEASURED };
+// Characters with no stats at all yet (upcoming, or just released): the average Level 80
+// HP, ATK and DEF of released characters with the same rank and main role
+// (falling back to the same rank). Flagged `fromPeers` so the UI says so.
+const known = { ...ESTIMATED, ...MEASURED };
+const peersOf = (c, sameRole) => CHARACTERS.filter((o) => !o.upcoming && known[o.id] && o.rarity === c.rarity
+  && (!sameRole || o.roles[0] === c.roles[0]));
+const avg = (list, k) => Math.round(list.reduce((t, o) => t + known[o.id][k], 0) / list.length);
+const FROM_PEERS = Object.fromEntries(
+  CHARACTERS.filter((c) => !known[c.id]).map((c) => {
+    const peers = peersOf(c, true).length ? peersOf(c, true) : peersOf(c, false);
+    if (!peers.length) return [c.id, null];
+    return [c.id, {
+      hp: avg(peers, 'hp'), atk: avg(peers, 'atk'), def: avg(peers, 'def'),
+      stamina: 200,
+      critRate: null, critDmg: null, charge: null, cycle: null, breakInt: null, universal: null,
+      healing: null, healingReceived: null,
+      dmg: {}, res: {},
+      estimated: true,
+      upcoming: !!c.upcoming,
+      fromPeers: `${c.rarity}-rank ${peersOf(c, true).length ? `${c.roles[0]} ` : ''}characters`,
+    }];
+  }).filter(([, v]) => v),
+);
+
+export const MAX_STATS = { ...FROM_PEERS, ...ESTIMATED, ...MEASURED };
 
 // Damage types in the order the game lists them.
 export const DMG_TYPES = ['cosmos', 'anima', 'incantation', 'chaos', 'psyche', 'lakshana', 'mental'];

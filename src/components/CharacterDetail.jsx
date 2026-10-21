@@ -12,6 +12,7 @@ import ElementGlyph from './ElementGlyph.jsx';
 import Portrait from './Portrait.jsx';
 import AscensionPlanner from './AscensionPlanner.jsx';
 import BuildTotals from './BuildTotals.jsx';
+import { ascensionCost } from '../data/ascension.js';
 import SkillsSection from './SkillsSection.jsx';
 import BondSection from './BondSection.jsx';
 import { AWAKENINGS, RESONANCES } from '../data/awakenings.js';
@@ -157,8 +158,16 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
       <EndgameStats character={c} />
     </div>
   );
+  // Upcoming characters: everything shown may still change before release.
+  const upcomingNote = c.upcoming ? (
+    <p className="upcoming-note">
+      <span className="upcoming-note__tag">Subject to change</span>
+      {c.name} isn’t out yet. Details here come from announcements and may change at release.
+    </p>
+  ) : null;
   const awakenings = (
     <section>
+      {upcomingNote}
       <h3 className="mini-title">Awakenings</h3>
       {AWAKENINGS[c.id] ? (
         <>
@@ -218,13 +227,26 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
       )}
     </section>
 );
-  const skills = <SkillsSection key={`skills-${c.id}`} character={c} />;
-  const bondTab = <BondSection character={c} />;
+  const skills = <>{upcomingNote}<SkillsSection key={`skills-${c.id}`} character={c} /></>;
+  const bondTab = <>{upcomingNote}<BondSection character={c} /></>;
   const materials = (
     <>
-      <AscensionPlanner key={c.id} character={c} />
-      <BuildTotals key={`totals-${c.id}`} character={c} />
-
+      {upcomingNote}
+      {ascensionCost(c.id) ? (
+        <>
+          <AscensionPlanner key={c.id} character={c} />
+          <BuildTotals key={`totals-${c.id}`} character={c} />
+        </>
+      ) : (
+        <section>
+          <h3 className="mini-title">Materials</h3>
+          <p className="muted small">
+            {c.upcoming
+              ? `${c.name}’s ascension and skill materials haven’t been announced yet. They’ll be added once confirmed.`
+              : 'Materials will be added once they’re published.'}
+          </p>
+        </section>
+      )}
     </>
   );
   const myBuild = CHARACTER_CONSOLE[c.id] ? (

@@ -59,6 +59,30 @@ export default function SwipeTabs({ slides, label }) {
     }
   }, [active]);
 
+  // After a resize or rotation, or once a swipe settles, line the track up
+  // exactly with the active slide so it never rests between two.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return undefined;
+    const align = () => {
+      const want = active * track.clientWidth;
+      if (Math.abs(track.scrollLeft - want) > 1) track.scrollTo({ left: want });
+    };
+    let t = 0;
+    const settle = () => {
+      clearTimeout(t);
+      t = setTimeout(align, 160);
+    };
+    const ro = new ResizeObserver(align);
+    ro.observe(track);
+    track.addEventListener('scroll', settle, { passive: true });
+    return () => {
+      ro.disconnect();
+      track.removeEventListener('scroll', settle);
+      clearTimeout(t);
+    };
+  }, [active]);
+
   function go(i) {
     const track = trackRef.current;
     track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
