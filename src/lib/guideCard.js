@@ -264,10 +264,10 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const LX = PAD;
   const RX = PAD + COL + GAP;
 
-  // ---- Header: name and facts on the left, portrait on the right ----
+  // ---- Header: portrait on the left, then name and facts, then Cortado ----
   const PW = 300;
   const PH = 300;
-  const PX = W - PAD - PW;
+  const PX = PAD;
   const PY = 36;
   ctx.save();
   roundRect(ctx, PX, PY, PW, PH, 24);
@@ -283,26 +283,30 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   ctx.lineWidth = 4;
   roundRect(ctx, PX, PY, PW, PH, 24);
   ctx.stroke();
-  drawMascot(ctx, await loadImage(`${base}mascot.svg`), PX + PW - 92, PY + PH - 84, 112);
+  const MS = 132;
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), W - PAD - MS + 10, PY - 4, MS);
 
-  const HW = PX - LX - 30;
+  const TX = PX + PW + 32;
+  // Room for the italic lean and outline before Cortado.
+  const HW = W - PAD - MS - TX - 20;
   let hy = PY + 34;
-  outlined(ctx, 'COMPLETE BUILD GUIDE', LX, hy, `700 20px ${MONO}`, '#ff8fbe', 5);
+  outlined(ctx, 'COMPLETE BUILD GUIDE', TX, hy, `700 20px ${MONO}`, '#ff8fbe', 5);
   // Name: as large as fits on two lines.
   let size = 104;
   let nameLines;
   for (; size >= 60; size -= 4) {
     ctx.font = `italic 900 ${size}px ${DISPLAY}`;
     nameLines = wrap(ctx, c.name.toUpperCase(), HW, 2);
-    if (nameLines.every((l) => !l.endsWith('…')) && (nameLines.length === 1 || size <= 84)) break;
+    const fits = nameLines.every((l) => !l.endsWith('…') && ctx.measureText(l).width <= HW);
+    if (fits && (nameLines.length === 1 || size <= 84)) break;
   }
   hy += size * 0.95 + 4;
-  nameLines.forEach((ln, i) => outlined(ctx, ln, LX, hy + i * size * 0.88, `italic 900 ${size}px ${DISPLAY}`, K.fg, 8));
+  nameLines.forEach((ln, i) => outlined(ctx, ln, TX, hy + i * size * 0.88, `italic 900 ${size}px ${DISPLAY}`, K.fg, 8));
   hy += (nameLines.length - 1) * size * 0.88 + 50;
 
   // Facts row: rank, element, Arc type
-  drawRank(ctx, c.rarity, LX, hy - 9, 36);
-  let fx = LX + 48;
+  drawRank(ctx, c.rarity, TX, hy - 9, 36);
+  let fx = TX + 48;
   if (elIcon) ctx.drawImage(elIcon, fx, hy - 26, 32, 32);
   fx += 40;
   ctx.font = `700 22px ${BODY}`;
@@ -316,11 +320,11 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     ctx.fillText(c.arcType, fx + 34, hy);
   }
   hy += 38;
-  const rx = drawRoles(ctx, c.roles, roleIcons, LX, hy, { font: `500 19px ${BODY}`, color: K.muted, size: 22 });
+  const rx = drawRoles(ctx, c.roles, roleIcons, TX, hy, { font: `500 19px ${BODY}`, color: K.muted, size: 22 });
   if (c.faction) {
     ctx.font = `500 19px ${BODY}`;
     ctx.fillStyle = K.muted;
-    ctx.fillText(fitLine(ctx, `  ·  ${c.faction}`, LX + HW - rx, 13), rx, hy);
+    ctx.fillText(fitLine(ctx, `  ·  ${c.faction}`, TX + HW - rx, 13), rx, hy);
   }
 
   const GY = PY + PH + 26;
