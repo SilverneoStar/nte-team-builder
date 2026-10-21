@@ -16,7 +16,14 @@ function unlocks(character, presentElements, activeReactionIds) {
   );
 }
 
-export default function Roster({ members, analysis, usage, dispatch }) {
+/**
+ * The character list with search and filters.
+ * - On the page: tapping a character adds it to the first empty slot (or removes it).
+ * - In the slot picker (`onPick`): tapping a character puts it in that slot.
+ */
+export default function Roster({ members, analysis, usage, dispatch, onPick = null }) {
+  const inPicker = !!onPick;
+  const idp = inPicker ? 'pick' : 'roster';
   const [query, setQuery] = useState('');
   const [element, setElement] = useState('all');
   const [role, setRole] = useState('all');
@@ -37,12 +44,12 @@ export default function Roster({ members, analysis, usage, dispatch }) {
   });
 
   return (
-    <section className="roster" aria-labelledby="roster-title">
+    <section className={`roster${inPicker ? ' roster--picker' : ''}`} aria-labelledby={inPicker ? undefined : 'roster-title'} aria-label={inPicker ? 'Characters' : undefined}>
       <div className="roster__head">
-        <h2 id="roster-title" className="section-title">Roster</h2>
-        <label className="sr-only" htmlFor="roster-search">Search characters</label>
+        {!inPicker && <h2 id="roster-title" className="section-title">Roster</h2>}
+        <label className="sr-only" htmlFor={`${idp}-search`}>Search characters</label>
         <input
-          id="roster-search"
+          id={`${idp}-search`}
           className="search"
           type="search"
           placeholder="Search"
@@ -71,7 +78,7 @@ export default function Roster({ members, analysis, usage, dispatch }) {
         <div className="filters__row">
           <label className="select">
             <span>Role</span>
-            <select id="filter-role" value={role} onChange={(e) => setRole(e.target.value)}>
+            <select id={`${idp}-role`} value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="all">Any</option>
               {ROLES.map((r) => (
                 <option key={r} value={r}>{r}</option>
@@ -80,7 +87,7 @@ export default function Roster({ members, analysis, usage, dispatch }) {
           </label>
           <label className="select">
             <span>Rank</span>
-            <select id="filter-rarity" value={rarity} onChange={(e) => setRarity(e.target.value)}>
+            <select id={`${idp}-rarity`} value={rarity} onChange={(e) => setRarity(e.target.value)}>
               <option value="all">Any</option>
               <option value="S">S</option>
               <option value="A">A</option>
@@ -88,7 +95,7 @@ export default function Roster({ members, analysis, usage, dispatch }) {
           </label>
           <label className="check">
             <input
-              id="filter-upcoming"
+              id={`${idp}-upcoming`}
               type="checkbox"
               checked={showUpcoming}
               onChange={(e) => setShowUpcoming(e.target.checked)}
@@ -110,9 +117,9 @@ export default function Roster({ members, analysis, usage, dispatch }) {
               <li key={c.id}>
                 <button
                   className={`card${inTeam ? ' card--in' : ''}`}
-                  aria-pressed={inTeam}
-                  disabled={!inTeam && teamFull}
-                  onClick={() => dispatch({ type: 'toggle', charId: c.id })}
+                  aria-pressed={inPicker ? undefined : inTeam}
+                  disabled={!inPicker && !inTeam && teamFull}
+                  onClick={() => (inPicker ? onPick(c.id) : dispatch({ type: 'toggle', charId: c.id }))}
                 >
                   <Portrait character={c} />
                   <span className="card__body">
@@ -124,6 +131,7 @@ export default function Roster({ members, analysis, usage, dispatch }) {
                     {gains.length > 0 && (
                       <span className="card__gain">+ {gains.map((g) => g.name).join(', ')}</span>
                     )}
+                    {inPicker && inTeam && <span className="card__tag">In this team · tap to move here</span>}
                     {c.upcoming && <span className="card__tag">Upcoming</span>}
                     {others && (
                       <span className="card__tag card__tag--used" title={`Also in ${others.join(', ')}`}>

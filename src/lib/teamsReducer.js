@@ -149,6 +149,20 @@ export function teamsReducer(state, action) {
       };
     }
 
+    case 'place': {
+      // Put a character in a chosen slot. If they're already in the team, they swap places.
+      const from = active.members.indexOf(action.charId);
+      return {
+        ...updateActive(state, (t) => {
+          const members = [...t.members];
+          if (from !== -1) members[from] = members[action.index];
+          members[action.index] = action.charId;
+          return { ...t, members };
+        }),
+        notice: null,
+      };
+    }
+
     case 'clearSlot':
       return updateActive(state, (t) => ({
         ...t,

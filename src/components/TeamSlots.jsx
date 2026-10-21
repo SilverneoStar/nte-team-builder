@@ -8,7 +8,8 @@ import Portrait from './Portrait.jsx';
 import RoleList from './RoleList.jsx';
 
 // Four team slots. Selecting a filled slot opens its loadout below.
-export default function TeamSlots({ team, selected, onSelect, dispatch }) {
+// Tapping an empty slot opens the character picker for that slot.
+export default function TeamSlots({ team, selected, onSelect, onAdd, dispatch }) {
   return (
     <ol className="slots" aria-label="Team members">
       {team.members.map((id, index) => {
@@ -16,8 +17,10 @@ export default function TeamSlots({ team, selected, onSelect, dispatch }) {
         if (!c) {
           return (
             <li key={index} className="slot slot--empty">
-              <span className="slot__plus" aria-hidden="true">+</span>
-              <span className="slot__hint">Pick from roster</span>
+              <button type="button" className="slot__add" onClick={() => onAdd(index)} aria-label={`Add a character to slot ${index + 1}`}>
+                <span className="slot__plus" aria-hidden="true">+</span>
+                <span className="slot__hint">Add character</span>
+              </button>
             </li>
           );
         }

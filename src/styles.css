@@ -5026,3 +5026,81 @@ th[aria-sort='descending'] .th-btn {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
+/* Empty team slot: the whole slot is a button that opens the character picker. */
+.slot--empty {
+  display: flex;
+  padding: 0;
+}
+.slot__add {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  min-height: inherit;
+  padding: 8px;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.slot--empty:hover,
+.slot--empty:focus-within {
+  border-color: var(--accent);
+  color: var(--fg);
+}
+.slot__add:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Character picker: a dialog on wide screens, a bottom sheet on phones. */
+.dialog--sheet {
+  width: min(760px, 100%);
+  align-content: start;
+}
+.dialog--sheet .dialog__head {
+  position: sticky;
+  top: -18px;
+  z-index: 2;
+  margin: -18px -18px 0;
+  padding: 14px 18px 10px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.roster--picker .grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+}
+@media (max-width: 639.98px) {
+  .dialog-backdrop--sheet {
+    place-items: end stretch;
+    padding: 0;
+  }
+  .dialog--sheet {
+    width: 100%;
+    max-height: calc(88dvh / var(--zoom, 1));
+    border-radius: 18px 18px 0 0;
+    border-bottom: 0;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    animation: sheet-up 0.22s ease-out;
+  }
+  .dialog--sheet .dialog__head {
+    border-radius: 18px 18px 0 0;
+  }
+  .roster--picker .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@keyframes sheet-up {
+  from { transform: translateY(40px); opacity: 0.4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog--sheet { animation: none; }
+}
+.roster--picker .roster__head .search {
+  width: 100%;
+  max-width: none;
+}

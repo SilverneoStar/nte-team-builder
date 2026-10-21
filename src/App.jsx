@@ -18,6 +18,7 @@ import Portrait from './components/Portrait.jsx';
 import SocialLinks from './components/SocialLinks.jsx';
 import Roster from './components/Roster.jsx';
 import SharePanel from './components/SharePanel.jsx';
+import PickDialog from './components/PickDialog.jsx';
 import TeamSlots from './components/TeamSlots.jsx';
 import TeamTabs from './components/TeamTabs.jsx';
 import Mascot from './components/Mascot.jsx';
@@ -30,6 +31,7 @@ export default function App() {
 
   // Which team slot's loadout is open. Closes when switching teams.
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [pickSlot, setPickSlot] = useState(null);
   useEffect(() => setSelectedSlot(null), [state.activeId]);
   const [exporting, setExporting] = useState(false);
   const selectedChar = selectedSlot != null ? CHARACTER_BY_ID[active.members[selectedSlot]] : null;
@@ -145,6 +147,7 @@ export default function App() {
               team={active}
               selected={selectedChar ? selectedSlot : null}
               onSelect={setSelectedSlot}
+              onAdd={setPickSlot}
               dispatch={dispatch}
             />
 
@@ -188,6 +191,20 @@ export default function App() {
             <Roster members={active.members} analysis={analysis} usage={usage} dispatch={dispatch} />
           </div>
         </main>
+      )}
+
+      {pickSlot != null && route.view === 'builder' && (
+        <PickDialog
+          slot={pickSlot}
+          members={active.members}
+          analysis={analysis}
+          usage={usage}
+          onPick={(charId) => {
+            dispatch({ type: 'place', index: pickSlot, charId });
+            setPickSlot(null);
+          }}
+          onClose={() => setPickSlot(null)}
+        />
       )}
 
       {exporting && <ExportDialog team={active} onClose={() => setExporting(false)} />}
