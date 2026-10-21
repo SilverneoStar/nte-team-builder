@@ -5,6 +5,7 @@ import { navigate } from '../lib/route.js';
 import ArcDetail from './ArcDetail.jsx';
 import { ARC_TYPES, CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
 import Portrait from './Portrait.jsx';
+import MoreList from './MoreList.jsx';
 import RankBadge from './RankBadge.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
 import StatText from './StatText.jsx';
@@ -149,11 +150,13 @@ export default function ArcsPage({ arcType, arcId }) {
                     {recs.length > 0 && (
                       <span className="arc-user arc-user--recs">
                         <span className="arc-tag arc-tag--rec">Rec</span>
-                        {recs.map((c) => (
-                          <a key={c.id} href={`#character-${c.id}`} title={c.name}>
-                            <Portrait character={c} size="sm" />
-                          </a>
-                        ))}
+                        <MoreList items={recs}>
+                          {(c) => (
+                            <a key={c.id} href={`#character-${c.id}`} title={c.name}>
+                              <Portrait character={c} size="sm" />
+                            </a>
+                          )}
+                        </MoreList>
                       </span>
                     )}
                   </div>

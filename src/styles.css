@@ -4878,3 +4878,87 @@ th[aria-sort='descending'] .th-btn {
     min-height: 120px;
   }
 }
+
+/* "+n more" button after the first few characters in a list */
+.more-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.76rem var(--font-mono);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.more-btn:hover {
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+/* Materials: one full-width column; icon, name, then the amount in its own pill */
+.mats {
+  grid-template-columns: minmax(0, 1fr);
+}
+.mat {
+  gap: 12px;
+}
+.mat .mat-icon {
+  width: 36px;
+  height: 36px;
+}
+.mat__name {
+  flex: 1;
+  order: 2;
+}
+.mat__qty {
+  order: 3;
+  flex: none;
+  min-width: 0;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--hl-num) 16%, var(--surface));
+  color: var(--hl-num);
+  font-size: 0.9rem;
+}
+.mat-icon--letter {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 8px;
+  color: #fff;
+  font: 800 1rem var(--font-display, inherit);
+}
+
+/* Folded full build total under the Materials tab */
+.build-total {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--surface);
+}
+.build-total summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  cursor: pointer;
+  list-style: none;
+}
+.build-total summary::-webkit-details-marker {
+  display: none;
+}
+.build-total summary::before {
+  content: '▸';
+  color: var(--muted);
+}
+.build-total[open] summary::before {
+  content: '▾';
+}
+.build-total[open] summary {
+  margin-bottom: 10px;
+}
+.build-total .mini-title {
+  margin: 0;
+}

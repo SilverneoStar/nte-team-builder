@@ -11,6 +11,7 @@ import { MAX_STATS } from '../data/maxStats.js';
 import ElementGlyph from './ElementGlyph.jsx';
 import Portrait from './Portrait.jsx';
 import AscensionPlanner from './AscensionPlanner.jsx';
+import BuildTotals from './BuildTotals.jsx';
 import SkillsSection from './SkillsSection.jsx';
 import BondSection from './BondSection.jsx';
 import { AWAKENINGS, RESONANCES } from '../data/awakenings.js';
@@ -222,6 +223,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   const materials = (
     <>
       <AscensionPlanner key={c.id} character={c} />
+      <BuildTotals key={`totals-${c.id}`} character={c} />
 
     </>
   );

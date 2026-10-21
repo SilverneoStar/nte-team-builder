@@ -15,6 +15,7 @@ import ExportDialog from './ExportDialog.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
 import MaterialIcon from './MaterialIcon.jsx';
 import Portrait from './Portrait.jsx';
+import MoreList from './MoreList.jsx';
 import RankBadge from './RankBadge.jsx';
 import StatText from './StatText.jsx';
 import { fmt } from '../lib/format.js';
@@ -102,12 +103,14 @@ export default function ArcDetail({ arc: a, onClose }) {
         {recs.length > 0 && (
           <div className="arc-users-detail__row">
             <span className="arc-tag arc-tag--rec">Recommended</span>
-            {recs.map((c) => (
-              <a key={c.id} href={`#character-${c.id}`} className="wielder">
-                <Portrait character={c} size="sm" />
-                {c.name}
-              </a>
-            ))}
+            <MoreList items={recs}>
+              {(c) => (
+                <a key={c.id} href={`#character-${c.id}`} className="wielder">
+                  <Portrait character={c} size="sm" />
+                  {c.name}
+                </a>
+              )}
+            </MoreList>
           </div>
         )}
         {!sig && recs.length === 0 && (
@@ -116,11 +119,13 @@ export default function ArcDetail({ arc: a, onClose }) {
         {others.length > 0 && (
           <div className="arc-users-detail__row arc-users-detail__row--others">
             <span className="muted small">Also fits</span>
-            {others.map((c) => (
-              <a key={c.id} href={`#character-${c.id}`} title={c.name}>
-                <Portrait character={c} size="sm" />
-              </a>
-            ))}
+            <MoreList items={others}>
+              {(c) => (
+                <a key={c.id} href={`#character-${c.id}`} title={c.name}>
+                  <Portrait character={c} size="sm" />
+                </a>
+              )}
+            </MoreList>
           </div>
         )}
       </section>
