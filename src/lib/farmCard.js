@@ -13,7 +13,7 @@ import { CHARACTER_BY_ID } from '../data/characters.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
   drawBandBackdrop, goldCells,
-  loadRoleIcons, drawRoles
+  loadRoleIcons, drawRoles, drawMascot
 } from './teamCard.js';
 import { drawLinksLine } from './cardLinks.js';
 import { fmt } from './format.js';
@@ -318,6 +318,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   ctx.fillStyle = K.muted;
   ctx.font = `500 17px ${BODY}`;
   ctx.fillText('Ascend to Lv 80 and max every skill', RX + 24 + hw + 20, PAD + 53);
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - 102, PAD - 8, 96);
 
   // ---- Groups ----
   const by = Object.fromEntries(list.groups.map((g) => [g.id, g]));
@@ -538,6 +539,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
   ctx.fillStyle = K.muted;
   ctx.font = `500 17px ${BODY}`;
   ctx.fillText('Level cap 20 → 80 · all 6 ascensions', RX + 24 + hw + 20, PAD + 53);
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - 102, PAD - 8, 96);
 
   // ---- Groups ----
   const GAP = 20;

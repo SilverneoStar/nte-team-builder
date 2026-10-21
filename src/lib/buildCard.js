@@ -19,7 +19,7 @@ import { loadoutOf } from './teamsReducer.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
   drawBandBackdrop, goldCells, fitLine,
-  loadRoleIcons, drawRoles
+  loadRoleIcons, drawRoles, drawMascot
 } from './teamCard.js';
 
 export const BUILD_W = 1600;
@@ -619,12 +619,14 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   ctx.fillText('CONSOLE DEVELOPMENT', RX + 98, PAD + 38);
   fillStatText(ctx, info ? specText(info.spec) : 'Console data not published yet.', RX + 98, PAD + 67, {
     font: `500 19px ${BODY}`, numFont: `700 19px ${BODY}`, color: K.muted, keyColor: K.key, numColor: K.num,
-    maxWidth: RW - 98 - 200,
+    maxWidth: RW - 98 - 300,
   });
+  const MS = 96;
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - MS - 6, PAD - 8, MS);
   ctx.textAlign = 'right';
   ctx.font = `700 14px ${MONO}`;
   ctx.fillStyle = K.pink;
-  ctx.fillText(build.source.toUpperCase(), RX + RW - 22, PAD + 36);
+  ctx.fillText(build.source.toUpperCase(), RX + RW - MS - 14, PAD + 36);
   ctx.textAlign = 'left';
 
   const top = PAD + 84 + 16;

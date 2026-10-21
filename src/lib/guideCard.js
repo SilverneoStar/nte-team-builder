@@ -18,7 +18,7 @@ import { fillStatText } from './statText.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, goldCells, loadImage, roundRect, wrap, fitLine,
-  loadRoleIcons, drawRoles
+  loadRoleIcons, drawRoles, drawMascot
 } from './teamCard.js';
 
 export const GUIDE_CARD_W = 1080;
@@ -283,6 +283,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   ctx.lineWidth = 4;
   roundRect(ctx, PX, PY, PW, PH, 24);
   ctx.stroke();
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), PX + PW - 92, PY + PH - 84, 112);
 
   const HW = PX - LX - 30;
   let hy = PY + 34;

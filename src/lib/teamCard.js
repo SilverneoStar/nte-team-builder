@@ -66,6 +66,17 @@ const STAT_SHORT = {
   'Charge Efficiency%': 'CHARGE EFF.',
 };
 
+// Cortado, the site mascot, as a little sticker on every exported card.
+export function drawMascot(ctx, img, x, y, size) {
+  if (!img) return;
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+  ctx.shadowBlur = size * 0.12;
+  ctx.shadowOffsetY = size * 0.04;
+  ctx.drawImage(img, x, y, size, size);
+  ctx.restore();
+}
+
 export function loadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -476,6 +487,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const M = METRICS[grid ? 'grid' : 'row'];
   await ensureFonts();
   const members = team.members.map((id) => (id ? CHARACTER_BY_ID[id] : null));
+  const mascot = await loadImage(`${base}mascot.svg`);
   const images = await Promise.all(
     members.map((c) => (c ? loadImage(`${base}characters/hd/${c.id}.webp`) : null)),
   );
@@ -535,7 +547,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   ctx.fillStyle = C.fg;
   // Long names step the font down before they'd be cut off.
   const titleText = (team.name || 'Untitled team').toUpperCase();
-  const titleW = W - PAD * 2 - 300;
+  const titleW = W - PAD * 2 - 400;
   let titleSize = 58;
   ctx.font = `800 ${titleSize}px ${DISPLAY}`;
   while (titleSize > 30 && ctx.measureText(titleText).width > titleW) {
@@ -545,9 +557,11 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const title = wrap(ctx, titleText, titleW, 1)[0];
   ctx.fillText(title, PAD, 108);
 
-  // Role counts, top right
+  // Cortado in the top right corner, role counts beside him
+  const MS = 92;
+  drawMascot(ctx, mascot, W - PAD - MS + 8, 22, MS);
   ctx.font = `600 15px ${BODY}`;
-  let rx = W - PAD;
+  let rx = W - PAD - MS - 6;
   for (const [role, n] of Object.entries(analysis.roleCounts).reverse()) {
     const text = `${n} ${role}`;
     ctx.font = `600 14px ${BODY}`;

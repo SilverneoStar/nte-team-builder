@@ -14,7 +14,7 @@ import { alternativesFor, cartTile, drawOrb, statLabel } from './buildCard.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap, fitLine,
-  loadRoleIcons, drawRoles
+  loadRoleIcons, drawRoles, drawMascot
 } from './teamCard.js';
 
 export const CHAR_CARD_W = 1080;
@@ -326,7 +326,8 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   // ---- Right: featured teams ----
   let ry = TOP + 14;
   ctx.font = `700 17px ${MONO}`;
-  const kicker = wrap(ctx, `TEAM IDEAS WITH ${c.name.toUpperCase()}`, COL, 1)[0];
+  drawMascot(ctx, mascot, RX + COL - 96, TOP - 10, 100);
+  const kicker = wrap(ctx, `TEAM IDEAS WITH ${c.name.toUpperCase()}`, COL - 104, 1)[0];
   outlined(ctx, kicker, RX, ry, `700 17px ${MONO}`, '#ff8fbe');
   ry += 42;
   outlined(ctx, 'FEATURED TEAMS', RX, ry, `italic 900 42px ${DISPLAY}`, K.fg, 6);
