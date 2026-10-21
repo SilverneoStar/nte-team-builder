@@ -1,132 +1,54 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 /**
- * Phone layout for long pages: a row of tabs over slides you can swipe
- * between. The tab row sticks to the top while you scroll a slide, and the
- * track takes the height of the slide on show, so short slides don't leave
- * a gap. Slides off screen are inert, so focus and screen readers stay on
- * the one being read.
+ * Phone layout for long pages: a row of tabs over sections you can swipe
+ * between. The tab row sticks to the top while you read.
+ *
+ * Only the section on show is laid out and painted; the others stay mounted
+ * (so typed-in values survive) but hidden. Switching plays a short slide-in,
+ * and a sideways swipe on the section moves to the next or previous one,
+ * while up/down scrolling stays with the browser.
  *
  * slides: [{ id, label, content }]
  */
+const SWIPE_MIN = 56; // px sideways before a swipe counts
+
+// A swipe that starts inside something that scrolls sideways (a carousel,
+// a wide table) belongs to that, not to the tabs.
+function inSideScroller(el, stop) {
+  for (let n = el; n && n !== stop; n = n.parentElement) {
+    if (n.scrollWidth > n.clientWidth + 1) {
+      const ox = getComputedStyle(n).overflowX;
+      if (ox === 'auto' || ox === 'scroll') return true;
+    }
+  }
+  return false;
+}
+
 export default function SwipeTabs({ slides, label }) {
   const uid = useId();
   const [active, setActive] = useState(0);
-  const [height, setHeight] = useState(null);
+  const [dir, setDir] = useState(0); // -1 came from the left, 1 from the right
   const rootRef = useRef(null);
-  const trackRef = useRef(null);
   const tabsRef = useRef(null);
-  const slideRefs = useRef([]);
-  // While a tab tap scrolls the track, the slides in between must not take over
-  // (that made the tabs flick back and forth and the page jump).
-  const lockRef = useRef(null);
-  const lockTimer = useRef(0);
-  const [moving, setMoving] = useState(false);
-  const release = () => {
-    clearTimeout(lockTimer.current);
-    if (lockRef.current == null) return;
-    lockRef.current = null;
-    setMoving(false);
-  };
+  const bodyRef = useRef(null);
+  const touch = useRef(null);
 
-  // Follow swipes: the slide nearest the track's scroll position is active.
+  // Keep the active tab in view in the tab row.
   useEffect(() => {
-    const track = trackRef.current;
-    let frame = 0;
-    let idle = 0;
-    const onScroll = () => {
-      // A finger swipe: hold the track height steady until the swipe comes to rest.
-      if (lockRef.current == null) {
-        setMoving(true);
-        clearTimeout(idle);
-        idle = setTimeout(() => {
-          if (lockRef.current == null) setMoving(false);
-        }, 220);
-      }
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        if (lockRef.current != null) {
-          if (Math.abs(track.scrollLeft - lockRef.current * track.clientWidth) <= 1) release();
-          return;
-        }
-        const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
-        setActive(Math.max(0, Math.min(slides.length - 1, i)));
-      });
-    };
-    track.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      track.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(frame);
-      clearTimeout(idle);
-    };
-  }, [slides.length]);
-
-  // Track height follows the slide on show, including when it grows or shrinks.
-  useLayoutEffect(() => {
-    const el = slideRefs.current[active];
-    if (!el) return undefined;
-    // Mid-switch, keep the taller of the two slides so the page doesn't jump;
-    // settle on the new slide's height once the track arrives.
-    const measure = () => setHeight((h) => (moving ? Math.max(h ?? 0, el.offsetHeight) : el.offsetHeight));
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, moving]);
-
-  useEffect(() => {
-    slideRefs.current.forEach((el, i) => {
-      if (el) el.inert = i !== active;
-    });
-    // Keep the active tab in view in the tab row.
-    const tab = tabsRef.current?.children[active];
-    if (tab) {
-      const row = tabsRef.current;
-      row.scrollTo({ left: tab.offsetLeft - (row.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' });
-    }
+    const row = tabsRef.current;
+    const tab = row?.children[active];
+    if (tab) row.scrollTo({ left: tab.offsetLeft - (row.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' });
   }, [active]);
-
-  // After a resize or rotation, or once a swipe settles, line the track up
-  // exactly with the active slide so it never rests between two.
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return undefined;
-    const align = () => {
-      if (lockRef.current != null) return;
-      const want = active * track.clientWidth;
-      if (Math.abs(track.scrollLeft - want) > 1) track.scrollTo({ left: want });
-    };
-    let t = 0;
-    const settle = () => {
-      clearTimeout(t);
-      t = setTimeout(align, 160);
-    };
-    const ro = new ResizeObserver(align);
-    ro.observe(track);
-    track.addEventListener('scroll', settle, { passive: true });
-    return () => {
-      ro.disconnect();
-      track.removeEventListener('scroll', settle);
-      clearTimeout(t);
-    };
-  }, [active]);
-
-  useEffect(() => () => clearTimeout(lockTimer.current), []);
 
   function go(i) {
-    const track = trackRef.current;
-    if (i === active && lockRef.current == null) return;
-    lockRef.current = i;
-    setMoving(true);
-    clearTimeout(lockTimer.current);
-    lockTimer.current = setTimeout(release, 900); // in case the scroll never lands exactly
-    if (Math.abs(track.scrollLeft - i * track.clientWidth) <= 1) setTimeout(release, 0);
-    track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
-    setActive(i);
-    // If the tab row is stuck at the top, bring the start of the new slide into view.
+    const next = Math.max(0, Math.min(slides.length - 1, i));
+    if (next === active) return;
+    setDir(next > active ? 1 : -1);
+    setActive(next);
+    // If the tab row is stuck at the top, bring the start of the new section into view.
     const top = rootRef.current.getBoundingClientRect().top;
-    if (top < 0) window.scrollBy({ top, behavior: 'smooth' });
+    if (top < 0) window.scrollBy({ top });
   }
 
   function onKeyDown(e) {
@@ -137,6 +59,46 @@ export default function SwipeTabs({ slides, label }) {
       go(i);
       tabsRef.current.children[i]?.focus();
     }
+  }
+
+  // Sideways swipes. The section follows the finger a little, then either
+  // moves on or springs back. Vertical scrolling is left alone.
+  const panel = () => bodyRef.current?.children[active];
+  function onTouchStart(e) {
+    if (e.touches.length !== 1 || inSideScroller(e.target, bodyRef.current)) {
+      touch.current = null;
+      return;
+    }
+    const t = e.touches[0];
+    touch.current = { x: t.clientX, y: t.clientY, dx: 0, axis: null };
+  }
+  function onTouchMove(e) {
+    const s = touch.current;
+    if (!s) return;
+    const t = e.touches[0];
+    const dx = t.clientX - s.x;
+    const dy = t.clientY - s.y;
+    if (!s.axis && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) s.axis = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'x' : 'y';
+    if (s.axis !== 'x') return;
+    s.dx = dx;
+    const edge = (dx > 0 && active === 0) || (dx < 0 && active === slides.length - 1);
+    const el = panel();
+    if (el) {
+      el.style.transition = 'none';
+      el.style.transform = `translateX(${dx * (edge ? 0.15 : 0.35)}px)`;
+    }
+  }
+  function onTouchEnd() {
+    const s = touch.current;
+    touch.current = null;
+    if (!s || s.axis !== 'x') return;
+    const el = panel();
+    if (el) {
+      el.style.transition = '';
+      el.style.transform = '';
+    }
+    if (s.dx <= -SWIPE_MIN) go(active + 1);
+    else if (s.dx >= SWIPE_MIN) go(active - 1);
   }
 
   return (
@@ -158,15 +120,22 @@ export default function SwipeTabs({ slides, label }) {
           </button>
         ))}
       </div>
-      <div className="swipe__track" ref={trackRef} style={height ? { height } : undefined}>
+      <div
+        className="swipe__body"
+        ref={bodyRef}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchEnd}
+      >
         {slides.map((s, i) => (
           <section
             key={s.id}
-            ref={(el) => { slideRefs.current[i] = el; }}
-            className="swipe__slide"
+            className={`swipe__slide${i === active && dir ? (dir > 0 ? ' from-right' : ' from-left') : ''}`}
             role="tabpanel"
             id={`${uid}-panel-${s.id}`}
             aria-labelledby={`${uid}-tab-${s.id}`}
+            hidden={i !== active}
           >
             {s.content}
           </section>
