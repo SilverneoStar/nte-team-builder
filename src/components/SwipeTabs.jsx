@@ -17,14 +17,38 @@ export default function SwipeTabs({ slides, label }) {
   const trackRef = useRef(null);
   const tabsRef = useRef(null);
   const slideRefs = useRef([]);
+  // While a tab tap scrolls the track, the slides in between must not take over
+  // (that made the tabs flick back and forth and the page jump).
+  const lockRef = useRef(null);
+  const lockTimer = useRef(0);
+  const [moving, setMoving] = useState(false);
+  const release = () => {
+    clearTimeout(lockTimer.current);
+    if (lockRef.current == null) return;
+    lockRef.current = null;
+    setMoving(false);
+  };
 
   // Follow swipes: the slide nearest the track's scroll position is active.
   useEffect(() => {
     const track = trackRef.current;
     let frame = 0;
+    let idle = 0;
     const onScroll = () => {
+      // A finger swipe: hold the track height steady until the swipe comes to rest.
+      if (lockRef.current == null) {
+        setMoving(true);
+        clearTimeout(idle);
+        idle = setTimeout(() => {
+          if (lockRef.current == null) setMoving(false);
+        }, 220);
+      }
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
+        if (lockRef.current != null) {
+          if (Math.abs(track.scrollLeft - lockRef.current * track.clientWidth) <= 1) release();
+          return;
+        }
         const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
         setActive(Math.max(0, Math.min(slides.length - 1, i)));
       });
@@ -33,6 +57,7 @@ export default function SwipeTabs({ slides, label }) {
     return () => {
       track.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(frame);
+      clearTimeout(idle);
     };
   }, [slides.length]);
 
@@ -40,12 +65,15 @@ export default function SwipeTabs({ slides, label }) {
   useLayoutEffect(() => {
     const el = slideRefs.current[active];
     if (!el) return undefined;
-    const measure = () => setHeight(el.offsetHeight);
+    // Mid-switch, keep the taller of the two slides so the page doesn't jump;
+    // settle on the new slide's height once the track arrives.
+    const measure = () => setHeight((h) => (moving ? Math.max(h ?? 0, el.offsetHeight) : el.offsetHeight));
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [active]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, moving]);
 
   useEffect(() => {
     slideRefs.current.forEach((el, i) => {
@@ -65,6 +93,7 @@ export default function SwipeTabs({ slides, label }) {
     const track = trackRef.current;
     if (!track) return undefined;
     const align = () => {
+      if (lockRef.current != null) return;
       const want = active * track.clientWidth;
       if (Math.abs(track.scrollLeft - want) > 1) track.scrollTo({ left: want });
     };
@@ -83,8 +112,16 @@ export default function SwipeTabs({ slides, label }) {
     };
   }, [active]);
 
+  useEffect(() => () => clearTimeout(lockTimer.current), []);
+
   function go(i) {
     const track = trackRef.current;
+    if (i === active && lockRef.current == null) return;
+    lockRef.current = i;
+    setMoving(true);
+    clearTimeout(lockTimer.current);
+    lockTimer.current = setTimeout(release, 900); // in case the scroll never lands exactly
+    if (Math.abs(track.scrollLeft - i * track.clientWidth) <= 1) setTimeout(release, 0);
     track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
     setActive(i);
     // If the tab row is stuck at the top, bring the start of the new slide into view.
