@@ -12,7 +12,7 @@ import { ENDGAME } from '../data/endgame.js';
 import { analyzeTeam } from './analyze.js';
 import { alternativesFor, cartTile, drawOrb, statLabel } from './buildCard.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
-import { drawPortraitBackdrop } from './arcPattern.js';
+import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap, fitLine,
   loadRoleIcons, drawRoles, drawMascot
@@ -181,13 +181,14 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   // ---- Left: portrait ----
   const PS = COL;
   const PH = 400;
-  await drawPortraitBackdrop(ctx, { x: LX, y: TOP, w: PS, h: PH, r: 22, color: elColor, arcType: c.arcType, base });
+  await drawPortraitBackdrop(ctx, { x: LX, y: TOP, w: PS, h: PH, r: 22, arcType: c.arcType, base });
   ctx.save();
   roundRect(ctx, LX, TOP, PS, PH, 22);
   ctx.clip();
   if (portrait) {
     // Square art, cropped to the frame from just below the top so faces sit high.
     const s = PS;
+    setPortraitShadow(ctx, PS);
     ctx.drawImage(portrait, LX, TOP - (s - PH) * 0.25, s, s);
   }
   ctx.restore();

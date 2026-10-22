@@ -5135,20 +5135,40 @@ th[aria-sort='descending'] .th-btn {
   font: 700 0.75rem var(--font-mono);
 }
 
-/* Arc-type pattern behind portraits (see ArcBackdrop.jsx) */
+/* Arc-type design behind portraits (see ArcBackdrop.jsx) */
 .arc-backdrop {
   position: absolute;
   inset: 0;
   border-radius: inherit;
+  background-color: #16171c;
   background-size: cover;
   background-position: center;
   pointer-events: none;
-  mix-blend-mode: normal;
+}
+.arc-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(62% 62% at 50% 55%, rgba(18, 19, 24, 0.82), rgba(18, 19, 24, 0.55) 45%, rgba(18, 19, 24, 0.05));
 }
 .char-tile__art {
   overflow: hidden;
 }
+/* The character casts a soft shadow, a layer above the design */
 .char-tile__art > img,
 .portrait > .portrait__img {
   position: relative;
+}
+.char-tile__art > img,
+.detail__head .portrait--xl .portrait__img {
+  filter: drop-shadow(4px 6px 5px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.35));
+}
+
+/* Arc banners: the type's design, with the theme colour behind the name */
+.arc-card[data-arc-type] .arc-card__top {
+  background-image:
+    linear-gradient(90deg, var(--arc-base) 0 18%, color-mix(in srgb, var(--arc-base) 55%, transparent) 55%, color-mix(in srgb, var(--arc-base) 15%, transparent)),
+    var(--arc-pattern) !important;
+  background-size: cover !important;
+  background-position: center !important;
 }

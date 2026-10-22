@@ -16,7 +16,7 @@ import { alternativesFor, cartTile, drawOrb } from './buildCard.js';
 import { teamsFor } from './characterCard.js';
 import { fillStatText } from './statText.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
-import { drawPortraitBackdrop } from './arcPattern.js';
+import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, goldCells, loadImage, roundRect, wrap, fitLine,
   loadRoleIcons, drawRoles, drawMascot
@@ -270,10 +270,11 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const PH = 300;
   const PX = PAD;
   const PY = 36;
-  await drawPortraitBackdrop(ctx, { x: PX, y: PY, w: PW, h: PH, r: 24, color: elColor, arcType: c.arcType, base });
+  await drawPortraitBackdrop(ctx, { x: PX, y: PY, w: PW, h: PH, r: 24, arcType: c.arcType, base });
   ctx.save();
   roundRect(ctx, PX, PY, PW, PH, 24);
   ctx.clip();
+  setPortraitShadow(ctx, PW);
   if (portrait) ctx.drawImage(portrait, PX, PY, PW, PW);
   ctx.restore();
   ctx.strokeStyle = elColor;

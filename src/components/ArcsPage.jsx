@@ -127,7 +127,7 @@ export default function ArcsPage({ arcType, arcId }) {
                   if (!e.target.closest('a, button')) navigate(`arc-${a.id}`);
                 }}
               >
-                <div className="arc-card__top">
+                <div className="arc-card__top" style={{ '--arc-pattern': `url(${import.meta.env.BASE_URL}arc-patterns/${a.type.toLowerCase()}.svg)` }}>
                   <RankBadge rank={a.rarity} size={22} />
                   <h3 className="arc-card__name"><a href={`#arc-${a.id}`}>{a.name}</a></h3>
                   {type === 'all' && <span className="arc-card__type"><ArcTypeIcon type={a.type} size={16} />{a.type}</span>}
