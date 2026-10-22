@@ -221,7 +221,7 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                     <img
                       src={`${BASE}characters/${portraitPath(c.id)}`}
                       srcSet={`${BASE}characters/${portraitPath(c.id)} 256w, ${BASE}characters/hd/${portraitPath(c.id)} 512w`}
-                      sizes="(max-width: 600px) 45vw, 170px"
+                      sizes="(max-width: 639.98px) 32vw, 170px"
                       alt=""
                       loading="lazy"
                     />

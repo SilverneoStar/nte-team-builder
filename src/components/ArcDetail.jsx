@@ -244,7 +244,7 @@ export default function ArcDetail({ arc: a, onClose }) {
           {NO_ART.has(a.id) ? (
             <ArcTypeIcon type={a.type} size={56} />
           ) : (
-            <img src={arcImageUrl(a.id)} alt="" width="128" height="128" />
+            <img src={arcImageUrl(a.id)} srcSet={`${arcImageUrl(a.id)} 2x, ${arcImageUrl(a.id).replace('/arcs/', '/arcs/hd/')} 4x`} alt="" width="128" height="128" />
           )}
         </div>
         <div className="detail__title">

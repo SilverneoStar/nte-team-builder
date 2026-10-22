@@ -8,6 +8,9 @@ import ArcBackdrop from './ArcBackdrop.jsx';
 // it falls back to the character's initials on their element colour.
 const BASE = import.meta.env.BASE_URL;
 
+// Largest shown width of each size (px), for picking the image resolution.
+const SIZE_PX = { sm: 28, md: 44, lg: 76, xl: 88 };
+
 // `backdrop`: show the Arc-type disc behind the art (large profile portrait).
 export default function Portrait({ character, size = 'md', backdrop = false }) {
   useZeroLook();
@@ -31,6 +34,9 @@ export default function Portrait({ character, size = 'md', backdrop = false }) {
         <img
           className="portrait__img"
           src={src}
+          // Sharp on high-density screens: the 512 px art for larger portraits.
+          srcSet={`${src} 256w, ${BASE}characters/hd/${portraitPath(character.id)} 512w`}
+          sizes={`${SIZE_PX[size] ?? 44}px`}
           alt=""
           loading="lazy"
           onError={() => setFailedSrc(src)}
