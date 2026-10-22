@@ -83,19 +83,39 @@ const mix = (hex, to, t) => {
   const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(v + (to - v) * t));
   return `rgb(${c.join(',')})`;
 };
+let brushed = null;
+// Load the brushed-metal texture once before drawing (renderTeamCard does).
+export async function loadMetal(base) {
+  if (!brushed) brushed = await loadImage(`${base}icons/brushed-metal.webp`);
+  return brushed;
+}
 export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, w, h);
+  if (brushed) {
+    ctx.globalCompositeOperation = 'overlay';
+    if (vertical) {
+      ctx.translate(x + w, y);
+      ctx.rotate(Math.PI / 2);
+      ctx.drawImage(brushed, 0, 0, Math.max(h, 300), w);
+    } else {
+      ctx.drawImage(brushed, x, y, Math.max(w, 300), h);
+    }
+    ctx.setTransform(ctx.getTransform());
+  }
+  ctx.restore();
+  ctx.save();
   const g = vertical ? ctx.createLinearGradient(x, 0, x + w, 0) : ctx.createLinearGradient(0, y, 0, y + h);
-  g.addColorStop(0, mix(color, 255, 0.55));
-  g.addColorStop(0.38, color);
-  g.addColorStop(0.72, mix(color, 0, 0.3));
-  g.addColorStop(1, mix(color, 255, 0.15));
+  g.addColorStop(0, 'rgba(255,255,255,0.35)');
+  g.addColorStop(0.45, 'rgba(255,255,255,0)');
+  g.addColorStop(1, 'rgba(0,0,0,0.25)');
   ctx.fillStyle = g;
   ctx.fillRect(x, y, w, h);
-  const s = vertical ? ctx.createLinearGradient(0, y, 0, y + h) : ctx.createLinearGradient(x, 0, x + w, 0);
-  [[0, 0], [0.08, 0], [0.22, 0.55], [0.34, 0], [0.58, 0], [0.7, 0.3], [0.8, 0], [1, 0]]
-    .forEach(([at, a]) => s.addColorStop(at, `rgba(255,255,255,${a})`));
-  ctx.fillStyle = s;
-  ctx.fillRect(x, y, w, h);
+  ctx.restore();
 }
 
 export function loadImage(src) {
@@ -509,6 +529,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   await ensureFonts();
   const members = team.members.map((id) => (id ? CHARACTER_BY_ID[id] : null));
   const mascot = await loadImage(`${base}mascot.svg`);
+  await loadMetal(base);
   const images = await Promise.all(
     members.map((c) => (c ? loadImage(`${base}characters/hd/${c.id}.webp`) : null)),
   );
@@ -630,7 +651,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     ctx.save();
     roundRect(ctx, x, top, cw, ch, 14);
     ctx.clip();
-    metalStrip(ctx, x, top, cw, 6, el);
+    metalStrip(ctx, x, top, cw, 8, el);
     ctx.restore();
 
     // Portrait
@@ -884,7 +905,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     ctx.save();
     roundRect(ctx, x, top, cw, ch, 14);
     ctx.clip();
-    metalStrip(ctx, x, top, 7, ch, el, true);
+    metalStrip(ctx, x, top, 8, ch, el, true);
     ctx.restore();
 
     // Portrait
