@@ -24,6 +24,8 @@ export const PRESETS = [
   { name: 'Skia Remora', members: ['skia', 'zero', 'nanally', 'haniel'] },
   { name: 'Akane Remora', members: ['akane', 'blackbird', 'zero', 'iroi'] },
   { name: 'Akane Stain', members: ['akane', 'blackbird', 'haniel', 'fadia'] },
+  { name: 'Shinku Akane Charge', members: ['shinku', 'akane', 'zero', 'iroi'] },
+  { name: 'Akane Stain Nova', members: ['akane', 'blackbird', 'hotori', 'daffodill'] },
   // Kit-based ideas (this site, Oct 2026): built from each kit's passives,
   // the Esper Cycle (neighbouring elements react; Charge and Discord trios) and
   // faction links, for characters the community guides cover thinly.

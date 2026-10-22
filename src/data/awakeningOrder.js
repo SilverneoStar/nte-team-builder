@@ -31,7 +31,7 @@ export const AWAKENING_ORDER = {
   skia: o(['A6', 'A4', 'A1', 'A5', 'A2', 'A3']),
   zankou: o(['A5', 'A1', 'A2', 'A4', 'A6', 'A3'], 'If interrupts are a problem, take A3 earlier.'),
   zero: o(['A2', 'A3', 'A4', 'A5', 'A1', 'A6']),
-  akane: o(['A1']),
+  akane: o(['A2', 'A5', 'A6', 'A4', 'A3', 'A1'], 'Against groups, A3 rises; take A1 earlier if she keeps getting interrupted.'),
 };
 
 export const ORDINAL = ['1st', '2nd', '3rd', '4th', '5th', '6th'];

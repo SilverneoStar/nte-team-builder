@@ -45,7 +45,7 @@ export default function EndgameStats({ character: c }) {
       <h3 id="endgame-title" className="mini-title">
         Recommended endgame stats {e.endgameLabel && <span>{e.endgameLabel}</span>}
       </h3>
-      <StatList stats={e.endgame} character={c} />
+      {e.endgame ? <StatList stats={e.endgame} character={c} /> : <p className="muted small">Number targets not published yet.</p>}
       {e.alt?.endgame && (
         <>
           <hr className="endgame__rule endgame__rule--section" />

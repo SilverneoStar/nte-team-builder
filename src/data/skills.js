@@ -279,8 +279,8 @@ export const SKILLS = {
       s(S, 'Altered Chord', 'A heavy strum: one hit of Lakshana damage that triggers a Reaction.'),
     ],
     life: [
-      s('Life', 'Bar Special', 'More shop customers while she works there.'),
-      s('Life', 'Stage Star', 'Unlocks Super Sound rounds on stage, for 1 extra City Stamina each.'),
+      s('Life', 'House Special', 'More shop traffic and less ingredient use while she works there.'),
+      s('Life', 'Shining Idol', 'Unlocks Super Sound rounds on stage, for 1 extra City Stamina each.'),
     ],
   },
   adler: {

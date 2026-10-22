@@ -25,7 +25,7 @@ export const ARCS = [
   arc('Crime and Punishment', 'S', 'Gas', 570, 'Crit Rate 24%', 'Psyche DMG +20% and Cycle Intensity up. After Ultimate, team Crit DMG up.', 'blackbird'),
   arc('Day Off', 'S', 'Solid', 512, 'Charge Efficiency 33%', 'ATK up; Eclipse restores Ultimate Energy on kills. Free from the Eclipse side quest; built for Esper Zero.'),
   arc('Eternal Waltz', 'S', 'Condensate', 424, 'HP 41.25%', 'Max HP up; Mental DMG up after Ultimate.', 'fadia'),
-  arc('Far Side of the Moon', 'S', 'Liquid', 570, 'Crit DMG 48%', 'Crit Rate +16%; stacking Basic Attack and Redirect Skill DMG.', 'akane'),
+  arc('Far Side of the Moon', 'S', 'Liquid', 570, 'Crit DMG 48%', 'Crit Rate +15%; Redirect Skill and Basic Attack DMG up, plus Lakshana DMG for 15s after a Redirect Skill.', 'akane'),
   arc('Fluff of Fearlessness', 'S', 'Solid', 512, 'Crit Rate 22%', 'ATK up for 10s after Ultimate.'),
   arc('Fluff of Ferocity', 'S', 'Condensate', 512, 'ATK 27.5%', 'Crit DMG stacks on critical hits, up to 10.'),
   arc('Fluff of Finesse', 'S', 'Gas', 512, 'ATK 27.5%', 'DMG up for 10s after a Critical Dodge, up to 3 stacks.'),

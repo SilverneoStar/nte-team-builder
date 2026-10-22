@@ -24,6 +24,16 @@ export const ENDGAME = {
     subs: 'Crit DMG > Crit Rate > ATK % > DMG % > Flat Attack',
     cartridges: ["Devil's Blood: Curse", 'Lost Radiance', 'Shadow Creed'],
   },
+  akane: {
+    slug: 'akane',
+    main: 'Crit Rate > Crit DMG > ATK % > Lakshana DMG %',
+    subs: 'Crit Rate = Crit DMG > ATK % > DMG % > ATK',
+    notes: [
+      'Street Boxer adds a lot of Crit Rate, so Crit Rate matters less with it.',
+      'Lakshana DMG on the main slot is also fine when your Crit Rate and Crit DMG are balanced (about 1 : 2).',
+    ],
+    cartridges: ['Street Boxer'],
+  },
   baicang: {
     slug: 'baicang',
     endgame: { hp: '20,000+', atk: '2000+', critRate: '75%+', critDmg: '100%+', break: '25+', universal: '10%+', element: '47.5%+' },

@@ -59,7 +59,7 @@ export const ARC_PASSIVES = {
   'far-side-of-the-moon': {
     name: 'Far Side of the Moon',
     text: [
-      'CRIT Rate +16%. The wearer’s Redirect Skill DMG +7%.',
+      'CRIT Rate +15%. The wearer’s Redirect Skill DMG +7%.',
       'For 15s after casting a Redirect Skill, the wearer’s Basic Attack DMG +28% and Lakshana DMG +16%.',
     ],
   },
