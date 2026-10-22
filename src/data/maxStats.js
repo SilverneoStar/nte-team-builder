@@ -91,5 +91,11 @@ const FROM_PEERS = Object.fromEntries(
 
 export const MAX_STATS = { ...FROM_PEERS, ...ESTIMATED, ...MEASURED };
 
+// Level 80 stats are shown on the site and cards only once confirmed against
+// fresh in-game screens (no Arc or Console). Until then the Stats tab shows
+// the stats to focus on instead. Add a character's id here to show theirs.
+export const CONFIRMED_STATS = new Set([]);
+export const confirmedStats = (id) => (CONFIRMED_STATS.has(id) ? MAX_STATS[id] ?? null : null);
+
 // Damage types in the order the game lists them.
 export const DMG_TYPES = ['cosmos', 'anima', 'incantation', 'chaos', 'psyche', 'lakshana', 'mental'];

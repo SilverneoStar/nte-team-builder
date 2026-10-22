@@ -9,7 +9,7 @@ import {
   CHARACTER_CONSOLE, CONSOLE_SIZE, SHAPES, consoleStats, maskOf, occupancy, setProgress,
 } from '../data/console.js';
 import { suggestedBuild, suggestedCartStats } from '../data/consoleBuilds.js';
-import { MAX_STATS, MAX_STATS_LEVEL } from '../data/maxStats.js';
+import { MAX_STATS_LEVEL, confirmedStats } from '../data/maxStats.js';
 import { ENDGAME } from '../data/endgame.js';
 import { AWAKENING_ORDER } from '../data/awakeningOrder.js';
 import { encodeConsoleCode } from './consoleCode.js';
@@ -632,8 +632,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   // ---- Key attributes: Level 80 base (when known) plus what the build adds ----
   const extra = bonusStats(build.arc && build.arcState === 'Equipped' ? build.arc : null, build.cartStats,
     consoleStats(c.id, build.pieces, build.cartridge));
-  // Estimates from other characters aren't shown; only real in-game values.
-  const ms = MAX_STATS[c.id]?.fromPeers ? null : MAX_STATS[c.id];
+  // Only confirmed in-game values are shown.
+  const ms = confirmedStats(c.id);
   let stats = extra;
   if (ms) {
     const take = (stat) => {

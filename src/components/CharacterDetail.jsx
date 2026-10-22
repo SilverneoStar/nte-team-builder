@@ -8,7 +8,7 @@ import MaxStats from './MaxStats.jsx';
 import EndgameStats from './EndgameStats.jsx';
 import FocusStats from './FocusStats.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
-import { MAX_STATS } from '../data/maxStats.js';
+import { confirmedStats } from '../data/maxStats.js';
 import ElementGlyph from './ElementGlyph.jsx';
 import Portrait from './Portrait.jsx';
 import AscensionPlanner from './AscensionPlanner.jsx';
@@ -149,8 +149,8 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   const stats = (
     <div className="stats">
       {/* Only real in-game values; until then, the stats to chase. */}
-      {MAX_STATS[c.id] && !MAX_STATS[c.id].fromPeers ? (
-        <MaxStats stats={MAX_STATS[c.id]} />
+      {confirmedStats(c.id) ? (
+        <MaxStats stats={confirmedStats(c.id)} />
       ) : (
         <FocusStats character={c} />
       )}
