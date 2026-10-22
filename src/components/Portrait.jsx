@@ -1,4 +1,4 @@
-import { portraitFile, useZeroLook } from '../lib/portraits.js';
+import { portraitPath, useZeroLook } from '../lib/portraits.js';
 import { useState } from 'react';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import ElementGlyph from './ElementGlyph.jsx';
@@ -11,7 +11,7 @@ const BASE = import.meta.env.BASE_URL;
 // `backdrop`: show the Arc-type disc behind the art (large profile portrait).
 export default function Portrait({ character, size = 'md', backdrop = false }) {
   useZeroLook();
-  const src = `${BASE}characters/${portraitFile(character.id)}.webp`;
+  const src = `${BASE}characters/${portraitPath(character.id)}`;
   // Remember which image failed, so switching characters retries.
   const [failedSrc, setFailedSrc] = useState(null);
   const failed = failedSrc === src;

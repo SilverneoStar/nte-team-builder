@@ -2,7 +2,7 @@
 // the profile header. Four panels: Cartridges (best + alternative, with set
 // bonuses), Stats & Console (stat priority, module bonus, awakening order),
 // Arcs (best, then premium / battle pass / free picks) and Teams.
-import { portraitFile } from './portraits.js';
+import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess } from '../data/arcs.js';
@@ -236,14 +236,14 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const mates = [...new Set(teams.flatMap((p) => p.members))];
 
   const [portrait, elIcon, typeIcon, cartImg, altCartImg, bestArcImg, ...rest] = await Promise.all([
-    loadImage(`${base}characters/hd/${portraitFile(c.id)}.webp`),
+    loadImage(`${base}characters/hd/${portraitPath(c.id)}`),
     loadImage(`${base}icons/elements/${c.element}.webp`),
     c.arcType ? loadImage(`${base}icons/arc-types/${c.arcType.toLowerCase()}.webp`) : null,
     bestCart ? loadImage(`${base}icons/cartridges/${bestCart}.webp`) : null,
     altCart ? loadImage(`${base}icons/cartridges/${altCart}.webp`) : null,
     arcs.best ? loadImage(`${base}arcs/${arcs.best.id}.webp`) : null,
     ...arcs.more.map((m) => loadImage(`${base}arcs/${m.arc.id}.webp`)),
-    ...mates.map((id) => loadImage(`${base}characters/${portraitFile(id)}.webp`)),
+    ...mates.map((id) => loadImage(`${base}characters/${portraitPath(id)}`)),
   ]);
   const moreImgs = rest.slice(0, arcs.more.length);
   const mateImg = Object.fromEntries(mates.map((id, i) => [id, rest[arcs.more.length + i]]));

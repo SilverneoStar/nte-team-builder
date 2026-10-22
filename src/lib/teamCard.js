@@ -1,6 +1,6 @@
 // Draws a shareable team card on a canvas. No libraries: plain Canvas 2D,
 // so the image looks the same in every browser and works offline.
-import { portraitFile } from './portraits.js';
+import { portraitPath } from './portraits.js';
 import { loadPatterns, paintBackdrop, setPortraitShadow } from './arcPattern.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
@@ -565,7 +565,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const patterns = await loadPatterns(base, [...new Set(members.filter(Boolean).map((c) => c.arcType))]);
   await loadMetal(base);
   const images = await Promise.all(
-    members.map((c) => (c ? loadImage(`${base}characters/hd/${portraitFile(c.id)}.webp`) : null)),
+    members.map((c) => (c ? loadImage(`${base}characters/hd/${portraitPath(c.id)}`) : null)),
   );
   const analysis = analyzeTeam(team.members);
   // Official element and role icons.

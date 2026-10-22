@@ -40,3 +40,18 @@ export const useZeroLook = () => useSyncExternalStore(subscribe, getZeroLook, ge
 
 /** File name (without extension) of a character's portrait. */
 export const portraitFile = (id) => (id === 'zero' && look !== 'both' ? `zero-${look}` : id);
+
+// Portraits that were redrawn keep their file name, so browsers may still
+// show a saved old copy. A version on the address makes them fetch the new
+// one. Bump a portrait's version whenever its image is replaced.
+const UPDATED = {
+  jiuyuan: 3,
+  shinku: 2,
+  'zero-male': 3,
+  'zero-female': 2,
+};
+/** File name and version of a character's portrait, e.g. "shinku.webp?v=2". */
+export const portraitPath = (id) => {
+  const f = portraitFile(id);
+  return UPDATED[f] ? `${f}.webp?v=${UPDATED[f]}` : `${f}.webp`;
+};
