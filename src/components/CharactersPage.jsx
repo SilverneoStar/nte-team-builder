@@ -223,12 +223,15 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                       alt=""
                       loading="lazy"
                     />
-                    <span className="char-tile__rank"><RankBadge rank={c.rarity} size={24} /></span>
-                    <span className="char-tile__el"><ElementGlyph element={c.element} size={20} title={ELEMENT_BY_ID[c.element].name} /></span>
                     {c.upcoming && <span className="char-tile__tag">Upcoming</span>}
                   </span>
-                  <span className="char-tile__name">{c.name}</span>
-                  <span className="char-tile__roles"><RoleList roles={c.roles} size={13} separator={false} /></span>
+                  {/* Name and roles on the left; rank above element on the right */}
+                  <span className="char-tile__info">
+                    <span className="char-tile__name">{c.name}</span>
+                    <span className="char-tile__rank"><RankBadge rank={c.rarity} size={20} /></span>
+                    <span className="char-tile__roles"><RoleList roles={c.roles} size={13} separator={false} /></span>
+                    <span className="char-tile__el"><ElementGlyph element={c.element} size={16} title={ELEMENT_BY_ID[c.element].name} /></span>
+                  </span>
                 </a>
               </li>
             ))}

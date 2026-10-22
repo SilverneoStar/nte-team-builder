@@ -5172,3 +5172,65 @@ th[aria-sort='descending'] .th-btn {
   background-size: cover !important;
   background-position: center !important;
 }
+
+/* Character tile: info block under the art, 2 x 2.
+   Left: name over roles. Right: rank over element. */
+.char-tile__info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 6px;
+  row-gap: 4px;
+  padding: 6px 7px 0 10px;
+  align-items: start;
+}
+.char-tile__info .char-tile__name {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  padding: 0;
+  /* Shrinks on narrow tiles so one-word names stay whole */
+  font-size: clamp(0.74rem, 3.4vw, 0.92rem);
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+.char-tile__info .char-tile__roles {
+  grid-column: 1;
+  grid-row: 2;
+  padding: 0;
+  font-size: clamp(0.64rem, 3vw, 0.74rem);
+  min-width: 0;
+}
+.char-tile__info .char-tile__roles .role-list > * {
+  white-space: nowrap;
+}
+.char-tile__info .char-tile__rank,
+.char-tile__info .char-tile__el {
+  position: static;
+  grid-column: 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+}
+.char-tile__info .char-tile__rank { grid-row: 1; }
+.char-tile__info .char-tile__el {
+  grid-row: 2;
+  height: 24px;
+  padding: 0;
+  background: color-mix(in srgb, var(--el) 16%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--el) 45%, var(--line));
+}
+
+/* Arc banners: the type label sits on a small dark pill so it reads on any design */
+.arc-card[data-arc-type] .arc-card__type {
+  gap: 5px;
+  padding: 3px 8px 3px 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--arc-base) 78%, transparent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  color: var(--fg);
+  opacity: 1;
+  font-weight: 600;
+  text-shadow: none;
+}
