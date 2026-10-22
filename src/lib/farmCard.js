@@ -1,6 +1,7 @@
 // Draws a shareable "materials to farm" card for one character: everything
 // needed to ascend them to Lv 80 and max their skills, grouped by where each
 // material is farmed. Same look as the build card (charcoal panels, silver frame).
+import { portraitFile } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { farmList } from '../data/farmList.js';
 import { bestBuild } from '../data/bestBuild.js';
@@ -218,7 +219,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
 
   const names = [...new Set(list.groups.flatMap((g) => g.items.map((i) => i.name)))];
   const [portrait, elIcon, ...icons] = await Promise.all([
-    loadImage(`${base}characters/hd/${c.id}.webp`),
+    loadImage(`${base}characters/hd/${portraitFile(c.id)}.webp`),
     loadImage(`${base}icons/elements/${c.element}.webp`),
     ...names.map((n) => (materialIconUrl(n) ? loadImage(materialIconUrl(n)) : null)),
   ]);
@@ -409,7 +410,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
     loadImage(`${base}arcs/hd/${arc.id}.webp`),
     loadImage(`${base}icons/arc-types/${arc.type.toLowerCase()}.webp`),
     ...names.map((n) => (materialIconUrl(n) ? loadImage(materialIconUrl(n)) : null)),
-    ...users.map((c) => loadImage(`${base}characters/${c.id}.webp`)),
+    ...users.map((c) => loadImage(`${base}characters/${portraitFile(c.id)}.webp`)),
   ]);
   const imgs = new Map(names.map((n, i) => [n, rest[i]]));
   const userImgs = rest.slice(names.length);

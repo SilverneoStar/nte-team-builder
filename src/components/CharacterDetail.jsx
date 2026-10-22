@@ -11,6 +11,7 @@ import ArcTypeIcon from './ArcTypeIcon.jsx';
 import { confirmedStats } from '../data/maxStats.js';
 import ElementGlyph from './ElementGlyph.jsx';
 import Portrait from './Portrait.jsx';
+import { ZERO_LOOKS, setZeroLook, useZeroLook } from '../lib/portraits.js';
 import AscensionPlanner from './AscensionPlanner.jsx';
 import BuildTotals from './BuildTotals.jsx';
 import { ascensionCost } from '../data/ascension.js';
@@ -271,6 +272,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
               {c.tags.map((t) => <li key={t}>{t}</li>)}
             </ul>
           )}
+          {c.id === 'zero' && <ZeroLookPick />}
         </div>
         <div className="detail__head-actions">
           {cardTypes.length > 0 && (
@@ -353,5 +355,27 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         />
       )}
     </article>
+  );
+}
+
+// Esper Zero: choose which form the site and cards show.
+function ZeroLookPick() {
+  const look = useZeroLook();
+  return (
+    <div className="zero-pick" role="radiogroup" aria-label="Esper Zero portrait">
+      <span className="zero-pick__label">Show</span>
+      {ZERO_LOOKS.map((l) => (
+        <button
+          key={l.id}
+          type="button"
+          role="radio"
+          aria-checked={look === l.id}
+          className={`zero-pick__opt${look === l.id ? ' is-on' : ''}`}
+          onClick={() => setZeroLook(l.id)}
+        >
+          {l.label}
+        </button>
+      ))}
+    </div>
   );
 }

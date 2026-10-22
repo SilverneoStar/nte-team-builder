@@ -1,3 +1,4 @@
+import { portraitFile, useZeroLook } from '../lib/portraits.js';
 import { useEffect, useMemo, useState } from 'react';
 import { ARC_TYPES, CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
 import { ELEMENTS, ELEMENT_BY_ID, ROLES } from '../data/elements.js';
@@ -57,6 +58,7 @@ function compare(a, b, col, dir) {
 }
 
 export default function CharactersPage({ characterId, activeTeam, onAdd }) {
+  useZeroLook();
   const [query, setQuery] = useState('');
   const [element, setElement] = useState('all');
   const [role, setRole] = useState('all');
@@ -217,8 +219,8 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                   <span className="char-tile__art">
                     <ArcBackdrop arcType={c.arcType} />
                     <img
-                      src={`${BASE}characters/${c.id}.webp`}
-                      srcSet={`${BASE}characters/${c.id}.webp 256w, ${BASE}characters/hd/${c.id}.webp 512w`}
+                      src={`${BASE}characters/${portraitFile(c.id)}.webp`}
+                      srcSet={`${BASE}characters/${portraitFile(c.id)}.webp 256w, ${BASE}characters/hd/${portraitFile(c.id)}.webp 512w`}
                       sizes="(max-width: 600px) 45vw, 170px"
                       alt=""
                       loading="lazy"

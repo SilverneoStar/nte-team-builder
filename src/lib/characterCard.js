@@ -1,6 +1,7 @@
 // Character teams card: a tall (4:5) image for one character. Left column:
 // portrait and recommended build. Right column: the featured teams they're in,
 // with each team's reactions. Shared from the character page's "Featured in".
+import { portraitFile } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { ARC_BY_ID, arcAccess, arcTag } from '../data/arcs.js';
@@ -148,14 +149,14 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   const ao = AWAKENING_ORDER[c.id];
 
   const [portrait, elIcon, mascot, arcArt, altArcArt, cartImg, ...rest] = await Promise.all([
-    loadImage(`${base}characters/hd/${c.id}.webp`),
+    loadImage(`${base}characters/hd/${portraitFile(c.id)}.webp`),
     loadImage(`${base}icons/elements/${c.element}.webp`),
     loadImage(`${base}mascot.svg`),
     arc ? loadImage(`${base}arcs/${arc.id}.webp`) : null,
     alt.arc ? loadImage(`${base}arcs/${alt.arc.id}.webp`) : null,
     best?.cartridge ? loadImage(`${base}icons/cartridges/${best.cartridge}.webp`) : null,
     ...alt.cartridges.map((id) => loadImage(`${base}icons/cartridges/${id}.webp`)),
-    ...mates.map((id) => loadImage(`${base}characters/${id}.webp`)),
+    ...mates.map((id) => loadImage(`${base}characters/${portraitFile(id)}.webp`)),
   ]);
   const altCartImgs = rest.slice(0, alt.cartridges.length);
   const mateImg = Object.fromEntries(mates.map((id, i) => [id, rest[alt.cartridges.length + i]]));

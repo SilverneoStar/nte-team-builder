@@ -2,6 +2,7 @@
 // Character Guide screen: portrait on the left, a header strip with the
 // Console bonus, build stats / Arc / Cartridge panels, and a Console
 // Development panel with current and recommended modules plus the grid.
+import { portraitFile } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess, arcTag } from '../data/arcs.js';
 import { CARTRIDGE_BY_ID, bonusStats, cartridgesFor, isPercentStat, moduleLevel } from '../data/gear.js';
@@ -507,7 +508,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   ]);
   const [portrait, elIcon, cartImg, recCartImg, arcImg, arcArt] = await Promise.all([
     // 512 px portrait (AI-upscaled from the 256 px source) so the card stays sharp.
-    loadImage(`${base}characters/hd/${c.id}.webp`),
+    loadImage(`${base}characters/hd/${portraitFile(c.id)}.webp`),
     loadImage(`${base}icons/elements/${c.element}.webp`),
     build.cartridge ? loadImage(`${base}icons/cartridges/${build.cartridge}.webp`) : null,
     build.recommended ? loadImage(`${base}icons/cartridges/${build.recommended.cartridge}.webp`) : null,

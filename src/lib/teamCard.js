@@ -1,5 +1,6 @@
 // Draws a shareable team card on a canvas. No libraries: plain Canvas 2D,
 // so the image looks the same in every browser and works offline.
+import { portraitFile } from './portraits.js';
 import { loadPatterns, paintBackdrop, setPortraitShadow } from './arcPattern.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
@@ -482,7 +483,7 @@ const METRICS = {
   },
   grid: {
     r: 74, cy: 104, shift: 34, frame: { w: 236, h: 148, y: 22, r: 22 }, nameFont: 28, gearFont: 18, gearLine: 22, bonusLine: 27, bonusName: 16, bonusNum: 18, alwaysTwoLines: true,
-    aw: { w: 42, h: 25, step: 30, font: 14, rr: 17, rStep: 40 }, elFont: 17, elIcon: 26, rank: 30, roleFont: 18, roleIcon: 20, roleGap: 10,
+    aw: { w: 42, h: 28, step: 36, font: 14, rr: 19, rStep: 40 }, awTwoCol: true, elFont: 17, elIcon: 26, rank: 30, roleFont: 18, roleIcon: 20, roleGap: 10,
     dupFont: 15, label: 14, tiles: true,
   },
 };
@@ -564,7 +565,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const patterns = await loadPatterns(base, [...new Set(members.filter(Boolean).map((c) => c.arcType))]);
   await loadMetal(base);
   const images = await Promise.all(
-    members.map((c) => (c ? loadImage(`${base}characters/hd/${c.id}.webp`) : null)),
+    members.map((c) => (c ? loadImage(`${base}characters/hd/${portraitFile(c.id)}.webp`) : null)),
   );
   const analysis = analyzeTeam(team.members);
   // Official element and role icons.
@@ -699,12 +700,15 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     const colX = x + 14;
     const pillW = M.aw.w;
     const pillH = M.aw.h;
+    // Tall (2 x 2) layout: two columns of three, Resonance side by side below.
+    const twoCol = !!M.awTwoCol;
     for (let k = 0; k < 6; k++) {
       const id = `A${k + 1}`;
       const on = onSet.has(id);
-      const py = top + 18 + k * M.aw.step;
+      const px = twoCol ? colX + (k % 2) * (pillW + 6) : colX;
+      const py = twoCol ? top + 18 + Math.floor(k / 2) * M.aw.step : top + 18 + k * M.aw.step;
       ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.06)';
-      roundRect(ctx, colX, py, pillW, pillH, 6);
+      roundRect(ctx, px, py, pillW, pillH, 6);
       ctx.fill();
       if (!on) {
         ctx.strokeStyle = C.line;
@@ -715,13 +719,15 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       ctx.font = `700 ${M.aw.font}px ${MONO}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(id, colX + pillW / 2, py + pillH / 2 + 1);
+      ctx.fillText(id, px + pillW / 2, py + pillH / 2 + 1);
     }
     const reso = activeResonance(onSet.size);
     ['R3', 'R6'].forEach((id, k) => {
       const on = reso[id];
-      const rcx = colX + pillW / 2;
-      const rcy = top + 18 + 6 * M.aw.step + M.aw.rr + 4 + k * M.aw.rStep;
+      const rcx = twoCol ? colX + pillW / 2 + k * (pillW + 6) : colX + pillW / 2;
+      const rcy = twoCol
+        ? top + 18 + 3 * M.aw.step + M.aw.rr + 6
+        : top + 18 + 6 * M.aw.step + M.aw.rr + 4 + k * M.aw.rStep;
       ctx.beginPath();
       ctx.arc(rcx, rcy, M.aw.rr, 0, Math.PI * 2);
       ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.04)';
