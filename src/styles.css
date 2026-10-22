@@ -5134,3 +5134,21 @@ th[aria-sort='descending'] .th-btn {
   color: #fff;
   font: 700 0.75rem var(--font-mono);
 }
+
+/* Arc-type pattern behind portraits (see ArcBackdrop.jsx) */
+.arc-backdrop {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+.char-tile__art {
+  overflow: hidden;
+}
+.char-tile__art > img,
+.portrait > .portrait__img {
+  position: relative;
+}

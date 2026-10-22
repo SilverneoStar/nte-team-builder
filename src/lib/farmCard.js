@@ -242,7 +242,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   const LW = 340;
   const px = PAD;
   const py = PAD;
-  drawPortraitBackdrop(ctx, { x: px, y: py, w: LW, h: LW, r: 22, color: elColor, arcType: c.arcType, seed: c.id });
+  await drawPortraitBackdrop(ctx, { x: px, y: py, w: LW, h: LW, r: 22, color: elColor, arcType: c.arcType, base });
   if (portrait) {
     ctx.save();
     roundRect(ctx, px, py, LW, LW, 22);

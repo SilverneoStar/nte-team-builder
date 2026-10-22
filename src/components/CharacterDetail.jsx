@@ -255,7 +255,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   return (
     <article className="detail" style={{ '--el': element.color }} aria-labelledby="detail-name">
       <header className="detail__head">
-        <Portrait character={c} size="xl" />
+        <Portrait character={c} size="xl" backdrop />
         <div className="detail__title">
           <p className="eyebrow">
             <span className="eyebrow__meta">

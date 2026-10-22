@@ -181,7 +181,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   // ---- Left: portrait ----
   const PS = COL;
   const PH = 400;
-  drawPortraitBackdrop(ctx, { x: LX, y: TOP, w: PS, h: PH, r: 22, color: elColor, arcType: c.arcType, seed: c.id });
+  await drawPortraitBackdrop(ctx, { x: LX, y: TOP, w: PS, h: PH, r: 22, color: elColor, arcType: c.arcType, base });
   ctx.save();
   roundRect(ctx, LX, TOP, PS, PH, 22);
   ctx.clip();

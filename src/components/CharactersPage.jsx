@@ -5,6 +5,7 @@ import { navigate } from '../lib/route.js';
 import CharacterDetail from './CharacterDetail.jsx';
 import ElementGlyph from './ElementGlyph.jsx';
 import Portrait from './Portrait.jsx';
+import ArcBackdrop from './ArcBackdrop.jsx';
 import RankBadge from './RankBadge.jsx';
 import RoleList from './RoleList.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
@@ -214,6 +215,7 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                   aria-current={c.id === characterId ? 'true' : undefined}
                 >
                   <span className="char-tile__art">
+                    <ArcBackdrop arcType={c.arcType} />
                     <img
                       src={`${BASE}characters/${c.id}.webp`}
                       srcSet={`${BASE}characters/${c.id}.webp 256w, ${BASE}characters/hd/${c.id}.webp 512w`}

@@ -270,7 +270,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const PH = 300;
   const PX = PAD;
   const PY = 36;
-  drawPortraitBackdrop(ctx, { x: PX, y: PY, w: PW, h: PH, r: 24, color: elColor, arcType: c.arcType, seed: c.id });
+  await drawPortraitBackdrop(ctx, { x: PX, y: PY, w: PW, h: PH, r: 24, color: elColor, arcType: c.arcType, base });
   ctx.save();
   roundRect(ctx, PX, PY, PW, PH, 24);
   ctx.clip();
