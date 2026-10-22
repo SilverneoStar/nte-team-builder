@@ -77,6 +77,27 @@ export function drawMascot(ctx, img, x, y, size) {
   ctx.restore();
 }
 
+// Element colour as a polished metal strip (matches .metal-strip on the site).
+const mix = (hex, to, t) => {
+  const n = parseInt(hex.replace('#', '').slice(0, 6), 16);
+  const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(v + (to - v) * t));
+  return `rgb(${c.join(',')})`;
+};
+export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
+  const g = vertical ? ctx.createLinearGradient(x, 0, x + w, 0) : ctx.createLinearGradient(0, y, 0, y + h);
+  g.addColorStop(0, mix(color, 255, 0.55));
+  g.addColorStop(0.38, color);
+  g.addColorStop(0.72, mix(color, 0, 0.3));
+  g.addColorStop(1, mix(color, 255, 0.15));
+  ctx.fillStyle = g;
+  ctx.fillRect(x, y, w, h);
+  const s = vertical ? ctx.createLinearGradient(0, y, 0, y + h) : ctx.createLinearGradient(x, 0, x + w, 0);
+  [[0, 0], [0.08, 0], [0.22, 0.55], [0.34, 0], [0.58, 0], [0.7, 0.3], [0.8, 0], [1, 0]]
+    .forEach(([at, a]) => s.addColorStop(at, `rgba(255,255,255,${a})`));
+  ctx.fillStyle = s;
+  ctx.fillRect(x, y, w, h);
+}
+
 export function loadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -609,8 +630,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     ctx.save();
     roundRect(ctx, x, top, cw, ch, 14);
     ctx.clip();
-    ctx.fillStyle = el;
-    ctx.fillRect(x, top, cw, 5);
+    metalStrip(ctx, x, top, cw, 6, el);
     ctx.restore();
 
     // Portrait
@@ -864,8 +884,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     ctx.save();
     roundRect(ctx, x, top, cw, ch, 14);
     ctx.clip();
-    ctx.fillStyle = el;
-    ctx.fillRect(x, top, 6, ch);
+    metalStrip(ctx, x, top, 7, ch, el, true);
     ctx.restore();
 
     // Portrait

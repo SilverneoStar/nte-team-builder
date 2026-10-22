@@ -2,6 +2,8 @@
 const BASE = import.meta.env.BASE_URL;
 
 export const elementIconUrl = (elementId) => `${BASE}icons/elements/${elementId}.webp`;
+// Just the element symbol, cut out of its round badge (transparent background).
+export const elementSymbolUrl = (elementId) => `${BASE}icons/element-symbols/${elementId}.webp`;
 export const roleIconUrl = (role) => `${BASE}icons/roles/${role.toLowerCase()}.webp`;
 export const cartridgeIconUrl = (id) => `${BASE}icons/cartridges/${id}.webp`;
 export const arcImageUrl = (id) => `${BASE}arcs/${id}.webp`;
