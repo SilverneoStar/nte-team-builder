@@ -5315,3 +5315,39 @@ th[aria-sort='descending'] .th-btn {
   width: 11px;
   height: 11px;
 }
+
+/* Character tile info: four cells, each with its content centred.
+   Name and roles fill the left column, rank and element the right. */
+.char-tile__info {
+  grid-template-columns: minmax(0, 1fr) 30px;
+  grid-template-rows: 30px auto;
+  align-items: center;
+  justify-items: center;
+  padding: 8px 8px 9px;
+  column-gap: 6px;
+  row-gap: 4px;
+}
+.char-tile__info > * {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.char-tile__info .char-tile__name {
+  height: 100%;
+  container-type: inline-size;
+}
+/* One line, shrunk to fit its cell */
+.char-tile__info .char-tile__name > span {
+  white-space: nowrap;
+  font-size: min(0.84rem, calc(100cqi / (var(--len) * 0.6)));
+}
+.char-tile__info .char-tile__roles .role-list {
+  align-items: center;
+}
+.char-tile__info .char-tile__rank,
+.char-tile__info .char-tile__el {
+  width: 30px;
+  height: 30px;
+}
