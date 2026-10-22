@@ -35,8 +35,19 @@ export function drawCover(ctx, img, x, y, w, h) {
  * Fills a rounded box with the Arc-type design behind a character.
  * Draw the portrait on top afterwards with setPortraitShadow() on.
  */
-export async function drawPortraitBackdrop(ctx, { x, y, w, h, r = 22, arcType, base = '/' }) {
-  const img = await patternImage(base, arcType);
+export async function drawPortraitBackdrop(ctx, opts) {
+  const img = await patternImage(opts.base ?? '/', opts.arcType);
+  paintBackdrop(ctx, { ...opts, img });
+}
+
+/** Load the designs for these Arc types ahead of drawing (for paintBackdrop). */
+export async function loadPatterns(base, arcTypes) {
+  const list = await Promise.all(arcTypes.map(async (t) => [String(t || '').toLowerCase(), await patternImage(base, t)]));
+  return Object.fromEntries(list);
+}
+
+/** Same as drawPortraitBackdrop, with the design image already loaded. */
+export function paintBackdrop(ctx, { x, y, w, h, r = 22, img }) {
   ctx.save();
   ctx.beginPath();
   ctx.roundRect(x, y, w, h, r);

@@ -1,5 +1,6 @@
 // Draws a shareable team card on a canvas. No libraries: plain Canvas 2D,
 // so the image looks the same in every browser and works offline.
+import { loadPatterns, paintBackdrop, setPortraitShadow } from './arcPattern.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
@@ -119,6 +120,34 @@ export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
   ctx.fillStyle = g;
   ctx.fillRect(x, y, w, h);
   ctx.restore();
+}
+
+/**
+ * Character portrait in a rounded frame (a circle when r is half the size):
+ * Arc-type backdrop, the art casting a soft shadow, an element-colour border.
+ * The art fills the frame width and is cropped from the top.
+ */
+function framedPortrait(ctx, img, c, { x, y, w, h, r, color, patterns }) {
+  paintBackdrop(ctx, { x, y, w, h, r, img: patterns[String(c.arcType || '').toLowerCase()] });
+  ctx.save();
+  roundRect(ctx, x, y, w, h, r);
+  ctx.clip();
+  if (img) {
+    const s = Math.max(w, h);
+    setPortraitShadow(ctx, s);
+    ctx.drawImage(img, x + (w - s) / 2, y - (s - h) * 0.3, s, s);
+  } else {
+    ctx.fillStyle = C.fg;
+    ctx.font = `800 44px ${DISPLAY}`;
+    ctx.textAlign = 'center';
+    ctx.fillText(c.name.slice(0, 1), x + w / 2, y + h / 2 + 15);
+    ctx.textAlign = 'left';
+  }
+  ctx.restore();
+  roundRect(ctx, x, y, w, h, r);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  ctx.stroke();
 }
 
 export function loadImage(src) {
@@ -447,12 +476,12 @@ export const SIDE_H = 1000;
 // Member panel metrics per layout (offsets from the panel top).
 const METRICS = {
   row: {
-    r: 58, cy: 86, shift: 0, nameFont: 22, gearFont: 15, gearLine: 19, bonusLine: 17, bonusName: 12, bonusNum: 14, alwaysTwoLines: false,
+    r: 58, cy: 86, shift: 0, frame: { w: 136, h: 126, y: 20, r: 18 }, nameFont: 22, gearFont: 15, gearLine: 19, bonusLine: 17, bonusName: 12, bonusNum: 14, alwaysTwoLines: false,
     aw: { w: 34, h: 20, step: 24, font: 11, rr: 14, rStep: 34 }, elFont: 13, elIcon: 20, rank: 24, roleFont: 14, roleIcon: 16, roleGap: 0,
     dupFont: 12, label: 12, tiles: false,
   },
   grid: {
-    r: 74, cy: 104, shift: 34, nameFont: 28, gearFont: 18, gearLine: 22, bonusLine: 27, bonusName: 16, bonusNum: 18, alwaysTwoLines: true,
+    r: 74, cy: 104, shift: 34, frame: { w: 236, h: 148, y: 22, r: 22 }, nameFont: 28, gearFont: 18, gearLine: 22, bonusLine: 27, bonusName: 16, bonusNum: 18, alwaysTwoLines: true,
     aw: { w: 42, h: 25, step: 30, font: 14, rr: 17, rStep: 40 }, elFont: 17, elIcon: 26, rank: 30, roleFont: 18, roleIcon: 20, roleGap: 10,
     dupFont: 15, label: 14, tiles: true,
   },
@@ -532,6 +561,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   await ensureFonts();
   const members = team.members.map((id) => (id ? CHARACTER_BY_ID[id] : null));
   const mascot = await loadImage(`${base}mascot.svg`);
+  const patterns = await loadPatterns(base, [...new Set(members.filter(Boolean).map((c) => c.arcType))]);
   await loadMetal(base);
   const images = await Promise.all(
     members.map((c) => (c ? loadImage(`${base}characters/hd/${c.id}.webp`) : null)),
@@ -657,31 +687,11 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     metalStrip(ctx, x, top, cw, 8, el);
     ctx.restore();
 
-    // Portrait
+    // Portrait in a frame shaped for the layout, on the Arc-type backdrop:
+    // Wide (1 x 4): an upright rounded frame. Tall (2 x 2): a broad rounded frame.
     const cx = x + cw / 2;
-    const cy = top + M.cy;
-    const r = M.r;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = C.panel2;
-    ctx.fill();
-    ctx.clip();
-    if (images[i]) {
-      ctx.drawImage(images[i], cx - r, cy - r, r * 2, r * 2);
-    } else {
-      ctx.fillStyle = C.fg;
-      ctx.font = `800 44px ${DISPLAY}`;
-      ctx.textAlign = 'center';
-      ctx.fillText(c.name.slice(0, 1), cx, cy + 15);
-      ctx.textAlign = 'left';
-    }
-    ctx.restore();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = el;
-    ctx.lineWidth = 4;
-    ctx.stroke();
+    const F = M.frame;
+    framedPortrait(ctx, images[i], c, { x: cx - F.w / 2, y: top + F.y, w: F.w, h: F.h, r: F.r, color: el, patterns });
 
     // Awakenings A1-A6 down the left edge, then R3 / R6 Resonance circles.
     const gearAw = loadoutOf(team, c.id);
@@ -911,23 +921,11 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     metalStrip(ctx, x, top, 8, ch, el, true);
     ctx.restore();
 
-    // Portrait
+    // Portrait: round frame on the Arc-type backdrop
     const r = Math.min(92, (ch - 100) / 2);
     const cx = x + 30 + r;
     const cy = top + 24 + r;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = C.panel2;
-    ctx.fill();
-    ctx.clip();
-    if (images[i]) ctx.drawImage(images[i], cx - r, cy - r, r * 2, r * 2);
-    ctx.restore();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = el;
-    ctx.lineWidth = 4;
-    ctx.stroke();
+    framedPortrait(ctx, images[i], c, { x: cx - r, y: cy - r, w: r * 2, h: r * 2, r, color: el, patterns });
 
     // Awakenings A1-A6 in a row under the portrait, Resonance and duplicates below.
     const onSet = new Set(gear.awakenings);
