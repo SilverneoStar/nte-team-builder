@@ -230,7 +230,7 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                     <span className="char-tile__name">{c.name}</span>
                     <span className="char-tile__rank"><RankBadge rank={c.rarity} size={20} /></span>
                     <span className="char-tile__roles"><RoleList roles={c.roles} size={13} separator={false} /></span>
-                    <span className="char-tile__el"><ElementGlyph element={c.element} size={26} symbol title={ELEMENT_BY_ID[c.element].name} /></span>
+                    <span className="char-tile__el"><ElementGlyph element={c.element} size={21} symbol title={ELEMENT_BY_ID[c.element].name} /></span>
                   </span>
                 </a>
               </li>
