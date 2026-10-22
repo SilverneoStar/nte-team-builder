@@ -10,6 +10,7 @@ import { materialIconUrl } from './icons.js';
 import { ARC_DYES, ARC_MATERIAL_SOURCE, arcAscensionCost } from '../data/arcMaterials.js';
 import { ARC_SOURCES, RECOMMENDED } from '../data/arcs.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
+import { drawPortraitBackdrop } from './arcPattern.js';
 import {
   BODY, DISPLAY, EL, MONO, clipCard, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
   drawBandBackdrop, goldCells,
@@ -241,15 +242,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   const LW = 340;
   const px = PAD;
   const py = PAD;
-  const glow = ctx.createRadialGradient(px + LW / 2, py + LW / 2, 20, px + LW / 2, py + LW / 2, LW * 0.75);
-  glow.addColorStop(0, `${elColor}55`);
-  glow.addColorStop(1, 'rgba(18,19,24,0)');
-  ctx.fillStyle = '#1b1c22';
-  roundRect(ctx, px, py, LW, LW, 22);
-  ctx.fill();
-  ctx.fillStyle = glow;
-  roundRect(ctx, px, py, LW, LW, 22);
-  ctx.fill();
+  drawPortraitBackdrop(ctx, { x: px, y: py, w: LW, h: LW, r: 22, color: elColor, arcType: c.arcType, seed: c.id });
   if (portrait) {
     ctx.save();
     roundRect(ctx, px, py, LW, LW, 22);
