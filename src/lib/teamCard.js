@@ -94,7 +94,7 @@ export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
   ctx.beginPath();
   ctx.rect(x, y, w, h);
   ctx.clip();
-  ctx.fillStyle = color;
+  ctx.fillStyle = mix(color, 0, 0.22);   // a touch dimmer than the element colour
   ctx.fillRect(x, y, w, h);
   if (brushed) {
     ctx.globalCompositeOperation = 'overlay';
@@ -110,9 +110,12 @@ export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
   ctx.restore();
   ctx.save();
   const g = vertical ? ctx.createLinearGradient(x, 0, x + w, 0) : ctx.createLinearGradient(0, y, 0, y + h);
-  g.addColorStop(0, 'rgba(255,255,255,0.35)');
-  g.addColorStop(0.45, 'rgba(255,255,255,0)');
-  g.addColorStop(1, 'rgba(0,0,0,0.25)');
+  // Pressed in: shade on the top edge, a thin light catch on the bottom edge
+  g.addColorStop(0, 'rgba(0,0,0,0.55)');
+  g.addColorStop(0.3, 'rgba(0,0,0,0.12)');
+  g.addColorStop(0.6, 'rgba(0,0,0,0)');
+  g.addColorStop(0.85, 'rgba(255,255,255,0.08)');
+  g.addColorStop(1, 'rgba(255,255,255,0.35)');
   ctx.fillStyle = g;
   ctx.fillRect(x, y, w, h);
   ctx.restore();

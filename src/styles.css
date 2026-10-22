@@ -5248,13 +5248,17 @@ th[aria-sort='descending'] .th-btn {
 .slot__btn::before,
 .detail::before {
   /* Brushed metal tinted with the element colour */
-  background-color: var(--el);
+  /* Slightly dimmed, and pressed in: shade along the top edge, a thin light
+     catch along the bottom, like a groove cut into the card. */
+  background-color: color-mix(in srgb, var(--el) 78%, #000);
   background-image:
     var(--metal-tex, none),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 45%, rgba(0, 0, 0, 0.25));
+    linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 50%, rgba(255, 255, 255, 0.12));
   background-size: 300px 100%, 100% 100%;
   background-blend-mode: overlay, normal;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    inset 0 2px 2px -1px rgba(0, 0, 0, 0.6),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.28);
 }
 .char-tile__art {
   border-bottom: 0;
