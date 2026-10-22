@@ -1,7 +1,7 @@
 // Portrait backdrops for the export cards: the character's element colour
-// plus a light pattern that matches their Arc type.
-//   Liquid: bubbles · Gas: drifting swirls · Solid: crystal facets
-//   Plasma: lightning · Condensate: frost stars
+// plus a faded pattern that matches their Arc type, like the Arc list banners.
+//   Solid: crystal sheen · Liquid: gloss and bubbles · Gas: wind haze
+//   Plasma: fine filaments · Condensate: rings
 // Patterns are drawn by code (no images) and are the same every time for a
 // character, so a card exported twice looks identical.
 
@@ -38,195 +38,154 @@ function spots(rand, x, y, w, h, n) {
   return out;
 }
 
-function bubbles(ctx, rand, x, y, w, h, col, u) {
-  for (const [px, py] of spots(rand, x, y, w, h, 26)) {
-    const r = u * (0.025 + rand() ** 2 * 0.09);
-    ctx.beginPath();
-    ctx.arc(px, py, r, 0, Math.PI * 2);
-    ctx.fillStyle = hexA(col, 0.10);
-    ctx.fill();
-    ctx.lineWidth = Math.max(1.2, r * 0.09);
-    ctx.strokeStyle = hexA(col, 0.55);
-    ctx.stroke();
-    // Shine
-    ctx.beginPath();
-    ctx.arc(px - r * 0.3, py - r * 0.3, r * 0.5, Math.PI * 1.05, Math.PI * 1.55);
-    ctx.lineWidth = Math.max(1.2, r * 0.12);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
-    ctx.stroke();
-  }
-}
-
-function swirls(ctx, rand, x, y, w, h, col, u) {
-  ctx.lineCap = 'round';
-  for (const [px, py] of spots(rand, x, y, w, h, 13)) {
-    const r = u * (0.05 + rand() * 0.08);
-    const turns = 1.4 + rand() * 0.8;
-    const dir = rand() < 0.5 ? 1 : -1;
-    const start = rand() * Math.PI * 2;
-    ctx.beginPath();
-    for (let t = 0; t <= 1.0001; t += 0.02) {
-      const a = start + dir * t * turns * Math.PI * 2;
-      const rr = r * (0.15 + t);
-      const qx = px + Math.cos(a) * rr;
-      const qy = py + Math.sin(a) * rr * 0.8;
-      if (t === 0) ctx.moveTo(qx, qy); else ctx.lineTo(qx, qy);
+// Patterns in the style of the Arc list banners (Arcs page), as flat line
+// work drawn onto a separate layer that is then faded and masked out of the
+// middle, so the character always reads first.
+const TYPE_PATTERNS = {
+  // Crystal facets: broad sheen bands at a few angles
+  solid(ctx, rand, x, y, w, h) {
+    const band = (ang, at, width, a) => {
+      ctx.save();
+      ctx.translate(x + w / 2, y + h / 2);
+      ctx.rotate(ang);
+      const d = Math.hypot(w, h);
+      ctx.fillStyle = `rgba(255, 255, 255, ${a})`;
+      ctx.fillRect(-d / 2 + at * d, -d / 2, width * d, d);
+      ctx.restore();
+    };
+    band(-0.78, 0.0, 0.16, 0.5);
+    band(-0.78, 0.38, 0.12, 0.3);
+    band(0.84, 0.58, 0.12, 0.35);
+    band(-1.2, 0.74, 0.08, 0.3);
+    band(0.4, 0.86, 0.06, 0.25);
+  },
+  // Water: glossy highlight from the top and a few soft bubbles
+  liquid(ctx, rand, x, y, w, h) {
+    const u = Math.max(w, h);
+    const g = ctx.createRadialGradient(x + w / 2, y - h * 0.25, 0, x + w / 2, y - h * 0.25, u * 0.7);
+    g.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
+    g.addColorStop(0.6, 'rgba(255, 255, 255, 0.18)');
+    g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x, y, w, h);
+    for (const [px, py] of spots(rand, x, y, w, h, 14)) {
+      const r = u * (0.02 + rand() ** 2 * 0.07);
+      ctx.beginPath();
+      ctx.arc(px, py, r, 0, Math.PI * 2);
+      ctx.lineWidth = Math.max(1.5, r * 0.1);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.stroke();
     }
-    // Trailing wisp off the swirl
-    const a = start + dir * turns * Math.PI * 2;
-    ctx.quadraticCurveTo(px + Math.cos(a) * r * 2.2, py + Math.sin(a) * r * 0.6, px + Math.cos(a) * r * 3.2 + r, py + Math.sin(a) * r * 1.2);
-    ctx.lineWidth = Math.max(2, u * 0.009);
-    ctx.strokeStyle = hexA(col, 0.7);
-    ctx.stroke();
-  }
-  // Long drifting streams
-  for (let i = 0; i < 5; i++) {
-    const yy = y + h * (0.1 + rand() * 0.8);
-    ctx.beginPath();
-    ctx.moveTo(x - 10, yy);
-    ctx.bezierCurveTo(x + w * 0.3, yy - h * 0.12 * (rand() - 0.5) * 2, x + w * 0.7, yy + h * 0.15 * (rand() - 0.5) * 2, x + w + 10, yy - h * 0.05);
-    ctx.lineWidth = Math.max(1.2, u * 0.005);
-    ctx.strokeStyle = hexA(col, 0.4);
-    ctx.stroke();
-  }
-}
-
-function crystals(ctx, rand, x, y, w, h, col, u) {
-  ctx.lineJoin = 'round';
-  for (const [px, py] of spots(rand, x, y, w, h, 16)) {
-    const s = u * (0.04 + rand() * 0.09);
-    const rot = (rand() - 0.5) * 0.9;
-    const tall = 1.6 + rand() * 0.8;
-    ctx.save();
-    ctx.translate(px, py);
-    ctx.rotate(rot);
-    // Shard: a long hexagon with a centre facet line
-    const pts = [[0, -s * tall], [s * 0.5, -s * 0.5], [s * 0.5, s * 0.7], [0, s * tall * 0.7], [-s * 0.5, s * 0.7], [-s * 0.5, -s * 0.5]];
-    ctx.beginPath();
-    pts.forEach(([a, b], i) => (i ? ctx.lineTo(a, b) : ctx.moveTo(a, b)));
-    ctx.closePath();
-    ctx.fillStyle = hexA(col, 0.12);
-    ctx.fill();
-    ctx.lineWidth = Math.max(1.2, s * 0.06);
-    ctx.strokeStyle = hexA(col, 0.55);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, -s * tall);
-    ctx.lineTo(0, s * tall * 0.7);
-    ctx.moveTo(-s * 0.5, -s * 0.5);
-    ctx.lineTo(0, -s * 0.15);
-    ctx.lineTo(s * 0.5, -s * 0.5);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
-    ctx.stroke();
-    ctx.restore();
-  }
-}
-
-function lightning(ctx, rand, x, y, w, h, col, u) {
-  ctx.lineJoin = 'miter';
-  ctx.lineCap = 'round';
-  const bolt = (sx, sy, len, ang, width, depth) => {
-    let cx = sx;
-    let cy = sy;
-    const steps = 5 + Math.floor(rand() * 3);
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    for (let i = 0; i < steps; i++) {
-      const a = ang + (rand() - 0.5) * 1.2;
-      cx += Math.cos(a) * (len / steps);
-      cy += Math.sin(a) * (len / steps);
-      ctx.lineTo(cx, cy);
-      if (depth && rand() < 0.3) {
-        ctx.stroke();
-        bolt(cx, cy, len * 0.4, a + (rand() < 0.5 ? 0.7 : -0.7), width * 0.6, 0);
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-      }
+  },
+  // Wind: soft white haze clouds
+  gas(ctx, rand, x, y, w, h) {
+    const u = Math.max(w, h);
+    for (const [cx, cy, rx] of [[0.12, 0.7, 0.42], [0.52, 0.08, 0.38], [0.92, 0.85, 0.45], [0.95, 0.25, 0.3], [0.05, 0.15, 0.3]]) {
+      const g = ctx.createRadialGradient(x + cx * w, y + cy * h, 0, x + cx * w, y + cy * h, rx * u);
+      g.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+      g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(x, y, w, h);
     }
-    ctx.lineWidth = width * 3;
-    ctx.strokeStyle = hexA(col, 0.25);
-    ctx.stroke();
-    ctx.lineWidth = width;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
-    ctx.stroke();
-    ctx.lineWidth = width * 0.6;
-    ctx.strokeStyle = hexA(col, 0.9);
-    ctx.stroke();
-  };
-  for (const [px, py] of spots(rand, x, y, w, h, 10)) {
-    bolt(px, py, u * (0.16 + rand() * 0.16), Math.PI / 2 + (rand() - 0.5) * 1.4, Math.max(2, u * 0.008), 1);
-  }
-  // Sparks
-  for (const [px, py] of spots(rand, x, y, w, h, 22)) {
-    const r = u * (0.004 + rand() * 0.008);
-    ctx.beginPath();
-    ctx.arc(px, py, r, 0, Math.PI * 2);
-    ctx.fillStyle = hexA(col, 0.7);
-    ctx.fill();
-  }
-}
-
-function frost(ctx, rand, x, y, w, h, col, u) {
-  ctx.lineCap = 'round';
-  for (const [px, py] of spots(rand, x, y, w, h, 16)) {
-    const r = u * (0.025 + rand() ** 2 * 0.07);
-    const rot = rand() * Math.PI;
-    ctx.save();
-    ctx.translate(px, py);
-    ctx.rotate(rot);
-    ctx.beginPath();
-    for (let k = 0; k < 6; k++) {
-      const a = (k * Math.PI) / 3;
-      const ex = Math.cos(a) * r;
-      const ey = Math.sin(a) * r;
-      ctx.moveTo(0, 0);
-      ctx.lineTo(ex, ey);
-      // little branches
-      for (const f of [0.5, 0.75]) {
-        const bx = Math.cos(a) * r * f;
-        const by = Math.sin(a) * r * f;
-        const bl = r * 0.28 * (1.1 - f);
-        ctx.moveTo(bx, by);
-        ctx.lineTo(bx + Math.cos(a + 0.8) * bl, by + Math.sin(a + 0.8) * bl);
-        ctx.moveTo(bx, by);
-        ctx.lineTo(bx + Math.cos(a - 0.8) * bl, by + Math.sin(a - 0.8) * bl);
-      }
+    ctx.lineCap = 'round';
+    for (let i = 0; i < 6; i++) {
+      const yy = y + h * (0.08 + i * 0.17 + rand() * 0.05);
+      ctx.beginPath();
+      ctx.moveTo(x - 10, yy);
+      ctx.bezierCurveTo(x + w * 0.3, yy - h * 0.08, x + w * 0.6, yy + h * 0.08, x + w + 10, yy - h * 0.03);
+      ctx.lineWidth = Math.max(1.5, u * 0.004);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.stroke();
     }
-    ctx.lineWidth = Math.max(1.2, r * 0.08);
-    ctx.strokeStyle = hexA(col, 0.6);
-    ctx.stroke();
-    ctx.restore();
-  }
-  // Fine frost dots
-  for (const [px, py] of spots(rand, x, y, w, h, 30)) {
+  },
+  // Electric filaments: fine diagonal lines with a glow at one side
+  plasma(ctx, rand, x, y, w, h) {
+    const u = Math.max(w, h);
+    const g = ctx.createRadialGradient(x + w, y + h / 2, 0, x + w, y + h / 2, u * 0.6);
+    g.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+    g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x, y, w, h);
+    const step = u * 0.055;
+    ctx.lineWidth = Math.max(1.2, u * 0.0035);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
     ctx.beginPath();
-    ctx.arc(px, py, u * (0.003 + rand() * 0.004), 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-    ctx.fill();
-  }
-}
-
-const PATTERNS = { liquid: bubbles, gas: swirls, solid: crystals, plasma: lightning, condensate: frost };
+    for (let k = -h; k < w + h; k += step) {
+      ctx.moveTo(x + k, y + h);
+      ctx.lineTo(x + k + h * 0.53, y);
+    }
+    ctx.stroke();
+  },
+  // Rings radiating from one side
+  condensate(ctx, rand, x, y, w, h) {
+    const u = Math.max(w, h);
+    const cx = x + w * 0.9;
+    const cy = y + h * 0.5;
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, u * 0.55);
+    g.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+    g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x, y, w, h);
+    ctx.lineWidth = Math.max(1.5, u * 0.006);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    for (let r = u * 0.05; r < u * 1.1; r += u * 0.045) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  },
+};
 
 /**
- * Fills a rounded box with the element-coloured backdrop and the Arc-type
- * pattern. Draw the character portrait on top afterwards.
+ * Fills a rounded box with the element-coloured backdrop and a faded
+ * Arc-type pattern. Draw the character portrait on top afterwards.
  */
 export function drawPortraitBackdrop(ctx, { x, y, w, h, r = 22, color, arcType, seed = '' }) {
   ctx.save();
   ctx.beginPath();
   ctx.roundRect(x, y, w, h, r);
   ctx.clip();
-  // Base: element colour fading to charcoal toward the corners
+  // Base: element colour, deeper toward the corners
   ctx.fillStyle = '#16171c';
   ctx.fillRect(x, y, w, h);
   const glow = ctx.createRadialGradient(x + w / 2, y + h * 0.45, 10, x + w / 2, y + h / 2, Math.max(w, h) * 0.8);
-  glow.addColorStop(0, hexA(color, 0.55));
-  glow.addColorStop(0.55, hexA(color, 0.22));
-  glow.addColorStop(1, hexA(color, 0.05));
+  glow.addColorStop(0, hexA(color, 0.5));
+  glow.addColorStop(0.6, hexA(color, 0.26));
+  glow.addColorStop(1, hexA(color, 0.12));
   ctx.fillStyle = glow;
   ctx.fillRect(x, y, w, h);
-  const draw = PATTERNS[String(arcType || '').toLowerCase()];
-  if (draw) draw(ctx, rng(`${seed}:${arcType}`), x, y, w, h, color, Math.max(w, h));
+
+  const draw = TYPE_PATTERNS[String(arcType || '').toLowerCase()];
+  if (draw && typeof document !== 'undefined') {
+    // Pattern on its own layer at the card's pixel scale
+    const t = ctx.getTransform();
+    const k = Math.hypot(t.a, t.b) || 1;
+    const layer = document.createElement('canvas');
+    layer.width = Math.ceil(w * k);
+    layer.height = Math.ceil(h * k);
+    const lc = layer.getContext('2d');
+    lc.scale(k, k);
+    draw(lc, rng(`${seed}:${arcType}`), 0, 0, w, h);
+    // Tint the white line work toward the element colour
+    lc.globalCompositeOperation = 'source-atop';
+    lc.fillStyle = hexA(color, 0.35);
+    lc.fillRect(0, 0, w, h);
+    // Fade it out of the middle, where the character is
+    lc.globalCompositeOperation = 'destination-in';
+    const m = lc.createRadialGradient(w / 2, h * 0.45, Math.min(w, h) * 0.18, w / 2, h * 0.5, Math.max(w, h) * 0.72);
+    m.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
+    m.addColorStop(1, 'rgba(0, 0, 0, 1)');
+    lc.fillStyle = m;
+    lc.fillRect(0, 0, w, h);
+    ctx.globalAlpha = 0.32;
+    ctx.drawImage(layer, x, y, w, h);
+    ctx.globalAlpha = 1;
+  }
+  // Soft dark halo right behind the character so they stand out
+  const halo = ctx.createRadialGradient(x + w / 2, y + h * 0.55, 0, x + w / 2, y + h * 0.55, Math.max(w, h) * 0.55);
+  halo.addColorStop(0, 'rgba(10, 11, 16, 0.28)');
+  halo.addColorStop(1, 'rgba(10, 11, 16, 0)');
+  ctx.fillStyle = halo;
+  ctx.fillRect(x, y, w, h);
   ctx.restore();
 }
