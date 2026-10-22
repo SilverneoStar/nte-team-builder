@@ -105,7 +105,7 @@ export const CHARACTERS = [
   },
   {
     id: 'akane', name: 'Akane Rin', rarity: 'S', version: '1.4', element: 'lakshana', roles: ['Damage'],
-    arcType: 'Liquid', faction: 'Tamamochi Street Resident Association', ability: null,
+    arcType: 'Liquid', faction: 'StarSign', ability: 'Unwritten Star',
     tags: ['Main DPS'], stats: null,
   },
   // Version 1.5 drip-marketing reveals. Arc type and kit not published yet.
