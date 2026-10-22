@@ -5336,12 +5336,19 @@ th[aria-sort='descending'] .th-btn {
 }
 .char-tile__info .char-tile__name {
   height: 100%;
-  container-type: inline-size;
+  /* Width of the name cell, used to shrink long names (no container
+     queries: those made the Characters tab slow to open on phones). */
+  --cell: 84px;
+}
+@media (max-width: 639.98px) {
+  .char-tile__info .char-tile__name {
+    --cell: calc((100vw - 48px) / 3 - 54px);
+  }
 }
 /* One line, shrunk to fit its cell */
 .char-tile__info .char-tile__name > span {
   white-space: nowrap;
-  font-size: min(0.84rem, calc(100cqi / (var(--len) * 0.6)));
+  font-size: min(0.84rem, calc(var(--cell) / (var(--len) * 0.6)));
 }
 .char-tile__info .char-tile__roles .role-list {
   align-items: center;
@@ -5442,4 +5449,11 @@ th[aria-sort='descending'] .th-btn {
   border-color: var(--el);
   background: color-mix(in srgb, var(--el) 22%, var(--surface-2));
   color: var(--fg);
+}
+
+/* Long lists: skip drawing cards that are off screen until scrolled to */
+.arc-grid > li,
+.ach-list > li {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 240px;
 }
