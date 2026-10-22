@@ -6,6 +6,7 @@ import { CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
 import CartridgeIcon from './CartridgeIcon.jsx';
 import MaxStats from './MaxStats.jsx';
 import EndgameStats from './EndgameStats.jsx';
+import FocusStats from './FocusStats.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
 import { MAX_STATS } from '../data/maxStats.js';
 import ElementGlyph from './ElementGlyph.jsx';
@@ -147,13 +148,11 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   );
   const stats = (
     <div className="stats">
-      {MAX_STATS[c.id] ? (
+      {/* Only real in-game values; until then, the stats to chase. */}
+      {MAX_STATS[c.id] && !MAX_STATS[c.id].fromPeers ? (
         <MaxStats stats={MAX_STATS[c.id]} />
       ) : (
-        <>
-          <h3 className="mini-title">Stats</h3>
-          <p className="muted">Level 80 stats not added yet.</p>
-        </>
+        <FocusStats character={c} />
       )}
       <EndgameStats character={c} />
     </div>

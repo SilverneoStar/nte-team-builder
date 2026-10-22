@@ -632,7 +632,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   // ---- Key attributes: Level 80 base (when known) plus what the build adds ----
   const extra = bonusStats(build.arc && build.arcState === 'Equipped' ? build.arc : null, build.cartStats,
     consoleStats(c.id, build.pieces, build.cartridge));
-  const ms = MAX_STATS[c.id];
+  // Estimates from other characters aren't shown; only real in-game values.
+  const ms = MAX_STATS[c.id]?.fromPeers ? null : MAX_STATS[c.id];
   let stats = extra;
   if (ms) {
     const take = (stat) => {
