@@ -5286,3 +5286,28 @@ th[aria-sort='descending'] .th-btn {
   pointer-events: none;
 }
 .slot__btn { padding-top: 17px; }
+
+/* Character tile info block: even spacing all round, compact role text */
+.char-tile {
+  padding-bottom: 0;
+  gap: 0;
+  align-content: start;
+}
+.char-tile__info {
+  padding: 9px 10px 10px 11px;
+  column-gap: 8px;
+  row-gap: 5px;
+}
+.char-tile__info .char-tile__roles {
+  font-size: clamp(0.6rem, 2.7vw, 0.68rem);
+}
+.char-tile__info .char-tile__roles .role-list {
+  min-height: 0;
+  gap: 1px;
+  line-height: 1.3;
+}
+.char-tile__info .char-tile__roles .role-list img,
+.char-tile__info .char-tile__roles .role-list svg {
+  width: 11px;
+  height: 11px;
+}
