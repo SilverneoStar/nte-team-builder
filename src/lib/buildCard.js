@@ -2,6 +2,7 @@
 // Character Guide screen: portrait on the left, a header strip with the
 // Console bonus, build stats / Arc / Cartridge panels, and a Console
 // Development panel with current and recommended modules plus the grid.
+import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess, arcTag } from '../data/arcs.js';
@@ -503,7 +504,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   const elColor = EL[c.element] ?? K.pink;
   const alt = build.alternatives ?? { arc: null, cartridges: [] };
   const [altArcArt, ...altCartImgs] = await Promise.all([
-    alt.arc ? loadImage(`${base}arcs/${alt.arc.id}.webp`) : null,
+    alt.arc ? loadArcArt(base, alt.arc.id, 256) : null,
     ...alt.cartridges.map((id) => loadImage(`${base}icons/cartridges/${id}.webp`)),
   ]);
   const [portrait, elIcon, cartImg, recCartImg, arcImg, arcArt] = await Promise.all([
@@ -513,7 +514,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     build.cartridge ? loadImage(`${base}icons/cartridges/${build.cartridge}.webp`) : null,
     build.recommended ? loadImage(`${base}icons/cartridges/${build.recommended.cartridge}.webp`) : null,
     build.arc ? loadImage(`${base}icons/arc-types/${build.arc.type.toLowerCase()}.webp`) : null,
-    build.arc ? loadImage(`${base}arcs/hd/${build.arc.id}.webp`) : null,
+    build.arc ? loadArcArt(base, build.arc.id, 512) : null,
   ]);
 
   const roleIcons = await loadRoleIcons(base, c.roles);

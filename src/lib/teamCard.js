@@ -1,5 +1,6 @@
 // Draws a shareable team card on a canvas. No libraries: plain Canvas 2D,
 // so the image looks the same in every browser and works offline.
+import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { loadPatterns, paintBackdrop, setPortraitShadow } from './arcPattern.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
@@ -582,7 +583,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   );
   const arcArtIds = grid ? [...new Set(team.members.map((id) => id && loadoutOf(team, id).arc).filter(Boolean))] : [];
   const arcArts = Object.fromEntries(
-    await Promise.all(arcArtIds.map(async (id) => [id, await loadImage(`${base}arcs/${id}.webp`)])),
+    await Promise.all(arcArtIds.map(async (id) => [id, await loadArcArt(base, id, 256)])),
   );
   const cartIcons = Object.fromEntries(
     await Promise.all(cartIds.map(async (id) => [id, await loadImage(`${base}icons/cartridges/${id}.webp`)])),

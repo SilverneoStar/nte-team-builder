@@ -2,6 +2,7 @@
 // the profile header. Four panels: Cartridges (best + alternative, with set
 // bonuses), Stats & Console (stat priority, module bonus, awakening order),
 // Arcs (best, then premium / battle pass / free picks) and Teams.
+import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
@@ -241,8 +242,8 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     c.arcType ? loadImage(`${base}icons/arc-types/${c.arcType.toLowerCase()}.webp`) : null,
     bestCart ? loadImage(`${base}icons/cartridges/${bestCart}.webp`) : null,
     altCart ? loadImage(`${base}icons/cartridges/${altCart}.webp`) : null,
-    arcs.best ? loadImage(`${base}arcs/${arcs.best.id}.webp`) : null,
-    ...arcs.more.map((m) => loadImage(`${base}arcs/${m.arc.id}.webp`)),
+    arcs.best ? loadArcArt(base, arcs.best.id, 256) : null,
+    ...arcs.more.map((m) => loadArcArt(base, m.arc.id, 256)),
     ...mates.map((id) => loadImage(`${base}characters/${portraitPath(id)}`)),
   ]);
   const moreImgs = rest.slice(0, arcs.more.length);

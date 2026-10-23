@@ -1,6 +1,7 @@
 // Character teams card: a tall (4:5) image for one character. Left column:
 // portrait and recommended build. Right column: the featured teams they're in,
 // with each team's reactions. Shared from the character page's "Featured in".
+import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
@@ -152,8 +153,8 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
     loadImage(`${base}characters/hd/${portraitPath(c.id)}`),
     loadImage(`${base}icons/elements/${c.element}.webp`),
     loadImage(`${base}mascot.svg`),
-    arc ? loadImage(`${base}arcs/${arc.id}.webp`) : null,
-    alt.arc ? loadImage(`${base}arcs/${alt.arc.id}.webp`) : null,
+    arc ? loadArcArt(base, arc.id, 256) : null,
+    alt.arc ? loadArcArt(base, alt.arc.id, 256) : null,
     best?.cartridge ? loadImage(`${base}icons/cartridges/${best.cartridge}.webp`) : null,
     ...alt.cartridges.map((id) => loadImage(`${base}icons/cartridges/${id}.webp`)),
     ...mates.map((id) => loadImage(`${base}characters/${portraitPath(id)}`)),

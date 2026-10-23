@@ -1,6 +1,7 @@
 // Draws a shareable "materials to farm" card for one character: everything
 // needed to ascend them to Lv 80 and max their skills, grouped by where each
 // material is farmed. Same look as the build card (charcoal panels, silver frame).
+import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { farmList } from '../data/farmList.js';
@@ -407,7 +408,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
 
   const names = [...new Set(Object.values(groups).flatMap((g) => g.items.map((i) => i.name)))];
   const [art, typeIcon, ...rest] = await Promise.all([
-    loadImage(`${base}arcs/hd/${arc.id}.webp`),
+    loadArcArt(base, arc.id, 512),
     loadImage(`${base}icons/arc-types/${arc.type.toLowerCase()}.webp`),
     ...names.map((n) => (materialIconUrl(n) ? loadImage(materialIconUrl(n)) : null)),
     ...users.map((c) => loadImage(`${base}characters/${portraitPath(c.id)}`)),
