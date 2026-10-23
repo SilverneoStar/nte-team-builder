@@ -5457,3 +5457,76 @@ th[aria-sort='descending'] .th-btn {
   content-visibility: auto;
   contain-intrinsic-size: auto 240px;
 }
+
+/* ---- Arc player (ArcPlayer.jsx): flat 2D Arc with its type disc ---- */
+.arc-player {
+  position: relative;
+  display: block;
+  aspect-ratio: 680 / 600;
+  width: 100%;
+  contain: layout paint;
+}
+.arc-player > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Disc: turns about the hub (420, 366 in the 680 x 600 frame) */
+.arc-player__disc {
+  transform-origin: 61.76% 61%;
+}
+.arc-player.is-spinning .arc-player__disc {
+  will-change: transform;
+  animation: arc-spin 6s linear infinite;
+}
+@keyframes arc-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arc-player.is-spinning .arc-player__disc { animation: none; }
+}
+/* Artwork sits in the window: 300 x 300 at (86, 62), bottom-right corner cut */
+.arc-player__art {
+  position: absolute;
+  left: 12.647%;
+  top: 10.333%;
+  width: 44.118%;
+  height: 50%;
+  overflow: hidden;
+  border-radius: 3.3% 0 0 3.3%;
+  clip-path: polygon(0 0, 100% 0, 100% 84.67%, 84.67% 100%, 0 100%);
+  background: #171a22;
+}
+.arc-player__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.arc-player__art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 35%, transparent 75%, rgba(255, 255, 255, 0.06));
+  pointer-events: none;
+}
+/* Arcs list: small still player beside the stats */
+.arc-card__body {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+/* Arc page header: the player, spinning */
+.arc-detail__art {
+  width: 150px;
+  height: auto;
+}
+.arc-detail__art .arc-player {
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+}
+@media (max-width: 639.98px) {
+  .arc-detail__art { width: 104px; height: auto; }
+  .arc-card__body { grid-template-columns: 80px minmax(0, 1fr); }
+}

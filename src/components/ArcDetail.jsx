@@ -9,7 +9,7 @@ import {
   arcAscensionCost,
   arcAscensionTable,
 } from '../data/arcMaterials.js';
-import { arcImageUrl } from '../lib/icons.js';
+import ArcPlayer from './ArcPlayer.jsx';
 import { renderArcFarmCard } from '../lib/farmCard.js';
 import ExportDialog from './ExportDialog.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
@@ -244,7 +244,7 @@ export default function ArcDetail({ arc: a, onClose }) {
           {NO_ART.has(a.id) ? (
             <ArcTypeIcon type={a.type} size={56} />
           ) : (
-            <img src={arcImageUrl(a.id)} srcSet={`${arcImageUrl(a.id)} 2x, ${arcImageUrl(a.id).replace('/arcs/', '/arcs/hd/')} 4x`} alt="" width="128" height="128" />
+            <ArcPlayer arc={a} spin />
           )}
         </div>
         <div className="detail__title">

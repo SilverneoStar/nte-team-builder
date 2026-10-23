@@ -8,6 +8,7 @@ import Portrait from './Portrait.jsx';
 import MoreList from './MoreList.jsx';
 import RankBadge from './RankBadge.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
+import ArcPlayer from './ArcPlayer.jsx';
 import StatText from './StatText.jsx';
 
 const RANKS = ['S', 'A', 'B'];
@@ -132,10 +133,13 @@ export default function ArcsPage({ arcType, arcId }) {
                   <h3 className="arc-card__name"><a href={`#arc-${a.id}`}>{a.name}</a></h3>
                   {type === 'all' && <span className="arc-card__type"><ArcTypeIcon type={a.type} size={16} />{a.type}</span>}
                 </div>
-                <dl className="gear-stats">
-                  <div><dt>Base ATK</dt><dd>{a.atk}</dd></div>
-                  <div><dt>Secondary</dt><dd>{a.sub}</dd></div>
-                </dl>
+                <div className="arc-card__body">
+                  <ArcPlayer arc={a} />
+                  <dl className="gear-stats">
+                    <div><dt>Base ATK</dt><dd>{a.atk}</dd></div>
+                    <div><dt>Secondary</dt><dd>{a.sub}</dd></div>
+                  </dl>
+                </div>
                 <p className="arc-card__passive"><StatText>{a.passive}</StatText></p>
                 {FIELD_EFFECTS[a.id] && <p className="arc-card__field">Outside combat: {FIELD_EFFECTS[a.id].name}</p>}
                 {(sig || recs.length > 0) && (
