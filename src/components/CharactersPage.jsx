@@ -34,7 +34,7 @@ const COLUMNS = [
     ['hp', 'HP'], ['atk', 'ATK'], ['critRate', 'CRIT Rate'], ['critDmg', 'CRIT DMG'],
     ['universal', 'Univ. DMG'], ['element', 'Elem. DMG'],
   ].map(([key, label]) => ({
-    id: `eg-${key}`, label, endgame: key, numeric: true, get: (c) => endgameNumber(ENDGAME[c.id]?.endgame[key]),
+    id: `eg-${key}`, label, endgame: key, numeric: true, get: (c) => endgameNumber(ENDGAME[c.id]?.endgame?.[key]),
   })),
   { id: 'other', label: 'Also', get: (c) => otherStats(c) || null },
 ];
@@ -285,7 +285,7 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                 <td className="cell-meta-arc">{c.arcType ? <span className="cell-el"><ArcTypeIcon type={c.arcType} size={16} />{c.arcType}</span> : '—'}</td>
                 {COLUMNS.filter((col) => col.endgame).map((col) => (
                   <td key={col.id} className="num cell-stat" data-label={col.label}>
-                    {ENDGAME[c.id]?.endgame[col.endgame]?.replace(/%?\s*~\s*/, '–') ?? '—'}
+                    {ENDGAME[c.id]?.endgame?.[col.endgame]?.replace(/%?\s*~\s*/, '–') ?? '—'}
                   </td>
                 ))}
                 <td className={`small cell-other${otherStats(c) ? '' : ' is-empty'}`}>{otherStats(c) || '—'}</td>
