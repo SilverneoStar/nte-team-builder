@@ -98,6 +98,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         <div>
           <dt>Recommended Cartridges</dt>
           <dd className="cart-list">
+            {cartridgesFor(c).length === 0 && <span className="muted">Not known yet</span>}
             {cartridgesFor(c).map((id) => (
               <span key={id} className="cart-list__item">
                 <CartridgeIcon id={id} size={22} />
@@ -112,7 +113,9 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
     <section className="detail__reacts">
       <h3 className="mini-title">Reacts with</h3>
       <p className="muted small">
-        {element.name} sits between {neighbours[0].name} and {neighbours[1].name} on the Esper Cycle.
+        {c.element === 'unknown'
+          ? 'Element not announced yet, so reactions are unknown.'
+          : `${element.name} sits between ${neighbours[0].name} and ${neighbours[1].name} on the Esper Cycle.`}
       </p>
       <ul className="detail__reactions">
         {reactions.map((r) => {
@@ -261,7 +264,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           <p className="eyebrow">
             <span className="eyebrow__meta">
               <ElementGlyph element={c.element} size={16} />
-              <span>{element.name} · <span className="nowrap">{c.rarity}-rank</span></span>
+              <span>{element.name} · <span className="nowrap">{c.rarity === '?' ? 'Rank unconfirmed' : `${c.rarity}-rank`}</span></span>
             </span>
             {c.version && <span className="eyebrow__ver">Ver {c.version}</span>}
             <RoleList roles={c.roles} size={14} />

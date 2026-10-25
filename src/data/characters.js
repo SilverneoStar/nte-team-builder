@@ -119,6 +119,19 @@ export const CHARACTERS = [
     arcType: null, faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
     tags: [], stats: null, upcoming: true,
   },
+  // Version 1.6 (expected): shown in the official 1.4 preview stream
+  // (Pukaland Fest) with voice actors and wallpapers. Kit leaks say Ellie deals
+  // Incantation DMG; Nitsa is an ETD reserve, element not known yet.
+  {
+    id: 'ellie', name: 'Ellie', rarity: '?', version: '1.6', element: 'incantation', roles: [],
+    arcType: null, faction: null, ability: null,
+    tags: [], stats: null, upcoming: true,
+  },
+  {
+    id: 'nitsa', name: 'Nitsa', rarity: '?', version: '1.6', element: 'unknown', roles: [],
+    arcType: null, faction: 'Bureau of Anomaly Control', unit: 'ETD Reserve', ability: null,
+    tags: [], stats: null, upcoming: true,
+  },
   // A-rank
   {
     id: 'adler', name: 'Adler', rarity: 'A', version: '1.0', element: 'incantation', roles: ['Survival'],

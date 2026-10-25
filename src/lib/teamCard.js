@@ -43,6 +43,7 @@ export const EL = {
   chaos: '#ad93f7',
   psyche: '#4fbcf3',
   lakshana: '#f3d03e',
+  unknown: '#9aa0ad',
 };
 
 // Short module stat labels that fit a small tile.

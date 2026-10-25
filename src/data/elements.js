@@ -11,7 +11,10 @@ export const ELEMENTS = [
   { id: 'lakshana', name: 'Lakshana', color: 'var(--el-lakshana)' },
 ];
 
-export const ELEMENT_BY_ID = Object.fromEntries(ELEMENTS.map((e) => [e.id, e]));
+// Upcoming characters whose element isn't confirmed use 'unknown'. It is not
+// in ELEMENTS, so it never shows in filters or the Esper Cycle.
+export const UNKNOWN_ELEMENT = { id: 'unknown', name: 'Unconfirmed', color: '#9aa0ad' };
+export const ELEMENT_BY_ID = { ...Object.fromEntries(ELEMENTS.map((e) => [e.id, e])), unknown: UNKNOWN_ELEMENT };
 
 // Pair reactions: one per neighbouring pair on the ring.
 // "kind" groups them the way the community describes them.
