@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://silverneostar.github.io/nte-team-builder/sitemap.xml
