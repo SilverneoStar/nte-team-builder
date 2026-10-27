@@ -27,6 +27,11 @@ jobs:
       - run: npm install
       # The site lives under /nte-team-builder/, so asset paths need that prefix.
       - run: npm run build -- --base=/nte-team-builder/
+      # File sizes of the built scripts and styles, shown as notes on the run.
+      - name: Report bundle sizes
+        run: |
+          cd dist/assets
+          for f in *.js *.css; do echo "::notice title=$f::$(stat -c%s "$f") bytes, $(gzip -c "$f" | wc -c) gzipped"; done
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
