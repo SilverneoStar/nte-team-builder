@@ -5,6 +5,12 @@ import { statParts } from '../lib/statText.js';
 export default function StatText({ children }) {
   if (typeof children !== 'string') return children ?? null;
   return statParts(children).map((p, i) =>
-    p.t === 'text' ? p.s : <b key={i} className={p.t === 'key' ? 'hl-key' : 'hl-num'}>{p.s}</b>,
+    p.t === 'text' ? (
+      p.s
+    ) : (
+      <b key={i} className={p.t === 'key' ? 'hl-key' : 'hl-num'}>
+        {p.s}
+      </b>
+    ),
   );
 }

@@ -4,7 +4,8 @@
 
 // Words that can sit in front of "DMG" as part of one stat name,
 // e.g. "Psyche Esper Ability DMG", "Basic Attack DMG", "Ultimate CRIT DMG".
-const MOD = '(?:Lakshana|Psyche|Cosmos|Anima|Chaos|Incantation|Mental|Esper|Ability|Basic|Attack|Redirect|Support|Skill|Ultimate|Critical|Riposte|Attach|Attachment|Boss|Universal|Break|DoT|Elemental)';
+const MOD =
+  '(?:Lakshana|Psyche|Cosmos|Anima|Chaos|Incantation|Mental|Esper|Ability|Basic|Attack|Redirect|Support|Skill|Ultimate|Critical|Riposte|Attach|Attachment|Boss|Universal|Break|DoT|Elemental)';
 const KEYWORDS = [
   `(?:${MOD} ){0,4}(?:CRIT|Crit) (?:DMG|Rate)`,
   `(?:${MOD} ){0,4}DMG(?: Bonus| dealt)?`,
@@ -44,7 +45,13 @@ export function statParts(text) {
  * Draws game text on a canvas with stat names and values in their own colours.
  * Truncates with "…" at maxWidth. Returns the drawn width.
  */
-export function fillStatText(ctx, text, x, y, { font, numFont = font, color, keyColor, numColor, maxWidth = Infinity }) {
+export function fillStatText(
+  ctx,
+  text,
+  x,
+  y,
+  { font, numFont = font, color, keyColor, numColor, maxWidth = Infinity },
+) {
   let cx = x;
   const align = ctx.textAlign;
   ctx.textAlign = 'left';

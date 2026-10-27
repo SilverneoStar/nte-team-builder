@@ -14,9 +14,22 @@ import { ARC_SOURCES, RECOMMENDED } from '../data/arcs.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
-  BODY, DISPLAY, EL, MONO, clipCard, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
-  drawBandBackdrop, goldCells,
-  loadRoleIcons, drawRoles, drawMascot
+  BODY,
+  DISPLAY,
+  EL,
+  MONO,
+  clipCard,
+  drawRank,
+  drawSilverFrame,
+  ensureFonts,
+  loadImage,
+  roundRect,
+  wrap,
+  drawBandBackdrop,
+  goldCells,
+  loadRoleIcons,
+  drawRoles,
+  drawMascot,
 } from './teamCard.js';
 import { drawLinksLine } from './cardLinks.js';
 import { fmt } from './format.js';
@@ -35,7 +48,11 @@ const K = {
 };
 
 // Diagonal pink bands behind the panels.
-const BANDS = [{ y: -60, h: 190, a: 1 }, { y: 380, h: 130, a: 0.6 }, { y: 800, h: 180, a: 0.8 }];
+const BANDS = [
+  { y: -60, h: 190, a: 1 },
+  { y: 380, h: 130, a: 0.6 },
+  { y: 800, h: 180, a: 0.8 },
+];
 
 // Tile accent per material kind (tiers read low → high like the game's rarity colours).
 const KIND = {
@@ -164,7 +181,11 @@ function consolePanel(ctx, x, y, w, h, build, cartImg) {
   ctx.fillText(`${build.pieces.length} modules`, mx, ty + 14);
   ctx.fillStyle = K.muted;
   ctx.font = `500 13px ${BODY}`;
-  ctx.fillText(`gold = counts for ${cart.name}`, mx + ctx.measureText(`${build.pieces.length} modules`).width + 40, ty + 14);
+  ctx.fillText(
+    `gold = counts for ${cart.name}`,
+    mx + ctx.measureText(`${build.pieces.length} modules`).width + 40,
+    ty + 14,
+  );
   const chipW = 64;
   const chipH = 62;
   const perRow = Math.max(1, Math.floor((mw + 10) / (chipW + 10)));
@@ -274,8 +295,11 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, px + 86, ly);
-  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly,
-    { font: `500 18px ${BODY}`, color: K.muted, size: 22 });
+  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly, {
+    font: `500 18px ${BODY}`,
+    color: K.muted,
+    size: 22,
+  });
 
   // What the totals cover
   ly += 44;
@@ -290,7 +314,12 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   ctx.fillText('TOTALS COVER', px + 18, ly);
   ctx.fillStyle = K.fg;
   ctx.font = `500 16px ${BODY}`;
-  const lines = ['Level cap 20 → 80 (6 ascensions)', '4 combat skills Lv 1 → 10', 'Both passives', 'Life skill Lv 1 → 5'];
+  const lines = [
+    'Level cap 20 → 80 (6 ascensions)',
+    '4 combat skills Lv 1 → 10',
+    'Both passives',
+    'Life skill Lv 1 → 5',
+  ];
   lines.forEach((t, i) => {
     ctx.fillStyle = K.pink;
     ctx.fillRect(px + 18, ly + 22 + i * 28 - 6, 6, 6);
@@ -349,9 +378,15 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   ctx.fillStyle = K.muted;
   ctx.fillText(
     'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games · Amounts may change with updates',
-    PAD, FARM_H - 30,
+    PAD,
+    FARM_H - 30,
   );
-  drawLinksLine(ctx, FARM_W - PAD, FARM_H - 30, { font: `500 13px ${BODY}`, color: K.muted, accent: K.fg, align: 'right' });
+  drawLinksLine(ctx, FARM_W - PAD, FARM_H - 30, {
+    font: `500 13px ${BODY}`,
+    color: K.muted,
+    accent: K.fg,
+    align: 'right',
+  });
 
   drawSilverFrame(ctx, FARM_W, FARM_H);
   return canvas;
@@ -478,7 +513,11 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
     ly += 30;
     ctx.fillStyle = K.pink;
     ctx.font = `700 13px ${MONO}`;
-    ctx.fillText(sig && recs.length ? 'SIGNATURE · RECOMMENDED FOR' : sig ? 'SIGNATURE ARC OF' : 'RECOMMENDED FOR', PAD, ly);
+    ctx.fillText(
+      sig && recs.length ? 'SIGNATURE · RECOMMENDED FOR' : sig ? 'SIGNATURE ARC OF' : 'RECOMMENDED FOR',
+      PAD,
+      ly,
+    );
     users.forEach((_, i) => {
       const d = 52;
       const x = PAD + i * (d + 12);
@@ -553,9 +592,15 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
   ctx.fillStyle = K.muted;
   ctx.fillText(
     'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games · Amounts may change with updates',
-    PAD, ARC_FARM_H - 28,
+    PAD,
+    ARC_FARM_H - 28,
   );
-  drawLinksLine(ctx, FARM_W - PAD, ARC_FARM_H - 28, { font: `500 13px ${BODY}`, color: K.muted, accent: K.fg, align: 'right' });
+  drawLinksLine(ctx, FARM_W - PAD, ARC_FARM_H - 28, {
+    font: `500 13px ${BODY}`,
+    color: K.muted,
+    accent: K.fg,
+    align: 'right',
+  });
 
   drawSilverFrame(ctx, FARM_W, ARC_FARM_H);
   return canvas;

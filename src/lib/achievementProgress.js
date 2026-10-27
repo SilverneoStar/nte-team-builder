@@ -46,7 +46,10 @@ export function useAchievementProgress() {
   }, []);
 
   const toggle = useCallback((id) => update((s) => (s.has(id) ? s.delete(id) : s.add(id))), [update]);
-  const setMany = useCallback((ids, value) => update((s) => ids.forEach((id) => (value ? s.add(id) : s.delete(id)))), [update]);
+  const setMany = useCallback(
+    (ids, value) => update((s) => ids.forEach((id) => (value ? s.add(id) : s.delete(id)))),
+    [update],
+  );
   const reset = useCallback(() => update((s) => s.clear()), [update]);
 
   return { done, toggle, setMany, reset };

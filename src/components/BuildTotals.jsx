@@ -56,7 +56,8 @@ export default function BuildTotals({ character: c }) {
           </div>
           <MatList items={arcCost} />
           <p className="muted small">
-            Lv 20 → {ARC_MAX_LEVEL} for {arc.signature === c.id ? 'their signature Arc' : 'their top recommended Arc'}. Other Arcs are on each Arc’s page.
+            Lv 20 → {ARC_MAX_LEVEL} for {arc.signature === c.id ? 'their signature Arc' : 'their top recommended Arc'}.
+            Other Arcs are on each Arc’s page.
           </p>
         </section>
       )}

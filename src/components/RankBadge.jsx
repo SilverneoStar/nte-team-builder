@@ -10,14 +10,7 @@ export default function RankBadge({ rank, size = 22 }) {
   const stops = GRADIENTS[rank] ?? ['#d7dbe4', '#a9b0bf', '#7d869a'];
   const id = `rank-grad-${rank}`;
   return (
-    <svg
-      className="rank-badge"
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      role="img"
-      aria-label={`${rank}-rank`}
-    >
+    <svg className="rank-badge" width={size} height={size} viewBox="0 0 32 32" role="img" aria-label={`${rank}-rank`}>
       <defs>
         <linearGradient id={id} x1="0.3" y1="0" x2="0.6" y2="1">
           <stop offset="0" stopColor={stops[0]} />
@@ -28,13 +21,7 @@ export default function RankBadge({ rank, size = 22 }) {
       <circle cx="16" cy="16" r="15" className="rank-badge__disc" />
       {/* Placed by the letters' measured ink box (italic glyphs sit off their
           advance width), so S, A and B are centred in the disc. */}
-      <text
-        x="8.5"
-        y="24"
-        textAnchor="start"
-        className="rank-badge__letter"
-        fill={`url(#${id})`}
-      >
+      <text x="8.5" y="24" textAnchor="start" className="rank-badge__letter" fill={`url(#${id})`}>
         {rank}
       </text>
     </svg>

@@ -23,8 +23,12 @@ export default function PickDialog({ slot, members, analysis, usage, onPick, onC
     <div className="dialog-backdrop dialog-backdrop--sheet" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="dialog dialog--sheet" role="dialog" aria-modal="true" aria-labelledby="pick-title">
         <header className="dialog__head">
-          <h2 id="pick-title" className="section-title">Add to slot {slot + 1}</h2>
-          <button ref={closeRef} className="btn btn--quiet" onClick={onClose}>Close</button>
+          <h2 id="pick-title" className="section-title">
+            Add to slot {slot + 1}
+          </h2>
+          <button ref={closeRef} className="btn btn--quiet" onClick={onClose}>
+            Close
+          </button>
         </header>
         <Roster members={members} analysis={analysis} usage={usage} onPick={onPick} />
       </div>

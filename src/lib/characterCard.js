@@ -16,8 +16,22 @@ import { alternativesFor, cartTile, drawOrb, statLabel } from './buildCard.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
-  BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap, fitLine,
-  loadRoleIcons, drawRoles, drawMascot
+  BODY,
+  DISPLAY,
+  EL,
+  MONO,
+  clipCard,
+  drawBandBackdrop,
+  drawRank,
+  drawSilverFrame,
+  ensureFonts,
+  loadImage,
+  roundRect,
+  wrap,
+  fitLine,
+  loadRoleIcons,
+  drawRoles,
+  drawMascot,
 } from './teamCard.js';
 
 export const CHAR_CARD_W = 1080;
@@ -36,7 +50,11 @@ const K = {
   num: '#ffc061',
   key: '#b9c3ff',
 };
-const BANDS = [{ y: -60, h: 190, a: 1 }, { y: 520, h: 130, a: 0.6 }, { y: 1100, h: 180, a: 0.8 }];
+const BANDS = [
+  { y: -60, h: 190, a: 1 },
+  { y: 520, h: 130, a: 0.6 },
+  { y: 1100, h: 180, a: 0.8 },
+];
 
 /** Presets this character is in: community teams first (their own named team leading), then kit ideas. */
 export function teamsFor(character) {
@@ -230,8 +248,17 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
       ctx.font = `700 12px ${MONO}`;
       ctx.fillStyle = K.muted;
       ctx.fillText('ALT', ix + 6, y);
-      iconLine(ctx, altArcArt, ix + 50, y, 26, alt.arc.name,
-        arcAccess(alt.arc.id) === 'pass' ? 'Battle pass' : 'Free', ix + iw, `600 16px ${BODY}`);
+      iconLine(
+        ctx,
+        altArcArt,
+        ix + 50,
+        y,
+        26,
+        alt.arc.name,
+        arcAccess(alt.arc.id) === 'pass' ? 'Battle pass' : 'Free',
+        ix + iw,
+        `600 16px ${BODY}`,
+      );
     }
   }
   if (best?.cartridge) {
@@ -274,9 +301,20 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   // Endgame targets: the four that matter most, as small tiles.
   const eg = ENDGAME[c.id]?.endgame;
   if (eg) {
-    const names = { critRate: 'CRIT Rate', critDmg: 'CRIT DMG', element: `${el.name} DMG`, atk: 'ATK', hp: 'HP',
-      universal: 'Universal DMG', break: 'Break Int.', cycle: 'Cycle Int.', def: 'DEF' };
-    const picks = Object.keys(names).filter((k) => eg[k]).slice(0, 4);
+    const names = {
+      critRate: 'CRIT Rate',
+      critDmg: 'CRIT DMG',
+      element: `${el.name} DMG`,
+      atk: 'ATK',
+      hp: 'HP',
+      universal: 'Universal DMG',
+      break: 'Break Int.',
+      cycle: 'Cycle Int.',
+      def: 'DEF',
+    };
+    const picks = Object.keys(names)
+      .filter((k) => eg[k])
+      .slice(0, 4);
     if (picks.length) {
       y += 46;
       ctx.font = `700 13px ${MONO}`;
@@ -387,7 +425,12 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
       ctx.font = `600 15px ${BODY}`;
       const need = ctx.measureText(ch.text).width + 24 + ch.dots.length * 11 + 6;
       if (cx + need > RX + COL - 20) break;
-      cx += chip(ctx, cx, cyChip, ch.text, { bg: ch.trio ? '#262c4a' : K.inset, fg: ch.trio ? K.key : K.fg, dots: ch.dots }) + 8;
+      cx +=
+        chip(ctx, cx, cyChip, ch.text, {
+          bg: ch.trio ? '#262c4a' : K.inset,
+          fg: ch.trio ? K.key : K.fg,
+          dots: ch.dots,
+        }) + 8;
     }
     ry += TH + 14;
   });
@@ -409,11 +452,15 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
     ctx.fillStyle = K.fg;
     const head = wrap(ctx, 'MAKE YOUR OWN TEAM', tw, 2);
     let ty = ry + h / 2 - (head.length * 32 + 56) / 2 + 26;
-    head.forEach((ln) => { ctx.fillText(ln, tx, ty); ty += 32; });
+    head.forEach((ln) => {
+      ctx.fillText(ln, tx, ty);
+      ty += 32;
+    });
     ctx.font = `500 16px ${BODY}`;
     ctx.fillStyle = K.label;
-    wrap(ctx, `Try ${c.name} with anyone in the Team Builder and see the reactions.`, tw, 3)
-      .forEach((ln, i) => ctx.fillText(ln, tx, ty + 6 + i * 22));
+    wrap(ctx, `Try ${c.name} with anyone in the Team Builder and see the reactions.`, tw, 3).forEach((ln, i) =>
+      ctx.fillText(ln, tx, ty + 6 + i * 22),
+    );
   }
   if (teams.length > MAX_TEAMS) {
     ctx.font = `500 16px ${BODY}`;
@@ -424,11 +471,21 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   // ---- Footer: links, then the legal line ----
   const linksFont = `500 15px ${BODY}`;
   const lw = measureLinksLine(ctx, { font: linksFont, iconSize: 15, gap: 22 });
-  drawLinksLine(ctx, (CHAR_CARD_W - lw) / 2, CHAR_CARD_H - 66, { font: linksFont, color: K.muted, accent: K.fg, iconSize: 15, gap: 22 });
+  drawLinksLine(ctx, (CHAR_CARD_W - lw) / 2, CHAR_CARD_H - 66, {
+    font: linksFont,
+    color: K.muted,
+    accent: K.fg,
+    iconSize: 15,
+    gap: 22,
+  });
   ctx.font = `400 13px ${BODY}`;
   ctx.fillStyle = K.muted;
   ctx.textAlign = 'center';
-  ctx.fillText('Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games', CHAR_CARD_W / 2, CHAR_CARD_H - 34);
+  ctx.fillText(
+    'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games',
+    CHAR_CARD_W / 2,
+    CHAR_CARD_H - 34,
+  );
   ctx.textAlign = 'left';
 
   drawSilverFrame(ctx, CHAR_CARD_W, CHAR_CARD_H);

@@ -75,7 +75,11 @@ const MATERIAL_ICONS = new Set([
 ]);
 
 export const materialSlug = (name) =>
-  name.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  name
+    .toLowerCase()
+    .replace(/['’]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 
 /** URL of a material's icon, or null when we don't have one yet. */
 export function materialIconUrl(name) {

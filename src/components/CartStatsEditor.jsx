@@ -32,17 +32,25 @@ function StatRow({ id, label, options, value, onChange }) {
   const pct = value && isPercentStat(value.stat);
   return (
     <div className={value ? 'cstat cstat--on' : 'cstat'}>
-      <label className="cstat__label" htmlFor={id}>{label}</label>
+      <label className="cstat__label" htmlFor={id}>
+        {label}
+      </label>
       <select
         id={id}
         value={value?.stat ?? ''}
         onChange={(e) => onChange(e.target.value ? { stat: e.target.value, value: value?.value ?? 0 } : null)}
       >
         <option value="">—</option>
-        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
       </select>
       <span className="cstat__value">
-        <label className="sr-only" htmlFor={`${id}-v`}>{label} value</label>
+        <label className="sr-only" htmlFor={`${id}-v`}>
+          {label} value
+        </label>
         <input
           id={`${id}-v`}
           type="number"
@@ -57,7 +65,9 @@ function StatRow({ id, label, options, value, onChange }) {
             onChange({ ...value, value: Math.round(n * 100) / 100 });
           }}
         />
-        <span className="cstat__unit" aria-hidden="true">{pct ? '%' : ''}</span>
+        <span className="cstat__unit" aria-hidden="true">
+          {pct ? '%' : ''}
+        </span>
       </span>
     </div>
   );

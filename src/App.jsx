@@ -83,7 +83,11 @@ export default function App() {
   return (
     <div className="app">
       <div className="backdrop" aria-hidden="true">
-        <span /><span /><span /><span /><span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
       </div>
       <header className="masthead">
         <div className="masthead__line" aria-hidden="true" />
@@ -114,11 +118,7 @@ export default function App() {
           </p>
           <label className="display-size">
             <span>Display size</span>
-            <select
-              id="display-size"
-              value={display.setting}
-              onChange={(e) => display.setSetting(e.target.value)}
-            >
+            <select id="display-size" value={display.setting} onChange={(e) => display.setSetting(e.target.value)}>
               {SCALE_OPTIONS.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.id === 'auto' ? `Auto (${Math.round(display.scale * 100)}%)` : o.label}
@@ -130,23 +130,23 @@ export default function App() {
       </header>
 
       <Suspense fallback={<PageLoading />}>
-      {route.view === 'characters' && (
-        <CharactersPage characterId={route.characterId} activeTeam={active} onAdd={addFromIndex} />
-      )}
+        {route.view === 'characters' && (
+          <CharactersPage characterId={route.characterId} activeTeam={active} onAdd={addFromIndex} />
+        )}
 
-      {route.view === 'arcs' && <ArcsPage arcType={route.arcType} arcId={route.arcId} />}
+        {route.view === 'arcs' && <ArcsPage arcType={route.arcType} arcId={route.arcId} />}
 
-      {route.view === 'achievements' && <AchievementsPage category={route.category} />}
+        {route.view === 'achievements' && <AchievementsPage category={route.category} />}
 
-      {route.view === 'console' && (
-        <ConsolePage
-          characterId={route.characterId}
-          activeTeam={active}
-          onEquip={(charId, patch) => dispatch({ type: 'setLoadout', charId, patch })}
-        />
-      )}
+        {route.view === 'console' && (
+          <ConsolePage
+            characterId={route.characterId}
+            activeTeam={active}
+            onEquip={(charId, patch) => dispatch({ type: 'setLoadout', charId, patch })}
+          />
+        )}
 
-      {route.view === 'glossary' && <GlossaryPage />}
+        {route.view === 'glossary' && <GlossaryPage />}
       </Suspense>
 
       {route.view === 'builder' && (
@@ -238,10 +238,10 @@ export default function App() {
       <footer className="foot">
         <SocialLinks />
         <p className="foot__notes">
-        Your teams are saved only in this browser on this device. Nobody else can see or change them.
-        Element reactions follow the Esper Cycle: each element reacts with its two neighbours.
-        Game data is compiled from community sources and may lag behind patches.
-        Neverness to Everness and all related content belong to Hotta Studio and Perfect World Games.
+          Your teams are saved only in this browser on this device. Nobody else can see or change them. Element
+          reactions follow the Esper Cycle: each element reacts with its two neighbours. Game data is compiled from
+          community sources and may lag behind patches. Neverness to Everness and all related content belong to Hotta
+          Studio and Perfect World Games.
         </p>
       </footer>
     </div>

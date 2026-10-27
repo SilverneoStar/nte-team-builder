@@ -56,7 +56,8 @@ export default function SwipeTabs({ slides, label }) {
     const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
     if (e.key === 'Home' || e.key === 'End' || step) {
       e.preventDefault();
-      const i = e.key === 'Home' ? 0 : e.key === 'End' ? slides.length - 1 : (active + step + slides.length) % slides.length;
+      const i =
+        e.key === 'Home' ? 0 : e.key === 'End' ? slides.length - 1 : (active + step + slides.length) % slides.length;
       go(i);
       tabsRef.current.children[i]?.focus();
     }
@@ -143,7 +144,9 @@ export default function SwipeTabs({ slides, label }) {
         ))}
       </div>
       <div className="swipe__dots" aria-hidden="true">
-        {slides.map((s, i) => <span key={s.id} className={i === active ? 'is-on' : undefined} />)}
+        {slides.map((s, i) => (
+          <span key={s.id} className={i === active ? 'is-on' : undefined} />
+        ))}
       </div>
     </div>
   );

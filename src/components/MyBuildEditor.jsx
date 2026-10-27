@@ -62,13 +62,32 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
   const consoleOptions = useMemo(() => {
     const out = [];
     const sug = suggestedBuild(c.id, build.cartridge);
-    if (sug) out.push({ id: 'suggested', label: `Suggested for ${CARTRIDGE_BY_ID[sug.cartridge].name}`, pieces: sug.pieces, cartridge: sug.cartridge });
+    if (sug)
+      out.push({
+        id: 'suggested',
+        label: `Suggested for ${CARTRIDGE_BY_ID[sug.cartridge].name}`,
+        pieces: sug.pieces,
+        cartridge: sug.cartridge,
+      });
     if (activeTeam?.members.includes(c.id)) {
       const lo = loadoutOf(activeTeam, c.id);
-      if (lo.console?.length) out.push({ id: 'team', label: `From team “${activeTeam.name}”`, pieces: lo.console, cartridge: lo.cartridge, cartStats: lo.cartStats });
+      if (lo.console?.length)
+        out.push({
+          id: 'team',
+          label: `From team “${activeTeam.name}”`,
+          pieces: lo.console,
+          cartridge: lo.cartridge,
+          cartStats: lo.cartStats,
+        });
     }
     for (const b of loadSavedConsoles().filter((x) => x.layout === layout)) {
-      out.push({ id: `saved:${b.id}`, label: `Saved: ${b.name}`, pieces: b.pieces, cartridge: b.cartridge, cartStats: b.cartStats });
+      out.push({
+        id: `saved:${b.id}`,
+        label: `Saved: ${b.name}`,
+        pieces: b.pieces,
+        cartridge: b.cartridge,
+        cartStats: b.cartStats,
+      });
     }
     return out;
   }, [c.id, build.cartridge, activeTeam, layout]);
@@ -107,7 +126,9 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
   return (
     <section className="mybuild" aria-labelledby="mybuild-title">
       <div className="mybuild__head">
-        <h3 id="mybuild-title" className="mini-title">Your build <span>{saved ? 'saved in this browser' : 'starts from the recommended build'}</span></h3>
+        <h3 id="mybuild-title" className="mini-title">
+          Your build <span>{saved ? 'saved in this browser' : 'starts from the recommended build'}</span>
+        </h3>
         <button
           type="button"
           className="btn btn--quiet"
@@ -130,7 +151,8 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
               const tag = arcTag(a, c);
               return (
                 <option key={a.id} value={a.id}>
-                  {a.name}{tag ? ` (${tag === 'sig' ? 'Sig' : 'Rec'})` : ''} · {a.rarity}
+                  {a.name}
+                  {tag ? ` (${tag === 'sig' ? 'Sig' : 'Rec'})` : ''} · {a.rarity}
                 </option>
               );
             })}
@@ -138,10 +160,19 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
         </label>
         <label className="mybuild__field mybuild__field--short">
           <span>Arc copies</span>
-          <select id="mybuild-arc-dupes" value={build.arcDupes ?? 0} onChange={(e) => set({ arcDupes: Number(e.target.value) })} disabled={!build.arc}>
+          <select
+            id="mybuild-arc-dupes"
+            value={build.arcDupes ?? 0}
+            onChange={(e) => set({ arcDupes: Number(e.target.value) })}
+            disabled={!build.arc}
+          >
             {Array.from({ length: MAX_ARC_DUPES + 1 }, (_, n) => (
               <option key={n} value={n}>
-                {n === 0 ? '1 copy (base)' : n === MAX_ARC_DUPES ? `+${n} duplicates (max)` : `+${n} duplicate${n > 1 ? 's' : ''}`}
+                {n === 0
+                  ? '1 copy (base)'
+                  : n === MAX_ARC_DUPES
+                    ? `+${n} duplicates (max)`
+                    : `+${n} duplicate${n > 1 ? 's' : ''}`}
               </option>
             ))}
           </select>
@@ -151,19 +182,35 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
           <select id="mybuild-cart" value={build.cartridge ?? ''} onChange={(e) => pickCartridge(e.target.value)}>
             <option value="">No set</option>
             <optgroup label="Recommended">
-              {recSets.map((id) => <option key={id} value={id}>{CARTRIDGE_BY_ID[id].name}</option>)}
+              {recSets.map((id) => (
+                <option key={id} value={id}>
+                  {CARTRIDGE_BY_ID[id].name}
+                </option>
+              ))}
             </optgroup>
             <optgroup label="Other sets">
-              {CARTRIDGES.filter((x) => !recSets.includes(x.id)).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
+              {CARTRIDGES.filter((x) => !recSets.includes(x.id)).map((x) => (
+                <option key={x.id} value={x.id}>
+                  {x.name}
+                </option>
+              ))}
             </optgroup>
           </select>
         </label>
         {layout && (
           <label className="mybuild__field">
             <span>Console build</span>
-            <select id="mybuild-console" value={build.consoleFrom ?? 'suggested'} onChange={(e) => pickConsole(e.target.value)}>
+            <select
+              id="mybuild-console"
+              value={build.consoleFrom ?? 'suggested'}
+              onChange={(e) => pickConsole(e.target.value)}
+            >
               <option value="none">No console</option>
-              {consoleOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+              {consoleOptions.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.label}
+                </option>
+              ))}
             </select>
           </label>
         )}
@@ -173,30 +220,54 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
         <div className="console-summary mybuild__console">
           <MiniBoard layout={layout} pieces={build.pieces} cell={11} />
           <div className="console-summary__body">
-            <span><b>{usedCells(build.pieces)}</b> / {FREE_CELLS} cells · {build.pieces.length} modules</span>
+            <span>
+              <b>{usedCells(build.pieces)}</b> / {FREE_CELLS} cells · {build.pieces.length} modules
+            </span>
             {prog && (
               <span className="muted small">
-                {build.cartridge && <CartridgeIcon id={build.cartridge} size={16} />} {CARTRIDGE_BY_ID[build.cartridge].name}: {Math.min(prog.count, 4)} / 4 set modules
+                {build.cartridge && <CartridgeIcon id={build.cartridge} size={16} />}{' '}
+                {CARTRIDGE_BY_ID[build.cartridge].name}: {Math.min(prog.count, 4)} / 4 set modules
               </span>
             )}
-            <a className="btn btn--quiet console-summary__link" href={`#console-${c.id}`}>Build or save a console</a>
+            <a className="btn btn--quiet console-summary__link" href={`#console-${c.id}`}>
+              Build or save a console
+            </a>
           </div>
         </div>
       )}
 
-      <p className="mini-title mybuild__sub">Cartridge stats <span>1 main · 4 sub</span></p>
+      <p className="mini-title mybuild__sub">
+        Cartridge stats <span>1 main · 4 sub</span>
+      </p>
       <CartStatsEditor value={build.cartStats} onChange={(v) => set({ cartStats: v })} idPrefix="mb" />
 
-      <p className="mini-title mybuild__sub">Awakening order <span>one per duplicate · use the arrows to reorder</span></p>
+      <p className="mini-title mybuild__sub">
+        Awakening order <span>one per duplicate · use the arrows to reorder</span>
+      </p>
       <ol className="awaken-chain awaken-chain--edit" aria-label="Your Awakening order">
         {build.awakeningOrder.map((id, i) => (
           <li key={id}>
-            {i > 0 && <span className="awaken-chain__arrow" aria-hidden="true">→</span>}
+            {i > 0 && (
+              <span className="awaken-chain__arrow" aria-hidden="true">
+                →
+              </span>
+            )}
             <span className="awaken-edit">
-              <span className={`awaken-chain__id${i === 0 ? ' is-first' : ''}`} title={names[id] ?? id}>{id}</span>
+              <span className={`awaken-chain__id${i === 0 ? ' is-first' : ''}`} title={names[id] ?? id}>
+                {id}
+              </span>
               <span className="awaken-edit__moves">
-                <button type="button" aria-label={`Move ${id} earlier`} disabled={i === 0} onClick={() => move(i, -1)}>‹</button>
-                <button type="button" aria-label={`Move ${id} later`} disabled={i === build.awakeningOrder.length - 1} onClick={() => move(i, 1)}>›</button>
+                <button type="button" aria-label={`Move ${id} earlier`} disabled={i === 0} onClick={() => move(i, -1)}>
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  aria-label={`Move ${id} later`}
+                  disabled={i === build.awakeningOrder.length - 1}
+                  onClick={() => move(i, 1)}
+                >
+                  ›
+                </button>
               </span>
             </span>
           </li>
@@ -204,7 +275,10 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
       </ol>
 
       <div className="mybuild__actions">
-        <button type="button" className="btn btn--primary" onClick={() => onShare(build)}><ExportIcon />Share my build image</button>
+        <button type="button" className="btn btn--primary" onClick={() => onShare(build)}>
+          <ExportIcon />
+          Share my build image
+        </button>
       </div>
     </section>
   );
@@ -221,4 +295,3 @@ export function myBuildCurrent(build) {
     awakeningOrder: build.awakeningOrder,
   };
 }
-

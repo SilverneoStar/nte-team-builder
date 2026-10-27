@@ -34,7 +34,6 @@ import FeaturedTeams from './FeaturedTeams.jsx';
 import { PHONE, useMedia } from '../lib/useMedia.js';
 import ExportIcon from './ExportIcon.jsx';
 
-
 export default function CharacterDetail({ character: c, activeTeam, inActiveTeam, teamFull, onAdd, onClose }) {
   const [sharing, setSharing] = useState(false);
   const element = ELEMENT_BY_ID[c.element];
@@ -59,18 +58,28 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   const overview = (
     <div className="detail__main">
       <dl className="facts">
-        <div><dt>Arc type</dt><dd>
-          {c.arcType ? (
-            <>
-              <ArcTypeIcon type={c.arcType} size={18} />
-              {c.arcType}{' '}
-              <a className="muted" href={`#arcs-${c.arcType.toLowerCase()}`}>· {arcCount} Arcs</a>
-            </>
-          ) : (
-            <span className="muted">Not announced yet</span>
-          )}
-        </dd></div>
-        {signature && <div><dt>Signature Arc</dt><dd>{signature.name}</dd></div>}
+        <div>
+          <dt>Arc type</dt>
+          <dd>
+            {c.arcType ? (
+              <>
+                <ArcTypeIcon type={c.arcType} size={18} />
+                {c.arcType}{' '}
+                <a className="muted" href={`#arcs-${c.arcType.toLowerCase()}`}>
+                  · {arcCount} Arcs
+                </a>
+              </>
+            ) : (
+              <span className="muted">Not announced yet</span>
+            )}
+          </dd>
+        </div>
+        {signature && (
+          <div>
+            <dt>Signature Arc</dt>
+            <dd>{signature.name}</dd>
+          </div>
+        )}
         {RECOMMENDED[c.id]?.length > 0 && (
           <div>
             <dt>Recommended Arcs</dt>
@@ -82,17 +91,23 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
             </dd>
           </div>
         )}
-        <div><dt>Faction</dt><dd>
-          {c.faction ?? (c.formerFaction ? '' : '—')}
-          {c.unit && <span className="muted"> · {c.unit}</span>}
-          {c.formerFaction && (
-            <span className="former">
-              {c.faction && ' '}
-              <span className="former__tag">Former</span> {c.formerFaction}
-            </span>
-          )}
-        </dd></div>
-        <div><dt>Esper ability</dt><dd>{c.ability ?? '—'}</dd></div>
+        <div>
+          <dt>Faction</dt>
+          <dd>
+            {c.faction ?? (c.formerFaction ? '' : '—')}
+            {c.unit && <span className="muted"> · {c.unit}</span>}
+            {c.formerFaction && (
+              <span className="former">
+                {c.faction && ' '}
+                <span className="former__tag">Former</span> {c.formerFaction}
+              </span>
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt>Esper ability</dt>
+          <dd>{c.ability ?? '—'}</dd>
+        </div>
         <div>
           <dt>Recommended Cartridges</dt>
           <dd className="cart-list">
@@ -105,57 +120,60 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
             ))}
           </dd>
         </div>
-        {c.upcoming && <div><dt>Status</dt><dd>Upcoming</dd></div>}
+        {c.upcoming && (
+          <div>
+            <dt>Status</dt>
+            <dd>Upcoming</dd>
+          </div>
+        )}
       </dl>
 
-    <section className="detail__reacts">
-      <h3 className="mini-title">Reacts with</h3>
-      <p className="muted small">
-        {c.element === 'unknown'
-          ? 'Element not announced yet, so reactions are unknown.'
-          : `${element.name} sits between ${neighbours[0].name} and ${neighbours[1].name} on the Esper Cycle.`}
-      </p>
-      <ul className="detail__reactions">
-        {reactions.map((r) => {
-          const other = r.elements.find((e) => e !== c.element);
-          return (
-            <li key={r.id}>
-              <ElementGlyph element={other} size={14} />
-              <b>{r.name}</b>
-              <span className="muted">with {ELEMENT_BY_ID[other].name}</span>
+      <section className="detail__reacts">
+        <h3 className="mini-title">Reacts with</h3>
+        <p className="muted small">
+          {c.element === 'unknown'
+            ? 'Element not announced yet, so reactions are unknown.'
+            : `${element.name} sits between ${neighbours[0].name} and ${neighbours[1].name} on the Esper Cycle.`}
+        </p>
+        <ul className="detail__reactions">
+          {reactions.map((r) => {
+            const other = r.elements.find((e) => e !== c.element);
+            return (
+              <li key={r.id}>
+                <ElementGlyph element={other} size={14} />
+                <b>{r.name}</b>
+                <span className="muted">with {ELEMENT_BY_ID[other].name}</span>
+              </li>
+            );
+          })}
+          {trios.map((t) => (
+            <li key={t.id}>
+              <span className="trio-dots">
+                {t.elements.map((e) => (
+                  <ElementGlyph key={e} element={e} size={11} />
+                ))}
+              </span>
+              <b>{t.name}</b>
+              <span className="muted">trio</span>
             </li>
-          );
-        })}
-        {trios.map((t) => (
-          <li key={t.id}>
-            <span className="trio-dots">
-              {t.elements.map((e) => <ElementGlyph key={e} element={e} size={11} />)}
-            </span>
-            <b>{t.name}</b>
-            <span className="muted">trio</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    {presets.length > 0 && (
-      <section>
-        <div className="featured-head">
-          <h3 className="mini-title">Featured in</h3>
-        </div>
-        <FeaturedTeams presets={presets} />
+          ))}
+        </ul>
       </section>
-    )}
+
+      {presets.length > 0 && (
+        <section>
+          <div className="featured-head">
+            <h3 className="mini-title">Featured in</h3>
+          </div>
+          <FeaturedTeams presets={presets} />
+        </section>
+      )}
     </div>
   );
   const stats = (
     <div className="stats">
       {/* Only real in-game values; until then, the stats to chase. */}
-      {confirmedStats(c.id) ? (
-        <MaxStats stats={confirmedStats(c.id)} />
-      ) : (
-        <FocusStats character={c} />
-      )}
+      {confirmedStats(c.id) ? <MaxStats stats={confirmedStats(c.id)} /> : <FocusStats character={c} />}
       <EndgameStats character={c} />
     </div>
   );
@@ -174,11 +192,17 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         <>
           {AWAKENING_ORDER[c.id] && (
             <div className="awaken-order" data-el={c.element}>
-              <p className="awaken-order__title">Suggested unlock order <span>one per duplicate</span></p>
+              <p className="awaken-order__title">
+                Suggested unlock order <span>one per duplicate</span>
+              </p>
               <ol className="awaken-chain" aria-label="Unlock order">
                 {AWAKENING_ORDER[c.id].order.map((id, i) => (
                   <li key={id} title={`${ORDINAL[i]} duplicate`}>
-                    {i > 0 && <span className="awaken-chain__arrow" aria-hidden="true">→</span>}
+                    {i > 0 && (
+                      <span className="awaken-chain__arrow" aria-hidden="true">
+                        →
+                      </span>
+                    )}
                     <span className={`awaken-chain__id${i === 0 ? ' is-first' : ''}`}>{id}</span>
                   </li>
                 ))}
@@ -197,14 +221,14 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
                       <span className="awaken-rank">{ORDINAL[AWAKENING_ORDER[c.id].order.indexOf(w.id)]} pick</span>
                     )}
                   </b>
-                  <span><StatText>{w.effect}</StatText></span>
+                  <span>
+                    <StatText>{w.effect}</StatText>
+                  </span>
                 </span>
               </li>
             ))}
           </ol>
-          <p className="muted small">
-            Each duplicate unlocks one awakening of your choice, in any order.
-          </p>
+          <p className="muted small">Each duplicate unlocks one awakening of your choice, in any order.</p>
           {RESONANCES[c.id] && (
             <>
               <h3 className="mini-title reso-title">Resonance</h3>
@@ -214,7 +238,9 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
                     <span className="reso__dot is-on is-static">{r.id}</span>
                     <span className="awaken-body">
                       <b>{r.name}</b>
-                      <span><StatText>{r.effect}</StatText></span>
+                      <span>
+                        <StatText>{r.effect}</StatText>
+                      </span>
                       <span className="reso-when">Active with {r.at} awakenings on</span>
                     </span>
                   </li>
@@ -227,9 +253,19 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         <p className="muted small">Awakenings will be added once they’re published.</p>
       )}
     </section>
-);
-  const skills = <>{upcomingNote}<SkillsSection key={`skills-${c.id}`} character={c} /></>;
-  const bondTab = <>{upcomingNote}<BondSection character={c} /></>;
+  );
+  const skills = (
+    <>
+      {upcomingNote}
+      <SkillsSection key={`skills-${c.id}`} character={c} />
+    </>
+  );
+  const bondTab = (
+    <>
+      {upcomingNote}
+      <BondSection character={c} />
+    </>
+  );
   const materials = (
     <>
       {upcomingNote}
@@ -262,15 +298,22 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           <p className="eyebrow">
             <span className="eyebrow__meta">
               <ElementGlyph element={c.element} size={16} />
-              <span>{element.name} · <span className="nowrap">{c.rarity === '?' ? 'Rank unconfirmed' : `${c.rarity}-rank`}</span></span>
+              <span>
+                {element.name} ·{' '}
+                <span className="nowrap">{c.rarity === '?' ? 'Rank unconfirmed' : `${c.rarity}-rank`}</span>
+              </span>
             </span>
             {c.version && <span className="eyebrow__ver">Ver {c.version}</span>}
             <RoleList roles={c.roles} size={14} />
           </p>
-          <h2 id="detail-name" className="detail__name">{c.name}</h2>
+          <h2 id="detail-name" className="detail__name">
+            {c.name}
+          </h2>
           {c.tags?.length > 0 && (
             <ul className="tags">
-              {c.tags.map((t) => <li key={t}>{t}</li>)}
+              {c.tags.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
             </ul>
           )}
           {c.id === 'zero' && <ZeroLookPick />}
@@ -288,7 +331,9 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
               <span className="detail__export-label">Export card</span>
             </button>
           )}
-          <button className="btn btn--quiet detail__close" onClick={onClose} aria-label="Close details">×</button>
+          <button className="btn btn--quiet detail__close" onClick={onClose} aria-label="Close details">
+            ×
+          </button>
         </div>
       </header>
 
@@ -354,7 +399,10 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           render={async (opts) => {
             const mine = myBuildCurrent(sharing.mine);
             const { characterBuild, renderBuildCard } = await import('../lib/buildCard.js');
-            return renderBuildCard(characterBuild(c, { current: mine, source: 'My build', recStats: mine.cartStats }), opts);
+            return renderBuildCard(
+              characterBuild(c, { current: mine, source: 'My build', recStats: mine.cartStats }),
+              opts,
+            );
           }}
         />
       )}

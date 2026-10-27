@@ -44,7 +44,14 @@ export default function FeaturedTeams({ presets }) {
     <div className="featured">
       <div className="featured__track" ref={trackRef} onScroll={onScroll}>
         {pages.map((list, i) => (
-          <ul key={i} className="featured__page" ref={(el) => { pageRefs.current[i] = el; }} aria-label={`Teams page ${i + 1} of ${pages.length}`}>
+          <ul
+            key={i}
+            className="featured__page"
+            ref={(el) => {
+              pageRefs.current[i] = el;
+            }}
+            aria-label={`Teams page ${i + 1} of ${pages.length}`}
+          >
             {list.map((p) => (
               <li key={p.name} className={`featured__team${p.idea ? ' is-idea' : ''}`}>
                 <span className="featured__name">
@@ -63,14 +70,30 @@ export default function FeaturedTeams({ presets }) {
       </div>
       {pages.length > 1 && (
         <div className="featured__nav">
-          <button type="button" className="btn btn--quiet btn--small" onClick={() => go(page - 1)} disabled={page === 0} aria-label="Previous teams">
+          <button
+            type="button"
+            className="btn btn--quiet btn--small"
+            onClick={() => go(page - 1)}
+            disabled={page === 0}
+            aria-label="Previous teams"
+          >
             ‹
           </button>
           <span className="featured__dots" aria-hidden="true">
-            {pages.map((_, i) => <span key={i} className={i === page ? 'is-on' : undefined} />)}
+            {pages.map((_, i) => (
+              <span key={i} className={i === page ? 'is-on' : undefined} />
+            ))}
           </span>
-          <span className="sr-only" aria-live="polite">Page {page + 1} of {pages.length}</span>
-          <button type="button" className="btn btn--quiet btn--small" onClick={() => go(page + 1)} disabled={page === pages.length - 1} aria-label="More teams">
+          <span className="sr-only" aria-live="polite">
+            Page {page + 1} of {pages.length}
+          </span>
+          <button
+            type="button"
+            className="btn btn--quiet btn--small"
+            onClick={() => go(page + 1)}
+            disabled={page === pages.length - 1}
+            aria-label="More teams"
+          >
             ›
           </button>
         </div>

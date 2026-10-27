@@ -45,10 +45,20 @@ export default function Roster({ members, analysis, usage, dispatch, onPick = nu
   });
 
   return (
-    <section className={`roster${inPicker ? ' roster--picker' : ''}`} aria-labelledby={inPicker ? undefined : 'roster-title'} aria-label={inPicker ? 'Characters' : undefined}>
+    <section
+      className={`roster${inPicker ? ' roster--picker' : ''}`}
+      aria-labelledby={inPicker ? undefined : 'roster-title'}
+      aria-label={inPicker ? 'Characters' : undefined}
+    >
       <div className="roster__head">
-        {!inPicker && <h2 id="roster-title" className="section-title">Roster</h2>}
-        <label className="sr-only" htmlFor={`${idp}-search`}>Search characters</label>
+        {!inPicker && (
+          <h2 id="roster-title" className="section-title">
+            Roster
+          </h2>
+        )}
+        <label className="sr-only" htmlFor={`${idp}-search`}>
+          Search characters
+        </label>
         <input
           id={`${idp}-search`}
           className="search"
@@ -82,7 +92,9 @@ export default function Roster({ members, analysis, usage, dispatch, onPick = nu
             <select id={`${idp}-role`} value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="all">Any</option>
               {ROLES.map((r) => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r} value={r}>
+                  {r}
+                </option>
               ))}
             </select>
           </label>
@@ -128,10 +140,10 @@ export default function Roster({ members, analysis, usage, dispatch, onPick = nu
                       {c.name}
                       <RankBadge rank={c.rarity} size={18} />
                     </span>
-                    <span className="card__role"><RoleList roles={c.roles} size={13} separator={false} /></span>
-                    {gains.length > 0 && (
-                      <span className="card__gain">+ {gains.map((g) => g.name).join(', ')}</span>
-                    )}
+                    <span className="card__role">
+                      <RoleList roles={c.roles} size={13} separator={false} />
+                    </span>
+                    {gains.length > 0 && <span className="card__gain">+ {gains.map((g) => g.name).join(', ')}</span>}
                     {inPicker && inTeam && <span className="card__tag">In this team · tap to move here</span>}
                     {c.upcoming && <span className="card__tag">Upcoming</span>}
                     {others && (

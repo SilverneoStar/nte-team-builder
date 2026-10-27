@@ -22,9 +22,7 @@ export function decodeTeam(code) {
   if (parts.length !== 3 || parts[0] !== PREFIX) return null;
   const name = parts[1].replace(/_/g, ' ') || 'Shared team';
   const ids = parts[2].split('.').slice(0, TEAM_SIZE);
-  const members = Array.from({ length: TEAM_SIZE }, (_, i) =>
-    CHARACTER_BY_ID[ids[i]] ? ids[i] : null,
-  );
+  const members = Array.from({ length: TEAM_SIZE }, (_, i) => (CHARACTER_BY_ID[ids[i]] ? ids[i] : null));
   // Drop duplicates: a character can only appear once in a team.
   const seen = new Set();
   const unique = members.map((id) => {

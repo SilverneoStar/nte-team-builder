@@ -28,17 +28,25 @@ export default function SharePanel({ team, dispatch }) {
     const card = decodeCardCode(input);
     const team = card ? { ...card, name: card.name || 'Imported team' } : decodeTeam(input);
     if (!team) {
-      setError('That code isn’t valid. Use a card code (groups of 5) or a link code starting with nte1~. Console codes go in the Console tab.');
+      setError(
+        'That code isn’t valid. Use a card code (groups of 5) or a link code starting with nte1~. Console codes go in the Console tab.',
+      );
       return;
     }
-    setError(card?.nameInvalid ? 'Imported the team, but the name part of the code had a typo, so it was named “Imported team”.' : '');
+    setError(
+      card?.nameInvalid
+        ? 'Imported the team, but the name part of the code had a typo, so it was named “Imported team”.'
+        : '',
+    );
     setInput('');
     dispatch({ type: 'import', ...team });
   }
 
   return (
     <section className="share" aria-labelledby="share-title">
-      <h2 id="share-title" className="section-title">Presets &amp; sharing</h2>
+      <h2 id="share-title" className="section-title">
+        Presets &amp; sharing
+      </h2>
 
       <label className="field">
         <span>Load a community preset into this team</span>
@@ -50,18 +58,36 @@ export default function SharePanel({ team, dispatch }) {
             if (p) dispatch({ type: 'loadPreset', name: p.name, members: p.members });
           }}
         >
-          <option value="" disabled>Choose a preset…</option>
+          <option value="" disabled>
+            Choose a preset…
+          </option>
           <optgroup label="Community teams">
-            {PRESETS.map((p, i) => !p.idea && <option key={p.name} value={i}>{p.name}</option>)}
+            {PRESETS.map(
+              (p, i) =>
+                !p.idea && (
+                  <option key={p.name} value={i}>
+                    {p.name}
+                  </option>
+                ),
+            )}
           </optgroup>
           <optgroup label="Kit-based ideas">
-            {PRESETS.map((p, i) => p.idea && <option key={p.name} value={i}>{p.name}</option>)}
+            {PRESETS.map(
+              (p, i) =>
+                p.idea && (
+                  <option key={p.name} value={i}>
+                    {p.name}
+                  </option>
+                ),
+            )}
           </optgroup>
         </select>
       </label>
 
       <div className="field">
-        <label htmlFor="card-code">Card code <span className="muted">· team name, duplicates, Arcs and Cartridge sets</span></label>
+        <label htmlFor="card-code">
+          Card code <span className="muted">· team name, duplicates, Arcs and Cartridge sets</span>
+        </label>
         <div className="code-row">
           <textarea
             id="card-code"
@@ -71,15 +97,21 @@ export default function SharePanel({ team, dispatch }) {
             value={cardCode}
             onFocus={(e) => e.target.select()}
           />
-          <button className="btn" onClick={() => copy(cardCode, 'card-code')}>{copied === 'card-code' ? 'Copied' : 'Copy'}</button>
+          <button className="btn" onClick={() => copy(cardCode, 'card-code')}>
+            {copied === 'card-code' ? 'Copied' : 'Copy'}
+          </button>
         </div>
       </div>
 
       <div className="field">
-        <label htmlFor="team-code">Link code <span className="muted">· team and name</span></label>
+        <label htmlFor="team-code">
+          Link code <span className="muted">· team and name</span>
+        </label>
         <div className="code-row">
           <input id="team-code" className="code" readOnly value={code} onFocus={(e) => e.target.select()} />
-          <button className="btn" onClick={() => copy(code, 'team-code')}>{copied === 'team-code' ? 'Copied' : 'Copy'}</button>
+          <button className="btn" onClick={() => copy(code, 'team-code')}>
+            {copied === 'team-code' ? 'Copied' : 'Copy'}
+          </button>
         </div>
       </div>
 
@@ -93,7 +125,9 @@ export default function SharePanel({ team, dispatch }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button className="btn" type="submit" disabled={!input.trim()}>Add team</button>
+          <button className="btn" type="submit" disabled={!input.trim()}>
+            Add team
+          </button>
         </div>
         {error && <p className="field__error">{error}</p>}
       </form>

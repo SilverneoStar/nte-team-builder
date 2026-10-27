@@ -18,8 +18,15 @@ export default function TeamSlots({ team, selected, onSelect, onAdd, dispatch })
         if (!c) {
           return (
             <li key={index} className="slot slot--empty">
-              <button type="button" className="slot__add" onClick={() => onAdd(index)} aria-label={`Add a character to slot ${index + 1}`}>
-                <span className="slot__plus" aria-hidden="true">+</span>
+              <button
+                type="button"
+                className="slot__add"
+                onClick={() => onAdd(index)}
+                aria-label={`Add a character to slot ${index + 1}`}
+              >
+                <span className="slot__plus" aria-hidden="true">
+                  +
+                </span>
                 <span className="slot__hint">Add character</span>
               </button>
             </li>
@@ -43,7 +50,9 @@ export default function TeamSlots({ team, selected, onSelect, onAdd, dispatch })
             >
               <Portrait character={c} size="lg" backdrop />
               <span className="slot__name">{c.name}</span>
-              <span className="slot__meta"><RoleList roles={c.roles} size={13} separator={false} /></span>
+              <span className="slot__meta">
+                <RoleList roles={c.roles} size={13} separator={false} />
+              </span>
               <span className="slot__gear">
                 <span className={arc ? 'gear-chip gear-chip--on' : 'gear-chip'} title={arc?.name ?? 'No Arc'}>
                   <span className="gear-chip__name">{arc ? arc.name : 'No Arc'}</span>
@@ -59,9 +68,20 @@ export default function TeamSlots({ team, selected, onSelect, onAdd, dispatch })
                   </span>
                 </span>
                 {/* Awakenings on their own line; the ones turned on glow */}
-                <span className="slot__aw" aria-label={gear.awakenings.length ? `Awakenings: ${[...gear.awakenings].sort().join(', ')}` : 'No awakenings'}>
+                <span
+                  className="slot__aw"
+                  aria-label={
+                    gear.awakenings.length ? `Awakenings: ${[...gear.awakenings].sort().join(', ')}` : 'No awakenings'
+                  }
+                >
                   {['A1', 'A2', 'A3', 'A4', 'A5', 'A6'].map((id) => (
-                    <span key={id} className={gear.awakenings.includes(id) ? 'slot__aw-pill is-on' : 'slot__aw-pill'} aria-hidden="true">{id}</span>
+                    <span
+                      key={id}
+                      className={gear.awakenings.includes(id) ? 'slot__aw-pill is-on' : 'slot__aw-pill'}
+                      aria-hidden="true"
+                    >
+                      {id}
+                    </span>
                   ))}
                 </span>
               </span>

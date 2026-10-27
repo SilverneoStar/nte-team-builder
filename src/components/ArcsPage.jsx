@@ -40,7 +40,9 @@ export default function ArcsPage({ arcType, arcId }) {
       (a) =>
         (type === 'all' || a.type === type) &&
         (rank === 'all' || a.rarity === rank) &&
-        (!q || a.name.toLowerCase().includes(q) || a.passive.toLowerCase().includes(q) ||
+        (!q ||
+          a.name.toLowerCase().includes(q) ||
+          a.passive.toLowerCase().includes(q) ||
           (ARC_PASSIVES[a.id]?.text.join(' ').toLowerCase().includes(q) ?? false)),
     ).sort((a, b) => RANK_ORDER[a.rarity] - RANK_ORDER[b.rarity] || b.atk - a.atk || a.name.localeCompare(b.name));
   }, [type, rank, query]);
@@ -52,7 +54,8 @@ export default function ArcsPage({ arcType, arcId }) {
       <header className="page__head">
         <h2 className="page__title">Arcs</h2>
         <p className="muted">
-          {ARCS.length} Arcs. A character can equip any Arc of their Arc type. Select an Arc for its materials and who it suits.
+          {ARCS.length} Arcs. A character can equip any Arc of their Arc type. Select an Arc for its materials and who
+          it suits.
         </p>
       </header>
 
@@ -63,13 +66,7 @@ export default function ArcsPage({ arcType, arcId }) {
           All <span>{ARCS.length}</span>
         </a>
         {ARC_TYPES.map((t) => (
-          <a
-            key={t}
-            className="type-tab"
-            role="tab"
-            aria-selected={type === t}
-            href={`#arcs-${t.toLowerCase()}`}
-          >
+          <a key={t} className="type-tab" role="tab" aria-selected={type === t} href={`#arcs-${t.toLowerCase()}`}>
             <ArcTypeIcon type={t} size={18} />
             {t} <span>{counts[t]}</span>
           </a>
@@ -93,7 +90,9 @@ export default function ArcsPage({ arcType, arcId }) {
       )}
 
       <div className="filters filters--page filters--row">
-        <label className="sr-only" htmlFor="arc-search">Search Arcs</label>
+        <label className="sr-only" htmlFor="arc-search">
+          Search Arcs
+        </label>
         <input
           id="arc-search"
           className="search search--inline"
@@ -103,7 +102,9 @@ export default function ArcsPage({ arcType, arcId }) {
           onChange={(e) => setQuery(e.target.value)}
         />
         <div className="chips" role="group" aria-label="Filter by rank">
-          <button className="chip" aria-pressed={rank === 'all'} onClick={() => setRank('all')}>Any rank</button>
+          <button className="chip" aria-pressed={rank === 'all'} onClick={() => setRank('all')}>
+            Any rank
+          </button>
           {RANKS.map((r) => (
             <button key={r} className="chip" aria-pressed={rank === r} onClick={() => setRank(rank === r ? 'all' : r)}>
               {r}-rank
@@ -118,7 +119,9 @@ export default function ArcsPage({ arcType, arcId }) {
         <ul className="arc-grid">
           {list.map((a) => {
             const sig = a.signature && CHARACTER_BY_ID[a.signature];
-            const recs = (RECOMMENDED_FOR[a.id] || []).filter((id) => id !== a.signature).map((id) => CHARACTER_BY_ID[id]);
+            const recs = (RECOMMENDED_FOR[a.id] || [])
+              .filter((id) => id !== a.signature)
+              .map((id) => CHARACTER_BY_ID[id]);
             return (
               <li
                 key={a.id}
@@ -129,19 +132,39 @@ export default function ArcsPage({ arcType, arcId }) {
                   if (!e.target.closest('a, button')) navigate(`arc-${a.id}`);
                 }}
               >
-                <div className="arc-card__top" style={{ '--arc-pattern': `url(${import.meta.env.BASE_URL}arc-patterns/${a.type.toLowerCase()}.svg)` }}>
+                <div
+                  className="arc-card__top"
+                  style={{
+                    '--arc-pattern': `url(${import.meta.env.BASE_URL}arc-patterns/${a.type.toLowerCase()}.svg)`,
+                  }}
+                >
                   <RankBadge rank={a.rarity} size={22} />
-                  <h3 className="arc-card__name"><a href={`#arc-${a.id}`}>{a.name}</a></h3>
-                  {type === 'all' && <span className="arc-card__type"><ArcTypeIcon type={a.type} size={16} />{a.type}</span>}
+                  <h3 className="arc-card__name">
+                    <a href={`#arc-${a.id}`}>{a.name}</a>
+                  </h3>
+                  {type === 'all' && (
+                    <span className="arc-card__type">
+                      <ArcTypeIcon type={a.type} size={16} />
+                      {a.type}
+                    </span>
+                  )}
                 </div>
                 <div className="arc-card__body">
                   <ArcPlayer arc={a} />
                   <dl className="gear-stats">
-                    <div><dt>Base ATK</dt><dd>{a.atk}</dd></div>
-                    <div><dt>Secondary</dt><dd>{a.sub}</dd></div>
+                    <div>
+                      <dt>Base ATK</dt>
+                      <dd>{a.atk}</dd>
+                    </div>
+                    <div>
+                      <dt>Secondary</dt>
+                      <dd>{a.sub}</dd>
+                    </div>
                   </dl>
                 </div>
-                <p className="arc-card__passive"><StatText>{a.passive}</StatText></p>
+                <p className="arc-card__passive">
+                  <StatText>{a.passive}</StatText>
+                </p>
                 {FIELD_EFFECTS[a.id] && <p className="arc-card__field">Outside combat: {FIELD_EFFECTS[a.id].name}</p>}
                 {(sig || recs.length > 0) && (
                   <div className="arc-card__users">
@@ -171,7 +194,9 @@ export default function ArcsPage({ arcType, arcId }) {
           })}
         </ul>
       )}
-      <p className="muted small">Base ATK and secondary stats at max level. Effects are summaries; check in-game text for exact values.</p>
+      <p className="muted small">
+        Base ATK and secondary stats at max level. Effects are summaries; check in-game text for exact values.
+      </p>
     </div>
   );
 }

@@ -30,43 +30,135 @@ import { TEAM_SIZE } from './analyze.js';
 // When the game adds a character, Arc, Cartridge or module stat, add it at the end.
 
 const CHAR_ORDER = [
-  'baicang', 'blackbird', 'chaos', 'chiz', 'daffodill', 'zero', 'fadia', 'hathor',
-  'hotori', 'iroi', 'jiuyuan', 'lacrimosa', 'linko', 'nanally', 'sakiri', 'shinku',
-  'zankou', 'akane', 'elyms', 'exe', 'adler', 'aurelia', 'edgar', 'haniel', 'mint', 'skia',
+  'baicang',
+  'blackbird',
+  'chaos',
+  'chiz',
+  'daffodill',
+  'zero',
+  'fadia',
+  'hathor',
+  'hotori',
+  'iroi',
+  'jiuyuan',
+  'lacrimosa',
+  'linko',
+  'nanally',
+  'sakiri',
+  'shinku',
+  'zankou',
+  'akane',
+  'elyms',
+  'exe',
+  'adler',
+  'aurelia',
+  'edgar',
+  'haniel',
+  'mint',
+  'skia',
 ];
 
 const ARC_ORDER = [
-  'blow-up-the-crowd', 'blushing-mirage', 'camellia-society', 'contemplative-cat',
-  'crime-and-punishment', 'day-off', 'eternal-waltz', 'far-side-of-the-moon',
-  'fluff-of-fearlessness', 'fluff-of-ferocity', 'fluff-of-finesse', 'fluff-of-fleetness',
-  'fluff-of-fortitude', 'good-boys-grand-adventure', 'hethereaus-keeper', 'marching-beyond-time',
-  'raging-flames', 'ravenous-blade', 'ready-ready', 'reality-refuge', 'song-of-the-whale',
-  'stellar-veil', 'tears-beneath-the-mask', 'the-last-rose', 'the-rain-that-shook-the-world',
-  'the-wrong-gate', 'voice-of-the-voyager', 'whats-desired', 'your-happiness-is-priceless',
-  'youthful-fantasy', 'a-time-will-come', 'call-of-the-twisted-city', 'clear-skies',
-  'cosmos-daze-wild-reverie', 'drawn-blade', 'failing-you-heavy-in-my-heart', 'mind-royale',
-  'oraora', 'shiny-days', 'the-fools-spring', 'the-forgotten', 'the-good-the-bad-the-bitter',
-  'the-great-thief', 'time-bandit', 'umbrella', 'watch-your-heads', 'be-happy',
-  'dangerous-game', 'first-step-to-success', 'real-music', 'us',
+  'blow-up-the-crowd',
+  'blushing-mirage',
+  'camellia-society',
+  'contemplative-cat',
+  'crime-and-punishment',
+  'day-off',
+  'eternal-waltz',
+  'far-side-of-the-moon',
+  'fluff-of-fearlessness',
+  'fluff-of-ferocity',
+  'fluff-of-finesse',
+  'fluff-of-fleetness',
+  'fluff-of-fortitude',
+  'good-boys-grand-adventure',
+  'hethereaus-keeper',
+  'marching-beyond-time',
+  'raging-flames',
+  'ravenous-blade',
+  'ready-ready',
+  'reality-refuge',
+  'song-of-the-whale',
+  'stellar-veil',
+  'tears-beneath-the-mask',
+  'the-last-rose',
+  'the-rain-that-shook-the-world',
+  'the-wrong-gate',
+  'voice-of-the-voyager',
+  'whats-desired',
+  'your-happiness-is-priceless',
+  'youthful-fantasy',
+  'a-time-will-come',
+  'call-of-the-twisted-city',
+  'clear-skies',
+  'cosmos-daze-wild-reverie',
+  'drawn-blade',
+  'failing-you-heavy-in-my-heart',
+  'mind-royale',
+  'oraora',
+  'shiny-days',
+  'the-fools-spring',
+  'the-forgotten',
+  'the-good-the-bad-the-bitter',
+  'the-great-thief',
+  'time-bandit',
+  'umbrella',
+  'watch-your-heads',
+  'be-happy',
+  'dangerous-game',
+  'first-step-to-success',
+  'real-music',
+  'us',
 ];
 
 const CART_ORDER = [
-  'crimson-twin-butterflies', 'devils-blood-curse', 'diabolos', 'fireflies-and-the-forest',
-  'kingdoms-guard', 'lost-radiance', 'quiet-manor', 'shadow-creed', 'speedy-hedgehog',
-  'street-boxer', 'theas-night-tavern', 'tiny-big-adventure',
+  'crimson-twin-butterflies',
+  'devils-blood-curse',
+  'diabolos',
+  'fireflies-and-the-forest',
+  'kingdoms-guard',
+  'lost-radiance',
+  'quiet-manor',
+  'shadow-creed',
+  'speedy-hedgehog',
+  'street-boxer',
+  'theas-night-tavern',
+  'tiny-big-adventure',
 ];
 
 // Cartridge main attributes.
 const MAIN_STAT_ORDER = [
-  'HP%', 'ATK%', 'DEF%', 'CRIT Rate', 'CRIT DMG', 'Cycle Intensity', 'Break Intensity',
-  'Healing%', 'Cosmos DMG%', 'Anima DMG%', 'Incantation DMG%', 'Chaos DMG%', 'Psyche DMG%',
-  'Lakshana DMG%', 'Mental DMG%',
+  'HP%',
+  'ATK%',
+  'DEF%',
+  'CRIT Rate',
+  'CRIT DMG',
+  'Cycle Intensity',
+  'Break Intensity',
+  'Healing%',
+  'Cosmos DMG%',
+  'Anima DMG%',
+  'Incantation DMG%',
+  'Chaos DMG%',
+  'Psyche DMG%',
+  'Lakshana DMG%',
+  'Mental DMG%',
 ];
 
 // Cartridge sub attributes.
 const SUB_STAT_ORDER = [
-  'HP', 'HP%', 'ATK', 'ATK%', 'DEF', 'DEF%', 'Break Intensity', 'Cycle Intensity', 'DMG%',
-  'CRIT Rate', 'CRIT DMG',
+  'HP',
+  'HP%',
+  'ATK',
+  'ATK%',
+  'DEF',
+  'DEF%',
+  'Break Intensity',
+  'Cycle Intensity',
+  'DMG%',
+  'CRIT Rate',
+  'CRIT DMG',
 ];
 
 // Crockford base 32: no I, L, O or U, so codes are easy to read and type.
@@ -167,7 +259,7 @@ function tailCheck(head, bits) {
     for (let k = 0; k < 5; k += 1) v = (v << 1) | (bits[i + k] ?? 0);
     sum += v * (i / 5 + 7);
   }
-  return (sum % 32) ^ TAIL_SALT;
+  return sum % 32 ^ TAIL_SALT;
 }
 
 // Percentages are stored in hundredths, flat stats as whole numbers.
@@ -270,7 +362,11 @@ function decodeV5(clean) {
   const members = [];
   const loadouts = {};
   for (let i = 0; i < TEAM_SIZE; i += 1) {
-    const c = r.read(6), d = r.read(3), a = r.read(5), ad = r.read(3), ct = r.read(5);
+    const c = r.read(6),
+      d = r.read(3),
+      a = r.read(5),
+      ad = r.read(3),
+      ct = r.read(5);
     if (c === 0) {
       members.push(null);
       continue;
@@ -280,7 +376,12 @@ function decodeV5(clean) {
     const list = arcsOfType(CHARACTER_BY_ID[id].arcType);
     if (a > list.length || (ct && !CART_ORDER[ct - 1])) return null;
     members.push(id);
-    loadouts[id] = { dupes: d, arc: a ? list[a - 1] : null, arcDupes: a ? ad : 0, cartridge: ct ? CART_ORDER[ct - 1] : null };
+    loadouts[id] = {
+      dupes: d,
+      arc: a ? list[a - 1] : null,
+      arcDupes: a ? ad : 0,
+      cartridge: ct ? CART_ORDER[ct - 1] : null,
+    };
   }
   if (r.read(8) !== checkByte(body, 0x5a)) return null;
   if (!members.some(Boolean)) return null;
@@ -328,12 +429,19 @@ function nameSymbols(name, mode) {
 }
 
 function encodeName(name) {
-  const clean = (name ?? '').replace(/[‘’ʼ`]/g, "'").replace(/[“”]/g, '"').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().slice(0, NAME_MAX);
+  const clean = (name ?? '')
+    .replace(/[‘’ʼ`]/g, "'")
+    .replace(/[“”]/g, '"')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, NAME_MAX);
   if (!clean) return '';
   // Pick the case mode that needs the fewest flips.
   const [mode, syms] = [0, 1, 2].map((m) => [m, nameSymbols(clean, m)]).sort((a, b) => a[1].length - b[1].length)[0];
   if (!syms.length) return '';
-  return [((mode << 3) | nameCheck(syms)), ...syms].map((v) => ALPHABET[v]).join('');
+  return [(mode << 3) | nameCheck(syms), ...syms].map((v) => ALPHABET[v]).join('');
 }
 
 /** Name part of a code → string, '' when there is none, null when it doesn't check out. */

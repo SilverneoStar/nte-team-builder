@@ -2,7 +2,8 @@
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { ENDGAME, ENDGAME_STATS, parsePriority } from '../data/endgame.js';
 
-const label = (key, c) => (key === 'element' ? `${ELEMENT_BY_ID[c.element].name} DMG` : ENDGAME_STATS.find(([k]) => k === key)[1]);
+const label = (key, c) =>
+  key === 'element' ? `${ELEMENT_BY_ID[c.element].name} DMG` : ENDGAME_STATS.find(([k]) => k === key)[1];
 
 function StatList({ stats, character }) {
   return (
@@ -24,7 +25,9 @@ function Priority({ title, text }) {
     <div className="endgame__prio">
       <span className="endgame__prio-title">{title}</span>
       <ol>
-        {groups.map((g, i) => <li key={i}>{g.join(' = ')}</li>)}
+        {groups.map((g, i) => (
+          <li key={i}>{g.join(' = ')}</li>
+        ))}
       </ol>
     </div>
   );
@@ -46,7 +49,11 @@ export default function EndgameStats({ character: c }) {
       <h3 id="endgame-title" className="mini-title">
         Recommended endgame stats {e.endgameLabel && <span>{e.endgameLabel}</span>}
       </h3>
-      {e.endgame ? <StatList stats={e.endgame} character={c} /> : <p className="muted small">Number targets not published yet.</p>}
+      {e.endgame ? (
+        <StatList stats={e.endgame} character={c} />
+      ) : (
+        <p className="muted small">Number targets not published yet.</p>
+      )}
       {e.alt?.endgame && (
         <>
           <hr className="endgame__rule endgame__rule--section" />
@@ -54,7 +61,11 @@ export default function EndgameStats({ character: c }) {
           <StatList stats={e.alt.endgame} character={c} />
         </>
       )}
-      {e.notes?.map((n) => <p key={n} className="muted small endgame__note">{n}</p>)}
+      {e.notes?.map((n) => (
+        <p key={n} className="muted small endgame__note">
+          {n}
+        </p>
+      ))}
 
       <hr className="endgame__rule endgame__rule--section" />
       <h3 className="mini-title endgame__best">Best Cartridge stats</h3>

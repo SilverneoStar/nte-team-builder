@@ -19,7 +19,9 @@ export default function AscensionPlanner({ character }) {
   return (
     <section className="ascend" aria-labelledby="ascend-title">
       <div className="ascend__head">
-        <h3 id="ascend-title" className="mini-title">Ascension materials</h3>
+        <h3 id="ascend-title" className="mini-title">
+          Ascension materials
+        </h3>
         <div className="ascend__range">
           <label>
             <span>Level cap</span>
@@ -32,14 +34,22 @@ export default function AscensionPlanner({ character }) {
                 if (to <= v) setTo(Math.min(v + 10, MAX_LEVEL));
               }}
             >
-              {CAPS.slice(0, -1).map((c) => <option key={c} value={c}>{c}</option>)}
+              {CAPS.slice(0, -1).map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </label>
           <span aria-hidden="true">→</span>
           <label>
             <span className="sr-only">Target level cap</span>
             <select id="ascend-to" value={to} onChange={(e) => setTo(Number(e.target.value))}>
-              {CAPS.filter((c) => c > from).map((c) => <option key={c} value={c}>{c}</option>)}
+              {CAPS.filter((c) => c > from).map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </label>
         </div>
@@ -52,7 +62,7 @@ export default function AscensionPlanner({ character }) {
           {cost.map((m) => (
             <li key={m.name} className={`mat mat--${m.kind}`}>
               <MaterialIcon name={m.name} />
-                  <span className="mat__qty">{fmt(m.qty)}</span>
+              <span className="mat__qty">{fmt(m.qty)}</span>
               <span className="mat__name">
                 {m.name}
                 {m.source && <span className="mat__src">{m.source}</span>}
@@ -79,15 +89,21 @@ export default function AscensionPlanner({ character }) {
                 <th scope="col">Ascension</th>
                 <th scope="col">{table[0].bossName}</th>
                 <th scope="col">Family material</th>
-                <th scope="col" className="num">Beetle Coin</th>
+                <th scope="col" className="num">
+                  Beetle Coin
+                </th>
               </tr>
             </thead>
             <tbody>
               {table.map((p) => (
                 <tr key={p.at} className={p.at >= from && p.at < to ? 'in-range' : undefined}>
-                  <td>Lv {p.at} → {p.to}</td>
+                  <td>
+                    Lv {p.at} → {p.to}
+                  </td>
                   <td className="num-l">{p.bossQty || '—'}</td>
-                  <td>{p.tierQty} × {p.tierName}</td>
+                  <td>
+                    {p.tierQty} × {p.tierName}
+                  </td>
                   <td className="num">{fmt(p.coins)}</td>
                 </tr>
               ))}
@@ -96,8 +112,8 @@ export default function AscensionPlanner({ character }) {
         </div>
       )}
       <p className="muted small">
-        {ASCENSION_PHASES.length} ascensions take the cap from 20 to {MAX_LEVEL}. Amounts follow
-        S-rank guides; check in-game for A-rank characters.
+        {ASCENSION_PHASES.length} ascensions take the cap from 20 to {MAX_LEVEL}. Amounts follow S-rank guides; check
+        in-game for A-rank characters.
       </p>
     </section>
   );

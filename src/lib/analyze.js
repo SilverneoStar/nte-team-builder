@@ -19,7 +19,10 @@ export function areNeighbours(a, b) {
  * That makes it easy to test and reuse.
  */
 export function analyzeTeam(memberIds) {
-  const members = memberIds.filter(Boolean).map((id) => CHARACTER_BY_ID[id]).filter(Boolean);
+  const members = memberIds
+    .filter(Boolean)
+    .map((id) => CHARACTER_BY_ID[id])
+    .filter(Boolean);
 
   const elementCounts = {};
   for (const m of members) elementCounts[m.element] = (elementCounts[m.element] || 0) + 1;
@@ -33,9 +36,7 @@ export function analyzeTeam(memberIds) {
   for (const m of members) for (const r of m.roles) roleCounts[r] += 1;
 
   // Elements with no neighbour in the team can't take part in any reaction.
-  const isolated = [...present].filter(
-    (el) => ![...present].some((other) => areNeighbours(el, other)),
-  );
+  const isolated = [...present].filter((el) => ![...present].some((other) => areNeighbours(el, other)));
 
   const notes = [];
   if (members.length === 0) {
@@ -52,7 +53,10 @@ export function analyzeTeam(memberIds) {
     }
     if (present.size > 1) {
       for (const el of isolated) {
-        const names = members.filter((m) => m.element === el).map((m) => m.name).join(', ');
+        const names = members
+          .filter((m) => m.element === el)
+          .map((m) => m.name)
+          .join(', ');
         notes.push({
           level: 'info',
           text: `${names} has no neighbouring element in this team, so they won't add a reaction.`,

@@ -62,8 +62,16 @@ export function loadoutOf(team, charId) {
 export function initialState(saved) {
   if (saved) return { ...saved, notice: null };
   const teams = [
-    makeTeam('Mono Blossom', ['nanally', 'jiuyuan', 'zero', 'hotori'], presetLoadouts(['nanally', 'jiuyuan', 'zero', 'hotori'])),
-    makeTeam('Lacrimosa Scorch', ['lacrimosa', 'sakiri', 'adler', 'fadia'], presetLoadouts(['lacrimosa', 'sakiri', 'adler', 'fadia'])),
+    makeTeam(
+      'Mono Blossom',
+      ['nanally', 'jiuyuan', 'zero', 'hotori'],
+      presetLoadouts(['nanally', 'jiuyuan', 'zero', 'hotori']),
+    ),
+    makeTeam(
+      'Lacrimosa Scorch',
+      ['lacrimosa', 'sakiri', 'adler', 'fadia'],
+      presetLoadouts(['lacrimosa', 'sakiri', 'adler', 'fadia']),
+    ),
   ];
   return { teams, activeId: teams[0].id, notice: null, isExample: true };
 }

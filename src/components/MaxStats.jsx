@@ -15,12 +15,23 @@ export default function MaxStats({ stats }) {
   if (stats.estimated) {
     return (
       <>
-        <h3 className="mini-title">Max stats <span>Lv {MAX_STATS_LEVEL} · estimated</span></h3>
+        <h3 className="mini-title">
+          Max stats <span>Lv {MAX_STATS_LEVEL} · estimated</span>
+        </h3>
         <table>
           <tbody>
-            {[['hp', 'HP', stats.hp], ['atk', 'ATK', stats.atk], ['def', 'DEF', stats.def]].map(([key, name, v]) => (
+            {[
+              ['hp', 'HP', stats.hp],
+              ['atk', 'ATK', stats.atk],
+              ['def', 'DEF', stats.def],
+            ].map(([key, name, v]) => (
               <tr key={key}>
-                <th scope="row"><span className="stat-label"><StatIcon stat={key} />{name}</span></th>
+                <th scope="row">
+                  <span className="stat-label">
+                    <StatIcon stat={key} />
+                    {name}
+                  </span>
+                </th>
                 <td>≈ {fmt(v)}</td>
               </tr>
             ))}
@@ -61,26 +72,37 @@ export default function MaxStats({ stats }) {
   const row = ([key, name, value], i) => (
     <tr key={`${name}-${i}`} className={value === '0' || value === '0%' ? 'is-zero' : undefined}>
       <th scope="row">
-        <span className="stat-label"><StatIcon stat={key} />{name}</span>
+        <span className="stat-label">
+          <StatIcon stat={key} />
+          {name}
+        </span>
       </th>
       <td>{value}</td>
     </tr>
   );
-  const typeRow = (prefix) => ([t, v]) => (
-    <tr key={`${prefix}-${t}`} className={v ? undefined : 'is-zero'}>
-      <th scope="row">
-        <span className="stat-label">
-          {t === 'mental' ? <StatIcon stat={prefix === 'res' ? 'res' : 'dmgBonus'} /> : <ElementGlyph element={t} size={16} />}
-          {label(t)} {prefix === 'res' ? 'Resistance' : 'DMG Bonus'}
-        </span>
-      </th>
-      <td>{pct(v)}</td>
-    </tr>
-  );
+  const typeRow =
+    (prefix) =>
+    ([t, v]) => (
+      <tr key={`${prefix}-${t}`} className={v ? undefined : 'is-zero'}>
+        <th scope="row">
+          <span className="stat-label">
+            {t === 'mental' ? (
+              <StatIcon stat={prefix === 'res' ? 'res' : 'dmgBonus'} />
+            ) : (
+              <ElementGlyph element={t} size={16} />
+            )}
+            {label(t)} {prefix === 'res' ? 'Resistance' : 'DMG Bonus'}
+          </span>
+        </th>
+        <td>{pct(v)}</td>
+      </tr>
+    );
 
   return (
     <>
-      <h3 className="mini-title">Max stats <span>Lv {MAX_STATS_LEVEL} · without Arc or Console</span></h3>
+      <h3 className="mini-title">
+        Max stats <span>Lv {MAX_STATS_LEVEL} · without Arc or Console</span>
+      </h3>
       <table>
         <tbody>{rows.map(row)}</tbody>
       </table>
@@ -90,15 +112,27 @@ export default function MaxStats({ stats }) {
           {advanced.map(row)}
           {healing.map(row)}
           {shownDmg.map(typeRow('dmg'))}
-          {showAll ? res.map(typeRow('res')) : (
+          {showAll ? (
+            res.map(typeRow('res'))
+          ) : (
             <tr className="is-zero">
-              <th scope="row"><span className="stat-label"><StatIcon stat="res" />Resistances</span></th>
+              <th scope="row">
+                <span className="stat-label">
+                  <StatIcon stat="res" />
+                  Resistances
+                </span>
+              </th>
               <td>{resAllZero ? 'All 0%' : 'See all'}</td>
             </tr>
           )}
         </tbody>
       </table>
-      <button type="button" className="btn btn--quiet stats__toggle" aria-expanded={showAll} onClick={() => setShowAll((v) => !v)}>
+      <button
+        type="button"
+        className="btn btn--quiet stats__toggle"
+        aria-expanded={showAll}
+        onClick={() => setShowAll((v) => !v)}
+      >
         {showAll ? 'Hide zero values' : 'Show all bonuses'}
       </button>
     </>

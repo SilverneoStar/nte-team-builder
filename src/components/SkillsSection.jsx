@@ -33,23 +33,34 @@ export default function SkillsSection({ character }) {
   return (
     <>
       <section aria-labelledby="skills-title">
-        <h3 id="skills-title" className="mini-title">Combat skills <span>max Lv {SKILL_MAX}</span></h3>
+        <h3 id="skills-title" className="mini-title">
+          Combat skills <span>max Lv {SKILL_MAX}</span>
+        </h3>
         <ol className="skill-list">
           {data.combat.map((sk) => (
             <li key={sk.type}>
               <span className="skill-type">{sk.type}</span>
               <span className="awaken-body">
                 <b>{sk.name ?? 'Not published yet'}</b>
-                {sk.summary && <span><StatText>{sk.summary}</StatText></span>}
+                {sk.summary && (
+                  <span>
+                    <StatText>{sk.summary}</StatText>
+                  </span>
+                )}
               </span>
             </li>
           ))}
         </ol>
 
-        <h3 className="mini-title skill-life-title">Passives <span>unlocked with skill books</span></h3>
+        <h3 className="mini-title skill-life-title">
+          Passives <span>unlocked with skill books</span>
+        </h3>
         {pas ? (
           <ol className="skill-list">
-            {[['Passive 1', pas.p1], ['Passive 2', pas.p2]].map(([label, ps]) => (
+            {[
+              ['Passive 1', pas.p1],
+              ['Passive 2', pas.p2],
+            ].map(([label, ps]) => (
               <li key={label}>
                 <span className="skill-type skill-type--passive">{label}</span>
                 <span className="awaken-body">
@@ -57,7 +68,9 @@ export default function SkillsSection({ character }) {
                     {ps.name}
                     {ps.boosts && <span className="passive-boost">{ps.boosts} Enhancement</span>}
                   </b>
-                  <span><StatText>{ps.text}</StatText></span>
+                  <span>
+                    <StatText>{ps.text}</StatText>
+                  </span>
                 </span>
               </li>
             ))}
@@ -74,19 +87,22 @@ export default function SkillsSection({ character }) {
                 <span className="skill-type skill-type--trait">Trait</span>
                 <span className="awaken-body">
                   <b>{pas.trait.name}</b>
-                  <span><StatText>{pas.trait.text}</StatText></span>
+                  <span>
+                    <StatText>{pas.trait.text}</StatText>
+                  </span>
                 </span>
               </li>
             </ol>
           </>
         )}
-
       </section>
 
       {cost && (
         <section className="ascend" aria-labelledby="skillmats-title">
           <div className="ascend__head">
-            <h3 id="skillmats-title" className="mini-title">Skill materials</h3>
+            <h3 id="skillmats-title" className="mini-title">
+              Skill materials
+            </h3>
             <div className="ascend__range">
               <label>
                 <span>All 4 skills, Lv</span>
@@ -99,14 +115,22 @@ export default function SkillsSection({ character }) {
                     if (to < v) setTo(v);
                   }}
                 >
-                  {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+                  {LEVELS.map((l) => (
+                    <option key={l} value={l}>
+                      {l}
+                    </option>
+                  ))}
                 </select>
               </label>
               <span aria-hidden="true">→</span>
               <label>
                 <span className="sr-only">Target skill level</span>
                 <select id="skill-to" value={to} onChange={(e) => setTo(Number(e.target.value))}>
-                  {LEVELS.filter((l) => l >= from).map((l) => <option key={l} value={l}>{l}</option>)}
+                  {LEVELS.filter((l) => l >= from).map((l) => (
+                    <option key={l} value={l}>
+                      {l}
+                    </option>
+                  ))}
                 </select>
               </label>
             </div>
@@ -154,15 +178,23 @@ export default function SkillsSection({ character }) {
                   <tr>
                     <th scope="col">One skill</th>
                     <th scope="col">Skill books + family</th>
-                    <th scope="col" className="num-l">Weekly</th>
-                    <th scope="col" className="num">Beetle Coin</th>
+                    <th scope="col" className="num-l">
+                      Weekly
+                    </th>
+                    <th scope="col" className="num">
+                      Beetle Coin
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {SKILL_LEVEL_COSTS.map((r) => (
                     <tr key={r.level} className={r.level > from && r.level <= to ? 'in-range' : undefined}>
-                      <td>Lv {r.level - 1} → {r.level}</td>
-                      <td>{r.qty} + {r.qty} × tier {r.tier}</td>
+                      <td>
+                        Lv {r.level - 1} → {r.level}
+                      </td>
+                      <td>
+                        {r.qty} + {r.qty} × tier {r.tier}
+                      </td>
                       <td className="num-l">{r.weekly || '—'}</td>
                       <td className="num">{fmt(r.coins)}</td>
                     </tr>
@@ -172,8 +204,8 @@ export default function SkillsSection({ character }) {
             </div>
           )}
           <p className="muted small">
-            Each of the 4 combat skills costs the same. Life skill amounts vary between guides
-            (56–96 Dreamless Seeds); check in-game.
+            Each of the 4 combat skills costs the same. Life skill amounts vary between guides (56–96 Dreamless Seeds);
+            check in-game.
           </p>
         </section>
       )}

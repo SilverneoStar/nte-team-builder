@@ -103,7 +103,7 @@ export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
   ctx.beginPath();
   ctx.rect(x, y, w, h);
   ctx.clip();
-  ctx.fillStyle = mix(color, 0, 0.22);   // a touch dimmer than the element colour
+  ctx.fillStyle = mix(color, 0, 0.22); // a touch dimmer than the element colour
   ctx.fillRect(x, y, w, h);
   if (brushed) {
     ctx.globalCompositeOperation = 'overlay';
@@ -315,8 +315,13 @@ export function drawSilverFrame(ctx, w, h, { width = FRAME_WIDTH, radius = FRAME
   ctx.clip('evenodd');
   const silver = ctx.createLinearGradient(0, 0, w, h);
   [
-    [0, '#4a4f5c'], [0.18, '#727886'], [0.36, '#9ea4b1'], [0.5, '#c3c8d2'],
-    [0.64, '#979dab'], [0.82, '#6b7180'], [1, '#464b57'],
+    [0, '#4a4f5c'],
+    [0.18, '#727886'],
+    [0.36, '#9ea4b1'],
+    [0.5, '#c3c8d2'],
+    [0.64, '#979dab'],
+    [0.82, '#6b7180'],
+    [1, '#464b57'],
   ].forEach(([at, col]) => silver.addColorStop(at, col));
   ctx.fillStyle = silver;
   ctx.fillRect(0, 0, w, h);
@@ -324,7 +329,7 @@ export function drawSilverFrame(ctx, w, h, { width = FRAME_WIDTH, radius = FRAME
   // Wisps drift along each edge, placed by a fixed pseudo-random sequence so
   // every export looks the same.
   let seed = 7;
-  const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const perimeter = 2 * (w + h);
   const count = Math.round(perimeter / 28);
   for (let i = 0; i < count; i += 1) {
@@ -334,10 +339,22 @@ export function drawSilverFrame(ctx, w, h, { width = FRAME_WIDTH, radius = FRAME
     let cx;
     let cy;
     let vertical = false;
-    if (t < w) { cx = t; cy = across; }
-    else if ((t -= w) < h) { cx = w - across; cy = t; vertical = true; }
-    else if ((t -= h) < w) { cx = w - t; cy = h - across; }
-    else { t -= w; cx = across; cy = h - t; vertical = true; }
+    if (t < w) {
+      cx = t;
+      cy = across;
+    } else if ((t -= w) < h) {
+      cx = w - across;
+      cy = t;
+      vertical = true;
+    } else if ((t -= h) < w) {
+      cx = w - t;
+      cy = h - across;
+    } else {
+      t -= w;
+      cx = across;
+      cy = h - t;
+      vertical = true;
+    }
     const rx = 14 + rand() * 40;
     const ry = 1.5 + rand() * 3.5;
     const a = dark ? 0.18 + rand() * 0.2 : 0.14 + rand() * 0.26;
@@ -475,14 +492,51 @@ export const SIDE_H = 1000;
 // Member panel metrics per layout (offsets from the panel top).
 const METRICS = {
   row: {
-    r: 58, cy: 86, shift: 0, frame: { w: 136, h: 126, y: 20, r: 18 }, nameFont: 22, gearFont: 15, gearLine: 19, bonusLine: 17, bonusName: 12, bonusNum: 14, alwaysTwoLines: false,
-    aw: { w: 34, h: 20, step: 24, font: 11, rr: 14, rStep: 34 }, elFont: 13, elIcon: 20, rank: 24, roleFont: 14, roleIcon: 16, roleGap: 0,
-    dupFont: 12, label: 12, tiles: false,
+    r: 58,
+    cy: 86,
+    shift: 0,
+    frame: { w: 136, h: 126, y: 20, r: 18 },
+    nameFont: 22,
+    gearFont: 15,
+    gearLine: 19,
+    bonusLine: 17,
+    bonusName: 12,
+    bonusNum: 14,
+    alwaysTwoLines: false,
+    aw: { w: 34, h: 20, step: 24, font: 11, rr: 14, rStep: 34 },
+    elFont: 13,
+    elIcon: 20,
+    rank: 24,
+    roleFont: 14,
+    roleIcon: 16,
+    roleGap: 0,
+    dupFont: 12,
+    label: 12,
+    tiles: false,
   },
   grid: {
-    r: 74, cy: 104, shift: 34, frame: { w: 236, h: 148, y: 22, r: 22 }, nameFont: 28, gearFont: 18, gearLine: 22, bonusLine: 27, bonusName: 16, bonusNum: 18, alwaysTwoLines: true,
-    aw: { w: 42, h: 28, step: 36, font: 14, rr: 19, rStep: 40 }, awTwoCol: true, elFont: 17, elIcon: 26, rank: 30, roleFont: 18, roleIcon: 20, roleGap: 10,
-    dupFont: 15, label: 14, tiles: true,
+    r: 74,
+    cy: 104,
+    shift: 34,
+    frame: { w: 236, h: 148, y: 22, r: 22 },
+    nameFont: 28,
+    gearFont: 18,
+    gearLine: 22,
+    bonusLine: 27,
+    bonusName: 16,
+    bonusNum: 18,
+    alwaysTwoLines: true,
+    aw: { w: 42, h: 28, step: 36, font: 14, rr: 19, rStep: 40 },
+    awTwoCol: true,
+    elFont: 17,
+    elIcon: 26,
+    rank: 30,
+    roleFont: 18,
+    roleIcon: 20,
+    roleGap: 10,
+    dupFont: 15,
+    label: 14,
+    tiles: true,
   },
 };
 
@@ -510,7 +564,11 @@ function gearTiles(ctx, x, y, w, o) {
     }
     if (col.tag) {
       pill(ctx, lx, y - 11, col.tag === 'sig' ? 'SIG' : 'REC', {
-        bg: col.tag === 'sig' ? C.sig : '#2a3150', fg: col.tag === 'sig' ? '#1a1400' : C.accent, font: `700 12px ${MONO}`, padX: 7, h: 20,
+        bg: col.tag === 'sig' ? C.sig : '#2a3150',
+        fg: col.tag === 'sig' ? '#1a1400' : C.accent,
+        font: `700 12px ${MONO}`,
+        padX: 7,
+        h: 20,
       });
     }
     const ty = y + 16;
@@ -569,14 +627,29 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   // Official element and role icons.
   const elementIds = [...new Set(members.filter(Boolean).map((c) => c.element))];
   const roleIds = [...new Set(members.filter(Boolean).flatMap((c) => c.roles))];
-  const cartIds = [...new Set(members.filter(Boolean).map((c) => loadoutOf(team, c.id).cartridge).filter(Boolean))];
+  const cartIds = [
+    ...new Set(
+      members
+        .filter(Boolean)
+        .map((c) => loadoutOf(team, c.id).cartridge)
+        .filter(Boolean),
+    ),
+  ];
   // Arc type icons, shown before each Arc name.
-  const arcTypes = [...new Set(team.members.map((id) => {
-    const g = id && loadoutOf(team, id);
-    return g?.arc && ARC_BY_ID[g.arc]?.type;
-  }).filter(Boolean))];
+  const arcTypes = [
+    ...new Set(
+      team.members
+        .map((id) => {
+          const g = id && loadoutOf(team, id);
+          return g?.arc && ARC_BY_ID[g.arc]?.type;
+        })
+        .filter(Boolean),
+    ),
+  ];
   const arcTypeIcons = Object.fromEntries(
-    await Promise.all(arcTypes.map(async (t) => [t, await loadImage(`${base}icons/arc-types/${t.toLowerCase()}.webp`)])),
+    await Promise.all(
+      arcTypes.map(async (t) => [t, await loadImage(`${base}icons/arc-types/${t.toLowerCase()}.webp`)]),
+    ),
   );
   const arcArtIds = grid ? [...new Set(team.members.map((id) => id && loadoutOf(team, id).arc).filter(Boolean))] : [];
   const arcArts = Object.fromEntries(
@@ -745,7 +818,12 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       const dText = `+${gearAw.dupes}`;
       ctx.font = `700 ${M.dupFont}px ${MONO}`;
       const dW = ctx.measureText(dText).width + 16;
-      pill(ctx, x + cw - 12 - dW, top + 16, dText, { bg: C.panel2, fg: C.muted, font: `700 ${M.dupFont}px ${MONO}`, h: M.dupFont + 10 });
+      pill(ctx, x + cw - 12 - dW, top + 16, dText, {
+        bg: C.panel2,
+        fg: C.muted,
+        font: `700 ${M.dupFont}px ${MONO}`,
+        h: M.dupFont + 10,
+      });
     }
 
     // Name and element
@@ -844,14 +922,35 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       gy += 30 + lines.length * M.gearLine;
     };
     if (M.tiles) {
-      gy += gearTiles(ctx, gx, gy, gw, {
-        arc, arcImg: arc && arcArts[arc.id], arcTag: arc ? arcTag(arc, c) : null, arcExtra: arc && gear.arcDupes ? `+${gear.arcDupes}` : null,
-        cart, cartImg: cart && cartIcons[cart.id], cartTag: cart && cartridgesFor(c).includes(cart.id) ? 'rec' : null,
-        size: 54, label: M.label, nameFont: 17, lineH: 20,
-      }) + 22;
+      gy +=
+        gearTiles(ctx, gx, gy, gw, {
+          arc,
+          arcImg: arc && arcArts[arc.id],
+          arcTag: arc ? arcTag(arc, c) : null,
+          arcExtra: arc && gear.arcDupes ? `+${gear.arcDupes}` : null,
+          cart,
+          cartImg: cart && cartIcons[cart.id],
+          cartTag: cart && cartridgesFor(c).includes(cart.id) ? 'rec' : null,
+          size: 54,
+          label: M.label,
+          nameFont: 17,
+          lineH: 20,
+        }) + 22;
     } else {
-      gearRow('ARC', arc?.name, arc ? arcTag(arc, c) : null, arc && gear.arcDupes ? `+${gear.arcDupes}` : null, arc && arcTypeIcons[arc.type]);
-      gearRow('CARTRIDGE', cart?.name, cart && cartridgesFor(c).includes(cart.id) ? 'rec' : null, null, cart && cartIcons[cart.id]);
+      gearRow(
+        'ARC',
+        arc?.name,
+        arc ? arcTag(arc, c) : null,
+        arc && gear.arcDupes ? `+${gear.arcDupes}` : null,
+        arc && arcTypeIcons[arc.type],
+      );
+      gearRow(
+        'CARTRIDGE',
+        cart?.name,
+        cart && cartridgesFor(c).includes(cart.id) ? 'rec' : null,
+        null,
+        cart && cartIcons[cart.id],
+      );
     }
 
     // Bonus stats: Arc + Cartridge, two columns along the bottom of the panel.
@@ -897,181 +996,194 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   });
 
   // Side-by-side 2x2: portrait and awakenings on the left, details on the right.
-  if (side) members.forEach((c, i) => {
-    const x = PAD + (i % 2) * (cw + gap);
-    const top = 136 + Math.floor(i / 2) * (ch + gap);
-    if (!c) {
-      ctx.strokeStyle = C.line;
-      ctx.setLineDash([8, 6]);
-      ctx.lineWidth = 2;
-      roundRect(ctx, x + 1, top + 1, cw - 2, ch - 2, 14);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = C.muted;
-      ctx.font = `500 18px ${BODY}`;
-      ctx.textAlign = 'center';
-      ctx.fillText('Open slot', x + cw / 2, top + ch / 2);
-      ctx.textAlign = 'left';
-      return;
-    }
-    const el = EL[c.element];
-    const gear = loadoutOf(team, c.id);
-    ctx.fillStyle = C.panel;
-    roundRect(ctx, x, top, cw, ch, 14);
-    ctx.fill();
-    ctx.save();
-    roundRect(ctx, x, top, cw, ch, 14);
-    ctx.clip();
-    metalStrip(ctx, x, top, 8, ch, el, true);
-    ctx.restore();
-
-    // Portrait: round frame on the Arc-type backdrop
-    const r = Math.min(92, (ch - 100) / 2);
-    const cx = x + 30 + r;
-    const cy = top + 24 + r;
-    framedPortrait(ctx, images[i], c, { x: cx - r, y: cy - r, w: r * 2, h: r * 2, r, color: el, patterns });
-
-    // Awakenings A1-A6 in a row under the portrait, Resonance and duplicates below.
-    const onSet = new Set(gear.awakenings);
-    const colW = r * 2 + 16;
-    const pw = Math.min(32, (colW - 5 * 4) / 6);
-    const ax0 = cx - (pw * 6 + 20) / 2;
-    const ay = cy + r + 14;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    for (let k = 0; k < 6; k++) {
-      const on = onSet.has(`A${k + 1}`);
-      const px = ax0 + k * (pw + 4);
-      ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.06)';
-      roundRect(ctx, px, ay, pw, 24, 6);
-      ctx.fill();
-      if (!on) {
+  if (side)
+    members.forEach((c, i) => {
+      const x = PAD + (i % 2) * (cw + gap);
+      const top = 136 + Math.floor(i / 2) * (ch + gap);
+      if (!c) {
         ctx.strokeStyle = C.line;
-        ctx.lineWidth = 1;
+        ctx.setLineDash([8, 6]);
+        ctx.lineWidth = 2;
+        roundRect(ctx, x + 1, top + 1, cw - 2, ch - 2, 14);
         ctx.stroke();
-      }
-      ctx.fillStyle = on ? C.bg : C.muted;
-      ctx.font = `700 13px ${MONO}`;
-      ctx.fillText(`A${k + 1}`, px + pw / 2, ay + 13);
-    }
-    const reso = activeResonance(onSet.size);
-    const ry2 = ay + 44;
-    ['R3', 'R6'].forEach((id, k) => {
-      const on = reso[id];
-      const rcx = cx - 36 + k * 38;
-      ctx.beginPath();
-      ctx.arc(rcx, ry2, 15, 0, Math.PI * 2);
-      ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.04)';
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = on ? el : C.line;
-      ctx.stroke();
-      ctx.fillStyle = on ? C.bg : C.muted;
-      ctx.font = `700 13px ${MONO}`;
-      ctx.fillText(id, rcx, ry2 + 1);
-    });
-    if (gear.dupes) {
-      ctx.fillStyle = C.panel2;
-      roundRect(ctx, cx + 22, ry2 - 14, 48, 28, 14);
-      ctx.fill();
-      ctx.fillStyle = C.muted;
-      ctx.font = `700 15px ${MONO}`;
-      ctx.fillText(`+${gear.dupes}`, cx + 46, ry2 + 1);
-    }
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
-
-    // Details
-    const dx = x + 30 + r * 2 + 34;
-    const dw = x + cw - 26 - dx;
-    let y = top + 54;
-    ctx.fillStyle = C.fg;
-    ctx.font = `700 34px ${BODY}`;
-    ctx.fillText(fitLine(ctx, c.name, dw, 20), dx, y);
-    y += 36;
-    let fx = dx;
-    const elIcon = elIcons[c.element];
-    if (elIcon) ctx.drawImage(elIcon, fx, y - 22, 28, 28);
-    fx += elIcon ? 34 : 0;
-    ctx.font = `600 18px ${MONO}`;
-    ctx.fillStyle = el;
-    const elName = ELEMENT_BY_ID[c.element].name.toUpperCase();
-    ctx.fillText(elName, fx, y);
-    fx += ctx.measureText(elName).width + 10;
-    drawRank(ctx, c.rarity, fx, y - 6, 30);
-    fx += 44;
-    ctx.font = `500 19px ${BODY}`;
-    ctx.fillStyle = C.muted;
-    c.roles.forEach((role, k) => {
-      if (k > 0) {
-        ctx.fillText('·', fx, y);
-        fx += 16;
-      }
-      const icon = roleIcons[role];
-      if (icon) ctx.drawImage(icon, fx, y - 17, 20, 20);
-      ctx.fillText(role, fx + 25, y);
-      fx += 25 + ctx.measureText(role).width + 12;
-    });
-    y += 18;
-    ctx.strokeStyle = C.line;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(dx, y);
-    ctx.lineTo(dx + dw, y);
-    ctx.stroke();
-
-    const arc = gear.arc && ARC_BY_ID[gear.arc];
-    const cart = gear.cartridge && CARTRIDGE_BY_ID[gear.cartridge];
-    y += 30;
-    y += gearTiles(ctx, dx, y, dw, {
-      arc, arcImg: arc && arcArts[arc.id], arcTag: arc ? arcTag(arc, c) : null, arcExtra: arc && gear.arcDupes ? `+${gear.arcDupes}` : null,
-      cart, cartImg: cart && cartIcons[cart.id], cartTag: cart && cartridgesFor(c).includes(cart.id) ? 'rec' : null,
-      size: 56, label: 14, nameFont: 18, lineH: 21,
-    });
-
-    // Bonus stats: three columns.
-    const bonus = bonusStats(arc, gear.cartStats, consoleStats(c.id, gear.console, gear.cartridge));
-    if (bonus.length) {
-      y += 30;
-      ctx.fillStyle = C.muted;
-      ctx.font = `500 14px ${MONO}`;
-      ctx.fillText('BONUS STATS', dx, y);
-      const cols3 = 3;
-      const LH = 25;
-      const rowsN = Math.max(1, Math.floor((top + ch - 12 - (y + 4)) / LH));
-      const cap = cols3 * rowsN;
-      const shown = bonus.length > cap ? bonus.slice(0, cap - 1) : bonus;
-      const bw = (dw - 18 * (cols3 - 1)) / cols3;
-      shown.forEach((b, k) => {
-        const bx = dx + Math.floor(k / rowsN) * (bw + 18);
-        const yy = y + 26 + (k % rowsN) * LH;
-        const v = Number.isInteger(b.value) ? String(b.value) : b.value.toFixed(2).replace(/0$/, '');
-        const valText = `${v}${isPercentStat(b.stat) ? '%' : ''}`;
-        ctx.font = `700 17px ${MONO}`;
-        const vw = ctx.measureText(valText).width;
-        const name = STAT_SHORT[b.stat] ?? b.stat;
-        let fs = 15;
-        ctx.font = `500 ${fs}px ${MONO}`;
-        while (fs > 12 && ctx.measureText(name).width > bw - vw - 6) {
-          fs -= 0.5;
-          ctx.font = `500 ${fs}px ${MONO}`;
-        }
-        ctx.fillStyle = C.label;
-        ctx.fillText(fitLine(ctx, name, bw - vw - 6, 10), bx, yy);
-        ctx.fillStyle = C.num;
-        ctx.font = `700 17px ${MONO}`;
-        ctx.textAlign = 'right';
-        ctx.fillText(valText, bx + bw, yy);
+        ctx.setLineDash([]);
+        ctx.fillStyle = C.muted;
+        ctx.font = `500 18px ${BODY}`;
+        ctx.textAlign = 'center';
+        ctx.fillText('Open slot', x + cw / 2, top + ch / 2);
         ctx.textAlign = 'left';
+        return;
+      }
+      const el = EL[c.element];
+      const gear = loadoutOf(team, c.id);
+      ctx.fillStyle = C.panel;
+      roundRect(ctx, x, top, cw, ch, 14);
+      ctx.fill();
+      ctx.save();
+      roundRect(ctx, x, top, cw, ch, 14);
+      ctx.clip();
+      metalStrip(ctx, x, top, 8, ch, el, true);
+      ctx.restore();
+
+      // Portrait: round frame on the Arc-type backdrop
+      const r = Math.min(92, (ch - 100) / 2);
+      const cx = x + 30 + r;
+      const cy = top + 24 + r;
+      framedPortrait(ctx, images[i], c, { x: cx - r, y: cy - r, w: r * 2, h: r * 2, r, color: el, patterns });
+
+      // Awakenings A1-A6 in a row under the portrait, Resonance and duplicates below.
+      const onSet = new Set(gear.awakenings);
+      const colW = r * 2 + 16;
+      const pw = Math.min(32, (colW - 5 * 4) / 6);
+      const ax0 = cx - (pw * 6 + 20) / 2;
+      const ay = cy + r + 14;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (let k = 0; k < 6; k++) {
+        const on = onSet.has(`A${k + 1}`);
+        const px = ax0 + k * (pw + 4);
+        ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.06)';
+        roundRect(ctx, px, ay, pw, 24, 6);
+        ctx.fill();
+        if (!on) {
+          ctx.strokeStyle = C.line;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        ctx.fillStyle = on ? C.bg : C.muted;
+        ctx.font = `700 13px ${MONO}`;
+        ctx.fillText(`A${k + 1}`, px + pw / 2, ay + 13);
+      }
+      const reso = activeResonance(onSet.size);
+      const ry2 = ay + 44;
+      ['R3', 'R6'].forEach((id, k) => {
+        const on = reso[id];
+        const rcx = cx - 36 + k * 38;
+        ctx.beginPath();
+        ctx.arc(rcx, ry2, 15, 0, Math.PI * 2);
+        ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.04)';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = on ? el : C.line;
+        ctx.stroke();
+        ctx.fillStyle = on ? C.bg : C.muted;
+        ctx.font = `700 13px ${MONO}`;
+        ctx.fillText(id, rcx, ry2 + 1);
       });
-      if (shown.length < bonus.length) {
+      if (gear.dupes) {
+        ctx.fillStyle = C.panel2;
+        roundRect(ctx, cx + 22, ry2 - 14, 48, 28, 14);
+        ctx.fill();
+        ctx.fillStyle = C.muted;
+        ctx.font = `700 15px ${MONO}`;
+        ctx.fillText(`+${gear.dupes}`, cx + 46, ry2 + 1);
+      }
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+
+      // Details
+      const dx = x + 30 + r * 2 + 34;
+      const dw = x + cw - 26 - dx;
+      let y = top + 54;
+      ctx.fillStyle = C.fg;
+      ctx.font = `700 34px ${BODY}`;
+      ctx.fillText(fitLine(ctx, c.name, dw, 20), dx, y);
+      y += 36;
+      let fx = dx;
+      const elIcon = elIcons[c.element];
+      if (elIcon) ctx.drawImage(elIcon, fx, y - 22, 28, 28);
+      fx += elIcon ? 34 : 0;
+      ctx.font = `600 18px ${MONO}`;
+      ctx.fillStyle = el;
+      const elName = ELEMENT_BY_ID[c.element].name.toUpperCase();
+      ctx.fillText(elName, fx, y);
+      fx += ctx.measureText(elName).width + 10;
+      drawRank(ctx, c.rarity, fx, y - 6, 30);
+      fx += 44;
+      ctx.font = `500 19px ${BODY}`;
+      ctx.fillStyle = C.muted;
+      c.roles.forEach((role, k) => {
+        if (k > 0) {
+          ctx.fillText('·', fx, y);
+          fx += 16;
+        }
+        const icon = roleIcons[role];
+        if (icon) ctx.drawImage(icon, fx, y - 17, 20, 20);
+        ctx.fillText(role, fx + 25, y);
+        fx += 25 + ctx.measureText(role).width + 12;
+      });
+      y += 18;
+      ctx.strokeStyle = C.line;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(dx, y);
+      ctx.lineTo(dx + dw, y);
+      ctx.stroke();
+
+      const arc = gear.arc && ARC_BY_ID[gear.arc];
+      const cart = gear.cartridge && CARTRIDGE_BY_ID[gear.cartridge];
+      y += 30;
+      y += gearTiles(ctx, dx, y, dw, {
+        arc,
+        arcImg: arc && arcArts[arc.id],
+        arcTag: arc ? arcTag(arc, c) : null,
+        arcExtra: arc && gear.arcDupes ? `+${gear.arcDupes}` : null,
+        cart,
+        cartImg: cart && cartIcons[cart.id],
+        cartTag: cart && cartridgesFor(c).includes(cart.id) ? 'rec' : null,
+        size: 56,
+        label: 14,
+        nameFont: 18,
+        lineH: 21,
+      });
+
+      // Bonus stats: three columns.
+      const bonus = bonusStats(arc, gear.cartStats, consoleStats(c.id, gear.console, gear.cartridge));
+      if (bonus.length) {
+        y += 30;
         ctx.fillStyle = C.muted;
         ctx.font = `500 14px ${MONO}`;
-        const k = shown.length;
-        ctx.fillText(`+${bonus.length - shown.length} more`, dx + Math.floor(k / rowsN) * (bw + 18), y + 26 + (k % rowsN) * LH);
+        ctx.fillText('BONUS STATS', dx, y);
+        const cols3 = 3;
+        const LH = 25;
+        const rowsN = Math.max(1, Math.floor((top + ch - 12 - (y + 4)) / LH));
+        const cap = cols3 * rowsN;
+        const shown = bonus.length > cap ? bonus.slice(0, cap - 1) : bonus;
+        const bw = (dw - 18 * (cols3 - 1)) / cols3;
+        shown.forEach((b, k) => {
+          const bx = dx + Math.floor(k / rowsN) * (bw + 18);
+          const yy = y + 26 + (k % rowsN) * LH;
+          const v = Number.isInteger(b.value) ? String(b.value) : b.value.toFixed(2).replace(/0$/, '');
+          const valText = `${v}${isPercentStat(b.stat) ? '%' : ''}`;
+          ctx.font = `700 17px ${MONO}`;
+          const vw = ctx.measureText(valText).width;
+          const name = STAT_SHORT[b.stat] ?? b.stat;
+          let fs = 15;
+          ctx.font = `500 ${fs}px ${MONO}`;
+          while (fs > 12 && ctx.measureText(name).width > bw - vw - 6) {
+            fs -= 0.5;
+            ctx.font = `500 ${fs}px ${MONO}`;
+          }
+          ctx.fillStyle = C.label;
+          ctx.fillText(fitLine(ctx, name, bw - vw - 6, 10), bx, yy);
+          ctx.fillStyle = C.num;
+          ctx.font = `700 17px ${MONO}`;
+          ctx.textAlign = 'right';
+          ctx.fillText(valText, bx + bw, yy);
+          ctx.textAlign = 'left';
+        });
+        if (shown.length < bonus.length) {
+          ctx.fillStyle = C.muted;
+          ctx.font = `500 14px ${MONO}`;
+          const k = shown.length;
+          ctx.fillText(
+            `+${bonus.length - shown.length} more`,
+            dx + Math.floor(k / rowsN) * (bw + 18),
+            y + 26 + (k % rowsN) * LH,
+          );
+        }
       }
-    }
-  });
+    });
 
   // Reactions
   const rows = grid ? 2 : 1;
@@ -1154,7 +1266,14 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   ctx.fillStyle = C.muted;
   ctx.font = `400 12px ${BODY}`;
   ctx.fillText(LEGAL, PAD, legalY);
-  drawLinksLine(ctx, W - PAD, linksY, { font: linksFont, color: C.muted, accent: C.fg, iconSize: 13, gap: 18, align: 'right' });
+  drawLinksLine(ctx, W - PAD, linksY, {
+    font: linksFont,
+    color: C.muted,
+    accent: C.fg,
+    iconSize: 13,
+    gap: 18,
+    align: 'right',
+  });
   // Card code: type it into the builder to rebuild this team and its gear.
   ctx.textAlign = 'right';
   ctx.font = `600 ${codeSize}px ${MONO}`;
@@ -1166,9 +1285,6 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   ctx.fillText('CODE', W - PAD - firstW - 12, codeTop - 2);
   ctx.textAlign = 'left';
 
-
   drawSilverFrame(ctx, W, H);
   return canvas;
 }
-
-

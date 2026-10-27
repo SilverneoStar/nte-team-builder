@@ -52,17 +52,38 @@ export default function ArcDetail({ arc: a, onClose }) {
   const info = (
     <>
       <dl className="facts">
-        <div><dt>Base ATK</dt><dd>{a.atk} <span className="muted">at Lv {ARC_MAX_LEVEL}</span></dd></div>
-        <div><dt>Secondary</dt><dd>{a.sub}</dd></div>
-        {!full && <div><dt>Passive</dt><dd><StatText>{a.passive}</StatText></dd></div>}
+        <div>
+          <dt>Base ATK</dt>
+          <dd>
+            {a.atk} <span className="muted">at Lv {ARC_MAX_LEVEL}</span>
+          </dd>
+        </div>
+        <div>
+          <dt>Secondary</dt>
+          <dd>{a.sub}</dd>
+        </div>
+        {!full && (
+          <div>
+            <dt>Passive</dt>
+            <dd>
+              <StatText>{a.passive}</StatText>
+            </dd>
+          </div>
+        )}
       </dl>
 
       {full && (
         <section className="arc-passive" aria-label="Passive">
           <span className="arc-passive__label">Passive · {full.name}</span>
-          {full.text.map((t) => <p key={t}><StatText>{t}</StatText></p>)}
+          {full.text.map((t) => (
+            <p key={t}>
+              <StatText>{t}</StatText>
+            </p>
+          ))}
           {full.max && (
-            <p className="arc-passive__max"><strong>Fully mixed (4 duplicates):</strong> <StatText>{full.max}</StatText></p>
+            <p className="arc-passive__max">
+              <strong>Fully mixed (4 duplicates):</strong> <StatText>{full.max}</StatText>
+            </p>
           )}
         </section>
       )}
@@ -71,7 +92,9 @@ export default function ArcDetail({ arc: a, onClose }) {
         <aside className="arc-field">
           <span className="arc-field__label">Outside combat</span>
           <strong>{field.name}</strong>
-          <p><StatText>{field.text}</StatText></p>
+          <p>
+            <StatText>{field.text}</StatText>
+          </p>
         </aside>
       )}
     </>
@@ -79,10 +102,14 @@ export default function ArcDetail({ arc: a, onClose }) {
   const obtain = (
     <>
       <section className="arc-obtain" aria-labelledby="arc-obtain-title">
-        <h3 id="arc-obtain-title" className="mini-title">How to get</h3>
+        <h3 id="arc-obtain-title" className="mini-title">
+          How to get
+        </h3>
         {sources.length > 0 ? (
           <ul className="arc-obtain__list">
-            {sources.map((s) => <li key={s}>{s}</li>)}
+            {sources.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
           </ul>
         ) : (
           <p className="muted small">No source is listed for this Arc yet.</p>
@@ -131,108 +158,134 @@ export default function ArcDetail({ arc: a, onClose }) {
       </section>
     </>
   );
-  const ascend = cost && table ? (
-    <section className="ascend" aria-labelledby="arc-ascend-title">
-      <div className="ascend__head">
-        <h3 id="arc-ascend-title" className="mini-title">Ascension materials</h3>
-        <div className="ascend__range">
-          <label>
-            <span>Level cap</span>
-            <select
-              value={from}
-              onChange={(e) => {
-                const v = Number(e.target.value);
-                setFrom(v);
-                if (to <= v) setTo(Math.min(v + 10, ARC_MAX_LEVEL));
-              }}
-            >
-              {CAPS.slice(0, -1).map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </label>
-          <span aria-hidden="true">→</span>
-          <label>
-            <span className="sr-only">Target level cap</span>
-            <select value={to} onChange={(e) => setTo(Number(e.target.value))}>
-              {CAPS.filter((c) => c > from).map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </label>
+  const ascend =
+    cost && table ? (
+      <section className="ascend" aria-labelledby="arc-ascend-title">
+        <div className="ascend__head">
+          <h3 id="arc-ascend-title" className="mini-title">
+            Ascension materials
+          </h3>
+          <div className="ascend__range">
+            <label>
+              <span>Level cap</span>
+              <select
+                value={from}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  setFrom(v);
+                  if (to <= v) setTo(Math.min(v + 10, ARC_MAX_LEVEL));
+                }}
+              >
+                {CAPS.slice(0, -1).map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <span aria-hidden="true">→</span>
+            <label>
+              <span className="sr-only">Target level cap</span>
+              <select value={to} onChange={(e) => setTo(Number(e.target.value))}>
+                {CAPS.filter((c) => c > from).map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <ul className="mats">
-        {cost.map((m) => (
-          <li key={m.name} className={`mat mat--${m.kind}`}>
-            <MaterialIcon name={m.name} />
-            <span className="mat__qty">{fmt(m.qty)}</span>
-            <span className="mat__name">
-              {m.name}
-              {m.source && <span className="mat__src">{m.source}</span>}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <button
-        type="button"
-        className="btn btn--quiet ascend__toggle"
-        aria-expanded={showPhases}
-        onClick={() => setShowPhases((v) => !v)}
-      >
-        {showPhases ? 'Hide' : 'Show'} each ascension
-      </button>
-
-      {showPhases && (
-        <div className="table-wrap">
-          <table className="phase-table">
-            <thead>
-              <tr>
-                <th scope="col">Ascension</th>
-                <th scope="col">Arc material</th>
-                <th scope="col">Anomaly material</th>
-                <th scope="col" className="num">Beetle Coin</th>
-              </tr>
-            </thead>
-            <tbody>
-              {table.map((p) => (
-                <tr key={p.at} className={p.at >= from && p.at < to ? 'in-range' : undefined}>
-                  <td>Lv {p.at} → {p.to}</td>
-                  <td>{p.qty} × {p.aName}</td>
-                  <td>{p.qty} × {p.bName}</td>
-                  <td className="num">{fmt(p.coins)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <div className="arc-level">
-        <h4 className="mini-title">Levelling</h4>
-        <ul className="arc-dyes">
-          {ARC_DYES.map((d) => (
-            <li key={d.name}>
-              <MaterialIcon name={d.name} size={26} />
-              <span>{d.name}<span className="mat__src">+{fmt(d.exp)} EXP</span></span>
+        <ul className="mats">
+          {cost.map((m) => (
+            <li key={m.name} className={`mat mat--${m.kind}`}>
+              <MaterialIcon name={m.name} />
+              <span className="mat__qty">{fmt(m.qty)}</span>
+              <span className="mat__name">
+                {m.name}
+                {m.source && <span className="mat__src">{m.source}</span>}
+              </span>
             </li>
           ))}
         </ul>
-        <p className="muted small">
-          Dye and Beetle Coin raise the level; Dye comes from Houdinii’s Magic Stage. Arc materials come from
-          the {ARC_MATERIAL_SOURCE}. Mixing in duplicate copies raises the passive from T1 to T5.
-        </p>
-      </div>
-    </section>
-  ) : null;
+
+        <button
+          type="button"
+          className="btn btn--quiet ascend__toggle"
+          aria-expanded={showPhases}
+          onClick={() => setShowPhases((v) => !v)}
+        >
+          {showPhases ? 'Hide' : 'Show'} each ascension
+        </button>
+
+        {showPhases && (
+          <div className="table-wrap">
+            <table className="phase-table">
+              <thead>
+                <tr>
+                  <th scope="col">Ascension</th>
+                  <th scope="col">Arc material</th>
+                  <th scope="col">Anomaly material</th>
+                  <th scope="col" className="num">
+                    Beetle Coin
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {table.map((p) => (
+                  <tr key={p.at} className={p.at >= from && p.at < to ? 'in-range' : undefined}>
+                    <td>
+                      Lv {p.at} → {p.to}
+                    </td>
+                    <td>
+                      {p.qty} × {p.aName}
+                    </td>
+                    <td>
+                      {p.qty} × {p.bName}
+                    </td>
+                    <td className="num">{fmt(p.coins)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <div className="arc-level">
+          <h4 className="mini-title">Levelling</h4>
+          <ul className="arc-dyes">
+            {ARC_DYES.map((d) => (
+              <li key={d.name}>
+                <MaterialIcon name={d.name} size={26} />
+                <span>
+                  {d.name}
+                  <span className="mat__src">+{fmt(d.exp)} EXP</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="muted small">
+            Dye and Beetle Coin raise the level; Dye comes from Houdinii’s Magic Stage. Arc materials come from the{' '}
+            {ARC_MATERIAL_SOURCE}. Mixing in duplicate copies raises the passive from T1 to T5.
+          </p>
+        </div>
+      </section>
+    ) : null;
   const farmCta = cost ? (
     <section className="farm-cta" aria-labelledby="arc-farm-title">
       <div className="farm-cta__text">
-        <h3 id="arc-farm-title" className="mini-title">Farming list</h3>
+        <h3 id="arc-farm-title" className="mini-title">
+          Farming list
+        </h3>
         <p className="muted small">
-          How to get {a.name}, plus every material to take it from Lv 20 to {ARC_MAX_LEVEL}, grouped by where to farm it.
+          How to get {a.name}, plus every material to take it from Lv 20 to {ARC_MAX_LEVEL}, grouped by where to farm
+          it.
         </p>
       </div>
       <button type="button" className="btn" onClick={() => setSharing(true)}>
-        <ExportIcon />Share farming list
+        <ExportIcon />
+        Share farming list
       </button>
     </section>
   ) : null;
@@ -241,21 +294,21 @@ export default function ArcDetail({ arc: a, onClose }) {
     <article className="detail arc-detail" data-arc-type={a.type.toLowerCase()} aria-labelledby="arc-detail-name">
       <header className="detail__head">
         <div className="arc-detail__art">
-          {NO_ART.has(a.id) ? (
-            <ArcTypeIcon type={a.type} size={56} />
-          ) : (
-            <ArcPlayer arc={a} spin />
-          )}
+          {NO_ART.has(a.id) ? <ArcTypeIcon type={a.type} size={56} /> : <ArcPlayer arc={a} spin />}
         </div>
         <div className="detail__title">
           <p className="eyebrow">
             <span className="eyebrow__meta">
               <RankBadge rank={a.rarity} size={18} />
               <ArcTypeIcon type={a.type} size={16} />
-              <span>{a.type} Arc · {a.rarity}-rank</span>
+              <span>
+                {a.type} Arc · {a.rarity}-rank
+              </span>
             </span>
           </p>
-          <h2 id="arc-detail-name" className="detail__name">{a.name}</h2>
+          <h2 id="arc-detail-name" className="detail__name">
+            {a.name}
+          </h2>
           {(sig || field) && (
             <ul className="tags">
               {sig && <li>Signature: {sig.name}</li>}
@@ -263,7 +316,9 @@ export default function ArcDetail({ arc: a, onClose }) {
             </ul>
           )}
         </div>
-        <button className="btn btn--quiet detail__close" onClick={onClose} aria-label="Close details">×</button>
+        <button className="btn btn--quiet detail__close" onClick={onClose} aria-label="Close details">
+          ×
+        </button>
       </header>
 
       {phone ? (
@@ -273,7 +328,16 @@ export default function ArcDetail({ arc: a, onClose }) {
           slides={[
             { id: 'overview', label: 'Overview', content: info },
             { id: 'obtain', label: 'How to get', content: obtain },
-            cost && { id: 'materials', label: 'Materials', content: <>{ascend}{farmCta}</> },
+            cost && {
+              id: 'materials',
+              label: 'Materials',
+              content: (
+                <>
+                  {ascend}
+                  {farmCta}
+                </>
+              ),
+            },
           ].filter(Boolean)}
         />
       ) : (

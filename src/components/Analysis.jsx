@@ -10,7 +10,9 @@ export default function Analysis({ analysis }) {
 
   return (
     <section className="analysis" aria-labelledby="analysis-title">
-      <h2 id="analysis-title" className="section-title">Synergy</h2>
+      <h2 id="analysis-title" className="section-title">
+        Synergy
+      </h2>
       <div className="analysis__grid">
         <EsperCycle elementCounts={elementCounts} reactions={reactions} trios={trios} />
 
@@ -32,7 +34,9 @@ export default function Analysis({ analysis }) {
                     <span className="reaction__name">{t.name}</span>
                     <span className="reaction__kind">Trio</span>
                   </div>
-                  <p><StatText>{t.effect}</StatText></p>
+                  <p>
+                    <StatText>{t.effect}</StatText>
+                  </p>
                 </li>
               ))}
               {reactions.map((r) => (
@@ -46,7 +50,9 @@ export default function Analysis({ analysis }) {
                     <span className="reaction__name">{r.name}</span>
                     <span className="reaction__kind">{r.kind}</span>
                   </div>
-                  <p><StatText>{r.effect}</StatText></p>
+                  <p>
+                    <StatText>{r.effect}</StatText>
+                  </p>
                 </li>
               ))}
             </ul>

@@ -34,7 +34,9 @@ export default function TeamTabs({ teams, activeId, dispatch, onExport }) {
       </div>
 
       <div className="tabs__edit">
-        <label className="sr-only" htmlFor="team-name">Team name</label>
+        <label className="sr-only" htmlFor="team-name">
+          Team name
+        </label>
         <input
           id="team-name"
           className="team-name"
@@ -43,12 +45,9 @@ export default function TeamTabs({ teams, activeId, dispatch, onExport }) {
           onChange={(e) => dispatch({ type: 'rename', name: e.target.value })}
         />
         <div className="tabs__actions">
-          <button
-            className="btn btn--primary"
-            onClick={onExport}
-            disabled={!active.members.some(Boolean)}
-          >
-            <ExportIcon />Export image
+          <button className="btn btn--primary" onClick={onExport} disabled={!active.members.some(Boolean)}>
+            <ExportIcon />
+            Export image
           </button>
           <button className="btn btn--quiet" onClick={() => dispatch({ type: 'duplicate' })}>
             Duplicate

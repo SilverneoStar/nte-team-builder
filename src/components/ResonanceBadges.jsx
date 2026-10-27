@@ -38,7 +38,9 @@ export default function ResonanceBadges({ characterId, awakeningCount = 0, showS
               {active[shown.id] ? 'Active' : `Needs ${shown.at} awakenings`}
             </span>
           )}
-          <p><StatText>{shown.effect}</StatText></p>
+          <p>
+            <StatText>{shown.effect}</StatText>
+          </p>
         </div>
       )}
     </div>

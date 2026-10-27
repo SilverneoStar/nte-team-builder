@@ -13,7 +13,9 @@ export default function StatAdvice({ character, cartridge }) {
         {cartridge && <span className="muted"> · with {CARTRIDGE_BY_ID[cartridge].name}</span>}
       </p>
       <ul className="stat-advice__why">
-        {r.reasons.map((x) => <li key={x}>{x}</li>)}
+        {r.reasons.map((x) => (
+          <li key={x}>{x}</li>
+        ))}
       </ul>
     </div>
   );

@@ -32,19 +32,35 @@ const COLUMNS = [
   { id: 'arcType', label: 'Arc type', get: (c) => c.arcType },
   // Recommended endgame stats from community build guides; sorted by their first number.
   ...[
-    ['hp', 'HP'], ['atk', 'ATK'], ['critRate', 'CRIT Rate'], ['critDmg', 'CRIT DMG'],
-    ['universal', 'Univ. DMG'], ['element', 'Elem. DMG'],
+    ['hp', 'HP'],
+    ['atk', 'ATK'],
+    ['critRate', 'CRIT Rate'],
+    ['critDmg', 'CRIT DMG'],
+    ['universal', 'Univ. DMG'],
+    ['element', 'Elem. DMG'],
   ].map(([key, label]) => ({
-    id: `eg-${key}`, label, endgame: key, numeric: true, get: (c) => endgameNumber(ENDGAME[c.id]?.endgame?.[key]),
+    id: `eg-${key}`,
+    label,
+    endgame: key,
+    numeric: true,
+    get: (c) => endgameNumber(ENDGAME[c.id]?.endgame?.[key]),
   })),
   { id: 'other', label: 'Also', get: (c) => otherStats(c) || null },
 ];
 
 // DEF, Cycle and Break targets, shown only for characters who need them.
-const OTHER = [['def', 'DEF'], ['cycle', 'Cycle'], ['break', 'Break']];
+const OTHER = [
+  ['def', 'DEF'],
+  ['cycle', 'Cycle'],
+  ['break', 'Break'],
+];
 const otherStats = (c) => {
   const e = ENDGAME[c.id]?.endgame;
-  return e ? OTHER.filter(([k]) => e[k]).map(([k, l]) => `${l} ${e[k]}`).join(' · ') : '';
+  return e
+    ? OTHER.filter(([k]) => e[k])
+        .map(([k, l]) => `${l} ${e[k]}`)
+        .join(' · ')
+    : '';
 };
 
 function compare(a, b, col, dir) {
@@ -117,7 +133,9 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
 
       <div className="filters filters--page">
         <div className="chips" role="group" aria-label="Filter by element">
-          <button className="chip" aria-pressed={element === 'all'} onClick={() => setElement('all')}>All</button>
+          <button className="chip" aria-pressed={element === 'all'} onClick={() => setElement('all')}>
+            All
+          </button>
           {ELEMENTS.map((el) => (
             <button
               key={el.id}
@@ -131,7 +149,9 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
           ))}
         </div>
         <div className="filters__row">
-          <label className="sr-only" htmlFor="index-search">Search characters</label>
+          <label className="sr-only" htmlFor="index-search">
+            Search characters
+          </label>
           <input
             id="index-search"
             className="search search--inline"
@@ -144,7 +164,11 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
             <span>Role</span>
             <select id="index-role" value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="all">Any</option>
-              {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+              {ROLES.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
             </select>
           </label>
           <label className="select">
@@ -159,10 +183,14 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
             <span>Arc</span>
             <select id="index-arc" value={arcType} onChange={(e) => setArcType(e.target.value)}>
               <option value="all">Any</option>
-              {ARC_TYPES.map((a) => <option key={a} value={a}>{a}</option>)}
+              {ARC_TYPES.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
             </select>
           </label>
-          {(
+          {
             <label className={`select${view === 'list' ? ' select--phone-only' : ''}`}>
               <span>Sort</span>
               <select
@@ -185,9 +213,14 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                 <option value="eg-element:-1">Element DMG</option>
               </select>
             </label>
-          )}
+          }
           <div className="view-toggle" role="group" aria-label="Layout">
-            <button className="view-toggle__btn" aria-pressed={view === 'grid'} onClick={() => setView('grid')} title="Grid view">
+            <button
+              className="view-toggle__btn"
+              aria-pressed={view === 'grid'}
+              onClick={() => setView('grid')}
+              title="Grid view"
+            >
               <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
                 <rect x="2" y="2" width="5" height="5" rx="1.2" fill="currentColor" />
                 <rect x="9" y="2" width="5" height="5" rx="1.2" fill="currentColor" />
@@ -196,7 +229,12 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
               </svg>
               Grid
             </button>
-            <button className="view-toggle__btn" aria-pressed={view === 'list'} onClick={() => setView('list')} title="List view">
+            <button
+              className="view-toggle__btn"
+              aria-pressed={view === 'list'}
+              onClick={() => setView('list')}
+              title="List view"
+            >
               <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
                 <path d="M2 3.5h12M2 8h12M2 12.5h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
               </svg>
@@ -231,10 +269,18 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                   </span>
                   {/* Name and roles on the left; rank above element on the right */}
                   <span className="char-tile__info">
-                    <span className="char-tile__name"><span style={{ '--len': c.name.length }}>{c.name}</span></span>
-                    <span className="char-tile__rank"><RankBadge rank={c.rarity} size={20} /></span>
-                    <span className="char-tile__roles"><RoleList roles={c.roles} size={13} separator={false} /></span>
-                    <span className="char-tile__el"><ElementGlyph element={c.element} size={21} symbol title={ELEMENT_BY_ID[c.element].name} /></span>
+                    <span className="char-tile__name">
+                      <span style={{ '--len': c.name.length }}>{c.name}</span>
+                    </span>
+                    <span className="char-tile__rank">
+                      <RankBadge rank={c.rarity} size={20} />
+                    </span>
+                    <span className="char-tile__roles">
+                      <RoleList roles={c.roles} size={13} separator={false} />
+                    </span>
+                    <span className="char-tile__el">
+                      <ElementGlyph element={c.element} size={21} symbol title={ELEMENT_BY_ID[c.element].name} />
+                    </span>
                   </span>
                 </a>
               </li>
@@ -245,61 +291,75 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
       )}
 
       {view === 'list' && (
-      <div className="table-wrap">
-        <table className="index-table">
-          <thead>
-            <tr>
-              {COLUMNS.map((col) => (
-                <th
-                  key={col.id}
-                  scope="col"
-                  className={col.numeric ? 'num' : undefined}
-                  aria-sort={sort.id === col.id ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}
-                >
-                  <button className="th-btn" onClick={() => toggleSort(col.id)}>
-                    {col.label}
-                    <span className="th-arrow" aria-hidden="true">
-                      {sort.id === col.id ? (sort.dir === 1 ? '▲' : '▼') : ''}
-                    </span>
-                  </button>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((c) => (
-              <tr key={c.id} className={c.id === characterId ? 'is-selected' : undefined}>
-                <td>
-                  <a className="row-link" href={`#character-${c.id}`}>
-                    <Portrait character={c} size="sm" />
-                    <span>{c.name}</span>
-                    {c.upcoming && <span className="card__tag">Upcoming</span>}
-                  </a>
-                </td>
-                <td className="cell-meta-el">
-                  <span className="cell-el">
-                    <ElementGlyph element={c.element} size={13} />
-                    {ELEMENT_BY_ID[c.element].name}
-                  </span>
-                </td>
-                <td className="cell-meta-rank"><RankBadge rank={c.rarity} size={22} /></td>
-                <td className="cell-meta-roles"><RoleList roles={c.roles} size={14} /></td>
-                <td className="cell-meta-arc">{c.arcType ? <span className="cell-el"><ArcTypeIcon type={c.arcType} size={16} />{c.arcType}</span> : '—'}</td>
-                {COLUMNS.filter((col) => col.endgame).map((col) => (
-                  <td key={col.id} className="num cell-stat" data-label={col.label}>
-                    {ENDGAME[c.id]?.endgame?.[col.endgame]?.replace(/%?\s*~\s*/, '–') ?? '—'}
-                  </td>
+        <div className="table-wrap">
+          <table className="index-table">
+            <thead>
+              <tr>
+                {COLUMNS.map((col) => (
+                  <th
+                    key={col.id}
+                    scope="col"
+                    className={col.numeric ? 'num' : undefined}
+                    aria-sort={sort.id === col.id ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}
+                  >
+                    <button className="th-btn" onClick={() => toggleSort(col.id)}>
+                      {col.label}
+                      <span className="th-arrow" aria-hidden="true">
+                        {sort.id === col.id ? (sort.dir === 1 ? '▲' : '▼') : ''}
+                      </span>
+                    </button>
+                  </th>
                 ))}
-                <td className={`small cell-other${otherStats(c) ? '' : ' is-empty'}`}>{otherStats(c) || '—'}</td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {rows.length === 0 && <p className="empty">No characters match these filters.</p>}
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((c) => (
+                <tr key={c.id} className={c.id === characterId ? 'is-selected' : undefined}>
+                  <td>
+                    <a className="row-link" href={`#character-${c.id}`}>
+                      <Portrait character={c} size="sm" />
+                      <span>{c.name}</span>
+                      {c.upcoming && <span className="card__tag">Upcoming</span>}
+                    </a>
+                  </td>
+                  <td className="cell-meta-el">
+                    <span className="cell-el">
+                      <ElementGlyph element={c.element} size={13} />
+                      {ELEMENT_BY_ID[c.element].name}
+                    </span>
+                  </td>
+                  <td className="cell-meta-rank">
+                    <RankBadge rank={c.rarity} size={22} />
+                  </td>
+                  <td className="cell-meta-roles">
+                    <RoleList roles={c.roles} size={14} />
+                  </td>
+                  <td className="cell-meta-arc">
+                    {c.arcType ? (
+                      <span className="cell-el">
+                        <ArcTypeIcon type={c.arcType} size={16} />
+                        {c.arcType}
+                      </span>
+                    ) : (
+                      '—'
+                    )}
+                  </td>
+                  {COLUMNS.filter((col) => col.endgame).map((col) => (
+                    <td key={col.id} className="num cell-stat" data-label={col.label}>
+                      {ENDGAME[c.id]?.endgame?.[col.endgame]?.replace(/%?\s*~\s*/, '–') ?? '—'}
+                    </td>
+                  ))}
+                  <td className={`small cell-other${otherStats(c) ? '' : ' is-empty'}`}>{otherStats(c) || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {rows.length === 0 && <p className="empty">No characters match these filters.</p>}
+        </div>
       )}
       <p className="muted small">
-        Recommended endgame stats, tuned for each character’s signature Arc. Elem. DMG is the character’s own element. “—” means not published yet.
+        Recommended endgame stats, tuned for each character’s signature Arc. Elem. DMG is the character’s own element.
+        “—” means not published yet.
       </p>
     </div>
   );

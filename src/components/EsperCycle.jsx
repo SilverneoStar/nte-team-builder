@@ -30,7 +30,11 @@ export default function EsperCycle({ elementCounts, reactions, trios }) {
 
   return (
     <figure className="cycle">
-      <svg viewBox={`${-PAD_X} 0 ${SIZE + PAD_X * 2} ${SIZE}`} role="img" aria-label="Esper Cycle with this team's elements and reactions">
+      <svg
+        viewBox={`${-PAD_X} 0 ${SIZE + PAD_X * 2} ${SIZE}`}
+        role="img"
+        aria-label="Esper Cycle with this team's elements and reactions"
+      >
         {/* Segments between neighbouring stations */}
         {ELEMENTS.map((el, i) => {
           const j = (i + 1) % ELEMENTS.length;

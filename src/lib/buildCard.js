@@ -8,7 +8,13 @@ import { ELEMENT_BY_ID } from '../data/elements.js';
 import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess, arcTag } from '../data/arcs.js';
 import { CARTRIDGE_BY_ID, bonusStats, cartridgesFor, isPercentStat, moduleLevel } from '../data/gear.js';
 import {
-  CHARACTER_CONSOLE, CONSOLE_SIZE, SHAPES, consoleStats, maskOf, occupancy, setProgress,
+  CHARACTER_CONSOLE,
+  CONSOLE_SIZE,
+  SHAPES,
+  consoleStats,
+  maskOf,
+  occupancy,
+  setProgress,
 } from '../data/console.js';
 import { suggestedBuild, suggestedCartStats } from '../data/consoleBuilds.js';
 import { MAX_STATS_LEVEL, confirmedStats } from '../data/maxStats.js';
@@ -20,9 +26,23 @@ import { drawLinksBlock } from './cardLinks.js';
 import { loadoutOf } from './teamsReducer.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
-  BODY, DISPLAY, EL, MONO, clipCard, drawRank, drawSilverFrame, ensureFonts, loadImage, roundRect, wrap,
-  drawBandBackdrop, goldCells, fitLine,
-  loadRoleIcons, drawRoles, drawMascot
+  BODY,
+  DISPLAY,
+  EL,
+  MONO,
+  clipCard,
+  drawRank,
+  drawSilverFrame,
+  ensureFonts,
+  loadImage,
+  roundRect,
+  wrap,
+  drawBandBackdrop,
+  goldCells,
+  fitLine,
+  loadRoleIcons,
+  drawRoles,
+  drawMascot,
 } from './teamCard.js';
 
 export const BUILD_W = 1600;
@@ -48,7 +68,11 @@ const K = {
 };
 
 // Diagonal pink bands behind the panels.
-const BANDS = [{ y: -60, h: 190, a: 1 }, { y: 360, h: 130, a: 0.6 }, { y: 760, h: 180, a: 0.8 }];
+const BANDS = [
+  { y: -60, h: 190, a: 1 },
+  { y: 360, h: 130, a: 0.6 },
+  { y: 760, h: 180, a: 0.8 },
+];
 
 const ROMAN = { 2: 'II', 3: 'III', 4: 'IV' };
 
@@ -114,13 +138,17 @@ const EASY = ['free', 'pass'];
  * are the next ones in the guides' ranking.
  */
 export function alternativesFor(character, arcId, shownCarts = []) {
-  const ok = (a) => a && a.id !== arcId && a.type === character.arcType && a.rarity !== 'B' && EASY.includes(arcAccess(a.id));
+  const ok = (a) =>
+    a && a.id !== arcId && a.type === character.arcType && a.rarity !== 'B' && EASY.includes(arcAccess(a.id));
   const sig = ARCS.find((a) => a.signature === character.id)?.id;
   const listed = [...new Set([sig, ...(RECOMMENDED[character.id] ?? [])])].map((id) => ARC_BY_ID[id]);
-  const altArc = listed.find(ok)
-    ?? ARCS.find((a) => ok(a) && a.name.startsWith('Fluff of'))
-    ?? ARCS.filter(ok).sort((a, b) => b.atk - a.atk)[0];
-  const carts = cartridgesFor(character).filter((id) => !shownCarts.includes(id)).slice(0, 2);
+  const altArc =
+    listed.find(ok) ??
+    ARCS.find((a) => ok(a) && a.name.startsWith('Fluff of')) ??
+    ARCS.filter(ok).sort((a, b) => b.atk - a.atk)[0];
+  const carts = cartridgesFor(character)
+    .filter((id) => !shownCarts.includes(id))
+    .slice(0, 2);
   return { arc: altArc ?? null, cartridges: carts };
 }
 
@@ -251,7 +279,14 @@ function moduleRow(ctx, x, y, w, label, cartId, pieces, cartImg) {
   pieces.forEach((p, i) => {
     const row = Math.floor(i / perRow);
     const col = i % perRow;
-    moduleTile(ctx, startX + col * (tile + gap), top + 4 + row * (tile + gap + 6), tile, p.shape, p.stats ? moduleLevel(p.stats) : 20);
+    moduleTile(
+      ctx,
+      startX + col * (tile + gap),
+      top + 4 + row * (tile + gap + 6),
+      tile,
+      p.shape,
+      p.stats ? moduleLevel(p.stats) : 20,
+    );
   });
   const rows = Math.ceil(pieces.length / perRow);
   return 34 + Math.max(72, rows * (tile + gap + 6) + 4);
@@ -273,22 +308,34 @@ function pieceOutline(cells, same, at, atY, cell, gap) {
     if (!same(r - 1, c)) {
       const s0 = same(r, c - 1) && same(r - 1, c - 1) ? gap : 0;
       const e0 = same(r, c + 1) ? gap : 0;
-      segs.push([[x0 - s0, y0], [x1 + e0, y0]]);
+      segs.push([
+        [x0 - s0, y0],
+        [x1 + e0, y0],
+      ]);
     }
     if (!same(r, c + 1)) {
       const s0 = same(r - 1, c) && same(r - 1, c + 1) ? gap : 0;
       const e0 = same(r + 1, c) ? gap : 0;
-      segs.push([[x1, y0 - s0], [x1, y1 + e0]]);
+      segs.push([
+        [x1, y0 - s0],
+        [x1, y1 + e0],
+      ]);
     }
     if (!same(r + 1, c)) {
       const s0 = same(r, c + 1) && same(r + 1, c + 1) ? gap : 0;
       const e0 = same(r, c - 1) ? gap : 0;
-      segs.push([[x1 + s0, y1], [x0 - e0, y1]]);
+      segs.push([
+        [x1 + s0, y1],
+        [x0 - e0, y1],
+      ]);
     }
     if (!same(r, c - 1)) {
       const s0 = same(r + 1, c) && same(r + 1, c - 1) ? gap : 0;
       const e0 = same(r - 1, c) ? gap : 0;
-      segs.push([[x0, y1 + s0], [x0, y0 - e0]]);
+      segs.push([
+        [x0, y1 + s0],
+        [x0, y0 - e0],
+      ]);
     }
   }
   const key = ([px, py]) => `${Math.round(px * 10)},${Math.round(py * 10)}`;
@@ -319,7 +366,11 @@ function roundedPolygon(ctx, pts, radius) {
     const p = pts[i];
     const q = pts[(i + 1) % n];
     const prev = pts[(i - 1 + n) % n];
-    const r = Math.min(radius, Math.hypot(p[0] - prev[0], p[1] - prev[1]) / 2, Math.hypot(q[0] - p[0], q[1] - p[1]) / 2);
+    const r = Math.min(
+      radius,
+      Math.hypot(p[0] - prev[0], p[1] - prev[1]) / 2,
+      Math.hypot(q[0] - p[0], q[1] - p[1]) / 2,
+    );
     ctx.arcTo(p[0], p[1], q[0], q[1], r);
   }
   ctx.closePath();
@@ -569,13 +620,20 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, px + 86, ly);
-  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly,
-    { font: `500 18px ${BODY}`, color: K.muted, size: 22 });
+  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly, {
+    font: `500 18px ${BODY}`,
+    color: K.muted,
+    size: 22,
+  });
 
   ly += 36;
   ctx.font = `500 16px ${BODY}`;
   ctx.fillStyle = K.muted;
-  const factionText = c.faction ? `${c.faction}${c.unit ? ` · ${c.unit}` : ''}` : c.formerFaction ? `Former ${c.formerFaction}` : '';
+  const factionText = c.faction
+    ? `${c.faction}${c.unit ? ` · ${c.unit}` : ''}`
+    : c.formerFaction
+      ? `Former ${c.formerFaction}`
+      : '';
   for (const line of wrap(ctx, factionText, LW, 2)) {
     ctx.fillText(line, px, ly);
     ly += 22;
@@ -614,7 +672,11 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   ctx.font = `italic 800 30px ${DISPLAY}`;
   ctx.fillText('CONSOLE DEVELOPMENT', RX + 98, PAD + 38);
   fillStatText(ctx, info ? specText(info.spec) : 'Console data not published yet.', RX + 98, PAD + 67, {
-    font: `500 19px ${BODY}`, numFont: `700 19px ${BODY}`, color: K.muted, keyColor: K.key, numColor: K.num,
+    font: `500 19px ${BODY}`,
+    numFont: `700 19px ${BODY}`,
+    color: K.muted,
+    keyColor: K.key,
+    numColor: K.num,
     maxWidth: RW - 98 - 300,
   });
   const MS = 96;
@@ -633,8 +695,11 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   const RCW = RW - LCW - 16;
 
   // ---- Key attributes: Level 80 base (when known) plus what the build adds ----
-  const extra = bonusStats(build.arc && build.arcState === 'Equipped' ? build.arc : null, build.cartStats,
-    consoleStats(c.id, build.pieces, build.cartridge));
+  const extra = bonusStats(
+    build.arc && build.arcState === 'Equipped' ? build.arc : null,
+    build.cartStats,
+    consoleStats(c.id, build.pieces, build.cartridge),
+  );
   // Only confirmed in-game values are shown.
   const ms = confirmedStats(c.id);
   let stats = extra;
@@ -656,7 +721,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
       { stat: 'DEF', value: round(ms.def + take('DEF')) },
       { stat: 'CRIT Rate', value: plus(ms.critRate, take('CRIT Rate')) },
       { stat: 'CRIT DMG', value: plus(ms.critDmg, take('CRIT DMG')) },
-      { stat: elDmg, value: plus(ms.estimated ? null : ms.dmg?.[c.element] ?? 0, take(elDmg)) },
+      { stat: elDmg, value: plus(ms.estimated ? null : (ms.dmg?.[c.element] ?? 0), take(elDmg)) },
       { stat: 'Universal DMG%', value: plus(ms.universal, take('Universal DMG%') + take('DMG%')) },
       ...stats,
     ];
@@ -666,14 +731,22 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   // Recommended endgame targets, shown beside each value.
   const eg = ENDGAME[c.id]?.endgame;
   const targetKey = {
-    HP: 'hp', ATK: 'atk', DEF: 'def', 'CRIT Rate': 'critRate', 'CRIT DMG': 'critDmg',
-    'Universal DMG%': 'universal', [`${el.name} DMG%`]: 'element', 'Cycle Intensity': 'cycle', 'Break Intensity': 'break',
+    HP: 'hp',
+    ATK: 'atk',
+    DEF: 'def',
+    'CRIT Rate': 'critRate',
+    'CRIT DMG': 'critDmg',
+    'Universal DMG%': 'universal',
+    [`${el.name} DMG%`]: 'element',
+    'Cycle Intensity': 'cycle',
+    'Break Intensity': 'break',
   };
   const target = (stat) => eg?.[targetKey[stat]] ?? null;
   if (eg && !ms) {
     // No Level 80 stats yet: list the targets on their own.
     const have = new Set(stats.map((x) => x.stat));
-    for (const [stat, key] of Object.entries(targetKey)) if (eg[key] && !have.has(stat)) stats.push({ stat, value: null });
+    for (const [stat, key] of Object.entries(targetKey))
+      if (eg[key] && !have.has(stat)) stats.push({ stat, value: null });
   }
   if (eg) {
     // Rows with a target first, then the rest; drop base-only rows without a target or bonus.
@@ -688,7 +761,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   ctx.font = `500 14px ${BODY}`;
   ctx.fillText(
     `${ms ? `Lv ${MAX_STATS_LEVEL} base${ms.estimated ? ' (est.)' : ''} + build` : 'from this build'}${eg ? ' / endgame target' : ''}`,
-    LCX + LCW - 18, top + 30,
+    LCX + LCW - 18,
+    top + 30,
   );
   ctx.textAlign = 'left';
   if (!stats.length) {
@@ -718,8 +792,14 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
       const capped = st.stat === 'CRIT Rate' && Number(st.value) > 100;
       // Estimated base (no in-game Level 80 values yet): mark HP/ATK/DEF as approximate.
       const approx = ms?.estimated && ['HP', 'ATK', 'DEF'].includes(st.stat) && st.value != null;
-      const v = st.value == null ? '—' : capped ? '100% (cap)' : isPercentStat(st.stat) ? statValue(st.stat, Number(st.value))
-        : `${approx ? '≈ ' : ''}${Number(st.value).toLocaleString('en-US')}`;
+      const v =
+        st.value == null
+          ? '—'
+          : capped
+            ? '100% (cap)'
+            : isPercentStat(st.stat)
+              ? statValue(st.stat, Number(st.value))
+              : `${approx ? '≈ ' : ''}${Number(st.value).toLocaleString('en-US')}`;
       ctx.fillText(v, valueX, base);
       const t = target(st.stat);
       if (t) {
@@ -758,7 +838,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     ctx.font = `700 22px ${BODY}`;
     const nm = fitLine(ctx, a.name, LCX + LCW - tx - 150, 14);
     ctx.fillText(nm, tx, arcY + 66);
-    const tag = arcTag(a, c) === 'sig' ? 'Signature' : build.source === 'Recommended build' ? 'Recommended' : build.arcState;
+    const tag =
+      arcTag(a, c) === 'sig' ? 'Signature' : build.source === 'Recommended build' ? 'Recommended' : build.arcState;
     ctx.font = `700 13px ${MONO}`;
     const tw = ctx.measureText(tag.toUpperCase()).width + 16;
     ctx.fillStyle = tag === 'Signature' ? K.gold : K.pinkSoft;
@@ -774,7 +855,10 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     // "ATK 570   Crit DMG 48%": names light, values gold.
     let sx = tx;
     const [subName, subVal] = [a.sub.replace(/\s*[\d.]+%?$/, ''), (a.sub.match(/[\d.]+%?$/) || [''])[0]];
-    for (const [name, val] of [['ATK', String(a.atk)], [subName, subVal]]) {
+    for (const [name, val] of [
+      ['ATK', String(a.atk)],
+      [subName, subVal],
+    ]) {
       ctx.font = `500 17px ${BODY}`;
       ctx.fillStyle = K.label;
       ctx.fillText(name, sx, arcY + 115);
@@ -793,7 +877,11 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
       ctx.lineTo(LCX + LCW - 18, arcY + 134.5);
       ctx.stroke();
       altLine(ctx, LCX + 18, arcY + 160, LCX + LCW - 18, 'ALTERNATIVE', [
-        { img: altArcArt, name: alt.arc.name, note: `${alt.arc.rarity}-rank · ${arcAccess(alt.arc.id) === 'pass' ? 'Battle pass' : 'Free'}` },
+        {
+          img: altArcArt,
+          name: alt.arc.name,
+          note: `${alt.arc.rarity}-rank · ${arcAccess(alt.arc.id) === 'pass' ? 'Battle pass' : 'Free'}`,
+        },
       ]);
     }
   } else {
@@ -811,9 +899,9 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     cs?.main ? { k: 'Main', ...cs.main } : null,
     ...(cs?.subs ?? []).map((x) => (x ? { k: 'Sub', ...x } : null)),
   ].filter(Boolean);
-  const list = rows.length ? rows : [
-    { k: 'Main', ...build.recStats.main }, ...build.recStats.subs.map((x) => ({ k: 'Sub', ...x })),
-  ];
+  const list = rows.length
+    ? rows
+    : [{ k: 'Main', ...build.recStats.main }, ...build.recStats.subs.map((x) => ({ k: 'Sub', ...x }))];
   if (!rows.length) {
     ctx.textAlign = 'right';
     ctx.fillStyle = K.muted;
@@ -856,9 +944,11 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   const innerX = RCX + 18;
   const innerW = RCW - 36;
   let y = top + 46;
-  const sameAsRec = build.recommended && build.cartridge === build.recommended.cartridge
-    && JSON.stringify(build.pieces.map(({ shape, r, c: col }) => [shape, r, col]))
-      === JSON.stringify(build.recommended.pieces.map(({ shape, r, c: col }) => [shape, r, col]));
+  const sameAsRec =
+    build.recommended &&
+    build.cartridge === build.recommended.cartridge &&
+    JSON.stringify(build.pieces.map(({ shape, r, c: col }) => [shape, r, col])) ===
+      JSON.stringify(build.recommended.pieces.map(({ shape, r, c: col }) => [shape, r, col]));
   const hasCurrent = build.pieces.length > 0 && !sameAsRec;
   // A player's own build shows only their modules; other cards compare with the recommendation.
   const ownBuild = build.source === 'My build';
@@ -866,18 +956,36 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     y += moduleRow(ctx, innerX, y, innerW, 'Current', build.cartridge, build.pieces, cartImg) + 14;
   }
   if (build.recommended && !ownBuild) {
-    y += moduleRow(ctx, innerX, y, innerW, 'Recommended', build.recommended.cartridge, build.recommended.pieces, recCartImg) + 14;
+    y +=
+      moduleRow(
+        ctx,
+        innerX,
+        y,
+        innerW,
+        'Recommended',
+        build.recommended.cartridge,
+        build.recommended.pieces,
+        recCartImg,
+      ) + 14;
   }
   if (alt.cartridges.length) {
     // Other sets the build guides rank for this character.
-    altLine(ctx, innerX, y + 14, innerX + innerW, 'ALTERNATIVE SETS', alt.cartridges.map((id, i) => ({
-      img: altCartImgs[i], name: CARTRIDGE_BY_ID[id].name,
-    })));
+    altLine(
+      ctx,
+      innerX,
+      y + 14,
+      innerX + innerW,
+      'ALTERNATIVE SETS',
+      alt.cartridges.map((id, i) => ({
+        img: altCartImgs[i],
+        name: CARTRIDGE_BY_ID[id].name,
+      })),
+    );
     y += 34;
   }
 
   // Attribute priorities + grid template.
-  const gridPieces = hasCurrent || ownBuild ? build.pieces : build.recommended?.pieces ?? [];
+  const gridPieces = hasCurrent || ownBuild ? build.pieces : (build.recommended?.pieces ?? []);
   // Leave room under the grid for the Awakening order orbs.
   const ao = build.awakeningOrder?.length ? { order: build.awakeningOrder } : AWAKENING_ORDER[c.id];
   const avail = bottom - 18 - y - (ao ? 96 : 0);
@@ -945,14 +1053,21 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   }
 
   // ---- Footer: console code + legal line ----
-  const code = info && (build.pieces.length || build.cartridge)
-    ? encodeConsoleCode({ layout: info.layout, cartridge: build.cartridge, cartStats: build.cartStats, pieces: build.pieces })
-    : '';
+  const code =
+    info && (build.pieces.length || build.cartridge)
+      ? encodeConsoleCode({
+          layout: info.layout,
+          cartridge: build.cartridge,
+          cartStats: build.cartStats,
+          pieces: build.pieces,
+        })
+      : '';
   ctx.font = `500 13px ${BODY}`;
   ctx.fillStyle = K.muted;
   ctx.fillText(
     'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games',
-    PAD, BUILD_H - 30,
+    PAD,
+    BUILD_H - 30,
   );
   if (code) {
     ctx.textAlign = 'right';

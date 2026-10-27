@@ -79,7 +79,12 @@ export default function SocialLinks() {
           </li>
         ))}
       </ul>
-      <a className="sister" href="https://silverneostar.github.io/zzz-team-builder/" target="_blank" rel="noopener noreferrer">
+      <a
+        className="sister"
+        href="https://silverneostar.github.io/zzz-team-builder/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <img className="sister__icon" src={`${import.meta.env.BASE_URL}mascot.svg`} alt="" width="36" height="36" />
         <span className="sister__text">
           <span className="sister__kicker">Also by Cortado</span>
@@ -91,8 +96,8 @@ export default function SocialLinks() {
         </span>
       </a>
       <p className="social__note">
-        These are the fan-run accounts and community server of this site, not official
-        Neverness to Everness channels. For official news, follow the game&apos;s own accounts.
+        These are the fan-run accounts and community server of this site, not official Neverness to Everness channels.
+        For official news, follow the game&apos;s own accounts.
       </p>
     </section>
   );

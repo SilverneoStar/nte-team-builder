@@ -27,7 +27,9 @@ export default function FocusStats({ character: c }) {
   const list = focusList(c);
   return (
     <section className="focus-stats" aria-labelledby="focus-title">
-      <h3 id="focus-title" className="mini-title">Stats to focus on</h3>
+      <h3 id="focus-title" className="mini-title">
+        Stats to focus on
+      </h3>
       <ol className="focus-stats__list">
         {list.map((g, i) => (
           <li key={i}>

@@ -40,18 +40,15 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
   const otherSets = CARTRIDGES.filter((s) => !recSets.includes(s.id));
   const cartIsRec = cart && recSets.includes(cart.id);
 
-
   return (
-    <section
-      className="loadout"
-      style={{ '--el': ELEMENT_BY_ID[c.element].color }}
-      aria-labelledby="loadout-title"
-    >
+    <section className="loadout" style={{ '--el': ELEMENT_BY_ID[c.element].color }} aria-labelledby="loadout-title">
       <header className="loadout__head">
         <Portrait character={c} size="md" />
         <div>
           <p className="eyebrow">Loadout</p>
-          <h2 id="loadout-title" className="loadout__name">{c.name}</h2>
+          <h2 id="loadout-title" className="loadout__name">
+            {c.name}
+          </h2>
         </div>
         <button className="btn btn--quiet loadout__close" onClick={onClose} aria-label="Close loadout">
           Done
@@ -63,7 +60,10 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
         <div className="gear-block gear-block--wide">
           <div className="awaken-head">
             <label className="mini-title" htmlFor="gear-dupes">
-              Duplicates <span>{loadout.awakenings.length}/{loadout.dupes} awakenings on</span>
+              Duplicates{' '}
+              <span>
+                {loadout.awakenings.length}/{loadout.dupes} awakenings on
+              </span>
             </label>
             <div className="stepper" role="group" aria-label="Duplicate copies">
               {Array.from({ length: MAX_DUPES + 1 }, (_, n) => (
@@ -96,7 +96,9 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
                       <span className="awaken-id">{w.id}</span>
                       <span className="awaken-body">
                         <b>{w.name}</b>
-                        <span><StatText>{w.effect}</StatText></span>
+                        <span>
+                          <StatText>{w.effect}</StatText>
+                        </span>
                       </span>
                     </button>
                   </li>
@@ -117,13 +119,18 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
         {/* Arc */}
         <div className="gear-block">
           <label className="mini-title" htmlFor="gear-arc">
-            Arc <span>{c.arcType ? <><ArcTypeIcon type={c.arcType} size={14} /> {c.arcType} only</> : 'Arc type not announced'}</span>
+            Arc{' '}
+            <span>
+              {c.arcType ? (
+                <>
+                  <ArcTypeIcon type={c.arcType} size={14} /> {c.arcType} only
+                </>
+              ) : (
+                'Arc type not announced'
+              )}
+            </span>
           </label>
-          <select
-            id="gear-arc"
-            value={loadout.arc ?? ''}
-            onChange={(e) => onChange({ arc: e.target.value || null })}
-          >
+          <select id="gear-arc" value={loadout.arc ?? ''} onChange={(e) => onChange({ arc: e.target.value || null })}>
             <option value="">No Arc</option>
             {picks.length > 0 && <optgroup label="Signature & recommended">{picks.map(arcOption)}</optgroup>}
             {ranks.map((r) => (
@@ -142,7 +149,11 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
               >
                 {Array.from({ length: MAX_ARC_DUPES + 1 }, (_, n) => (
                   <option key={n} value={n}>
-                    {n === 0 ? '1 copy (base)' : n === MAX_ARC_DUPES ? `+${n} duplicates (max)` : `+${n} duplicate${n > 1 ? 's' : ''}`}
+                    {n === 0
+                      ? '1 copy (base)'
+                      : n === MAX_ARC_DUPES
+                        ? `+${n} duplicates (max)`
+                        : `+${n} duplicate${n > 1 ? 's' : ''}`}
                   </option>
                 ))}
               </select>
@@ -156,10 +167,18 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
                 {arcTagNow && <span className={`arc-tag arc-tag--${arcTagNow}`}>{TAG_LABEL[arcTagNow]}</span>}
               </div>
               <dl className="gear-stats">
-                <div><dt>Base ATK</dt><dd>{arc.atk}</dd></div>
-                <div><dt>Secondary</dt><dd>{arc.sub}</dd></div>
+                <div>
+                  <dt>Base ATK</dt>
+                  <dd>{arc.atk}</dd>
+                </div>
+                <div>
+                  <dt>Secondary</dt>
+                  <dd>{arc.sub}</dd>
+                </div>
               </dl>
-              <p><StatText>{arc.passive}</StatText></p>
+              <p>
+                <StatText>{arc.passive}</StatText>
+              </p>
             </div>
           ) : (
             <div className="arc-picks">
@@ -167,19 +186,16 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
                 picks.map((a) => {
                   const tag = arcTag(a, c);
                   return (
-                    <button
-                      key={a.id}
-                      type="button"
-                      className="arc-pick"
-                      onClick={() => onChange({ arc: a.id })}
-                    >
+                    <button key={a.id} type="button" className="arc-pick" onClick={() => onChange({ arc: a.id })}>
                       <span className={`arc-tag arc-tag--${tag}`}>{tag === 'sig' ? 'Sig' : 'Rec'}</span>
                       {a.name}
                     </button>
                   );
                 })
               ) : (
-                <p className="muted small">{arcs.length} {c.arcType} Arcs available.</p>
+                <p className="muted small">
+                  {arcs.length} {c.arcType} Arcs available.
+                </p>
               )}
             </div>
           )}
@@ -187,7 +203,9 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
 
         {/* Cartridge */}
         <div className="gear-block">
-          <label className="mini-title" htmlFor="gear-cart">Cartridge set</label>
+          <label className="mini-title" htmlFor="gear-cart">
+            Cartridge set
+          </label>
           <select
             id="gear-cart"
             value={loadout.cartridge ?? ''}
@@ -196,12 +214,16 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
             <option value="">No set</option>
             <optgroup label="Recommended">
               {recSets.map((id) => (
-                <option key={id} value={id}>{CARTRIDGE_BY_ID[id].name} (Rec)</option>
+                <option key={id} value={id}>
+                  {CARTRIDGE_BY_ID[id].name} (Rec)
+                </option>
               ))}
             </optgroup>
             <optgroup label="Other sets">
               {otherSets.map((s) => (
-                <option key={s.id} value={s.id}>{s.name}</option>
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
               ))}
             </optgroup>
           </select>
@@ -213,8 +235,18 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
                 {cartIsRec && <span className="arc-tag arc-tag--rec">Recommended</span>}
               </div>
               <dl className="gear-bonus">
-                <div><dt>2-piece</dt><dd><StatText>{cart.two}</StatText></dd></div>
-                <div><dt>4-piece</dt><dd><StatText>{cart.four}</StatText></dd></div>
+                <div>
+                  <dt>2-piece</dt>
+                  <dd>
+                    <StatText>{cart.two}</StatText>
+                  </dd>
+                </div>
+                <div>
+                  <dt>4-piece</dt>
+                  <dd>
+                    <StatText>{cart.four}</StatText>
+                  </dd>
+                </div>
               </dl>
             </div>
           ) : (
@@ -236,91 +268,114 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
         </div>
 
         {/* Console build: modules + Cartridge stats, following the chosen Cartridge set */}
-        {CHARACTER_CONSOLE[c.id] && (() => {
-          const layout = CHARACTER_CONSOLE[c.id].layout;
-          const suggested = suggestedBuild(c.id, loadout.cartridge);
-          const saved = loadSavedConsoles().filter(
-            (b) => b.layout === layout && (!loadout.cartridge || b.cartridge === loadout.cartridge),
-          );
-          const builds = [...saved, suggested].filter(Boolean);
-          // Same layout = same shapes in the same places (module stats may differ).
-          const layoutKey = (ps) => JSON.stringify((ps ?? []).map(({ shape, r, c: col }) => [shape, r, col]));
-          const samePieces = (b) => layoutKey(b.pieces) === layoutKey(loadout.console);
-          // Saved builds win over the suggested one when both match.
-          const current = builds.find(samePieces);
-          const sb = specBonus(c.id, loadout.console);
-          const setName = cart ? cart.name : 'the recommended set';
-          // Keep values the person already entered for the same stat.
-          const withValues = (st) => keepCartValues(loadout.cartStats, st);
-          return (
-            <div className="gear-block gear-block--wide">
-              <label className="mini-title" htmlFor="gear-console">
-                Console build <span>for {setName}</span>
-              </label>
-              <select
-                id="gear-console"
-                value={current?.id ?? (loadout.console.length ? 'custom' : '')}
-                onChange={(e) => {
-                  const b = builds.find((x) => x.id === e.target.value);
-                  if (b) {
-                    onChange({
-                      console: b.pieces,
-                      cartridge: b.cartridge,
-                      cartStats: b.suggested ? withValues(b.cartStats) : b.cartStats ?? loadout.cartStats,
-                    });
-                  } else if (!e.target.value) {
-                    onChange({ console: [] });
-                  }
-                }}
-              >
-                <option value="">No console</option>
-                {!current && loadout.console.length > 0 && <option value="custom">Current layout (custom)</option>}
-                {suggested && (
-                  <option value={suggested.id}>Suggested · best layout for {CARTRIDGE_BY_ID[suggested.cartridge].name}</option>
-                )}
-                {saved.length > 0 && (
-                  <optgroup label="Your saved consoles">
-                    {saved.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-                  </optgroup>
-                )}
-              </select>
-              <div className="console-summary">
-                <MiniBoard layout={layout} pieces={loadout.console} cell={11} />
-                <div className="console-summary__body">
-                  {loadout.console.length ? (
-                    <>
-                      <span><b>{usedCells(loadout.console)}</b> / {FREE_CELLS} cells · {loadout.console.length} modules</span>
-                      {cart && <span className="muted small">{cart.name}: {Math.min(setProgress(cart.id, loadout.console).count, 4)} / 4 set modules</span>}
-                      {sb && sb.count > 0 && <span className="muted small">Bonus: +{sb.total}% {sb.stat}</span>}
-                    </>
-                  ) : (
-                    <span className="muted small">No modules placed yet.</span>
-                  )}
-                  <a className="btn btn--quiet console-summary__link" href={`#console-${c.id}`}>
-                    {loadout.console.length ? 'Edit in Console' : 'Build in Console'}
-                  </a>
-                </div>
-              </div>
-
-              <div className="cstats-head">
-                <p className="mini-title">Cartridge stats <span>1 main · 4 sub</span></p>
-                <button
-                  type="button"
-                  className="btn btn--quiet"
-                  onClick={() => onChange({ cartStats: withValues(suggestedCartStats(c, loadout.cartridge)) })}
+        {CHARACTER_CONSOLE[c.id] &&
+          (() => {
+            const layout = CHARACTER_CONSOLE[c.id].layout;
+            const suggested = suggestedBuild(c.id, loadout.cartridge);
+            const saved = loadSavedConsoles().filter(
+              (b) => b.layout === layout && (!loadout.cartridge || b.cartridge === loadout.cartridge),
+            );
+            const builds = [...saved, suggested].filter(Boolean);
+            // Same layout = same shapes in the same places (module stats may differ).
+            const layoutKey = (ps) => JSON.stringify((ps ?? []).map(({ shape, r, c: col }) => [shape, r, col]));
+            const samePieces = (b) => layoutKey(b.pieces) === layoutKey(loadout.console);
+            // Saved builds win over the suggested one when both match.
+            const current = builds.find(samePieces);
+            const sb = specBonus(c.id, loadout.console);
+            const setName = cart ? cart.name : 'the recommended set';
+            // Keep values the person already entered for the same stat.
+            const withValues = (st) => keepCartValues(loadout.cartStats, st);
+            return (
+              <div className="gear-block gear-block--wide">
+                <label className="mini-title" htmlFor="gear-console">
+                  Console build <span>for {setName}</span>
+                </label>
+                <select
+                  id="gear-console"
+                  value={current?.id ?? (loadout.console.length ? 'custom' : '')}
+                  onChange={(e) => {
+                    const b = builds.find((x) => x.id === e.target.value);
+                    if (b) {
+                      onChange({
+                        console: b.pieces,
+                        cartridge: b.cartridge,
+                        cartStats: b.suggested ? withValues(b.cartStats) : (b.cartStats ?? loadout.cartStats),
+                      });
+                    } else if (!e.target.value) {
+                      onChange({ console: [] });
+                    }
+                  }}
                 >
-                  Use suggested stats
-                </button>
+                  <option value="">No console</option>
+                  {!current && loadout.console.length > 0 && <option value="custom">Current layout (custom)</option>}
+                  {suggested && (
+                    <option value={suggested.id}>
+                      Suggested · best layout for {CARTRIDGE_BY_ID[suggested.cartridge].name}
+                    </option>
+                  )}
+                  {saved.length > 0 && (
+                    <optgroup label="Your saved consoles">
+                      {saved.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
+                <div className="console-summary">
+                  <MiniBoard layout={layout} pieces={loadout.console} cell={11} />
+                  <div className="console-summary__body">
+                    {loadout.console.length ? (
+                      <>
+                        <span>
+                          <b>{usedCells(loadout.console)}</b> / {FREE_CELLS} cells · {loadout.console.length} modules
+                        </span>
+                        {cart && (
+                          <span className="muted small">
+                            {cart.name}: {Math.min(setProgress(cart.id, loadout.console).count, 4)} / 4 set modules
+                          </span>
+                        )}
+                        {sb && sb.count > 0 && (
+                          <span className="muted small">
+                            Bonus: +{sb.total}% {sb.stat}
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      <span className="muted small">No modules placed yet.</span>
+                    )}
+                    <a className="btn btn--quiet console-summary__link" href={`#console-${c.id}`}>
+                      {loadout.console.length ? 'Edit in Console' : 'Build in Console'}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="cstats-head">
+                  <p className="mini-title">
+                    Cartridge stats <span>1 main · 4 sub</span>
+                  </p>
+                  <button
+                    type="button"
+                    className="btn btn--quiet"
+                    onClick={() => onChange({ cartStats: withValues(suggestedCartStats(c, loadout.cartridge)) })}
+                  >
+                    Use suggested stats
+                  </button>
+                </div>
+                <CartStatsEditor
+                  value={loadout.cartStats}
+                  onChange={(v) => onChange({ cartStats: v })}
+                  idPrefix="lcs"
+                />
+                <StatAdvice character={c} cartridge={loadout.cartridge} />
+                <p className="muted small">
+                  Adjust the stats and enter the values from your Cartridge. Module stats are entered per module in the
+                  Console tab.
+                </p>
               </div>
-              <CartStatsEditor value={loadout.cartStats} onChange={(v) => onChange({ cartStats: v })} idPrefix="lcs" />
-              <StatAdvice character={c} cartridge={loadout.cartridge} />
-              <p className="muted small">
-                Adjust the stats and enter the values from your Cartridge. Module stats are entered per module in
-                the Console tab.
-              </p>
-            </div>
-          );
-        })()}
+            );
+          })()}
       </div>
     </section>
   );

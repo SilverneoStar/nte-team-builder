@@ -42,7 +42,9 @@ export async function drawPortraitBackdrop(ctx, opts) {
 
 /** Load the designs for these Arc types ahead of drawing (for paintBackdrop). */
 export async function loadPatterns(base, arcTypes) {
-  const list = await Promise.all(arcTypes.map(async (t) => [String(t || '').toLowerCase(), await patternImage(base, t)]));
+  const list = await Promise.all(
+    arcTypes.map(async (t) => [String(t || '').toLowerCase(), await patternImage(base, t)]),
+  );
   return Object.fromEntries(list);
 }
 

@@ -31,7 +31,11 @@ const SCALE_KEY = 'nte-export-scale';
 // Export sizes live in exportSettings.js; re-exported so older imports keep working.
 export { EXPORT_SIZES };
 
-const slug = (name) => (name || 'team').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'team';
+const slug = (name) =>
+  (name || 'team')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '') || 'team';
 
 /**
  * Shows a rendered card with ways to save, copy or share it.
@@ -42,7 +46,15 @@ const slug = (name) => (name || 'team').toLowerCase().replace(/[^a-z0-9]+/g, '-'
  * Every export has a size picker; `render` gets `opts.scale`.
  */
 export default function ExportDialog({
-  team, onClose, render, title = 'Team image', name, suffix = 'nte-team', types = null, typeKey = null, initialType = null,
+  team,
+  onClose,
+  render,
+  title = 'Team image',
+  name,
+  suffix = 'nte-team',
+  types = null,
+  typeKey = null,
+  initialType = null,
 }) {
   const label = name ?? team?.name;
   const [type, setType] = useState(() => {
@@ -55,15 +67,20 @@ export default function ExportDialog({
   const shownTitle = current?.title ?? title;
   const shownSuffix = current?.suffix ?? suffix;
   // Only the team image (no custom render) offers a layout choice.
-  const [layout, setLayout] = useState(() => (render ? null : load(LAYOUT_KEY, (v) => TEAM_LAYOUTS.some((l) => l.id === v), 'row')));
-  const [scale, setScale] = useState(() => Number(load(SCALE_KEY, (v) => EXPORT_SIZES.some((s) => String(s.scale) === v), '2')));
+  const [layout, setLayout] = useState(() =>
+    render ? null : load(LAYOUT_KEY, (v) => TEAM_LAYOUTS.some((l) => l.id === v), 'row'),
+  );
+  const [scale, setScale] = useState(() =>
+    Number(load(SCALE_KEY, (v) => EXPORT_SIZES.some((s) => String(s.scale) === v), '2')),
+  );
   const [url, setUrl] = useState(null);
   const [blob, setBlob] = useState(null);
   const [px, setPx] = useState(null);
   const [status, setStatus] = useState('');
   const closeRef = useRef(null);
 
-  const fileName = () => `${slug(label)}-${shownSuffix}${layout === 'grid' ? '-2x2' : layout === 'side' ? '-2x2-side' : ''}${scale === 2 ? '' : `-${scale}x`}.png`;
+  const fileName = () =>
+    `${slug(label)}-${shownSuffix}${layout === 'grid' ? '-2x2' : layout === 'side' ? '-2x2-side' : ''}${scale === 2 ? '' : `-${scale}x`}.png`;
 
   useEffect(() => {
     let cancelled = false;
@@ -138,8 +155,12 @@ export default function ExportDialog({
     <div className="dialog-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="dialog" role="dialog" aria-modal="true" aria-labelledby="export-title">
         <header className="dialog__head">
-          <h2 id="export-title" className="section-title">{shownTitle}</h2>
-          <button ref={closeRef} className="btn btn--quiet" onClick={onClose}>Close</button>
+          <h2 id="export-title" className="section-title">
+            {shownTitle}
+          </h2>
+          <button ref={closeRef} className="btn btn--quiet" onClick={onClose}>
+            Close
+          </button>
         </header>
 
         {types && (
@@ -171,7 +192,10 @@ export default function ExportDialog({
                 onClick={() => pickLayout(l.id)}
               >
                 <span className={`layout-pick__icon layout-pick__icon--${l.id}`} aria-hidden="true">
-                  <i /><i /><i /><i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
                 </span>
                 <b>{l.label}</b>
                 <span className="muted">{l.hint}</span>
@@ -214,12 +238,18 @@ export default function ExportDialog({
             </a>
           )}
           {url && canCopy && (
-            <button className="btn" onClick={copy}>Copy image</button>
+            <button className="btn" onClick={copy}>
+              Copy image
+            </button>
           )}
           {url && canShare && (
-            <button className="btn" onClick={share}>Share…</button>
+            <button className="btn" onClick={share}>
+              Share…
+            </button>
           )}
-          <p className="dialog__status" role="status" aria-live="polite">{url ? status : ''}</p>
+          <p className="dialog__status" role="status" aria-live="polite">
+            {url ? status : ''}
+          </p>
         </div>
       </div>
     </div>

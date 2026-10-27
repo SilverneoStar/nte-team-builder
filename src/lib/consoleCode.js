@@ -2,8 +2,17 @@
 import { CARTRIDGE_SUB_SLOTS, isPercentStat } from '../data/gear.js';
 import { CONSOLE_SIZE, SHAPES, maskOf } from '../data/console.js';
 import {
-  ALPHABET, BitReader, BitWriter, CART_ORDER, MAIN_STAT_ORDER, SUB_STAT_ORDER,
-  checkByte, cleanCode, segment, toBits, toChars,
+  ALPHABET,
+  BitReader,
+  BitWriter,
+  CART_ORDER,
+  MAIN_STAT_ORDER,
+  SUB_STAT_ORDER,
+  checkByte,
+  cleanCode,
+  segment,
+  toBits,
+  toChars,
 } from './cardCode.js';
 
 // Console codes: share a Console build without sharing a team, e.g.
@@ -20,7 +29,20 @@ import {
 //
 // APPEND-ONLY lists, as in cardCode.js.
 const LAYOUT_ORDER = ['A', 'B', 'C', 'D'];
-const SHAPE_CODE = ['Hen2', 'Shu2', 'Hen3', 'Shu3', 'ZhiJiao1', 'ZhiJiao2', 'ZhiJiao3', 'ZhiJiao4', 'Hen4', 'Shu4', 'Z3', 'Z4'];
+const SHAPE_CODE = [
+  'Hen2',
+  'Shu2',
+  'Hen3',
+  'Shu3',
+  'ZhiJiao1',
+  'ZhiJiao2',
+  'ZhiJiao3',
+  'ZhiJiao4',
+  'Hen4',
+  'Shu4',
+  'Z3',
+  'Z4',
+];
 const VERSION = 0b101;
 const SALT = 0x3c;
 const VALUE_BITS = [7, 10, 13, 16];
@@ -139,7 +161,12 @@ export function decodeConsoleCode(input) {
         if (!shape) return null;
         const [fr, fc] = SHAPES[shape].cells[0];
         const cells = SHAPES[shape].cells.map(([a, b]) => [row - fr + a, col - fc + b]);
-        if (cells.some(([a, b]) => a < 0 || b < 0 || a >= CONSOLE_SIZE || b >= CONSOLE_SIZE || !grid[a][b] || covered.has(`${a},${b}`))) {
+        if (
+          cells.some(
+            ([a, b]) =>
+              a < 0 || b < 0 || a >= CONSOLE_SIZE || b >= CONSOLE_SIZE || !grid[a][b] || covered.has(`${a},${b}`),
+          )
+        ) {
           return null;
         }
         cells.forEach(([a, b]) => covered.add(`${a},${b}`));

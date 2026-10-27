@@ -38,9 +38,9 @@ export default function GlossaryPage() {
     );
     return GLOSSARY_CATEGORIES.map((cat) => ({
       cat,
-      entries: matches.filter((e) => e.category === cat).sort((a, b) =>
-        cat === 'Reactions' ? 0 : a.term.localeCompare(b.term),
-      ),
+      entries: matches
+        .filter((e) => e.category === cat)
+        .sort((a, b) => (cat === 'Reactions' ? 0 : a.term.localeCompare(b.term))),
     })).filter((g) => g.entries.length > 0);
   }, [query, category]);
 
@@ -52,7 +52,9 @@ export default function GlossaryPage() {
       </header>
 
       <div className="filters filters--page">
-        <label className="sr-only" htmlFor="glossary-search">Search terms</label>
+        <label className="sr-only" htmlFor="glossary-search">
+          Search terms
+        </label>
         <input
           id="glossary-search"
           className="search search--inline"
@@ -62,7 +64,9 @@ export default function GlossaryPage() {
           onChange={(e) => setQuery(e.target.value)}
         />
         <div className="chips" role="group" aria-label="Filter by category">
-          <button className="chip" aria-pressed={category === 'all'} onClick={() => setCategory('all')}>All</button>
+          <button className="chip" aria-pressed={category === 'all'} onClick={() => setCategory('all')}>
+            All
+          </button>
           {GLOSSARY_CATEGORIES.map((c) => (
             <button
               key={c}
@@ -80,14 +84,18 @@ export default function GlossaryPage() {
 
       {groups.map((g) => (
         <section key={g.cat} className="gloss-group" aria-labelledby={`g-${slug(g.cat)}`}>
-          <h3 id={`g-${slug(g.cat)}`} className="gloss-group__title">{g.cat}</h3>
+          <h3 id={`g-${slug(g.cat)}`} className="gloss-group__title">
+            {g.cat}
+          </h3>
           <dl className="gloss">
             {g.entries.map((e) => (
               <div key={e.term} className="gloss__item">
                 <dt>
                   {e.elements && (
                     <span className="gloss__els">
-                      {e.elements.map((el) => <ElementGlyph key={el} element={el} size={13} />)}
+                      {e.elements.map((el) => (
+                        <ElementGlyph key={el} element={el} size={13} />
+                      ))}
                     </span>
                   )}
                   <span className="gloss__term">{e.term}</span>

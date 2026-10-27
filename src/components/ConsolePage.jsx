@@ -3,8 +3,22 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { decodeConsoleCode, encodeConsoleCode } from '../lib/consoleCode.js';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
 import {
-  CHARACTER_CONSOLE, CONSOLE_SIZE, FREE_CELLS, LAYOUT_NAMES, SET_SHAPES, SHAPES, SHAPE_ORDER,
-  canPlace, charactersWithLayout, consoleStats, footprint, maskOf, occupancy, setProgress, specBonus, usedCells,
+  CHARACTER_CONSOLE,
+  CONSOLE_SIZE,
+  FREE_CELLS,
+  LAYOUT_NAMES,
+  SET_SHAPES,
+  SHAPES,
+  SHAPE_ORDER,
+  canPlace,
+  charactersWithLayout,
+  consoleStats,
+  footprint,
+  maskOf,
+  occupancy,
+  setProgress,
+  specBonus,
+  usedCells,
 } from '../data/console.js';
 import { navigate } from '../lib/route.js';
 import { loadoutOf } from '../lib/teamsReducer.js';
@@ -14,8 +28,19 @@ import StatAdvice from './StatAdvice.jsx';
 import { suggestedBuild } from '../data/consoleBuilds.js';
 import { loadSavedConsoles, storeSavedConsoles } from '../lib/consoles.js';
 import {
-  CARTRIDGES, CARTRIDGE_BY_ID, CARTRIDGE_SUB_SLOTS, MODULE_MAX_LEVEL, MODULE_SUB_STATS, SUB_UNLOCK_LEVELS, bonusStats,
-  formatStat, isPercentStat, keepCartValues, moduleLevel, moduleRange, unlockedSubs,
+  CARTRIDGES,
+  CARTRIDGE_BY_ID,
+  CARTRIDGE_SUB_SLOTS,
+  MODULE_MAX_LEVEL,
+  MODULE_SUB_STATS,
+  SUB_UNLOCK_LEVELS,
+  bonusStats,
+  formatStat,
+  isPercentStat,
+  keepCartValues,
+  moduleLevel,
+  moduleRange,
+  unlockedSubs,
 } from '../data/gear.js';
 import Portrait from './Portrait.jsx';
 import ExportDialog from './ExportDialog.jsx';
@@ -139,19 +164,22 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
   const spec = specBonus(charId, pieces);
   const cart = cartridge && CARTRIDGE_BY_ID[cartridge];
   const counts = { 2: 0, 3: 0, 4: 0 };
-  pieces.forEach((p) => { counts[SHAPES[p.shape].type] += 1; });
+  pieces.forEach((p) => {
+    counts[SHAPES[p.shape].type] += 1;
+  });
 
   // Place so the clicked cell is the shape's first cell.
   const origin = (shape, r, c) => {
     const [fr, fc] = SHAPES[shape].cells[0];
     return [r - fr, c - fc];
   };
-  const preview = hover && selected && occ[hover[0]][hover[1]] === -1
-    ? (() => {
-        const [r0, c0] = origin(selected, hover[0], hover[1]);
-        return { cells: footprint(selected, r0, c0), ok: canPlace(layout, pieces, selected, r0, c0) };
-      })()
-    : null;
+  const preview =
+    hover && selected && occ[hover[0]][hover[1]] === -1
+      ? (() => {
+          const [r0, c0] = origin(selected, hover[0], hover[1]);
+          return { cells: footprint(selected, r0, c0), ok: canPlace(layout, pieces, selected, r0, c0) };
+        })()
+      : null;
   const previewSet = new Set(preview?.cells.map(([a, b]) => `${a},${b}`) ?? []);
 
   function clickCell(r, c) {
@@ -177,20 +205,27 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
     const me = occ[r][c];
     if (me === -1) return '';
     const diff = (rr, cc) => rr < 0 || cc < 0 || rr >= CONSOLE_SIZE || cc >= CONSOLE_SIZE || occ[rr][cc] !== me;
-    return [
-      diff(r - 1, c) && 'e-t', diff(r, c + 1) && 'e-r', diff(r + 1, c) && 'e-b', diff(r, c - 1) && 'e-l',
-    ].filter(Boolean).join(' ');
+    return [diff(r - 1, c) && 'e-t', diff(r, c + 1) && 'e-r', diff(r + 1, c) && 'e-b', diff(r, c - 1) && 'e-l']
+      .filter(Boolean)
+      .join(' ');
   }
 
   function save() {
     const label = name.trim() || `${character.name} console`;
-    setSaved([{ id: `c${Date.now().toString(36)}`, name: label.slice(0, 40), layout, pieces, cartridge, cartStats }, ...saved]);
+    setSaved([
+      { id: `c${Date.now().toString(36)}`, name: label.slice(0, 40), layout, pieces, cartridge, cartStats },
+      ...saved,
+    ]);
     setName('');
     setStatus(`Saved “${label}”.`);
   }
 
   function equip(targetId) {
-    onEquip(targetId, { console: pieces, cartridge: cartridge ?? loadoutOf(activeTeam, targetId).cartridge, cartStats });
+    onEquip(targetId, {
+      console: pieces,
+      cartridge: cartridge ?? loadoutOf(activeTeam, targetId).cartridge,
+      cartStats,
+    });
     setStatus(`Equipped on ${CHARACTER_BY_ID[targetId].name} in “${activeTeam.name}”.`);
   }
 
@@ -202,8 +237,8 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
       <header className="page__head">
         <h2 className="page__title">Console</h2>
         <p className="muted">
-          Pick a character, choose a Cartridge set and fill the grid with modules. Save layouts and equip
-          them on any character with the same grid.
+          Pick a character, choose a Cartridge set and fill the grid with modules. Save layouts and equip them on any
+          character with the same grid.
         </p>
       </header>
 
@@ -227,8 +262,12 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
         <section className="console-board" aria-label={`${character.name} console grid`}>
           <div className="console-board__head">
             <div>
-              <h3 className="mini-title">{character.name} <span>{LAYOUT_NAMES[layout]} grid</span></h3>
-              <p className="console-fill"><b>{used}</b> / {FREE_CELLS} cells</p>
+              <h3 className="mini-title">
+                {character.name} <span>{LAYOUT_NAMES[layout]} grid</span>
+              </h3>
+              <p className="console-fill">
+                <b>{used}</b> / {FREE_CELLS} cells
+              </p>
             </div>
             <div className="console-board__actions">
               {suggested && (
@@ -237,13 +276,23 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                   className="btn btn--quiet"
                   onClick={() => {
                     applyBuild({ ...suggested, cartStats: keepCartValues(cartStats, suggested.cartStats) });
-                    setStatus(`Loaded the suggested layout for ${CARTRIDGE_BY_ID[suggested.cartridge].name}. Adjust the stats below the set.`);
+                    setStatus(
+                      `Loaded the suggested layout for ${CARTRIDGE_BY_ID[suggested.cartridge].name}. Adjust the stats below the set.`,
+                    );
                   }}
                 >
                   Use suggested
                 </button>
               )}
-              <button type="button" className="btn btn--quiet" onClick={() => { setPieces([]); setActive(null); }} disabled={!pieces.length}>
+              <button
+                type="button"
+                className="btn btn--quiet"
+                onClick={() => {
+                  setPieces([]);
+                  setActive(null);
+                }}
+                disabled={!pieces.length}
+              >
                 Clear
               </button>
             </div>
@@ -263,7 +312,9 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                   at !== -1 && at === active && 'ccell--active',
                   p?.stats && 'ccell--has-stats',
                   edgeClass(r, c),
-                ].filter(Boolean).join(' ');
+                ]
+                  .filter(Boolean)
+                  .join(' ');
                 return (
                   <button
                     key={`${r}-${c}`}
@@ -274,8 +325,10 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                     onFocus={() => setHover([r, c])}
                     onClick={() => clickCell(r, c)}
                     aria-label={
-                      !free ? 'Blocked cell'
-                        : p ? `${TYPE_NAMES[SHAPES[p.shape].type]} module, edit stats`
+                      !free
+                        ? 'Blocked cell'
+                        : p
+                          ? `${TYPE_NAMES[SHAPES[p.shape].type]} module, edit stats`
                           : `Empty cell, row ${r + 1} column ${c + 1}`
                     }
                   />
@@ -286,7 +339,9 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           <p className="muted small">
             Tap a shape, then tap a cell to place it. Tap a placed module to enter its stats or remove it.
           </p>
-          <p className="console-status" role="status" aria-live="polite">{status}</p>
+          <p className="console-status" role="status" aria-live="polite">
+            {status}
+          </p>
           {active !== null && pieces[active] && (
             <ModuleEditor
               piece={pieces[active]}
@@ -303,10 +358,14 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
 
         <div className="console-side">
           <section aria-labelledby="console-shapes">
-            <h3 id="console-shapes" className="mini-title">Modules</h3>
+            <h3 id="console-shapes" className="mini-title">
+              Modules
+            </h3>
             {[2, 3, 4].map((type) => (
               <div key={type} className="shape-group">
-                <span className="shape-group__label">{TYPE_NAMES[type]} <b>{counts[type]}</b></span>
+                <span className="shape-group__label">
+                  {TYPE_NAMES[type]} <b>{counts[type]}</b>
+                </span>
                 <div className="shape-row">
                   {SHAPE_ORDER.filter((s) => SHAPES[s].type === type).map((s) => (
                     <button
@@ -330,14 +389,20 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           </section>
 
           <section aria-labelledby="console-cart">
-            <label id="console-cart" className="mini-title" htmlFor="console-cart-select">Cartridge set</label>
+            <label id="console-cart" className="mini-title" htmlFor="console-cart-select">
+              Cartridge set
+            </label>
             <select
               id="console-cart-select"
               value={cartridge ?? ''}
               onChange={(e) => setCartridge(e.target.value || null)}
             >
               <option value="">No set</option>
-              {CARTRIDGES.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              {CARTRIDGES.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
             </select>
             {cart && set && (
               <div className="console-set">
@@ -355,42 +420,57 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                   ))}
                 </div>
                 <ul className="console-tiers">
-                  <li className={set.two ? 'is-on' : undefined}><b>2</b> <StatText>{cart.two}</StatText></li>
-                  <li className={set.four ? 'is-on' : undefined}><b>4</b> <StatText>{cart.four}</StatText></li>
+                  <li className={set.two ? 'is-on' : undefined}>
+                    <b>2</b> <StatText>{cart.two}</StatText>
+                  </li>
+                  <li className={set.four ? 'is-on' : undefined}>
+                    <b>4</b> <StatText>{cart.four}</StatText>
+                  </li>
                 </ul>
               </div>
             )}
           </section>
 
           <section aria-labelledby="console-cstats">
-            <h3 id="console-cstats" className="mini-title">Cartridge stats <span>1 main · {CARTRIDGE_SUB_SLOTS} sub</span></h3>
+            <h3 id="console-cstats" className="mini-title">
+              Cartridge stats <span>1 main · {CARTRIDGE_SUB_SLOTS} sub</span>
+            </h3>
             <CartStatsEditor value={cartStats} onChange={setCartStats} idPrefix="ccs" />
             <StatAdvice character={character} cartridge={cartridge} />
             <p className="muted small">
-              Enter the values shown on your Cartridge. They’re added to the Arc’s stats under Bonus stats on the
-              team image.
+              Enter the values shown on your Cartridge. They’re added to the Arc’s stats under Bonus stats on the team
+              image.
             </p>
           </section>
 
           {spec && (
             <section aria-labelledby="console-spec">
-              <h3 id="console-spec" className="mini-title">{character.name} bonus</h3>
+              <h3 id="console-spec" className="mini-title">
+                {character.name} bonus
+              </h3>
               <p className="console-spec">
                 +{spec.value}% {spec.stat} per {TYPE_NAMES[spec.type]} module
                 <span className="console-spec__total">
-                  {spec.count} equipped → <b>+{spec.total}% {spec.stat}</b>
+                  {spec.count} equipped →{' '}
+                  <b>
+                    +{spec.total}% {spec.stat}
+                  </b>
                 </span>
               </p>
             </section>
           )}
 
           <section aria-labelledby="console-totals">
-            <h3 id="console-totals" className="mini-title">Console totals <span>modules, Cartridge, bonuses</span></h3>
+            <h3 id="console-totals" className="mini-title">
+              Console totals <span>modules, Cartridge, bonuses</span>
+            </h3>
             {(() => {
               const totals = bonusStats(null, cartStats, consoleStats(charId, pieces, cartridge));
               return totals.length ? (
                 <ul className="console-totals">
-                  {totals.map((t) => <li key={t.stat}>{formatStat(t.stat, t.value)}</li>)}
+                  {totals.map((t) => (
+                    <li key={t.stat}>{formatStat(t.stat, t.value)}</li>
+                  ))}
                 </ul>
               ) : (
                 <p className="muted small">Enter module and Cartridge stats to see the totals.</p>
@@ -399,10 +479,18 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           </section>
 
           <section aria-labelledby="console-code">
-            <h3 id="console-code" className="mini-title">Console code <span>layout, set and Cartridge stats</span></h3>
+            <h3 id="console-code" className="mini-title">
+              Console code <span>layout, set and Cartridge stats</span>
+            </h3>
             {consoleCode ? (
               <div className="code-row">
-                <input id="console-code-out" className="code code--card" readOnly value={consoleCode} onFocus={(e) => e.target.select()} />
+                <input
+                  id="console-code-out"
+                  className="code code--card"
+                  readOnly
+                  value={consoleCode}
+                  onFocus={(e) => e.target.select()}
+                />
                 <button type="button" className="btn" onClick={() => copyText(consoleCode, 'current')}>
                   {copied === 'current' ? 'Copied' : 'Copy'}
                 </button>
@@ -411,7 +499,9 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
               <p className="muted small">Place modules or pick a set to get a code.</p>
             )}
             <form className="code-row console-code-in" onSubmit={importCode}>
-              <label className="sr-only" htmlFor="console-code-in">Paste a console code</label>
+              <label className="sr-only" htmlFor="console-code-in">
+                Paste a console code
+              </label>
               <input
                 id="console-code-in"
                 className="code"
@@ -419,10 +509,13 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                 value={codeInput}
                 onChange={(e) => setCodeInput(e.target.value)}
               />
-              <button type="submit" className="btn" disabled={!codeInput.trim()}>Load</button>
+              <button type="submit" className="btn" disabled={!codeInput.trim()}>
+                Load
+              </button>
             </form>
             <button type="button" className="btn btn--primary console-share" onClick={() => setSharing(true)}>
-              <ExportIcon />Share build image
+              <ExportIcon />
+              Share build image
             </button>
             <p className="muted small">
               Share a build without sharing a team. Codes carry the grid, set and Cartridge stats; module stats stay
@@ -431,9 +524,13 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           </section>
 
           <section aria-labelledby="console-save">
-            <h3 id="console-save" className="mini-title">Save &amp; equip</h3>
+            <h3 id="console-save" className="mini-title">
+              Save &amp; equip
+            </h3>
             <div className="code-row">
-              <label className="sr-only" htmlFor="console-name">Console name</label>
+              <label className="sr-only" htmlFor="console-name">
+                Console name
+              </label>
               <input
                 id="console-name"
                 className="code"
@@ -441,7 +538,9 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              <button type="button" className="btn" onClick={save} disabled={!pieces.length}>Save</button>
+              <button type="button" className="btn" onClick={save} disabled={!pieces.length}>
+                Save
+              </button>
             </div>
             {teamTargets.length > 0 ? (
               <div className="console-equip">
@@ -464,7 +563,9 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
       </div>
 
       <section className="console-saved" aria-labelledby="console-saved-title">
-        <h3 id="console-saved-title" className="mini-title">Saved consoles</h3>
+        <h3 id="console-saved-title" className="mini-title">
+          Saved consoles
+        </h3>
         {saved.length === 0 ? (
           <p className="muted small">No saved consoles yet. They stay in this browser.</p>
         ) : (
@@ -479,17 +580,36 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                     <b>{s.name}</b>
                     <span className="muted small">
                       {usedCells(s.pieces)}/{FREE_CELLS} cells
-                      {sc && <> · <CartridgeIcon id={sc.id} size={14} /> {sc.name} {Math.min(setProgress(sc.id, s.pieces).count, 4)}/4</>}
+                      {sc && (
+                        <>
+                          {' '}
+                          · <CartridgeIcon id={sc.id} size={14} /> {sc.name}{' '}
+                          {Math.min(setProgress(sc.id, s.pieces).count, 4)}/4
+                        </>
+                      )}
                     </span>
                     <span className="muted small">
-                      Fits: {charactersWithLayout(s.layout).map((id) => CHARACTER_BY_ID[id].name).join(', ')}
+                      Fits:{' '}
+                      {charactersWithLayout(s.layout)
+                        .map((id) => CHARACTER_BY_ID[id].name)
+                        .join(', ')}
                     </span>
                   </div>
                   <div className="saved-item__actions">
                     <button
                       type="button"
                       className="btn btn--quiet"
-                      onClick={() => copyText(encodeConsoleCode({ layout: s.layout, cartridge: s.cartridge, cartStats: s.cartStats, pieces: s.pieces }), s.id)}
+                      onClick={() =>
+                        copyText(
+                          encodeConsoleCode({
+                            layout: s.layout,
+                            cartridge: s.cartridge,
+                            cartStats: s.cartStats,
+                            pieces: s.pieces,
+                          }),
+                          s.id,
+                        )
+                      }
                     >
                       {copied === s.id ? 'Copied' : 'Copy code'}
                     </button>
@@ -520,8 +640,7 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
         )}
       </section>
       <p className="muted small">
-        Grid layouts, module shapes and set requirements follow game data compiled by the Icy Veins
-        Console Tool.
+        Grid layouts, module shapes and set requirements follow game data compiled by the Icy Veins Console Tool.
       </p>
       {sharing && (
         <ExportDialog
@@ -533,12 +652,12 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
             // Card drawing code loads only when the image is made.
             const { characterBuild, renderBuildCard } = await import('../lib/buildCard.js');
             return renderBuildCard(
-            characterBuild(character, {
-              team: activeTeam,
-              current: { pieces, cartridge, cartStats, arc: inTeam ? loadoutOf(activeTeam, charId).arc : null },
-            }),
-            opts,
-          );
+              characterBuild(character, {
+                team: activeTeam,
+                current: { pieces, cartridge, cartStats, arc: inTeam ? loadoutOf(activeTeam, charId).arc : null },
+              }),
+              opts,
+            );
           }}
         />
       )}
@@ -598,22 +717,29 @@ function ModuleEditor({ piece, index, onChange, onRemove, onClose }) {
       <div className="module-editor__head">
         <ShapeGlyph shape={piece.shape} size={9} />
         <b>{typeName} module</b>
-        <button type="button" className="btn btn--quiet" onClick={onRemove}>Remove</button>
-        <button type="button" className="btn btn--quiet" onClick={onClose}>Done</button>
+        <button type="button" className="btn btn--quiet" onClick={onRemove}>
+          Remove
+        </button>
+        <button type="button" className="btn btn--quiet" onClick={onClose}>
+          Done
+        </button>
       </div>
       <label className="module-editor__level">
         <span>Module level</span>
-        <select
-          id={`module-${index}-level`}
-          value={level}
-          onChange={(e) => set({ level: Number(e.target.value) })}
-        >
-          {MODULE_LEVELS.map((l) => <option key={l} value={l}>Lv {l}</option>)}
+        <select id={`module-${index}-level`} value={level} onChange={(e) => set({ level: Number(e.target.value) })}>
+          {MODULE_LEVELS.map((l) => (
+            <option key={l} value={l}>
+              Lv {l}
+            </option>
+          ))}
         </select>
         <span className="muted small">{open} of 4 sub stats unlocked</span>
       </label>
       <div className="module-editor__mains">
-        {[['atk', 'ATK'], ['hp', 'HP']].map(([key, label]) => {
+        {[
+          ['atk', 'ATK'],
+          ['hp', 'HP'],
+        ].map(([key, label]) => {
           const [min, max] = moduleRange('main', label);
           return (
             <label key={key} className="cstat cstat--on">
@@ -650,12 +776,18 @@ function ModuleEditor({ piece, index, onChange, onRemove, onClose }) {
                     disabled={locked}
                     onChange={(e) => {
                       const stat = e.target.value;
-                      const next = stat ? { stat, value: sub && isPercentStat(sub.stat) === isPercentStat(stat) ? sub.value : 0 } : null;
+                      const next = stat
+                        ? { stat, value: sub && isPercentStat(sub.stat) === isPercentStat(stat) ? sub.value : 0 }
+                        : null;
                       set({ subs: st.subs.map((x, j) => (j === i ? next : x)) });
                     }}
                   >
                     <option value="">—</option>
-                    {MODULE_SUB_STATS.map((o) => <option key={o} value={o}>{o}</option>)}
+                    {MODULE_SUB_STATS.map((o) => (
+                      <option key={o} value={o}>
+                        {o}
+                      </option>
+                    ))}
                   </select>
                   <span className="cstat__value">
                     <input
@@ -668,13 +800,23 @@ function ModuleEditor({ piece, index, onChange, onRemove, onClose }) {
                       disabled={!sub || locked}
                       placeholder={sub ? `${min}–${max}` : ''}
                       value={sub?.value || ''}
-                      onChange={(e) => set({
-                        subs: st.subs.map((x, j) => (j === i ? { ...x, value: num('sub', x.stat, e.target.value) } : x)),
-                      })}
+                      onChange={(e) =>
+                        set({
+                          subs: st.subs.map((x, j) =>
+                            j === i ? { ...x, value: num('sub', x.stat, e.target.value) } : x,
+                          ),
+                        })
+                      }
                     />
-                    <span className="cstat__unit" aria-hidden="true">{pct ? '%' : ''}</span>
+                    <span className="cstat__unit" aria-hidden="true">
+                      {pct ? '%' : ''}
+                    </span>
                   </span>
-                  {locked && <span className="cstat__lock cstat__lock--note">Locked until Lv {SUB_UNLOCK_LEVELS[i]}, not counted</span>}
+                  {locked && (
+                    <span className="cstat__lock cstat__lock--note">
+                      Locked until Lv {SUB_UNLOCK_LEVELS[i]}, not counted
+                    </span>
+                  )}
                 </>
               )}
             </div>
@@ -682,8 +824,8 @@ function ModuleEditor({ piece, index, onChange, onRemove, onClose }) {
         })}
       </div>
       <p className="muted small">
-        Main ATK 10–90 and HP 100–1,200. Sub stats: HP up to 500; flat ATK, flat DEF, Cycle Intensity and
-        Break Intensity 10–50; percentages 2.00–9.00%.
+        Main ATK 10–90 and HP 100–1,200. Sub stats: HP up to 500; flat ATK, flat DEF, Cycle Intensity and Break
+        Intensity 10–50; percentages 2.00–9.00%.
       </p>
     </div>
   );

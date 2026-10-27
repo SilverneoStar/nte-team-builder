@@ -20,8 +20,23 @@ import { fillStatText } from './statText.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
-  BODY, DISPLAY, EL, MONO, clipCard, drawBandBackdrop, drawRank, drawSilverFrame, ensureFonts, goldCells, loadImage, roundRect, wrap, fitLine,
-  loadRoleIcons, drawRoles, drawMascot
+  BODY,
+  DISPLAY,
+  EL,
+  MONO,
+  clipCard,
+  drawBandBackdrop,
+  drawRank,
+  drawSilverFrame,
+  ensureFonts,
+  goldCells,
+  loadImage,
+  roundRect,
+  wrap,
+  fitLine,
+  loadRoleIcons,
+  drawRoles,
+  drawMascot,
 } from './teamCard.js';
 
 export const GUIDE_CARD_W = 1080;
@@ -39,7 +54,11 @@ const K = {
   num: '#ffc061',
   key: '#b9c3ff',
 };
-const BANDS = [{ y: -40, h: 230, a: 1 }, { y: 760, h: 120, a: 0.55 }, { y: 1120, h: 170, a: 0.8 }];
+const BANDS = [
+  { y: -40, h: 230, a: 1 },
+  { y: 760, h: 120, a: 0.55 },
+  { y: 1120, h: 170, a: 0.8 },
+];
 const HL = { color: K.label, keyColor: K.key, numColor: K.num };
 
 // ---------- data ----------
@@ -95,7 +114,7 @@ const ACCESS_LABEL = { free: 'F2P', pass: 'BATTLE PASS', banner: 'STANDARD', pai
  */
 export function arcPicks(character, best) {
   const sig = ARCS.find((a) => a.signature === character.id);
-  const first = best?.arc ? ARC_BY_ID[best.arc] : sig ?? ARC_BY_ID[(RECOMMENDED[character.id] ?? [])[0]];
+  const first = best?.arc ? ARC_BY_ID[best.arc] : (sig ?? ARC_BY_ID[(RECOMMENDED[character.id] ?? [])[0]]);
   if (!first) return { best: null, more: [] };
   const listed = [...new Set([sig?.id, ...(RECOMMENDED[character.id] ?? [])])]
     .filter((id) => id && id !== first.id)
@@ -227,8 +246,8 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const elColor = EL[c.element] ?? K.pink;
   const best = bestBuild(c);
   const bestCart = best?.cartridge ?? cartridgesFor(c)[0] ?? null;
-  const altCart = cartridgesFor(c).find((id) => id !== bestCart)
-    ?? GENERIC_ALT[c.roles[0]]?.find((id) => id !== bestCart) ?? null;
+  const altCart =
+    cartridgesFor(c).find((id) => id !== bestCart) ?? GENERIC_ALT[c.roles[0]]?.find((id) => id !== bestCart) ?? null;
   const arcs = arcPicks(c, best);
   const prio = statPriority(c, best);
   const spec = CHARACTER_CONSOLE[c.id]?.spec;
@@ -445,7 +464,16 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     ctx.fillStyle = K.muted;
     const rk = `${arcs.best.rarity}-RANK  ·  `;
     ctx.fillText(rk, tx, sy);
-    statLines(ctx, arcs.best.sub, tx + ctx.measureText(rk).width, sy, iw - A - 18 - ctx.measureText(rk).width, 1, 22, 16);
+    statLines(
+      ctx,
+      arcs.best.sub,
+      tx + ctx.measureText(rk).width,
+      sy,
+      iw - A - 18 - ctx.measureText(rk).width,
+      1,
+      22,
+      16,
+    );
     y += A + 16;
     const room = R2Y + ROW2 - 14 - y;
     const rowH = Math.min(78, room / Math.max(1, arcs.more.length));
@@ -498,7 +526,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
         if (!m) return;
         const cx = ix + R + j * step;
         const cy = y + 32 + R;
-        circle(ctx, mateImg[id], cx, cy, R, id === c.id ? K.gold : EL[m.element] ?? K.line, id === c.id ? 3.5 : 2.5);
+        circle(ctx, mateImg[id], cx, cy, R, id === c.id ? K.gold : (EL[m.element] ?? K.line), id === c.id ? 3.5 : 2.5);
       });
       // Reactions beside the portraits
       const a = analyzeTeam(p.members);
@@ -511,8 +539,9 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     if (!teams.length) {
       ctx.font = `500 18px ${BODY}`;
       ctx.fillStyle = K.muted;
-      wrap(ctx, `Try ${c.name} with anyone in the Team Builder and see the reactions.`, iw, 3)
-        .forEach((ln, k) => ctx.fillText(ln, ix, top + 20 + k * 26));
+      wrap(ctx, `Try ${c.name} with anyone in the Team Builder and see the reactions.`, iw, 3).forEach((ln, k) =>
+        ctx.fillText(ln, ix, top + 20 + k * 26),
+      );
     }
   }
 

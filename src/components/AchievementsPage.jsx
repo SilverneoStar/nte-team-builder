@@ -1,11 +1,6 @@
 // The Achievements page: categories, tiers and a per-browser progress tracker.
 import { useMemo, useState } from 'react';
-import {
-  ACHIEVEMENTS,
-  ACHIEVEMENT_CATEGORIES,
-  ACHIEVEMENT_CHARACTERS,
-  TIERS,
-} from '../data/achievements.js';
+import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORIES, ACHIEVEMENT_CHARACTERS, TIERS } from '../data/achievements.js';
 import { useAchievementProgress } from '../lib/achievementProgress.js';
 
 const TIER_LABEL = Object.fromEntries(TIERS.map((t) => [t.id, t.label]));
@@ -128,8 +123,8 @@ export default function AchievementsPage({ category: catParam }) {
       <header className="page__head">
         <h2 className="page__title">Achievements</h2>
         <p className="muted">
-          {ACHIEVEMENTS.length} achievements in {ACHIEVEMENT_CATEGORIES.length} categories. Tick them off as you go: your
-          progress is saved in this browser on this device.
+          {ACHIEVEMENTS.length} achievements in {ACHIEVEMENT_CATEGORIES.length} categories. Tick them off as you go:
+          your progress is saved in this browser on this device.
         </p>
       </header>
 
@@ -150,7 +145,10 @@ export default function AchievementsPage({ category: catParam }) {
 
       <div className="type-tabs" role="tablist" aria-label="Achievement category">
         <a className="type-tab" role="tab" aria-selected={category === 'all'} href="#achievements">
-          All <span>{stats.done}/{ACHIEVEMENTS.length}</span>
+          All{' '}
+          <span>
+            {stats.done}/{ACHIEVEMENTS.length}
+          </span>
         </a>
         {ACHIEVEMENT_CATEGORIES.map((c) => (
           <a
@@ -176,7 +174,9 @@ export default function AchievementsPage({ category: catParam }) {
       )}
 
       <div className="filters filters--page filters--row ach-filters">
-        <label className="sr-only" htmlFor="ach-search">Search achievements</label>
+        <label className="sr-only" htmlFor="ach-search">
+          Search achievements
+        </label>
         <input
           id="ach-search"
           className="search search--inline"
@@ -186,7 +186,9 @@ export default function AchievementsPage({ category: catParam }) {
           onChange={(e) => setQuery(e.target.value)}
         />
         <div className="chips" role="group" aria-label="Filter by tier">
-          <button className="chip" aria-pressed={tier === 'all'} onClick={() => setTier('all')}>Any tier</button>
+          <button className="chip" aria-pressed={tier === 'all'} onClick={() => setTier('all')}>
+            Any tier
+          </button>
           {TIERS.map((t) => (
             <button
               key={t.id}
@@ -214,7 +216,9 @@ export default function AchievementsPage({ category: catParam }) {
           <span>Sort</span>
           <select value={sort} onChange={(e) => setSort(e.target.value)}>
             {SORTS.map((s) => (
-              <option key={s.id} value={s.id}>{s.label}</option>
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
             ))}
           </select>
         </label>
@@ -224,7 +228,9 @@ export default function AchievementsPage({ category: catParam }) {
             <select value={who} onChange={(e) => setWho(e.target.value)}>
               <option value="all">Anyone</option>
               {ACHIEVEMENT_CHARACTERS.map((n) => (
-                <option key={n} value={n}>{n}</option>
+                <option key={n} value={n}>
+                  {n}
+                </option>
               ))}
             </select>
           </label>
@@ -240,7 +246,12 @@ export default function AchievementsPage({ category: catParam }) {
           Showing {list.length} · {shownDone} done
         </span>
         <div className="ach-bar__actions">
-          <button type="button" className="btn btn--quiet" onClick={() => markShown(true)} disabled={shownDone === list.length}>
+          <button
+            type="button"
+            className="btn btn--quiet"
+            onClick={() => markShown(true)}
+            disabled={shownDone === list.length}
+          >
             Mark shown as done
           </button>
           <button type="button" className="btn btn--quiet" onClick={() => markShown(false)} disabled={shownDone === 0}>
@@ -270,7 +281,9 @@ export default function AchievementsPage({ category: catParam }) {
                 />
                 <Medal tier={a.tier} />
                 <div className="ach__body">
-                  <label htmlFor={`ach-${a.id}`} className="ach__name">{a.name}</label>
+                  <label htmlFor={`ach-${a.id}`} className="ach__name">
+                    {a.name}
+                  </label>
                   {hidden ? (
                     <button
                       type="button"

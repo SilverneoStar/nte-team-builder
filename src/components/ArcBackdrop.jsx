@@ -6,5 +6,11 @@ import { PATTERN_OPACITY, arcPatternUrl } from '../lib/arcPattern.js';
 export default function ArcBackdrop({ arcType }) {
   const src = arcPatternUrl(import.meta.env.BASE_URL, arcType);
   if (!src) return null;
-  return <span className="arc-backdrop" aria-hidden="true" style={{ backgroundImage: `url(${src})`, opacity: PATTERN_OPACITY }} />;
+  return (
+    <span
+      className="arc-backdrop"
+      aria-hidden="true"
+      style={{ backgroundImage: `url(${src})`, opacity: PATTERN_OPACITY }}
+    />
+  );
 }

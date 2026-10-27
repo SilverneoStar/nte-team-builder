@@ -39,18 +39,58 @@ const d6 = () => 1 + Math.floor(Math.random() * 6);
 // Pip positions for each face, as [col, row] in a 3×3 grid (-1..1).
 const PIPS = {
   1: [[0, 0]],
-  2: [[-1, -1], [1, 1]],
-  3: [[-1, -1], [0, 0], [1, 1]],
-  4: [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]],
-  6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]],
+  2: [
+    [-1, -1],
+    [1, 1],
+  ],
+  3: [
+    [-1, -1],
+    [0, 0],
+    [1, 1],
+  ],
+  4: [
+    [-1, -1],
+    [1, -1],
+    [-1, 1],
+    [1, 1],
+  ],
+  5: [
+    [-1, -1],
+    [1, -1],
+    [0, 0],
+    [-1, 1],
+    [1, 1],
+  ],
+  6: [
+    [-1, -1],
+    [1, -1],
+    [-1, 0],
+    [1, 0],
+    [-1, 1],
+    [1, 1],
+  ],
 };
 function Die({ cx, cy, value, fill, className }) {
   const s = 7.6;
   return (
     <g className={className}>
-      <rect x={cx - s / 2} y={cy - s / 2} width={s} height={s} rx="1.6" fill={fill} stroke="#2B1D16" strokeWidth="0.7" />
-      <path d={`M${cx - s / 2 + 1.2} ${cy - s / 2 + 1} h${s - 3}`} stroke="#ffffff" strokeOpacity="0.45" strokeWidth="0.7" strokeLinecap="round" />
+      <rect
+        x={cx - s / 2}
+        y={cy - s / 2}
+        width={s}
+        height={s}
+        rx="1.6"
+        fill={fill}
+        stroke="#2B1D16"
+        strokeWidth="0.7"
+      />
+      <path
+        d={`M${cx - s / 2 + 1.2} ${cy - s / 2 + 1} h${s - 3}`}
+        stroke="#ffffff"
+        strokeOpacity="0.45"
+        strokeWidth="0.7"
+        strokeLinecap="round"
+      />
       {PIPS[value].map(([c, r], i) => (
         <circle key={i} cx={cx + c * 2.1} cy={cy + r * 2.1} r="0.78" fill="#FFF9F0" />
       ))}
@@ -95,7 +135,14 @@ function Face({ kind, dice }) {
   return (
     <g>
       <rect x="20.2" y="27.2" width="23.6" height="13.1" rx="6.5" fill="#2E1F17" />
-      <path d={BROWS[kind]} stroke="#9A8F88" strokeWidth="1.1" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d={BROWS[kind]}
+        stroke="#9A8F88"
+        strokeWidth="1.1"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <ellipse cx="22.6" cy="38" rx="1.6" ry="0.9" fill="#F4A7A0" />
       <ellipse cx="41.4" cy="38" rx="1.6" ry="0.9" fill="#F4A7A0" />
       {kind === 'happy' && (
@@ -176,7 +223,14 @@ export default function Mascot() {
   const [dice, setDice] = useState([1, 1]);
   const next = useRef(0);
   const timers = useRef([]);
-  useEffect(() => () => timers.current.forEach((t) => { clearTimeout(t); clearInterval(t); }), []);
+  useEffect(
+    () => () =>
+      timers.current.forEach((t) => {
+        clearTimeout(t);
+        clearInterval(t);
+      }),
+    [],
+  );
 
   function swapHat() {
     setHat((h) => {
@@ -191,7 +245,10 @@ export default function Mascot() {
   }
 
   function play() {
-    timers.current.forEach((t) => { clearTimeout(t); clearInterval(t); });
+    timers.current.forEach((t) => {
+      clearTimeout(t);
+      clearInterval(t);
+    });
     const e = EMOTES[next.current];
     next.current = (next.current + 1) % EMOTES.length;
     // A new key restarts the CSS animation even when the same emote repeats.
@@ -200,14 +257,27 @@ export default function Mascot() {
       const final = [d6(), d6()];
       const tick = setInterval(() => setDice([d6(), d6()]), DICE_TICK_MS);
       timers.current.push(tick);
-      timers.current.push(setTimeout(() => { clearInterval(tick); setDice(final); }, DICE_ROLL_MS));
+      timers.current.push(
+        setTimeout(() => {
+          clearInterval(tick);
+          setDice(final);
+        }, DICE_ROLL_MS),
+      );
     }
     if (e.id === 'hat') timers.current.push(setTimeout(swapHat, HAT_SWAP_AT));
     timers.current.push(setTimeout(() => setEmote(null), e.ms));
   }
 
   const id = emote?.id;
-  const face = { wag: 'happy', hop: 'happy', dash: 'focused', swim: 'happy', sparkle: 'sparkle', charge: 'battery', dice: 'dice' }[id];
+  const face = {
+    wag: 'happy',
+    hop: 'happy',
+    dash: 'focused',
+    swim: 'happy',
+    sparkle: 'sparkle',
+    charge: 'battery',
+    dice: 'dice',
+  }[id];
 
   return (
     <button
@@ -234,8 +304,26 @@ export default function Mascot() {
                   <path d="M-5 46 L5 46" />
                 </g>
                 <g className="mascot__wheels">
-                  <rect x="22.6" y="52" width="2.2" height="4.6" rx="0.6" fill="#C9D0D9" stroke="#2B1D16" strokeWidth="0.6" />
-                  <rect x="39.2" y="52" width="2.2" height="4.6" rx="0.6" fill="#C9D0D9" stroke="#2B1D16" strokeWidth="0.6" />
+                  <rect
+                    x="22.6"
+                    y="52"
+                    width="2.2"
+                    height="4.6"
+                    rx="0.6"
+                    fill="#C9D0D9"
+                    stroke="#2B1D16"
+                    strokeWidth="0.6"
+                  />
+                  <rect
+                    x="39.2"
+                    y="52"
+                    width="2.2"
+                    height="4.6"
+                    rx="0.6"
+                    fill="#C9D0D9"
+                    stroke="#2B1D16"
+                    strokeWidth="0.6"
+                  />
                   <circle cx="23.7" cy="57.6" r="3" fill="#3A271D" stroke="#2B1D16" strokeWidth="1" />
                   <circle cx="23.7" cy="57.6" r="1.1" fill="#C9D0D9" />
                   <circle cx="40.3" cy="57.6" r="3" fill="#3A271D" stroke="#2B1D16" strokeWidth="1" />
@@ -264,16 +352,42 @@ export default function Mascot() {
                 <>
                   {/* The float belt inflates into a ring, then the water rises around it */}
                   <g className="mascot__ring">
-                    <path d="M10.6 44.4 Q32 55 53.4 44.4 Q57.6 48.6 53.4 52.8 Q32 63 10.6 52.8 Q6.4 48.6 10.6 44.4 Z" fill="#E8833A" stroke="#2B1D16" strokeWidth="1.1" />
-                    <path d="M18 47.4 Q17 51.6 18 55.7 M25 49.1 Q24.2 53.2 25 57.3 M39 49.1 Q39.8 53.2 39 57.3 M46 47.4 Q47 51.6 46 55.7" stroke="#B4561C" strokeWidth="0.6" fill="none" strokeLinecap="round" />
-                    <path d="M12.6 46.2 Q32 55.8 51.4 46.2" stroke="#F7B07A" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+                    <path
+                      d="M10.6 44.4 Q32 55 53.4 44.4 Q57.6 48.6 53.4 52.8 Q32 63 10.6 52.8 Q6.4 48.6 10.6 44.4 Z"
+                      fill="#E8833A"
+                      stroke="#2B1D16"
+                      strokeWidth="1.1"
+                    />
+                    <path
+                      d="M18 47.4 Q17 51.6 18 55.7 M25 49.1 Q24.2 53.2 25 57.3 M39 49.1 Q39.8 53.2 39 57.3 M46 47.4 Q47 51.6 46 55.7"
+                      stroke="#B4561C"
+                      strokeWidth="0.6"
+                      fill="none"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M12.6 46.2 Q32 55.8 51.4 46.2"
+                      stroke="#F7B07A"
+                      strokeWidth="1.2"
+                      fill="none"
+                      strokeLinecap="round"
+                    />
                     <path d="M8.6 49.4 Q32 60.6 55.4 49.4" stroke="#2B1D16" strokeWidth="2" fill="none" />
                     <path d="M8.6 49.4 Q32 60.6 55.4 49.4" stroke="#E6EBF0" strokeWidth="1.2" fill="none" />
                     <circle cx="32" cy="55" r="1.7" fill="#D5DBE3" stroke="#2B1D16" strokeWidth="0.6" />
                   </g>
                   <g className="mascot__water">
-                    <path d="M-10 57 Q-4 55 2 57 T14 57 T26 57 T38 57 T50 57 T62 57 T74 57 L74 66 L-10 66 Z" fill="#7FC4E2" opacity="0.6" />
-                    <path d="M-10 57 Q-4 55 2 57 T14 57 T26 57 T38 57 T50 57 T62 57 T74 57" stroke="#3F8FB5" strokeWidth="0.8" fill="none" />
+                    <path
+                      d="M-10 57 Q-4 55 2 57 T14 57 T26 57 T38 57 T50 57 T62 57 T74 57 L74 66 L-10 66 Z"
+                      fill="#7FC4E2"
+                      opacity="0.6"
+                    />
+                    <path
+                      d="M-10 57 Q-4 55 2 57 T14 57 T26 57 T38 57 T50 57 T62 57 T74 57"
+                      stroke="#3F8FB5"
+                      strokeWidth="0.8"
+                      fill="none"
+                    />
                   </g>
                 </>
               )}
