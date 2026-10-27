@@ -5596,22 +5596,31 @@ th[aria-sort='descending'] .th-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px 6px 6px;
+  padding: 6px 14px 6px 7px;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface-2);
   font-weight: 600;
 }
 .focus-stats__n {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 22px;
   height: 22px;
+  flex: none;
   border-radius: 50%;
   background: var(--el, var(--accent));
+  /* Number centred in the circle; white on the darker light-theme colours */
   color: #fff;
-  font: 700 0.75rem var(--font-mono);
+  font: 800 0.75rem/22px var(--font-mono);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
+/* Dark theme: element colours are light (Cosmos is near white), so a dark number */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .focus-stats__n { color: #0f1016; }
+}
+:root[data-theme='dark'] .focus-stats__n { color: #0f1016; }
 
 /* Arc-type design behind portraits (see ArcBackdrop.jsx) */
 .arc-backdrop {
@@ -5749,9 +5758,7 @@ th[aria-sort='descending'] .th-btn {
   background-color: color-mix(in srgb, var(--el) 78%, #000);
   background-image: var(--metal-tex, none),
     linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 50%, rgba(255, 255, 255, 0.12));
-  background-size:
-    300px 100%,
-    100% 100%;
+  background-size: 600px 100%, 100% 100%;
   background-blend-mode: overlay, normal;
   box-shadow:
     inset 0 2px 2px -1px rgba(0, 0, 0, 0.6),

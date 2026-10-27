@@ -110,9 +110,9 @@ export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
     if (vertical) {
       ctx.translate(x + w, y);
       ctx.rotate(Math.PI / 2);
-      ctx.drawImage(brushed, 0, 0, Math.max(h, 300), w);
+      ctx.drawImage(brushed, 0, 0, Math.max(h, 600), w);
     } else {
-      ctx.drawImage(brushed, x, y, Math.max(w, 300), h);
+      ctx.drawImage(brushed, x, y, Math.max(w, 600), h);
     }
     ctx.setTransform(ctx.getTransform());
   }
