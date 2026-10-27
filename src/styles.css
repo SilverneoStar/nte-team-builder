@@ -6125,7 +6125,20 @@ th[aria-sort='descending'] .th-btn {
   border-color: transparent;
   background:
     linear-gradient(#0b0c10, #0b0c10) padding-box,
-    linear-gradient(135deg, #e4e7ef, #b9a8f0 55%, #d7d9e4) border-box;
-  color: #cdc4f2;
-  text-shadow: 0 0 4px rgba(185, 168, 240, 0.35);
+    linear-gradient(135deg, #eef0f5, #c9c6dc 55%, #dfe2ea) border-box;
+  color: #dcdbe8;
+  text-shadow: 0 0 4px rgba(200, 196, 225, 0.3);
+}
+/* Light theme: a deeper silver so the outline shows on the pale pills */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) .focus-stats__list[data-el='cosmos'] .focus-stats__n {
+    background:
+      linear-gradient(#0b0c10, #0b0c10) padding-box,
+      linear-gradient(135deg, #8e94a6, #a29dbb 55%, #9aa0b0) border-box;
+  }
+}
+:root[data-theme='light'] .focus-stats__list[data-el='cosmos'] .focus-stats__n {
+  background:
+    linear-gradient(#0b0c10, #0b0c10) padding-box,
+    linear-gradient(135deg, #8e94a6, #a29dbb 55%, #9aa0b0) border-box;
 }
