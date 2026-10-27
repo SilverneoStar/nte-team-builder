@@ -1,3 +1,4 @@
+// The Achievements page: categories, tiers and a per-browser progress tracker.
 import { useMemo, useState } from 'react';
 import {
   ACHIEVEMENTS,

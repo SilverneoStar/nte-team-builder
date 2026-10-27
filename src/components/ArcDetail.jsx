@@ -1,3 +1,4 @@
+// One Arc's page: the 2D player, stats, passive, who uses it, how to get it and its materials.
 import { useState } from 'react';
 import { ARC_SOURCES, FIELD_EFFECTS, RECOMMENDED } from '../data/arcs.js';
 import { ARC_PASSIVES } from '../data/arcPassives.js';
@@ -10,7 +11,6 @@ import {
   arcAscensionTable,
 } from '../data/arcMaterials.js';
 import ArcPlayer from './ArcPlayer.jsx';
-import { renderArcFarmCard } from '../lib/farmCard.js';
 import ExportDialog from './ExportDialog.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
 import MaterialIcon from './MaterialIcon.jsx';
@@ -295,7 +295,7 @@ export default function ArcDetail({ arc: a, onClose }) {
           name={a.name}
           suffix="nte-arc-farming-list"
           onClose={() => setSharing(false)}
-          render={(opts) => renderArcFarmCard(a, opts)}
+          render={(opts) => import('../lib/farmCard.js').then((m) => m.renderArcFarmCard(a, opts))}
         />
       )}
     </article>

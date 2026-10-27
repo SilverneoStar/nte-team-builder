@@ -1,3 +1,4 @@
+// The Characters page: filters, grid or list view, and the selected character's page.
 import { portraitPath, useZeroLook } from '../lib/portraits.js';
 import { useEffect, useMemo, useState } from 'react';
 import { ARC_TYPES, CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
@@ -224,6 +225,7 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
                       sizes="(max-width: 639.98px) 32vw, 170px"
                       alt=""
                       loading="lazy"
+                      decoding="async"
                     />
                     {c.upcoming && <span className="char-tile__tag">Upcoming</span>}
                   </span>

@@ -1,3 +1,4 @@
+// The Arcs page: filters, the Arc cards list and the selected Arc's details.
 import { useMemo, useState } from 'react';
 import { ARCS, ARC_BY_ID, FIELD_EFFECTS, RECOMMENDED } from '../data/arcs.js';
 import { ARC_PASSIVES } from '../data/arcPassives.js';

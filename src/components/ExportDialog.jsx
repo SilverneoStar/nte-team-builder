@@ -1,5 +1,10 @@
+// The export dialog: previews a team image or card, with pickers for card type,
+// team layout and size, and Save / Copy / Share buttons.
 import { useEffect, useRef, useState } from 'react';
-import { TEAM_LAYOUTS, canvasToBlob, renderTeamCard } from '../lib/teamCard.js';
+import { EXPORT_SIZES, TEAM_LAYOUTS, canvasToBlob } from '../lib/exportSettings.js';
+
+// The team image drawing code loads only when a team image is made.
+const renderTeamCard = (team, opts) => import('../lib/teamCard.js').then((m) => m.renderTeamCard(team, opts));
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -23,12 +28,8 @@ const save = (key, v) => {
 const LAYOUT_KEY = 'nte-team-card-layout';
 const SCALE_KEY = 'nte-export-scale';
 
-// Same layout at every size, just more pixels.
-export const EXPORT_SIZES = [
-  { scale: 1, label: 'Standard', hint: '1×' },
-  { scale: 2, label: 'HD', hint: '2×' },
-  { scale: 3, label: 'Max', hint: '3×' },
-];
+// Export sizes live in exportSettings.js; re-exported so older imports keep working.
+export { EXPORT_SIZES };
 
 const slug = (name) => (name || 'team').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'team';
 

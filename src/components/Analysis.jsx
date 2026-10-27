@@ -1,3 +1,4 @@
+// Team analysis under the slots: elements, reactions, trios, roles and tips.
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import EsperCycle from './EsperCycle.jsx';
 import ElementGlyph from './ElementGlyph.jsx';

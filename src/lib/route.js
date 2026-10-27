@@ -1,3 +1,4 @@
+// The hash router: which page and item the address points to.
 import { useEffect, useState } from 'react';
 
 // Tiny hash router: #builder, #characters, #character-<id>, #arcs,

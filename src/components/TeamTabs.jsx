@@ -1,3 +1,4 @@
+// Saved teams as tabs, with rename, copy, delete and export actions.
 import { useState } from 'react';
 import ExportIcon from './ExportIcon.jsx';
 

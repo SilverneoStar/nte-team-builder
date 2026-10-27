@@ -1,3 +1,4 @@
+// Card codes printed on team images: encode and decode a team with its gear.
 import { ARCS, ARC_BY_ID } from '../data/arcs.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { MAX_DUPES } from '../data/awakenings.js';

@@ -1,3 +1,4 @@
+// "Stats to focus on", shown until a character's in-game Level 80 stats are confirmed.
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { ENDGAME, parsePriority } from '../data/endgame.js';
 

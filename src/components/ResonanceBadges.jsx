@@ -1,3 +1,4 @@
+// R3 / R6 Resonance circles with their descriptions.
 import { useState } from 'react';
 import { RESONANCES, activeResonance } from '../data/awakenings.js';
 import StatText from './StatText.jsx';

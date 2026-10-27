@@ -1,3 +1,4 @@
+// Console codes: share one Console build as a short code.
 import { CARTRIDGE_SUB_SLOTS, isPercentStat } from '../data/gear.js';
 import { CONSOLE_SIZE, SHAPES, maskOf } from '../data/console.js';
 import {

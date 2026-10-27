@@ -1,3 +1,4 @@
+// A character's round or square portrait, with element badge and optional Arc backdrop.
 import { portraitPath, useZeroLook } from '../lib/portraits.js';
 import { useState } from 'react';
 import { ELEMENT_BY_ID } from '../data/elements.js';
@@ -39,6 +40,7 @@ export default function Portrait({ character, size = 'md', backdrop = false }) {
           sizes={`${SIZE_PX[size] ?? 44}px`}
           alt=""
           loading="lazy"
+          decoding="async"
           onError={() => setFailedSrc(src)}
         />
       )}

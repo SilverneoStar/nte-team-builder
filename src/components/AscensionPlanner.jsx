@@ -1,3 +1,4 @@
+// Level-cap materials for a character, with a from/to planner.
 import { useState } from 'react';
 import MaterialIcon from './MaterialIcon.jsx';
 import { ASCENSION_PHASES, MAX_LEVEL, ascensionCost, ascensionTable } from '../data/ascension.js';

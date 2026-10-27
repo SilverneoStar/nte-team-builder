@@ -1,3 +1,4 @@
+// Gear editor for one team member: Arc, Cartridge set, Console and awakenings.
 import { ARC_BY_ID, arcTag, arcsFor } from '../data/arcs.js';
 import CartridgeIcon from './CartridgeIcon.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';

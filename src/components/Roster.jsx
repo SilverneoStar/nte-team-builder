@@ -1,3 +1,4 @@
+// The roster on the team builder: search, filters and the character cards.
 import { useMemo, useState } from 'react';
 import { CHARACTERS } from '../data/characters.js';
 import { ELEMENTS, PAIR_REACTIONS, ROLES } from '../data/elements.js';

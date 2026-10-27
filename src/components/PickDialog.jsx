@@ -1,3 +1,4 @@
+// Character picker for one team slot (bottom sheet on phones).
 import { useEffect, useRef } from 'react';
 import Roster from './Roster.jsx';
 

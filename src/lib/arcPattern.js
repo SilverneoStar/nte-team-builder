@@ -3,7 +3,7 @@
 // in-game disc artwork: Liquid currents and bubbles, Solid crystal facets,
 // Gas smoke and brush streaks, Plasma lightning, Condensate rings.
 // The site (CSS, .arc-backdrop) and the export cards (canvas, below) match.
-import { loadImage } from './teamCard.js';
+import { loadImage } from './loadImage.js';
 
 export const ARC_PATTERN_TYPES = ['liquid', 'solid', 'gas', 'plasma', 'condensate'];
 export const arcPatternUrl = (base, arcType) => {

@@ -1,3 +1,4 @@
+// Every team change (add, rename, slots, gear, presets) in one reducer.
 import { TEAM_SIZE } from './analyze.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';

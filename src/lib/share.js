@@ -1,3 +1,4 @@
+// Team share codes in links (#nte1~...).
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { TEAM_SIZE } from './analyze.js';
 

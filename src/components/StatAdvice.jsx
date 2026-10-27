@@ -1,3 +1,4 @@
+// Suggested Cartridge stats for a character and set, with reasons.
 import { recommendStats } from '../data/buildProfiles.js';
 import { CARTRIDGE_BY_ID } from '../data/gear.js';
 

@@ -1,3 +1,4 @@
+// Arc-type design shown behind a character's portrait (site version of the card backdrop).
 import { PATTERN_OPACITY, arcPatternUrl } from '../lib/arcPattern.js';
 
 // The design of the character's Arc type, behind their portrait. Same look as

@@ -1,3 +1,4 @@
+// "Featured in" teams on a character's page, as a paged carousel.
 import { useEffect, useRef, useState } from 'react';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import Portrait from './Portrait.jsx';

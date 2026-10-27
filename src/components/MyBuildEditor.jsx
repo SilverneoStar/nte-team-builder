@@ -1,3 +1,4 @@
+// The My build tab: a reader's own build for a character, saved in this browser.
 import { useEffect, useMemo, useState } from 'react';
 import { arcTag, arcsFor } from '../data/arcs.js';
 import { CARTRIDGES, CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';

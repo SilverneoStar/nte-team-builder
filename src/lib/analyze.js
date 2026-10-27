@@ -1,3 +1,4 @@
+// Team analysis: reactions, trios, role counts and tips, plus where a character is used in other teams.
 import { ELEMENTS, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 

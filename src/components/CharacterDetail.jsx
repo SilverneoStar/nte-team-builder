@@ -1,3 +1,4 @@
+// One character's page: header, Overview / Stats / Awakenings / Skills / Bond / Materials / My build, and the Export card button.
 import { ELEMENTS, ELEMENT_BY_ID, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { PRESETS } from '../data/presets.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
@@ -22,18 +23,15 @@ import { AWAKENING_ORDER, ORDINAL } from '../data/awakeningOrder.js';
 import RoleList from './RoleList.jsx';
 import { useState } from 'react';
 import ExportDialog from './ExportDialog.jsx';
-import { characterBuild, renderBuildCard } from '../lib/buildCard.js';
+import { CHARACTER_CARDS } from '../lib/exportSettings.js';
 import { CHARACTER_CONSOLE } from '../data/console.js';
 import { bestBuild } from '../data/bestBuild.js';
 import MyBuildEditor, { myBuildCurrent } from './MyBuildEditor.jsx';
 import { farmList } from '../data/farmList.js';
-import { renderFarmCard } from '../lib/farmCard.js';
 import StatText from './StatText.jsx';
 import SwipeTabs from './SwipeTabs.jsx';
 import FeaturedTeams from './FeaturedTeams.jsx';
 import { PHONE, useMedia } from '../lib/useMedia.js';
-import { renderCharacterCard } from '../lib/characterCard.js';
-import { renderGuideCard } from '../lib/guideCard.js';
 import ExportIcon from './ExportIcon.jsx';
 
 
@@ -51,10 +49,10 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   const phone = useMedia(PHONE);
   // Cards the Export card button offers, in picker order.
   const cardTypes = [
-    CHARACTER_CONSOLE[c.id] && { id: 'build', label: 'Build', title: 'Build image', suffix: 'nte-build' },
-    farmList(c.id) && { id: 'farming', label: 'Farming', title: 'Farming list image', suffix: 'nte-farming-list' },
-    CHARACTER_CONSOLE[c.id] && { id: 'guide', label: 'Guide', title: 'Build guide image', suffix: 'nte-build-guide' },
-    presets.length > 0 && { id: 'teams', label: 'Teams', title: 'Character teams image', suffix: 'nte-teams' },
+    CHARACTER_CONSOLE[c.id] && CHARACTER_CARDS.build,
+    farmList(c.id) && CHARACTER_CARDS.farming,
+    CHARACTER_CONSOLE[c.id] && CHARACTER_CARDS.guide,
+    presets.length > 0 && CHARACTER_CARDS.teams,
   ].filter(Boolean);
 
   // Page sections: stacked on wider screens, swipeable slides on phones.
@@ -333,11 +331,13 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           types={cardTypes}
           typeKey="nte-character-card-type"
           onClose={() => setSharing(false)}
-          render={(opts) => {
-            if (opts.type === 'guide') return renderGuideCard(c, opts);
-            if (opts.type === 'teams') return renderCharacterCard(c, opts);
-            if (opts.type === 'farming') return renderFarmCard(c, opts);
+          render={async (opts) => {
+            // Card drawing code loads only when a card is exported.
+            if (opts.type === 'guide') return (await import('../lib/guideCard.js')).renderGuideCard(c, opts);
+            if (opts.type === 'teams') return (await import('../lib/characterCard.js')).renderCharacterCard(c, opts);
+            if (opts.type === 'farming') return (await import('../lib/farmCard.js')).renderFarmCard(c, opts);
             const best = bestBuild(c);
+            const { characterBuild, renderBuildCard } = await import('../lib/buildCard.js');
             return renderBuildCard(
               characterBuild(c, { current: best, source: 'Recommended build', recStats: best?.cartStats }),
               opts,
@@ -351,8 +351,9 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           name={c.name}
           suffix="my-nte-build"
           onClose={() => setSharing(false)}
-          render={(opts) => {
+          render={async (opts) => {
             const mine = myBuildCurrent(sharing.mine);
+            const { characterBuild, renderBuildCard } = await import('../lib/buildCard.js');
             return renderBuildCard(characterBuild(c, { current: mine, source: 'My build', recStats: mine.cartStats }), opts);
           }}
         />

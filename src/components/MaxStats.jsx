@@ -1,3 +1,4 @@
+// Level 80 stats table (only for confirmed in-game values).
 import { useState } from 'react';
 import { DMG_TYPES, MAX_STATS_LEVEL } from '../data/maxStats.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';

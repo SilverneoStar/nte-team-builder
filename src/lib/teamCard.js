@@ -1,5 +1,10 @@
-// Draws a shareable team card on a canvas. No libraries: plain Canvas 2D,
-// so the image looks the same in every browser and works offline.
+// Draws a shareable team card on a canvas, plus the shared drawing helpers
+// (fonts, frames, rank badges, Cortado) the other cards reuse. No libraries:
+// plain Canvas 2D, so the image looks the same in every browser and works
+// offline. Loaded only when an image is exported.
+import { loadImage } from './loadImage.js';
+// Export options moved to exportSettings.js; re-exported so older imports keep working.
+export { EXPORT_SCALE, EXPORT_SIZES, TEAM_LAYOUTS, canvasToBlob } from './exportSettings.js';
 import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { loadPatterns, paintBackdrop, setPortraitShadow } from './arcPattern.js';
@@ -153,14 +158,9 @@ function framedPortrait(ctx, img, c, { x, y, w, h, r, color, patterns }) {
   ctx.stroke();
 }
 
-export function loadImage(src) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-    img.src = src;
-  });
-}
+// loadImage lives in loadImage.js (shared with the site); re-exported here
+// so the card files can keep importing it from teamCard.js.
+export { loadImage };
 
 export function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -466,11 +466,7 @@ export async function ensureFonts() {
 
 // Team card layouts: 'row' is the wide 1x4 card (16:9), 'grid' a 2x2 card (4:5)
 // with twice the width per member, so names, gear and stats don't get cut off.
-export const TEAM_LAYOUTS = [
-  { id: 'row', label: '1 × 4', hint: 'Wide' },
-  { id: 'grid', label: '2 × 2', hint: 'Tall' },
-  { id: 'side', label: '2 × 2', hint: 'Side by side' },
-];
+// (TEAM_LAYOUTS is in exportSettings.js.)
 export const GRID_W = 1080;
 export const GRID_H = 1350;
 // 'side': 2x2 with each member as a wide card, portrait on the left, details on the right.
@@ -1175,6 +1171,4 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   return canvas;
 }
 
-export function canvasToBlob(canvas) {
-  return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-}
+

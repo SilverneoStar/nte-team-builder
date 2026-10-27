@@ -1,3 +1,4 @@
+// The Glossary page: game terms, reactions and statuses explained.
 import { useMemo, useState } from 'react';
 import { ELEMENT_BY_ID, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { GLOSSARY, GLOSSARY_CATEGORIES } from '../data/glossary.js';

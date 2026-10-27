@@ -1,3 +1,4 @@
+// Which portrait file a character uses (Esper Zero's form, cache-busting versions).
 import { useSyncExternalStore } from 'react';
 
 // Esper Zero has a male and a female form. People pick which one the site

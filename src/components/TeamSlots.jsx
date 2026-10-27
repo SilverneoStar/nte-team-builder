@@ -1,3 +1,4 @@
+// The four team slots on the builder.
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { ARC_BY_ID, arcTag } from '../data/arcs.js';
 import { CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';

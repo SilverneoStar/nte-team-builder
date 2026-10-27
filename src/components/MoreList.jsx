@@ -1,3 +1,4 @@
+// Shows a few items, then a "+n more" button for the rest.
 import { useState } from 'react';
 
 // Shows the first `limit` items, then a "+n more" button that reveals the rest.

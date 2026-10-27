@@ -1,3 +1,4 @@
+// React hook for CSS media queries, plus the phone breakpoint.
 import { useSyncExternalStore } from 'react';
 
 /** True while the CSS media query matches; follows resizes and rotation. */

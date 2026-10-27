@@ -1,3 +1,4 @@
+// The Console page: lay out modules and Cartridges for a character, with codes and a build image.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { decodeConsoleCode, encodeConsoleCode } from '../lib/consoleCode.js';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
@@ -18,7 +19,6 @@ import {
 } from '../data/gear.js';
 import Portrait from './Portrait.jsx';
 import ExportDialog from './ExportDialog.jsx';
-import { characterBuild, renderBuildCard } from '../lib/buildCard.js';
 import StatText from './StatText.jsx';
 import ExportIcon from './ExportIcon.jsx';
 
@@ -529,13 +529,17 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           name={character.name}
           suffix="nte-build"
           onClose={() => setSharing(false)}
-          render={(opts) => renderBuildCard(
+          render={async (opts) => {
+            // Card drawing code loads only when the image is made.
+            const { characterBuild, renderBuildCard } = await import('../lib/buildCard.js');
+            return renderBuildCard(
             characterBuild(character, {
               team: activeTeam,
               current: { pieces, cartridge, cartStats, arc: inTeam ? loadoutOf(activeTeam, charId).arc : null },
             }),
             opts,
-          )}
+          );
+          }}
         />
       )}
     </div>

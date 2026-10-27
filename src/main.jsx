@@ -1,3 +1,4 @@
+// Entry point: mounts the app into #root in index.html and loads the site's styles.
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';

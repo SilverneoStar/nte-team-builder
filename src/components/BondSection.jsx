@@ -1,3 +1,4 @@
+// A character's Bond tab: overworld abilities, bond levels and favourite gifts.
 import { LIFE_MAX, SKILLS } from '../data/skills.js';
 import { BOND, BOND_LEVELS, BOND_MAX, BOND_TOTAL, GIFT_LIMITS, NO_BOND, UNIVERSAL_GIFTS } from '../data/bond.js';
 import StatText from './StatText.jsx';

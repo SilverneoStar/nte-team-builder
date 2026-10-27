@@ -1,3 +1,4 @@
+// Swipeable tabs used for long pages on phones.
 import { useEffect, useId, useRef, useState } from 'react';
 
 /**

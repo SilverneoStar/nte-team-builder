@@ -1,3 +1,4 @@
+// The site-wide display size setting.
 import { useEffect, useState } from 'react';
 
 // Display size: scales the whole app, like browser zoom but saved per browser

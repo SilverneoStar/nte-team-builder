@@ -1,8 +1,8 @@
-import { ENDGAME } from './endgame.js';
 // Console gear: Cartridge sets and Module types.
 // Sources (Oct 2026): Mobalytics cartridge guide (set bonuses), thegameswiki
 // Console page (module sizes, stat pool), character build guides.
 // Bonus text is summarised; check in-game for exact values.
+import { ENDGAME } from './endgame.js';
 
 export const CARTRIDGES = [
   { id: 'crimson-twin-butterflies', name: 'Crimson: Twin Butterflies', two: 'Incantation DMG +10%', four: 'ATK +6% each time a nearby enemy takes Incantation DMG from the team, up to 6 stacks (10s).' },

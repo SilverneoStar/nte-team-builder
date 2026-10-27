@@ -1,4 +1,8 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
+// The whole site: the masthead and page tabs, the team builder (team tabs,
+// slots, loadout panel, analysis, roster and sharing), and the other pages,
+// chosen by the address after # (see lib/route.js). Teams live in a reducer
+// (lib/teamsReducer.js) and are saved in this browser (lib/storage.js).
+import { Suspense, lazy, useEffect, useMemo, useReducer, useState } from 'react';
 import { CHARACTER_BY_ID, DATA_VERSION } from './data/characters.js';
 import { analyzeTeam, usageInOtherTeams } from './lib/analyze.js';
 import { navigate, useHashRoute, VIEWS } from './lib/route.js';
@@ -7,13 +11,7 @@ import { decodeTeam } from './lib/share.js';
 import { loadState, saveState } from './lib/storage.js';
 import { initialState, loadoutOf, teamsReducer } from './lib/teamsReducer.js';
 import Analysis from './components/Analysis.jsx';
-import AchievementsPage from './components/AchievementsPage.jsx';
-import ArcsPage from './components/ArcsPage.jsx';
-import CharactersPage from './components/CharactersPage.jsx';
-import ExportDialog from './components/ExportDialog.jsx';
 import LoadoutPanel from './components/LoadoutPanel.jsx';
-import GlossaryPage from './components/GlossaryPage.jsx';
-import ConsolePage from './components/ConsolePage.jsx';
 import Portrait from './components/Portrait.jsx';
 import SocialLinks from './components/SocialLinks.jsx';
 import Roster from './components/Roster.jsx';
@@ -22,6 +20,24 @@ import PickDialog from './components/PickDialog.jsx';
 import TeamSlots from './components/TeamSlots.jsx';
 import TeamTabs from './components/TeamTabs.jsx';
 import Mascot from './components/Mascot.jsx';
+
+// The team builder loads first; every other page (and the export dialog) is
+// fetched only when it's opened, so the first visit downloads much less.
+const AchievementsPage = lazy(() => import('./components/AchievementsPage.jsx'));
+const ArcsPage = lazy(() => import('./components/ArcsPage.jsx'));
+const CharactersPage = lazy(() => import('./components/CharactersPage.jsx'));
+const ConsolePage = lazy(() => import('./components/ConsolePage.jsx'));
+const ExportDialog = lazy(() => import('./components/ExportDialog.jsx'));
+const GlossaryPage = lazy(() => import('./components/GlossaryPage.jsx'));
+
+/** Shown for a moment while a page's code downloads. */
+function PageLoading() {
+  return (
+    <p className="page-loading muted" role="status">
+      Loading…
+    </p>
+  );
+}
 
 export default function App() {
   const [state, dispatch] = useReducer(teamsReducer, null, () => initialState(loadState()));
@@ -34,6 +50,10 @@ export default function App() {
   const [pickSlot, setPickSlot] = useState(null);
   useEffect(() => setSelectedSlot(null), [state.activeId]);
   const [exporting, setExporting] = useState(false);
+  // Leaving the team builder closes its export dialog.
+  useEffect(() => {
+    if (route.view !== 'builder') setExporting(false);
+  }, [route.view]);
   const selectedChar = selectedSlot != null ? CHARACTER_BY_ID[active.members[selectedSlot]] : null;
 
   const analysis = useMemo(() => analyzeTeam(active.members), [active.members]);
@@ -109,6 +129,7 @@ export default function App() {
         </div>
       </header>
 
+      <Suspense fallback={<PageLoading />}>
       {route.view === 'characters' && (
         <CharactersPage characterId={route.characterId} activeTeam={active} onAdd={addFromIndex} />
       )}
@@ -126,6 +147,7 @@ export default function App() {
       )}
 
       {route.view === 'glossary' && <GlossaryPage />}
+      </Suspense>
 
       {route.view === 'builder' && (
         <main className="layout">
@@ -207,7 +229,11 @@ export default function App() {
         />
       )}
 
-      {exporting && <ExportDialog team={active} onClose={() => setExporting(false)} />}
+      {exporting && (
+        <Suspense fallback={null}>
+          <ExportDialog team={active} onClose={() => setExporting(false)} />
+        </Suspense>
+      )}
 
       <footer className="foot">
         <SocialLinks />

@@ -1,3 +1,4 @@
+// Achievement progress saved in this browser.
 import { useCallback, useEffect, useState } from 'react';
 
 // Which achievements the player has ticked off, saved in this browser only

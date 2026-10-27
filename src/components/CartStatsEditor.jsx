@@ -1,3 +1,4 @@
+// Editor for a Cartridge's main and sub attributes.
 import { CARTRIDGE_MAIN_STATS, MODULE_SUB_STATS, isPercentStat } from '../data/gear.js';
 
 // Editor for a Cartridge's 1 main + 4 sub attributes.

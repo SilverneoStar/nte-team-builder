@@ -1,3 +1,4 @@
+// Game text with stat names and numbers highlighted.
 import { statParts } from '../lib/statText.js';
 
 // Game text with stat names and values highlighted.

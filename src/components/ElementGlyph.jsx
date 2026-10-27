@@ -1,3 +1,4 @@
+// Official element icon (or just its symbol), usable in HTML and inside SVG.
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { elementIconUrl, elementSymbolUrl } from '../lib/icons.js';
 

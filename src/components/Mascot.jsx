@@ -1,3 +1,4 @@
+// Cortado, the site mascot, with its hats and little animations.
 import { useEffect, useRef, useState } from 'react';
 
 // Cortado, the mascot: an anomaly that runs on coffee. Its headwear doubles as

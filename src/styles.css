@@ -5556,3 +5556,6 @@ th[aria-sort='descending'] .th-btn {
 .sister__game { font-size: 0.78rem; color: var(--muted); }
 .sister__arrow { margin-left: auto; font-size: 1.2rem; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .sister { transition: none; } .sister:hover { transform: none; } }
+
+/* Brief placeholder while a page's code downloads (see App.jsx). */
+.page-loading { padding: 32px 0; text-align: center; }

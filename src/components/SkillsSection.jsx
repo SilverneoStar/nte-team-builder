@@ -1,3 +1,4 @@
+// A character's Skills tab: combat skills, passives and a skill materials planner.
 import { useState } from 'react';
 import MaterialIcon from './MaterialIcon.jsx';
 import { LIFE_MAX, SKILL_LEVEL_COSTS, SKILL_MAX, SKILLS, skillCost } from '../data/skills.js';

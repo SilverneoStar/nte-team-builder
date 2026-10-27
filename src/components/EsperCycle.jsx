@@ -1,3 +1,4 @@
+// The Esper Cycle ring, lighting up the reactions the team can trigger.
 import { ELEMENTS, PAIR_REACTIONS } from '../data/elements.js';
 import ElementGlyph from './ElementGlyph.jsx';
 

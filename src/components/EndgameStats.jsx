@@ -1,3 +1,4 @@
+// Recommended endgame stats and Cartridge stat priorities from the build guides.
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { ENDGAME, ENDGAME_STATS, parsePriority } from '../data/endgame.js';
 

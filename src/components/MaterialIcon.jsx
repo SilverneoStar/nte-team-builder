@@ -1,3 +1,4 @@
+// Small material icon, or a coloured letter tile when there's no icon.
 import { materialIconUrl } from '../lib/icons.js';
 
 // Tile colours for materials without an icon, picked from the name so each item keeps its colour.
@@ -18,5 +19,5 @@ export default function MaterialIcon({ name, size = 30 }) {
       </span>
     );
   }
-  return <img className="mat-icon" src={src} width={size} height={size} alt="" loading="lazy" />;
+  return <img className="mat-icon" src={src} width={size} height={size} alt="" loading="lazy" decoding="async" />;
 }

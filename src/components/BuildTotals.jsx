@@ -1,3 +1,4 @@
+// Arc materials and the full build total (ascension, skills and Arc) for a character.
 import MaterialIcon from './MaterialIcon.jsx';
 import { ARCS, ARC_BY_ID, RECOMMENDED } from '../data/arcs.js';
 import { ARC_MAX_LEVEL, arcAscensionCost } from '../data/arcMaterials.js';

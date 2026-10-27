@@ -6,7 +6,6 @@ export const elementIconUrl = (elementId) => `${BASE}icons/elements/${elementId}
 export const elementSymbolUrl = (elementId) => `${BASE}icons/element-symbols/${elementId}.webp`;
 export const roleIconUrl = (role) => `${BASE}icons/roles/${role.toLowerCase()}.webp`;
 export const cartridgeIconUrl = (id) => `${BASE}icons/cartridges/${id}.webp`;
-export const arcImageUrl = (id) => `${BASE}arcs/${id}.webp`;
 export const arcTypeIconUrl = (type) => `${BASE}icons/arc-types/${type.toLowerCase()}.webp`;
 
 // Material icons we have files for (public/icons/materials/<slug>.webp).

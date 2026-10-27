@@ -2,7 +2,7 @@
 // the exported cards. Drop-in for the old Arc images: same square shape,
 // player centred, transparent around it.
 import { ARC_BY_ID } from '../data/arcs.js';
-import { loadImage } from './teamCard.js';
+import { loadImage } from './loadImage.js';
 
 const TYPES = new Set(['liquid', 'plasma', 'condensate', 'solid', 'gas']);
 const shared = new Map();

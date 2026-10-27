@@ -1,3 +1,4 @@
+// A character's roles with their icons.
 import { roleIconUrl } from '../lib/icons.js';
 
 // A character's roles, each with its official role icon.
