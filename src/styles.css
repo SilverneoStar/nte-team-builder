@@ -6119,3 +6119,13 @@ th[aria-sort='descending'] .th-btn {
   padding: 32px 0;
   text-align: center;
 }
+
+/* Cosmos numbers: silver blended with lavender (plain Cosmos white/grey reads flat) */
+.focus-stats__list[data-el='cosmos'] .focus-stats__n {
+  border-color: transparent;
+  background:
+    linear-gradient(#0b0c10, #0b0c10) padding-box,
+    linear-gradient(135deg, #e4e7ef, #b9a8f0 55%, #d7d9e4) border-box;
+  color: #cdc4f2;
+  text-shadow: 0 0 4px rgba(185, 168, 240, 0.35);
+}

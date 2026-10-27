@@ -30,7 +30,7 @@ export default function FocusStats({ character: c }) {
       <h3 id="focus-title" className="mini-title">
         Stats to focus on
       </h3>
-      <ol className="focus-stats__list">
+      <ol className="focus-stats__list" data-el={c.element}>
         {list.map((g, i) => (
           <li key={i}>
             <span className="focus-stats__n">{i + 1}</span>
