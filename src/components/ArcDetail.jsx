@@ -55,12 +55,14 @@ export default function ArcDetail({ arc: a, onClose }) {
         <div>
           <dt>Base ATK</dt>
           <dd>
-            {a.atk} <span className="muted">at Lv {ARC_MAX_LEVEL}</span>
+            {a.atk} {a.estimated && <span className="est-tag" title="Estimated: usual value for a limited S-rank Arc">est.</span>} <span className="muted">at Lv {ARC_MAX_LEVEL}</span>
           </dd>
         </div>
         <div>
           <dt>Secondary</dt>
-          <dd>{a.sub}</dd>
+          <dd>
+            {a.sub} {a.estimated && <span className="est-tag" title="Estimated: usual value for a limited S-rank Arc">est.</span>}
+          </dd>
         </div>
         {!full && (
           <div>

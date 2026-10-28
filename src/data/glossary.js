@@ -349,7 +349,7 @@ export const GLOSSARY = [
     term: 'Anomaly Pilgrimage',
     also: 'Weekly bosses',
     category: 'Modes',
-    text: 'Harder bosses such as Morphix, claimable three times a week with Character Pixels, for advanced skill upgrade materials.',
+    text: 'Harder bosses such as Morphix (and Amber Broodmother from 1.5), claimable three times a week with Character Pixels, for advanced skill upgrade materials.',
   },
   {
     term: 'Anomaly Zones',

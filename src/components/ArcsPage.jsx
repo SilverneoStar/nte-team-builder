@@ -142,6 +142,7 @@ export default function ArcsPage({ arcType, arcId }) {
                   <h3 className="arc-card__name">
                     <a href={`#arc-${a.id}`}>{a.name}</a>
                   </h3>
+                  {a.upcoming && <span className="card__tag">Upcoming</span>}
                   {type === 'all' && (
                     <span className="arc-card__type">
                       <ArcTypeIcon type={a.type} size={16} />
@@ -154,11 +155,15 @@ export default function ArcsPage({ arcType, arcId }) {
                   <dl className="gear-stats">
                     <div>
                       <dt>Base ATK</dt>
-                      <dd>{a.atk}</dd>
+                      <dd>
+                        {a.atk} {a.estimated && <span className="est-tag" title="Estimated: usual value for a limited S-rank Arc">est.</span>}
+                      </dd>
                     </div>
                     <div>
                       <dt>Secondary</dt>
-                      <dd>{a.sub}</dd>
+                      <dd>
+                        {a.sub} {a.estimated && <span className="est-tag" title="Estimated: usual value for a limited S-rank Arc">est.</span>}
+                      </dd>
                     </div>
                   </dl>
                 </div>

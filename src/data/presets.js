@@ -72,6 +72,16 @@ export const PRESETS = [
     why: 'Baicang’s Scorch with Daffodill’s Discord; Haniel adds Nova drain and Iroi heals and adds Hexed.' },
   { name: 'Mint Blossom', members: ['mint', 'zero', 'hotori', 'edgar'], idea: true,
     why: 'Mint’s Super Mint widens Vita Pistils; Zero and Hotori bring Cosmos for Blossom and Edgar heals.' },
+  // Version 1.5 pre-release ideas (Oct 2026), from the role tags shown in the
+  // preview stream. Revisit once Elyms’s and Exe’s kits are out.
+  { name: 'Elyms Remora', members: ['chaos', 'elyms', 'hathor', 'fadia'], idea: true,
+    why: 'Pre-release idea: Elyms brings Instant Cycle and a DMG Boost for Chaos, Hathor keeps Remora rolling and Fadia adds Stain and survival.' },
+  { name: 'Elyms Charge', members: ['nanally', 'elyms', 'hathor', 'iroi'], idea: true,
+    why: 'Pre-release idea: Elyms bursts and buffs inside a Charge trio, with Nanally’s Blossom, Hathor’s Remora and Iroi’s healing.' },
+  { name: 'Exe Discord', members: ['exe', 'sakiri', 'blackbird', 'fadia'], idea: true,
+    why: 'Pre-release idea: Exe as the main damage in a Discord trio; Blackbird adds Instant Cycle, Sakiri Scorch and Fadia keeps the team alive.' },
+  { name: 'Exe Scorch', members: ['exe', 'sakiri', 'haniel', 'adler'], idea: true,
+    why: 'Pre-release idea: Exe’s Chaos with Sakiri’s Scorch and Haniel’s Nova for Discord; Adler shields while the summons work.' },
 ];
 
 /**

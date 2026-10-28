@@ -1,7 +1,8 @@
 // Character ascension: what it takes to raise the level cap from 20 to 80.
 // Sources (Oct 2026): Oslink max-level material guides (per-phase amounts,
 // identical for Chaos and Blackbird), neverness.gg materials page and Icy Veins
-// (material families and boss drops per character).
+// (material families and boss drops per character). Elyms and Exe: the
+// official 1.5 preview stream (Oct 28, 2026).
 
 export const MAX_LEVEL = 80;
 
@@ -46,6 +47,8 @@ export const CHARACTER_MATERIALS = {
   chiz: ['whispers', 'tear-of-the-sea'],
   daffodill: ['delusions', 'charging-knight-spark-plug'],
   edgar: ['whispers', 'colorful-ticket-stub'],
+  elyms: ['silhouette', 'tear-of-the-sea'],
+  exe: ['numeral', 'confessional-flower-seed'],
   fadia: ['silhouette', 'water-moon-pick'],
   haniel: ['numeral', 'nest-guard-fragment'],
   hathor: ['delusions', 'colorful-ticket-stub'],

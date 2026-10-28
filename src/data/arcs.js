@@ -5,7 +5,7 @@
 // "signature" links an Arc to the character whose kit its passive is built
 // around. Signatures cross-checked against GameWith's top pick per character.
 
-const arc = (name, rarity, type, atk, sub, passive, signature = null) => ({
+const arc = (name, rarity, type, atk, sub, passive, signature = null, extra = {}) => ({
   id: name.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
   name,
   rarity,
@@ -14,7 +14,13 @@ const arc = (name, rarity, type, atk, sub, passive, signature = null) => ({
   sub,
   passive,
   signature,
+  ...extra,
 });
+
+// Arcs shown in a preview stream before release. Only the name, type and
+// banner are known: ATK and the secondary stat are the usual values for a
+// limited S-rank Arc (marked "est." on the site), and the passive is unknown.
+const PREVIEW = { estimated: true, upcoming: true };
 
 export const ARCS = [
   // S-rank
@@ -24,6 +30,8 @@ export const ARCS = [
   arc('Contemplative Cat', 'S', 'Gas', 512, 'Crit DMG 44%', 'Cosmos DMG rises with Fons held, up to 10 stacks.', 'chiz'),
   arc('Crime and Punishment', 'S', 'Gas', 570, 'Crit Rate 24%', 'Psyche DMG +20% and Cycle Intensity up. After Ultimate, team Crit DMG up.', 'blackbird'),
   arc('Day Off', 'S', 'Solid', 512, 'Charge Efficiency 33%', 'ATK up; Eclipse restores Ultimate Energy on kills. Free from the Eclipse side quest; built for Esper Zero.'),
+  arc('Dotted Horizon', 'S', 'Plasma', 570, 'Crit Rate 24%', 'Passive not revealed yet. Exe’s signature Arc, from the Encryption Special banner (Version 1.5).', 'exe', PREVIEW),
+  arc('Echoes on Hold', 'S', 'Solid', 570, 'Crit Rate 24%', 'Passive not revealed yet. Elyms’s signature Arc, from the Echo Special banner (Version 1.5).', 'elyms', PREVIEW),
   arc('Eternal Waltz', 'S', 'Condensate', 424, 'HP 41.25%', 'Max HP up; Mental DMG up after Ultimate.', 'fadia'),
   arc('Far Side of the Moon', 'S', 'Liquid', 570, 'Crit DMG 48%', 'Crit Rate +15%; Redirect Skill and Basic Attack DMG up, plus Lakshana DMG for 15s after a Redirect Skill.', 'akane'),
   arc('Fluff of Fearlessness', 'S', 'Solid', 512, 'Crit Rate 22%', 'ATK up for 10s after Ultimate.'),
@@ -89,7 +97,8 @@ export const FIELD_EFFECTS = {
 // "Character banners" are the Scarborough Fair boards (GameWith: "Gacha"),
 // "Arc banners" the Arc Research Program, and the Arc Shop is the Arc
 // Exchange paid in U-00NE from anomaly bosses.
-// Limited Arc banner names (Oct 2026): NTE Global on X (Resolve Special);
+// Limited Arc banner names (Oct 2026): official 1.5 preview stream (Echo,
+// Encryption); NTE Global on X (Resolve Special);
 // GameWith banner list (Dreamgate, Spellbound, Tiger, Bright Moon, Chorus);
 // The Games Wiki (Nocturne, Pursuit); AllThings.how 1.4 banners (Roostfeather,
 // Celestial).
@@ -110,6 +119,8 @@ export const ARC_SOURCES = {
   'contemplative-cat': ['City Tycoon reward at Tycoon Level 21'],
   'crime-and-punishment': [limited('Roostfeather', 'Blackbird’s')],
   'day-off': ['Eclipse side quest at the Bureau of Anomaly Control'],
+  'dotted-horizon': [limited('Encryption', 'Exe’s') + ', Dec 2 (after update) – Dec 23, 05:59 (UTC+8)'],
+  'echoes-on-hold': [limited('Echo', 'Elyms’s') + ', Nov 11 (after update) – Dec 2, 05:59 (UTC+8)'],
   'eternal-waltz': ['Anomaly Pilgrimage: first clear against The Never-ending Arachne'],
   'far-side-of-the-moon': [limited('Celestial', 'Akane Rin’s')],
   'fluff-of-fearlessness': [PASS],
@@ -178,6 +189,10 @@ export const RECOMMENDED = {
   chiz: ['contemplative-cat', 'cosmos-daze-wild-reverie', 'watch-your-heads'],
   daffodill: ['youthful-fantasy', 'shiny-days', 'fluff-of-fleetness'],
   edgar: ['call-of-the-twisted-city', 'mind-royale'],
+  // Pre-release picks (this site, Oct 2026): Arcs of their type whose
+  // passives fit their role tags. Revisit once their kits are out.
+  elyms: ['the-rain-that-shook-the-world', 'marching-beyond-time', 'fluff-of-fearlessness'],
+  exe: ['raging-flames', 'fluff-of-fortitude', 'oraora'],
   fadia: ['eternal-waltz', 'the-good-the-bad-the-bitter', 'a-time-will-come'],
   haniel: ['blow-up-the-crowd', 'time-bandit', 'day-off'],
   hathor: ['raging-flames', 'fluff-of-fortitude', 'song-of-the-whale'],

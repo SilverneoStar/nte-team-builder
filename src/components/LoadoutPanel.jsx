@@ -169,11 +169,15 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
               <dl className="gear-stats">
                 <div>
                   <dt>Base ATK</dt>
-                  <dd>{arc.atk}</dd>
+                  <dd>
+                    {arc.atk} {arc.estimated && <span className="est-tag" title="Estimated: usual value for a limited S-rank Arc">est.</span>}
+                  </dd>
                 </div>
                 <div>
                   <dt>Secondary</dt>
-                  <dd>{arc.sub}</dd>
+                  <dd>
+                    {arc.sub} {arc.estimated && <span className="est-tag" title="Estimated: usual value for a limited S-rank Arc">est.</span>}
+                  </dd>
                 </div>
               </dl>
               <p>

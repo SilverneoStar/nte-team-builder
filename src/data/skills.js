@@ -26,6 +26,8 @@ export const WEEKLY_ITEMS = {
   'eternal-memory': { name: 'Eternal Memory', source: 'Pilgrimage: Debt Collector' },
   'good-boy-stamp': { name: 'Good Boy Stamp', source: 'Pilgrimage: Morphix' },
   'dress-hem': { name: 'Dress Hem of Vanity', source: 'Pilgrimage: The Never-ending Arachne' },
+  // New in 1.5 (official preview stream, Oct 28, 2026).
+  'hollow-flowerseed': { name: 'Hollow Flowerseed', source: 'Pilgrimage: Amber Broodmother' },
 };
 
 // Cost to raise ONE active skill to each level (the same for every character).
@@ -65,6 +67,8 @@ const SKILL_MATS = {
   chiz: ['pigeon', 'good-boy-stamp'],
   daffodill: ['waves', 'dress-hem'],
   edgar: ['pigeon', 'good-boy-stamp'],
+  elyms: ['pigeon', 'hollow-flowerseed'],
+  exe: ['waves', 'hollow-flowerseed'],
   fadia: ['synchronicity', 'dress-hem'],
   haniel: ['waves', 'dress-hem'],
   hathor: ['synchronicity', 'good-boy-stamp'],

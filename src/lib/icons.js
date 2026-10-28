@@ -52,6 +52,7 @@ const MATERIAL_ICONS = new Set([
   'good-boy-stamp',
   'heart-racing-night',
   'hesitation-of-the-waves',
+  'hollow-flowerseed',
   'known-weariness',
   'lost-whispers',
   'nest-guard-fragment',

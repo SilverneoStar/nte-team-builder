@@ -120,16 +120,21 @@ export const CHARACTERS = [
     arcType: 'Liquid', faction: 'StarSign', ability: 'Unwritten Star',
     tags: ['Main DPS'], stats: null,
   },
-  // Version 1.5 drip-marketing reveals. Arc type and kit not published yet.
+  // Version 1.5: revealed in the "Once Upon a Glitched Call" preview stream
+  // (Oct 28, 2026): role tags, element (banner icons), Arc type (the disc on
+  // their signature Arc banners), materials and banner dates. Kits, stats and
+  // Esper abilities aren't out yet. "banner": limited board, dates in UTC+8.
   {
-    id: 'elyms', name: 'Elyms', rarity: 'S', version: null, element: 'cosmos', roles: ['Damage'],
-    arcType: null, faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
-    tags: ['Melee'], stats: null, upcoming: true,
+    id: 'elyms', name: 'Elyms', rarity: 'S', version: '1.5', element: 'cosmos', roles: ['Damage', 'Buff'],
+    arcType: 'Solid', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
+    tags: ['Instant Cycle', 'DMG Boost', 'Burst DPS'], stats: null, upcoming: true,
+    banner: { name: 'Android Dreams', from: 'Nov 11 (after update)', to: 'Dec 2, 05:59' },
   },
   {
-    id: 'exe', name: 'Exe', rarity: 'S', version: null, element: 'chaos', roles: ['Damage'],
-    arcType: null, faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
-    tags: [], stats: null, upcoming: true,
+    id: 'exe', name: 'Exe', rarity: 'S', version: '1.5', element: 'chaos', roles: ['Damage'],
+    arcType: 'Plasma', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
+    tags: ['Main DPS', 'Summoner'], stats: null, upcoming: true,
+    banner: { name: 'Offline Equations', from: 'Dec 2 (after update)', to: 'Dec 23, 05:59' },
   },
   // Version 1.6 (expected): shown in the official 1.4 preview stream
   // (Pukaland Fest) with voice actors and wallpapers. Kit leaks say Ellie deals

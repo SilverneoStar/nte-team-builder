@@ -44,6 +44,14 @@ export const BUILD_PROFILES = {
     instantCycle: true,
     note: 'Her redirect skill triggers the Cycle instantly, so Cycle Intensity isn’t needed.',
   },
+  // Pre-release (1.5 preview stream tags): early picks until the kits are out.
+  elyms: {
+    instantCycle: true,
+    note: 'Tagged Instant Cycle, so Cycle Intensity isn’t needed. An early pick from her role tags (Burst DPS, DMG Boost) until her kit is out.',
+  },
+  exe: {
+    note: 'An early pick from his role tags (Main DPS, Summoner) until his kit is out. If his summons scale with ATK, ATK% may move up.',
+  },
 };
 
 // Role weights. 'EL' stands for the character's own element DMG% (main stat only).

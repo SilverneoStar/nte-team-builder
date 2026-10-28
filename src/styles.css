@@ -1487,6 +1487,20 @@ button {
   color: var(--muted);
   vertical-align: 1px;
 }
+/* Estimated values (Arcs shown before release). */
+.est-tag {
+  display: inline-block;
+  margin-left: 2px;
+  padding: 0 5px;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  font: 600 0.6rem var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  vertical-align: 1px;
+  cursor: help;
+}
 .card__tag--used {
   color: var(--warn);
   max-width: 100%;
@@ -1855,11 +1869,20 @@ button {
   gap: 6px;
 }
 .tags li {
-  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px 2px 6px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--el) 16%, var(--surface));
   font-size: 0.76rem;
   font-weight: 600;
+}
+/* In-game role tag icons, tinted with the character's element. */
+.tag-icon {
+  flex: none;
+  color: var(--el, var(--accent));
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
 }
 .detail__grid {
   display: grid;

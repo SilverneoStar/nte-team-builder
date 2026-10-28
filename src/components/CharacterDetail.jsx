@@ -21,6 +21,7 @@ import BondSection from './BondSection.jsx';
 import { AWAKENINGS, RESONANCES } from '../data/awakenings.js';
 import { AWAKENING_ORDER, ORDINAL } from '../data/awakeningOrder.js';
 import RoleList from './RoleList.jsx';
+import TagIcon from './TagIcon.jsx';
 import { useState } from 'react';
 import ExportDialog from './ExportDialog.jsx';
 import { CHARACTER_CARDS } from '../lib/exportSettings.js';
@@ -126,6 +127,17 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
             <dd>Upcoming</dd>
           </div>
         )}
+        {c.banner && (
+          <div>
+            <dt>Limited board</dt>
+            <dd>
+              {c.banner.name}{' '}
+              <span className="muted">
+                · {c.banner.from} – {c.banner.to} (UTC+8)
+              </span>
+            </dd>
+          </div>
+        )}
       </dl>
 
       <section className="detail__reacts">
@@ -170,20 +182,21 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
       )}
     </div>
   );
+  // Upcoming characters: everything shown may still change before release.
+  const upcomingNote = c.upcoming ? (
+    <p className="upcoming-note">
+      <span className="upcoming-note__tag">Subject to change</span>
+      {c.name} isn’t out yet. Details here come from announcements and may change at release; builds are early picks from the role tags.
+    </p>
+  ) : null;
   const stats = (
     <div className="stats">
+      {phone && upcomingNote}
       {/* Only real in-game values; until then, the stats to chase. */}
       {confirmedStats(c.id) ? <MaxStats stats={confirmedStats(c.id)} /> : <FocusStats character={c} />}
       <EndgameStats character={c} />
     </div>
   );
-  // Upcoming characters: everything shown may still change before release.
-  const upcomingNote = c.upcoming ? (
-    <p className="upcoming-note">
-      <span className="upcoming-note__tag">Subject to change</span>
-      {c.name} isn’t out yet. Details here come from announcements and may change at release.
-    </p>
-  ) : null;
   const awakenings = (
     <section>
       {upcomingNote}
@@ -287,7 +300,10 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
     </>
   );
   const myBuild = CHARACTER_CONSOLE[c.id] ? (
-    <MyBuildEditor character={c} activeTeam={activeTeam} onShare={(b) => setSharing({ mine: b })} />
+    <>
+      {phone && upcomingNote}
+      <MyBuildEditor character={c} activeTeam={activeTeam} onShare={(b) => setSharing({ mine: b })} />
+    </>
   ) : null;
 
   return (
@@ -312,7 +328,10 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           {c.tags?.length > 0 && (
             <ul className="tags">
               {c.tags.map((t) => (
-                <li key={t}>{t}</li>
+                <li key={t}>
+                  <TagIcon tag={t} size={15} />
+                  {t}
+                </li>
               ))}
             </ul>
           )}
@@ -384,7 +403,11 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
             const best = bestBuild(c);
             const { characterBuild, renderBuildCard } = await import('../lib/buildCard.js');
             return renderBuildCard(
-              characterBuild(c, { current: best, source: 'Recommended build', recStats: best?.cartStats }),
+              characterBuild(c, {
+                current: best,
+                source: c.upcoming ? 'Early build · pre-release' : 'Recommended build',
+                recStats: best?.cartStats,
+              }),
               opts,
             );
           }}

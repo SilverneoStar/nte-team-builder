@@ -74,6 +74,10 @@ export const CHARACTER_CONSOLE = {
   chiz: c('D', 3, 'Cosmos DMG', 10),
   daffodill: c('C', 3, 'Chaos DMG', 10),
   edgar: c('A', 3, 'HP', 10),
+  // Pre-release guesses (Oct 2026), modelled on similar kits (Hotori for
+  // Elyms, Lacrimosa for Exe). Replace with game data once they are out.
+  elyms: c('B', 3, 'Cosmos DMG', 10),
+  exe: c('A', 3, 'Chaos DMG', 10),
   fadia: c('C', 2, 'HP', 6),
   haniel: c('B', 3, 'ATK', 10),
   hathor: c('C', 3, 'ATK', 10),
