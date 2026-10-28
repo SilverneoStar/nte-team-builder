@@ -647,6 +647,7 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           title="Build image"
           name={character.name}
           suffix="nte-build"
+          formats
           onClose={() => setSharing(false)}
           render={async (opts) => {
             // Card drawing code loads only when the image is made.

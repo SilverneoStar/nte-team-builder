@@ -7,17 +7,27 @@
 /** Team image layouts: 'row' is the wide 1x4 card (16:9), 'grid' and 'side' are 2x2. */
 export const TEAM_LAYOUTS = [
   { id: 'row', label: '1 × 4', hint: 'Wide' },
-  { id: 'grid', label: '2 × 2', hint: 'Tall' },
+  { id: 'grid', label: '2 × 2', hint: 'Tall · Instagram 4:5' },
   { id: 'side', label: '2 × 2', hint: 'Side by side' },
 ];
 
-/** Cards the Export card button on a character's page can offer, in picker order. */
+/**
+ * Cards the Export card button on a character's page can offer, in picker order.
+ * formats: the card can be made wide or as an Instagram post (EXPORT_FORMATS);
+ * post: the card is already Instagram-sized (4:5).
+ */
 export const CHARACTER_CARDS = {
-  build: { id: 'build', label: 'Build', title: 'Build image', suffix: 'nte-build' },
-  farming: { id: 'farming', label: 'Farming', title: 'Farming list image', suffix: 'nte-farming-list' },
-  guide: { id: 'guide', label: 'Guide', title: 'Build guide image', suffix: 'nte-build-guide' },
-  teams: { id: 'teams', label: 'Teams', title: 'Character teams image', suffix: 'nte-teams' },
+  build: { id: 'build', label: 'Build', title: 'Build image', suffix: 'nte-build', formats: true },
+  farming: { id: 'farming', label: 'Farming', title: 'Farming list image', suffix: 'nte-farming-list', formats: true },
+  guide: { id: 'guide', label: 'Guide', title: 'Build guide image', suffix: 'nte-build-guide', post: true },
+  teams: { id: 'teams', label: 'Teams', title: 'Character teams image', suffix: 'nte-teams', post: true },
 };
+
+/** Shapes for cards that come wide by default: as is, or an Instagram portrait post. */
+export const EXPORT_FORMATS = [
+  { id: 'wide', label: 'Wide', hint: 'Landscape' },
+  { id: 'ig', label: 'Instagram', hint: '4:5 post · 1080 × 1350' },
+];
 
 /** Default pixel scale for exports (HD). */
 export const EXPORT_SCALE = 2;

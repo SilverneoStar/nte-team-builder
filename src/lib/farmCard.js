@@ -36,6 +36,9 @@ import { fmt } from './format.js';
 
 export const FARM_W = 1600;
 export const FARM_H = 920;
+// Instagram portrait post (4:5), offered for both farming cards.
+export const IG_W = 1080;
+export const IG_H = 1350;
 
 const K = {
   bg: '#121318',
@@ -53,6 +56,29 @@ const BANDS = [
   { y: 380, h: 130, a: 0.6 },
   { y: 800, h: 180, a: 0.8 },
 ];
+
+const IG_BANDS = [
+  { y: -60, h: 200, a: 1 },
+  { y: 520, h: 150, a: 0.6 },
+  { y: 1120, h: 200, a: 0.8 },
+];
+
+// Fan-project line and site links. Wide: one row; Instagram: two rows.
+function footer(ctx, W, H, PAD, ig, bottomGap = 30) {
+  ctx.font = `500 13px ${BODY}`;
+  ctx.fillStyle = K.muted;
+  ctx.fillText(
+    'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games · Amounts may change with updates',
+    PAD,
+    H - bottomGap,
+  );
+  drawLinksLine(ctx, ig ? PAD : W - PAD, ig ? H - bottomGap - 26 : H - bottomGap, {
+    font: `500 13px ${BODY}`,
+    color: K.muted,
+    accent: K.fg,
+    align: ig ? 'left' : 'right',
+  });
+}
 
 // Tile accent per material kind (tiers read low → high like the game's rarity colours).
 const KIND = {
@@ -231,7 +257,10 @@ function consolePanel(ctx, x, y, w, h, build, cartImg) {
 }
 
 /** Renders the farm card and returns the canvas (null without material data). */
-export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) {
+export async function renderFarmCard(character, { base = '/', scale = 2, format = 'wide' } = {}) {
+  const ig = format === 'ig';
+  const W = ig ? IG_W : FARM_W;
+  const H = ig ? IG_H : FARM_H;
   const list = farmList(character.id);
   if (!list) return null;
   await ensureFonts();
@@ -251,18 +280,20 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
 
   const roleIcons = await loadRoleIcons(base, c.roles);
   const canvas = document.createElement('canvas');
-  canvas.width = Math.round(FARM_W * scale);
-  canvas.height = Math.round(FARM_H * scale);
+  canvas.width = Math.round(W * scale);
+  canvas.height = Math.round(H * scale);
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
   ctx.imageSmoothingQuality = 'high';
-  clipCard(ctx, FARM_W, FARM_H);
-  drawBandBackdrop(ctx, FARM_W, FARM_H, BANDS);
+  clipCard(ctx, W, H);
+  drawBandBackdrop(ctx, W, H, ig ? IG_BANDS : BANDS);
 
   const PAD = 32;
 
-  // ---- Left: portrait and identity ----
-  const LW = 340;
+  // ---- Portrait and identity: left column (wide) or across the top (Instagram) ----
+  const LW = ig ? 260 : 340;
+  const tx0 = ig ? PAD + LW + 28 : PAD;
+  const TW = ig ? W - PAD - tx0 : LW;
   const px = PAD;
   const py = PAD;
   await drawPortraitBackdrop(ctx, { x: px, y: py, w: LW, h: LW, r: 22, arcType: c.arcType, base });
@@ -279,39 +310,40 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   roundRect(ctx, px, py, LW, LW, 22);
   ctx.stroke();
 
-  let ly = py + LW + 58;
+  let ly = ig ? py + 56 : py + LW + 58;
   let nameSize = 54;
   ctx.fillStyle = K.fg;
   ctx.font = `italic 800 ${nameSize}px ${DISPLAY}`;
-  while (nameSize > 30 && ctx.measureText(c.name.toUpperCase()).width > LW) {
+  while (nameSize > 30 && ctx.measureText(c.name.toUpperCase()).width > TW) {
     nameSize -= 2;
     ctx.font = `italic 800 ${nameSize}px ${DISPLAY}`;
   }
-  ctx.fillText(c.name.toUpperCase(), px, ly);
+  ctx.fillText(c.name.toUpperCase(), tx0, ly);
 
   ly += 40;
-  drawRank(ctx, c.rarity, px, ly - 8, 36);
-  if (elIcon) ctx.drawImage(elIcon, px + 46, ly - 24, 32, 32);
+  drawRank(ctx, c.rarity, tx0, ly - 8, 36);
+  if (elIcon) ctx.drawImage(elIcon, tx0 + 46, ly - 24, 32, 32);
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
-  ctx.fillText(el.name, px + 86, ly);
-  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly, {
+  ctx.fillText(el.name, tx0 + 86, ly);
+  drawRoles(ctx, c.roles, roleIcons, tx0 + 86 + ctx.measureText(el.name).width + 18, ly, {
     font: `500 18px ${BODY}`,
     color: K.muted,
     size: 22,
   });
 
-  // What the totals cover
+  // What the totals cover (Instagram: two columns of two, under the name)
   ly += 44;
+  if (ig) ly = py + LW - 104 + 26;
   ctx.fillStyle = K.panel;
-  roundRect(ctx, px, ly - 26, LW, 150, 14);
+  roundRect(ctx, tx0, ly - 26, TW, ig ? 104 : 150, 14);
   ctx.fill();
   ctx.strokeStyle = K.line;
   ctx.lineWidth = 1.5;
   ctx.stroke();
   ctx.fillStyle = K.pink;
   ctx.font = `700 13px ${MONO}`;
-  ctx.fillText('TOTALS COVER', px + 18, ly);
+  ctx.fillText('TOTALS COVER', tx0 + 18, ly);
   ctx.fillStyle = K.fg;
   ctx.font = `500 16px ${BODY}`;
   const lines = [
@@ -321,51 +353,54 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
     'Life skill Lv 1 → 5',
   ];
   lines.forEach((t, i) => {
+    const lx = ig ? tx0 + 18 + (i % 2) * (TW / 2) : px + 18;
+    const lyy = ig ? ly + 26 + Math.floor(i / 2) * 28 : ly + 22 + i * 28;
     ctx.fillStyle = K.pink;
-    ctx.fillRect(px + 18, ly + 22 + i * 28 - 6, 6, 6);
+    ctx.fillRect(lx, lyy - 6, 6, 6);
     ctx.fillStyle = K.fg;
-    ctx.fillText(t, px + 34, ly + 22 + i * 28);
+    ctx.fillText(t, lx + 16, lyy);
   });
 
-  // ---- Header strip ----
-  const RX = PAD + LW + 28;
-  const RW = FARM_W - RX - PAD;
+  // ---- Header strip ---- (wide: top right; Instagram: full width under the portrait)
+  const RX = ig ? PAD : PAD + LW + 28;
+  const RW = W - RX - PAD;
+  const HY = ig ? PAD + LW + 20 : PAD;
   ctx.fillStyle = K.panel;
-  roundRect(ctx, RX, PAD, RW, 84, 16);
+  roundRect(ctx, RX, HY, RW, 84, 16);
   ctx.fill();
   ctx.strokeStyle = K.line;
   ctx.lineWidth = 1.5;
   ctx.stroke();
   ctx.fillStyle = K.fg;
   ctx.font = `italic 800 40px ${DISPLAY}`;
-  ctx.fillText('MATERIALS TO FARM', RX + 24, PAD + 55);
+  ctx.fillText('MATERIALS TO FARM', RX + 24, HY + 55);
   const hw = ctx.measureText('MATERIALS TO FARM').width;
   ctx.fillStyle = K.muted;
   ctx.font = `500 17px ${BODY}`;
-  ctx.fillText('Ascend to Lv 80 and max every skill', RX + 24 + hw + 20, PAD + 53);
-  drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - 102, PAD - 8, 96);
+  ctx.fillText('Ascend to Lv 80 and max every skill', RX + 24 + hw + 20, HY + 53);
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - 102, HY - 8, 96);
 
   // ---- Groups ----
   const by = Object.fromEntries(list.groups.map((g) => [g.id, g]));
   const GAP = 20;
-  const TOP = PAD + 84 + GAP;
-  const ROW = 214;
+  const TOP = HY + 84 + GAP;
+  const ROW = ig ? 250 : 214;
   // Row 1: boss + weekly + EXP
-  const w1 = 316;
+  const w1 = ig ? 300 : 316;
   let x = RX;
   for (const id of ['boss', 'weekly']) {
     if (!by[id]) continue;
     group(ctx, x, TOP, w1, ROW, by[id], imgs);
     x += w1 + GAP;
   }
-  group(ctx, x, TOP, RX + RW - x, ROW, by.exp, imgs);
+  group(ctx, x, TOP, RX + RW - x, ROW, by.exp, imgs, ig ? 92 : 104);
   // Row 2: anomaly family + skill books
   const half = (RW - GAP) / 2;
   group(ctx, RX, TOP + ROW + GAP, half, ROW, by.family, imgs);
   group(ctx, RX + half + GAP, TOP + ROW + GAP, half, ROW, by.books, imgs);
   // Row 3: currency + console gear
   const r3 = TOP + 2 * (ROW + GAP);
-  const ROW3 = 250;
+  const ROW3 = ig ? H - 96 - r3 : 250;
   if (build?.cartridge) {
     group(ctx, RX, r3, half, ROW3, by.money, imgs);
     consolePanel(ctx, RX + half + GAP, r3, half, ROW3, build, cartImg);
@@ -374,21 +409,9 @@ export async function renderFarmCard(character, { base = '/', scale = 2 } = {}) 
   }
 
   // ---- Footer ----
-  ctx.font = `500 13px ${BODY}`;
-  ctx.fillStyle = K.muted;
-  ctx.fillText(
-    'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games · Amounts may change with updates',
-    PAD,
-    FARM_H - 30,
-  );
-  drawLinksLine(ctx, FARM_W - PAD, FARM_H - 30, {
-    font: `500 13px ${BODY}`,
-    color: K.muted,
-    accent: K.fg,
-    align: 'right',
-  });
+  footer(ctx, W, H, PAD, ig);
 
-  drawSilverFrame(ctx, FARM_W, FARM_H);
+  drawSilverFrame(ctx, W, H);
   return canvas;
 }
 
@@ -414,7 +437,10 @@ function circleImage(ctx, img, x, y, d, ring) {
 }
 
 /** Renders the farming card for one Arc (Lv 20 → 80), or null without data. */
-export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
+export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = 'wide' } = {}) {
+  const ig = format === 'ig';
+  const W = ig ? IG_W : FARM_W;
+  const H = ig ? IG_H : ARC_FARM_H;
   const cost = arcAscensionCost(arc);
   if (!cost) return null;
   await ensureFonts();
@@ -452,19 +478,22 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
   const userImgs = rest.slice(names.length);
 
   const canvas = document.createElement('canvas');
-  canvas.width = Math.round(FARM_W * scale);
-  canvas.height = Math.round(ARC_FARM_H * scale);
+  canvas.width = Math.round(W * scale);
+  canvas.height = Math.round(H * scale);
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
   ctx.imageSmoothingQuality = 'high';
-  clipCard(ctx, FARM_W, ARC_FARM_H);
+  clipCard(ctx, W, H);
   ctx.fillStyle = K.bg;
-  ctx.fillRect(0, 0, FARM_W, ARC_FARM_H);
-  drawBandBackdrop(ctx, FARM_W, FARM_H, BANDS);
+  ctx.fillRect(0, 0, W, H);
+  drawBandBackdrop(ctx, W, ig ? H : FARM_H, ig ? IG_BANDS : BANDS);
 
   const PAD = 32;
-  const LW = 340;
+  const LW = ig ? 300 : 340;
   const AH = 300;
+  // Name, users and sources: under the art (wide) or beside it (Instagram).
+  const tx0 = ig ? PAD + LW + 28 : PAD;
+  const TW = ig ? W - PAD - 96 - tx0 : LW;
   // ---- Left: Arc art ----
   const glow = ctx.createRadialGradient(PAD + LW / 2, PAD + AH / 2, 10, PAD + LW / 2, PAD + AH / 2, LW * 0.7);
   glow.addColorStop(0, `${color}66`);
@@ -484,29 +513,29 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
   roundRect(ctx, PAD, PAD, LW, AH, 22);
   ctx.stroke();
 
-  let ly = PAD + AH + 52;
+  let ly = ig ? PAD + 50 : PAD + AH + 52;
   let size = 44;
   ctx.fillStyle = K.fg;
   const title = arc.name.toUpperCase();
   ctx.font = `italic 800 ${size}px ${DISPLAY}`;
   const nameLines = (() => {
-    while (size > 30 && ctx.measureText(title).width > LW) {
+    while (size > 30 && ctx.measureText(title).width > TW) {
       size -= 2;
       ctx.font = `italic 800 ${size}px ${DISPLAY}`;
     }
-    return ctx.measureText(title).width > LW ? wrap(ctx, title, LW, 2) : [title];
+    return ctx.measureText(title).width > TW ? wrap(ctx, title, TW, 2) : [title];
   })();
-  nameLines.forEach((l, i) => ctx.fillText(l, PAD, ly + i * (size + 2)));
+  nameLines.forEach((l, i) => ctx.fillText(l, tx0, ly + i * (size + 2)));
   ly += (nameLines.length - 1) * (size + 2) + 38;
 
-  drawRank(ctx, arc.rarity, PAD, ly - 8, 34);
-  if (typeIcon) ctx.drawImage(typeIcon, PAD + 44, ly - 24, 30, 30);
+  drawRank(ctx, arc.rarity, tx0, ly - 8, 34);
+  if (typeIcon) ctx.drawImage(typeIcon, tx0 + 44, ly - 24, 30, 30);
   ctx.fillStyle = color;
   ctx.font = `700 19px ${BODY}`;
-  ctx.fillText(`${arc.type} Arc`, PAD + 82, ly);
+  ctx.fillText(`${arc.type} Arc`, tx0 + 82, ly);
   ctx.fillStyle = K.muted;
   ctx.font = `500 17px ${BODY}`;
-  ctx.fillText(` · ${arc.sub}`, PAD + 82 + ctx.measureText(`${arc.type} Arc`).width + 8, ly);
+  ctx.fillText(` · ${arc.sub}`, tx0 + 82 + ctx.measureText(`${arc.type} Arc`).width + 8, ly);
 
   // Who it's for
   if (users.length) {
@@ -515,71 +544,85 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
     ctx.font = `700 13px ${MONO}`;
     ctx.fillText(
       sig && recs.length ? 'SIGNATURE · RECOMMENDED FOR' : sig ? 'SIGNATURE ARC OF' : 'RECOMMENDED FOR',
-      PAD,
+      tx0,
       ly,
     );
     users.forEach((_, i) => {
       const d = 52;
-      const x = PAD + i * (d + 12);
+      const x = tx0 + i * (d + 12);
       circleImage(ctx, userImgs[i], x, ly + 12, d, i === 0 && sig ? '#f2c14e' : K.line);
     });
     ctx.fillStyle = K.fg;
     ctx.font = `600 15px ${BODY}`;
     const label = users.map((c) => c.name).join(', ');
-    wrap(ctx, label, LW, 1).forEach((l) => ctx.fillText(l, PAD, ly + 90));
+    wrap(ctx, label, TW, 1).forEach((l) => ctx.fillText(l, tx0, ly + 90));
     ly += 90;
   }
 
-  // How to get the Arc itself, as far as the left column has room.
+  // How to get the Arc itself: the rest of the left column (wide), or a
+  // full-width panel at the foot of the card (Instagram, placed below).
   const sources = ARC_SOURCES[arc.id] ?? [];
+  const SRC_TOP = ig ? H - 96 - 230 : 0;
+  if (ig && sources.length) {
+    ctx.fillStyle = K.panel;
+    roundRect(ctx, PAD, SRC_TOP, W - 2 * PAD, 230, 14);
+    ctx.fill();
+    ctx.strokeStyle = K.line;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ly = SRC_TOP + 34 - 40;
+  }
+  const SX = ig ? PAD + 18 : PAD;
+  const SW = ig ? W - 2 * PAD - 36 : LW;
   if (sources.length) {
     ly += 40;
     ctx.fillStyle = K.pink;
     ctx.font = `700 13px ${MONO}`;
-    ctx.fillText('HOW TO GET', PAD, ly);
+    ctx.fillText('HOW TO GET', SX, ly);
     ctx.font = `500 15px ${BODY}`;
     const LINE = 20;
-    const bottom = ARC_FARM_H - 56;
+    const bottom = ig ? SRC_TOP + 230 - 20 : ARC_FARM_H - 56;
     let y = ly + 24;
     let shown = 0;
     for (const src of sources) {
-      const lines = wrap(ctx, src, LW - 16, 3);
+      const lines = wrap(ctx, src, SW - 16, 3);
       if (y + (lines.length - 1) * LINE > bottom) break;
       ctx.fillStyle = color;
-      ctx.fillRect(PAD + 1, y - 9, 6, 6);
+      ctx.fillRect(SX + 1, y - 9, 6, 6);
       ctx.fillStyle = K.fg;
-      lines.forEach((l, i) => ctx.fillText(l, PAD + 16, y + i * LINE));
+      lines.forEach((l, i) => ctx.fillText(l, SX + 16, y + i * LINE));
       y += lines.length * LINE + 6;
       shown += 1;
     }
     if (shown < sources.length && y <= bottom + LINE) {
       ctx.fillStyle = K.muted;
-      ctx.fillText(`+${sources.length - shown} more on the site`, PAD + 16, Math.min(y, bottom + LINE));
+      ctx.fillText(`+${sources.length - shown} more on the site`, SX + 16, Math.min(y, bottom + LINE));
     }
   }
 
-  // ---- Header strip ----
-  const RX = PAD + LW + 28;
-  const RW = FARM_W - RX - PAD;
+  // ---- Header strip ---- (wide: top right; Instagram: full width under the art)
+  const RX = ig ? PAD : PAD + LW + 28;
+  const RW = W - RX - PAD;
+  const HY = ig ? PAD + AH + 20 : PAD;
   ctx.fillStyle = K.panel;
-  roundRect(ctx, RX, PAD, RW, 84, 16);
+  roundRect(ctx, RX, HY, RW, 84, 16);
   ctx.fill();
   ctx.strokeStyle = K.line;
   ctx.lineWidth = 1.5;
   ctx.stroke();
   ctx.fillStyle = K.fg;
-  ctx.font = `italic 800 40px ${DISPLAY}`;
-  ctx.fillText('ARC MATERIALS TO FARM', RX + 24, PAD + 55);
+  ctx.font = `italic 800 ${ig ? 36 : 40}px ${DISPLAY}`;
+  ctx.fillText('ARC MATERIALS TO FARM', RX + 24, HY + 55);
   const hw = ctx.measureText('ARC MATERIALS TO FARM').width;
   ctx.fillStyle = K.muted;
   ctx.font = `500 17px ${BODY}`;
-  ctx.fillText('Level cap 20 → 80 · all 6 ascensions', RX + 24 + hw + 20, PAD + 53);
-  drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - 102, PAD - 8, 96);
+  ctx.fillText(ig ? 'Lv 20 → 80 · 6 ascensions' : 'Level cap 20 → 80 · all 6 ascensions', RX + 24 + hw + 20, HY + 53);
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), ig ? W - PAD - 96 + 6 : RX + RW - 102, ig ? PAD - 8 : HY - 8, 96);
 
   // ---- Groups ----
   const GAP = 20;
-  const TOP = PAD + 84 + GAP;
-  const ROW = 252;
+  const TOP = HY + 84 + GAP;
+  const ROW = ig ? Math.floor((H - 96 - 230 - GAP - TOP - GAP) / 2) : 252;
   const half = (RW - GAP) / 2;
   group(ctx, RX, TOP, half, ROW, groups.arc, imgs);
   group(ctx, RX + half + GAP, TOP, half, ROW, groups.anomaly, imgs);
@@ -588,20 +631,8 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2 } = {}) {
   group(ctx, RX, r2, wide, ROW, groups.exp, imgs);
   group(ctx, RX + wide + GAP, r2, RW - wide - GAP, ROW, groups.money, imgs);
 
-  ctx.font = `500 13px ${BODY}`;
-  ctx.fillStyle = K.muted;
-  ctx.fillText(
-    'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games · Amounts may change with updates',
-    PAD,
-    ARC_FARM_H - 28,
-  );
-  drawLinksLine(ctx, FARM_W - PAD, ARC_FARM_H - 28, {
-    font: `500 13px ${BODY}`,
-    color: K.muted,
-    accent: K.fg,
-    align: 'right',
-  });
+  footer(ctx, W, H, PAD, ig, 28);
 
-  drawSilverFrame(ctx, FARM_W, ARC_FARM_H);
+  drawSilverFrame(ctx, W, H);
   return canvas;
 }

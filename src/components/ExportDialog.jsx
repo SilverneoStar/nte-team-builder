@@ -1,7 +1,7 @@
 // The export dialog: previews a team image or card, with pickers for card type,
 // team layout and size, and Save / Copy / Share buttons.
 import { useEffect, useRef, useState } from 'react';
-import { EXPORT_SIZES, TEAM_LAYOUTS, canvasToBlob } from '../lib/exportSettings.js';
+import { EXPORT_FORMATS, EXPORT_SIZES, TEAM_LAYOUTS, canvasToBlob } from '../lib/exportSettings.js';
 
 // The team image drawing code loads only when a team image is made.
 const renderTeamCard = (team, opts) => import('../lib/teamCard.js').then((m) => m.renderTeamCard(team, opts));
@@ -27,6 +27,7 @@ const save = (key, v) => {
 
 const LAYOUT_KEY = 'nte-team-card-layout';
 const SCALE_KEY = 'nte-export-scale';
+const FORMAT_KEY = 'nte-card-format';
 
 // Export sizes live in exportSettings.js; re-exported so older imports keep working.
 export { EXPORT_SIZES };
@@ -44,6 +45,8 @@ const slug = (name) =>
  * - `types` [{ id, label, title, suffix }] + `typeKey`: several cards to pick from
  *   (the pick is remembered under `typeKey`); `render` gets `opts.type`.
  * Every export has a size picker; `render` gets `opts.scale`.
+ * `formats` (or a type's `formats`): offer Wide / Instagram; `render` gets
+ * `opts.format` ('wide' | 'ig'). A type's `post`: already Instagram-sized.
  */
 export default function ExportDialog({
   team,
@@ -55,6 +58,7 @@ export default function ExportDialog({
   types = null,
   typeKey = null,
   initialType = null,
+  formats = false,
 }) {
   const label = name ?? team?.name;
   const [type, setType] = useState(() => {
@@ -66,6 +70,10 @@ export default function ExportDialog({
   const current = types?.find((t) => t.id === type);
   const shownTitle = current?.title ?? title;
   const shownSuffix = current?.suffix ?? suffix;
+  const hasFormats = current ? !!current.formats : formats;
+  const isPost = !!current?.post;
+  const [formatPick, setFormat] = useState(() => load(FORMAT_KEY, (v) => EXPORT_FORMATS.some((f) => f.id === v), 'wide'));
+  const format = hasFormats ? formatPick : 'wide';
   // Only the team image (no custom render) offers a layout choice.
   const [layout, setLayout] = useState(() =>
     render ? null : load(LAYOUT_KEY, (v) => TEAM_LAYOUTS.some((l) => l.id === v), 'row'),
@@ -80,14 +88,14 @@ export default function ExportDialog({
   const closeRef = useRef(null);
 
   const fileName = () =>
-    `${slug(label)}-${shownSuffix}${layout === 'grid' ? '-2x2' : layout === 'side' ? '-2x2-side' : ''}${scale === 2 ? '' : `-${scale}x`}.png`;
+    `${slug(label)}-${shownSuffix}${layout === 'grid' ? '-2x2' : layout === 'side' ? '-2x2-side' : ''}${format === 'ig' ? '-instagram' : ''}${scale === 2 ? '' : `-${scale}x`}.png`;
 
   useEffect(() => {
     let cancelled = false;
     let objectUrl;
     setUrl(null);
     setStatus('');
-    const opts = { base: BASE, scale, type };
+    const opts = { base: BASE, scale, type, format };
     (render ? render(opts) : renderTeamCard(team, { ...opts, layout }))
       .then((canvas) => {
         if (!cancelled) setPx([canvas.width, canvas.height]);
@@ -108,7 +116,7 @@ export default function ExportDialog({
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team, layout, scale, type]);
+  }, [team, layout, scale, type, format]);
 
   useEffect(() => {
     closeRef.current?.focus();
@@ -145,6 +153,10 @@ export default function ExportDialog({
   const pickLayout = (id) => {
     setLayout(id);
     save(LAYOUT_KEY, id);
+  };
+  const pickFormat = (id) => {
+    setFormat(id);
+    save(FORMAT_KEY, id);
   };
   const pickScale = (s) => {
     setScale(s);
@@ -203,6 +215,26 @@ export default function ExportDialog({
             ))}
           </div>
         )}
+
+        {hasFormats && (
+          <div className="format-pick" role="radiogroup" aria-label="Image shape">
+            {EXPORT_FORMATS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                role="radio"
+                aria-checked={format === f.id}
+                className={`format-pick__opt${format === f.id ? ' is-on' : ''}`}
+                onClick={() => pickFormat(f.id)}
+              >
+                <span className={`format-pick__icon format-pick__icon--${f.id}`} aria-hidden="true" />
+                <b>{f.label}</b>
+                <span className="muted">{f.hint}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        {isPost && <p className="format-note muted">Instagram-ready: 4:5 portrait post.</p>}
 
         <div className="dialog__preview">
           {url ? (

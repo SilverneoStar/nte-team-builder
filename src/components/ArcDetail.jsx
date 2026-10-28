@@ -360,6 +360,7 @@ export default function ArcDetail({ arc: a, onClose }) {
           title="Arc farming list image"
           name={a.name}
           suffix="nte-arc-farming-list"
+          formats
           onClose={() => setSharing(false)}
           render={(opts) => import('../lib/farmCard.js').then((m) => m.renderArcFarmCard(a, opts))}
         />

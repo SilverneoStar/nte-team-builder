@@ -5224,6 +5224,51 @@ th[aria-sort='descending'] .th-btn {
   flex-wrap: wrap;
 }
 
+/* Card shape choice (Wide or Instagram 4:5) in the export dialog */
+.format-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.format-pick__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.85rem;
+  color: inherit;
+  cursor: pointer;
+}
+.format-pick__opt.is-on {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+.format-pick__opt .muted {
+  font-size: 0.78rem;
+}
+.format-pick__icon {
+  display: inline-block;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  opacity: 0.75;
+}
+.format-pick__icon--wide {
+  width: 18px;
+  height: 10px;
+}
+.format-pick__icon--ig {
+  width: 11px;
+  height: 14px;
+}
+.format-note {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+}
+
 /* "Featured in": two-column team carousel */
 .featured__track {
   display: flex;

@@ -418,6 +418,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
           title="My build image"
           name={c.name}
           suffix="my-nte-build"
+          formats
           onClose={() => setSharing(false)}
           render={async (opts) => {
             const mine = myBuildCurrent(sharing.mine);

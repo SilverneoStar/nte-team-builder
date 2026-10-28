@@ -74,6 +74,13 @@ const BANDS = [
   { y: 760, h: 180, a: 0.8 },
 ];
 
+// Instagram (4:5) card: the same bands spread over the taller canvas.
+const IG_BANDS = [
+  { y: -60, h: 200, a: 1 },
+  { y: 520, h: 150, a: 0.6 },
+  { y: 1120, h: 200, a: 0.8 },
+];
+
 const ROMAN = { 2: 'II', 3: 'III', 4: 'IV' };
 
 // The game's names for stats: "ATK Bonus", "Chaos DMG Bonus"…
@@ -88,6 +95,12 @@ const statValue = (stat, value) => {
   const n = Number(value);
   const text = Number.isInteger(n) ? String(n) : n.toFixed(2);
   return `${text}${isPercentStat(stat) ? '%' : ''}`;
+};
+
+// Shorter wording for the narrower Instagram header.
+const specShort = (spec) => {
+  const stat = spec.stat.endsWith('DMG') && !spec.stat.startsWith('CRIT') ? `${spec.stat} Bonus` : spec.stat;
+  return `${stat} +${spec.value}% per Type ${ROMAN[spec.type]} Module`;
 };
 
 const specText = (spec) => {
@@ -547,7 +560,19 @@ function shade(hex, amt) {
 }
 
 /** Renders the build card and returns the canvas. */
-export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
+/** Card sizes: the wide card, or the Instagram portrait post (4:5). */
+export const BUILD_IG_W = 1080;
+export const BUILD_IG_H = 1350;
+
+/**
+ * Renders the build card and returns the canvas.
+ * format: 'wide' (1600 x 880) or 'ig' (1080 x 1350, Instagram 4:5): the same
+ * panels, with the portrait and name across the top and the two columns below.
+ */
+export async function renderBuildCard(build, { base = '/', scale = 2, format = 'wide' } = {}) {
+  const ig = format === 'ig';
+  const W = ig ? BUILD_IG_W : BUILD_W;
+  const H = ig ? BUILD_IG_H : BUILD_H;
   await ensureFonts();
   const c = build.character;
   const el = ELEMENT_BY_ID[c.element];
@@ -570,20 +595,24 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
 
   const roleIcons = await loadRoleIcons(base, c.roles);
   const canvas = document.createElement('canvas');
-  canvas.width = Math.round(BUILD_W * scale);
-  canvas.height = Math.round(BUILD_H * scale);
+  canvas.width = Math.round(W * scale);
+  canvas.height = Math.round(H * scale);
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
   ctx.imageSmoothingQuality = 'high';
-  clipCard(ctx, BUILD_W, BUILD_H);
-  drawBandBackdrop(ctx, BUILD_W, BUILD_H, BANDS);
+  clipCard(ctx, W, H);
+  drawBandBackdrop(ctx, W, H, ig ? IG_BANDS : BANDS);
 
   const PAD = 32;
 
   // ---- Left: portrait and identity ----
-  const LW = 340;
+  const LW = ig ? 280 : 340;
   const px = PAD;
   const py = PAD;
+  const MS = 96;
+  // Name and details: under the portrait (wide) or beside it (Instagram).
+  const tx0 = ig ? PAD + LW + 28 : px;
+  const TW = ig ? W - PAD - MS - 12 - tx0 : LW;
   await drawPortraitBackdrop(ctx, { x: px, y: py, w: LW, h: LW, r: 22, arcType: c.arcType, base });
   if (portrait) {
     ctx.save();
@@ -598,29 +627,29 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   roundRect(ctx, px, py, LW, LW, 22);
   ctx.stroke();
 
-  let ly = py + LW + 58;
+  let ly = ig ? py + 58 : py + LW + 58;
   ctx.fillStyle = K.fg;
   ctx.font = `italic 700 24px ${DISPLAY}`;
   const lvW = ctx.measureText(`LV. ${MAX_STATS_LEVEL}`).width + 14;
   let nameSize = 54;
   ctx.font = `italic 800 ${nameSize}px ${DISPLAY}`;
-  while (nameSize > 30 && ctx.measureText(c.name.toUpperCase()).width > LW - lvW) {
+  while (nameSize > 30 && ctx.measureText(c.name.toUpperCase()).width > TW - lvW) {
     nameSize -= 2;
     ctx.font = `italic 800 ${nameSize}px ${DISPLAY}`;
   }
-  ctx.fillText(c.name.toUpperCase(), px, ly);
+  ctx.fillText(c.name.toUpperCase(), tx0, ly);
   const nameW = ctx.measureText(c.name.toUpperCase()).width;
   ctx.font = `italic 700 24px ${DISPLAY}`;
   ctx.fillStyle = K.muted;
-  ctx.fillText(`LV. ${MAX_STATS_LEVEL}`, px + nameW + 14, ly);
+  ctx.fillText(`LV. ${MAX_STATS_LEVEL}`, tx0 + nameW + 14, ly);
 
   ly += 40;
-  drawRank(ctx, c.rarity, px, ly - 8, 36);
-  if (elIcon) ctx.drawImage(elIcon, px + 46, ly - 24, 32, 32);
+  drawRank(ctx, c.rarity, tx0, ly - 8, 36);
+  if (elIcon) ctx.drawImage(elIcon, tx0 + 46, ly - 24, 32, 32);
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
-  ctx.fillText(el.name, px + 86, ly);
-  drawRoles(ctx, c.roles, roleIcons, px + 86 + ctx.measureText(el.name).width + 18, ly, {
+  ctx.fillText(el.name, tx0 + 86, ly);
+  drawRoles(ctx, c.roles, roleIcons, tx0 + 86 + ctx.measureText(el.name).width + 18, ly, {
     font: `500 18px ${BODY}`,
     color: K.muted,
     size: 22,
@@ -634,65 +663,75 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     : c.formerFaction
       ? `Former ${c.formerFaction}`
       : '';
-  for (const line of wrap(ctx, factionText, LW, 2)) {
-    ctx.fillText(line, px, ly);
+  const lines = ig ? 1 : 2;
+  for (const line of wrap(ctx, factionText, TW, lines)) {
+    ctx.fillText(line, tx0, ly);
     ly += 22;
   }
   if (c.ability) {
     ctx.fillStyle = K.fg;
     ctx.font = `italic 500 16px ${BODY}`;
-    for (const line of wrap(ctx, `Esper ability: ${c.ability}`, LW, 2)) {
-      ctx.fillText(line, px, ly + 4);
+    for (const line of wrap(ctx, `Esper ability: ${c.ability}`, TW, lines)) {
+      ctx.fillText(line, tx0, ly + 4);
       ly += 22;
     }
   }
 
   // Site and socials at the foot of the left column, under the character info.
-  const linksBottom = BUILD_H - 74 - 4;
-  if (linksBottom - 48 - 16 > ly) {
+  // (Instagram: under the Cartridge stats panel, drawn further down.)
+  const linksBottom = H - 74 - 4;
+  if (!ig && linksBottom - 48 - 16 > ly) {
     drawLinksBlock(ctx, px, linksBottom, { font: `500 15px ${BODY}`, color: K.muted, accent: K.fg });
   }
 
-  // ---- Header strip ----
+  // ---- Header strip ---- (wide: top right; Instagram: beside the portrait's foot)
   const RX = PAD + LW + 28;
-  const RW = BUILD_W - RX - PAD;
+  const RW = W - RX - PAD;
+  const HY = ig ? PAD + LW - 84 : PAD;
   ctx.fillStyle = K.panel;
-  roundRect(ctx, RX, PAD, RW, 84, 16);
+  roundRect(ctx, RX, HY, RW, 84, 16);
   ctx.fill();
   ctx.strokeStyle = K.line;
   ctx.lineWidth = 1.5;
   ctx.stroke();
   // Pink ring with the rank letter, like the guide header.
   ctx.beginPath();
-  ctx.arc(RX + 50, PAD + 42, 30, 0, Math.PI * 2);
+  ctx.arc(RX + 50, HY + 42, 30, 0, Math.PI * 2);
   ctx.fillStyle = K.pink;
   ctx.fill();
-  drawRank(ctx, c.rarity, RX + 25, PAD + 42, 50);
+  drawRank(ctx, c.rarity, RX + 25, HY + 42, 50);
   ctx.fillStyle = K.fg;
   ctx.font = `italic 800 30px ${DISPLAY}`;
-  ctx.fillText('CONSOLE DEVELOPMENT', RX + 98, PAD + 38);
-  fillStatText(ctx, info ? specText(info.spec) : 'Console data not published yet.', RX + 98, PAD + 67, {
-    font: `500 19px ${BODY}`,
-    numFont: `700 19px ${BODY}`,
+  ctx.fillText('CONSOLE DEVELOPMENT', RX + 98, HY + 38);
+  const specPx = ig ? 17 : 19;
+  const spec = info ? (ig ? specShort(info.spec) : specText(info.spec)) : 'Console data not published yet.';
+  fillStatText(ctx, spec, RX + 98, HY + 67, {
+    font: `500 ${specPx}px ${BODY}`,
+    numFont: `700 ${specPx}px ${BODY}`,
     color: K.muted,
     keyColor: K.key,
     numColor: K.num,
-    maxWidth: RW - 98 - 300,
+    maxWidth: RW - 98 - (ig ? 24 : 300),
   });
-  const MS = 96;
-  drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - MS - 6, PAD - 8, MS);
+  const mascotX = ig ? W - PAD - MS + 6 : RX + RW - MS - 6;
+  drawMascot(ctx, await loadImage(`${base}mascot.svg`), mascotX, PAD - 8, MS);
   ctx.textAlign = 'right';
   ctx.font = `700 14px ${MONO}`;
   ctx.fillStyle = K.pink;
-  ctx.fillText(build.source.toUpperCase(), RX + RW - MS - 14, PAD + 36);
+  if (ig) ctx.fillText(build.source.toUpperCase(), RX + RW - 18, HY + 36 - 42 - 12);
+  else ctx.fillText(build.source.toUpperCase(), RX + RW - MS - 14, PAD + 36);
   ctx.textAlign = 'left';
 
-  const top = PAD + 84 + 16;
-  const bottom = BUILD_H - 74;
-  const LCW = 500;
-  const LCX = RX;
-  const RCX = RX + LCW + 16;
-  const RCW = RW - LCW - 16;
+  const top = ig ? PAD + LW + 16 : PAD + 84 + 16;
+  const bottom = H - 74;
+  const LCW = ig ? 456 : 500;
+  const LCX = ig ? PAD : RX;
+  const RCX = LCX + LCW + 16;
+  const RCW = (ig ? W - PAD : RX + RW) - RCX;
+  // Instagram: fixed Arc / Cartridge panels, the site links under them, and
+  // the Key attributes panel takes the rest of the column.
+  const IG_CART_H = 236;
+  const IG_LINKS_H = 96;
 
   // ---- Key attributes: Level 80 base (when known) plus what the build adds ----
   const extra = bonusStats(
@@ -754,7 +793,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     stats = stats.filter((x) => target(x.stat) || extraStats.has(x.stat) || !ms);
     stats.sort((a, b) => (target(b.stat) ? 1 : 0) - (target(a.stat) ? 1 : 0));
   }
-  const statsH = eg ? 250 : 214;
+  const arcHFor = build.arc && alt.arc ? 172 : 132;
+  const statsH = ig ? bottom - top - arcHFor - IG_CART_H - 28 - IG_LINKS_H : eg ? 250 : 214;
   panel(ctx, LCX, top, LCW, statsH, 'Key attributes');
   ctx.textAlign = 'right';
   ctx.fillStyle = K.muted;
@@ -772,7 +812,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   } else {
     // One row per stat: name, value, endgame target (gold).
     const maxRows = Math.floor((statsH - 52) / 22);
-    const rowH = Math.min(30, Math.floor((statsH - 52) / Math.min(stats.length, maxRows)));
+    const rowH = Math.min(ig ? 36 : 30, Math.floor((statsH - 52) / Math.min(stats.length, maxRows)));
     const valueX = LCX + LCW - (eg ? 150 : 28);
     const short = (t) => t.replace(/%?\s*~\s*/, '–');
     stats.slice(0, maxRows).forEach((st, i) => {
@@ -813,7 +853,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
 
   // ---- Arc ----
   const arcY = top + statsH + 14;
-  const arcH = build.arc && alt.arc ? 172 : 132;
+  const arcH = arcHFor;
   panel(ctx, LCX, arcY, LCW, arcH, 'Arc');
   if (build.arc) {
     const a = build.arc;
@@ -892,7 +932,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
 
   // ---- Cartridge stats ----
   const cY = arcY + arcH + 14;
-  const cH = bottom - cY;
+  const cH = ig ? IG_CART_H : bottom - cY;
+  if (ig) drawLinksBlock(ctx, LCX + 6, bottom - 6, { font: `500 15px ${BODY}`, color: K.muted, accent: K.fg });
   panel(ctx, LCX, cY, LCW, cH, 'Cartridge stats');
   const cs = build.cartStats;
   const rows = [
@@ -989,7 +1030,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   // Leave room under the grid for the Awakening order orbs.
   const ao = build.awakeningOrder?.length ? { order: build.awakeningOrder } : AWAKENING_ORDER[c.id];
   const avail = bottom - 18 - y - (ao ? 96 : 0);
-  const cell = Math.max(22, Math.min(46, Math.floor((avail - 30 - 20) / 5)));
+  const cell = Math.max(22, Math.min(ig ? 48 : 46, Math.floor((avail - 30 - 20) / 5)));
   const gridSize = cell * 5 + 20;
   const gx = RCX + RCW - 18 - gridSize;
   ctx.fillStyle = K.muted;
@@ -1016,9 +1057,9 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
     ctx.font = `700 11px ${MONO}`;
     ctx.fillStyle = i === 0 ? K.gold : K.muted;
     ctx.fillText(i === 0 ? 'MAIN' : `SUB ${i}`, innerX + 10, ry + (lh - 6) / 2 + 4);
-    ctx.font = `600 16px ${BODY}`;
+    ctx.font = `600 ${ig ? 15 : 16}px ${BODY}`;
     ctx.fillStyle = i === 0 ? K.num : K.key;
-    ctx.fillText(wrap(ctx, statLabel(stat), lw - 70, 1)[0], innerX + 62, ry + (lh - 6) / 2 + 5);
+    ctx.fillText(wrap(ctx, statLabel(stat), lw - (ig ? 62 : 70), 1)[0], innerX + (ig ? 56 : 62), ry + (lh - 6) / 2 + 5);
   });
 
   // Awakening unlock order in the space under the attributes and grid:
@@ -1067,20 +1108,20 @@ export async function renderBuildCard(build, { base = '/', scale = 2 } = {}) {
   ctx.fillText(
     'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games',
     PAD,
-    BUILD_H - 30,
+    H - 30,
   );
   if (code) {
     ctx.textAlign = 'right';
     ctx.font = `700 20px ${MONO}`;
     ctx.fillStyle = K.fg;
-    ctx.fillText(code, BUILD_W - PAD, BUILD_H - 28);
+    ctx.fillText(code, W - PAD, H - 28);
     const cw = ctx.measureText(code).width;
     ctx.font = `600 12px ${MONO}`;
     ctx.fillStyle = K.pink;
-    ctx.fillText('CONSOLE CODE', BUILD_W - PAD - cw - 14, BUILD_H - 30);
+    ctx.fillText('CONSOLE CODE', W - PAD - cw - 14, H - 30);
     ctx.textAlign = 'left';
   }
 
-  drawSilverFrame(ctx, BUILD_W, BUILD_H);
+  drawSilverFrame(ctx, W, H);
   return canvas;
 }
