@@ -1,8 +1,8 @@
 // The Characters page: filters, grid or list view, and the selected character's page.
 import { portraitPath, useZeroLook } from '../lib/portraits.js';
 import { useEffect, useMemo, useState } from 'react';
-import { ARC_TYPES, CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
-import { ELEMENTS, ELEMENT_BY_ID, ROLES } from '../data/elements.js';
+import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
+import { ELEMENTS, ELEMENT_BY_ID } from '../data/elements.js';
 import { navigate } from '../lib/route.js';
 import CharacterDetail from './CharacterDetail.jsx';
 import ElementGlyph from './ElementGlyph.jsx';
@@ -11,6 +11,7 @@ import ArcBackdrop from './ArcBackdrop.jsx';
 import RankBadge from './RankBadge.jsx';
 import RoleList from './RoleList.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
+import CharacterFilters, { matchesCharacterFilters, useCharacterFilters } from './CharacterFilters.jsx';
 import { ENDGAME, endgameNumber } from '../data/endgame.js';
 
 const BASE = import.meta.env.BASE_URL;
@@ -77,10 +78,7 @@ function compare(a, b, col, dir) {
 export default function CharactersPage({ characterId, activeTeam, onAdd }) {
   useZeroLook();
   const [query, setQuery] = useState('');
-  const [element, setElement] = useState('all');
-  const [role, setRole] = useState('all');
-  const [rarity, setRarity] = useState('all');
-  const [arcType, setArcType] = useState('all');
+  const [filters, setFilters] = useCharacterFilters();
   const [sort, setSort] = useState({ id: 'name', dir: 1 });
   const [view, setView] = useState(loadView);
 
@@ -97,14 +95,11 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
   const rows = useMemo(() => {
     const col = COLUMNS.find((c) => c.id === sort.id);
     return CHARACTERS.filter((c) => {
-      if (element !== 'all' && c.element !== element) return false;
-      if (role !== 'all' && !c.roles.includes(role)) return false;
-      if (rarity !== 'all' && c.rarity !== rarity) return false;
-      if (arcType !== 'all' && c.arcType !== arcType) return false;
+      if (!matchesCharacterFilters(c, filters)) return false;
       if (query && !c.name.toLowerCase().includes(query.trim().toLowerCase())) return false;
       return true;
     }).sort((a, b) => compare(a, b, col, sort.dir));
-  }, [query, element, role, rarity, arcType, sort]);
+  }, [query, filters, sort]);
 
   function toggleSort(id) {
     const col = COLUMNS.find((c) => c.id === id);
@@ -132,22 +127,7 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
       )}
 
       <div className="filters filters--page">
-        <div className="chips" role="group" aria-label="Filter by element">
-          <button className="chip" aria-pressed={element === 'all'} onClick={() => setElement('all')}>
-            All
-          </button>
-          {ELEMENTS.map((el) => (
-            <button
-              key={el.id}
-              className="chip"
-              aria-pressed={element === el.id}
-              onClick={() => setElement(element === el.id ? 'all' : el.id)}
-            >
-              <ElementGlyph element={el.id} size={13} />
-              {el.name}
-            </button>
-          ))}
-        </div>
+        <CharacterFilters filters={filters} setFilters={setFilters} />
         <div className="filters__row">
           <label className="sr-only" htmlFor="index-search">
             Search characters
@@ -160,36 +140,6 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <label className="select">
-            <span>Role</span>
-            <select id="index-role" value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="all">Any</option>
-              {ROLES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="select">
-            <span>Rank</span>
-            <select id="index-rarity" value={rarity} onChange={(e) => setRarity(e.target.value)}>
-              <option value="all">Any</option>
-              <option value="S">S</option>
-              <option value="A">A</option>
-            </select>
-          </label>
-          <label className="select">
-            <span>Arc</span>
-            <select id="index-arc" value={arcType} onChange={(e) => setArcType(e.target.value)}>
-              <option value="all">Any</option>
-              {ARC_TYPES.map((a) => (
-                <option key={a} value={a}>
-                  {a}
-                </option>
-              ))}
-            </select>
-          </label>
           {
             <label className={`select${view === 'list' ? ' select--phone-only' : ''}`}>
               <span>Sort</span>

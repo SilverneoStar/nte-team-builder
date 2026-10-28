@@ -18,6 +18,7 @@ import { analyzeTeam } from './analyze.js';
 import { activeResonance } from '../data/awakenings.js';
 import { encodeCardCode, splitCardCode } from './cardCode.js';
 import { consoleStats } from '../data/console.js';
+import { SYNERGY_MOODS, SYNERGY_RANK_STOPS, synergyScore } from './synergy.js';
 
 export const CARD_W = 1200;
 export const CARD_H = 675;
@@ -74,6 +75,44 @@ const STAT_SHORT = {
   'Mental DMG%': 'MENTAL DMG%',
   'Charge Efficiency%': 'CHARGE EFF.',
 };
+
+/** Cortado's face screen (mascot drawn at x, y, size) with a synergy rank letter. */
+function rankFace(ctx, rank, x, y, size) {
+  const k = size / 64;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(k, k);
+  ctx.fillStyle = '#2E1F17';
+  roundRect(ctx, 20.2, 27.2, 23.6, 13.1, 6.5);
+  ctx.fill();
+  ctx.strokeStyle = '#9A8F88';
+  ctx.lineWidth = 1.1;
+  ctx.lineCap = 'round';
+  ctx.stroke(new Path2D(SYNERGY_MOODS[rank].brow));
+  if (rank !== 'C') {
+    ctx.fillStyle = '#F4A7A0';
+    [22.6, 41.4].forEach((cx) => {
+      ctx.beginPath();
+      ctx.ellipse(cx, 38, 1.6, 0.9, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+  const g = ctx.createLinearGradient(0, 30, 0, 38.4);
+  SYNERGY_RANK_STOPS[rank].forEach((c, i, a) => g.addColorStop(i / (a.length - 1), c));
+  ctx.font = `italic 900 ${rank === 'S+' ? 9.4 : 10.4}px "Inter", "Arial Black", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillStyle = g;
+  ctx.fillText(rank, 32, 38.4);
+  if (rank === 'C') {
+    ctx.fillStyle = '#9fd4f0';
+    const drop = new Path2D('M47 24 Q49.4 27.4 47 29 Q44.6 27.4 47 24 Z');
+    ctx.fill(drop);
+    ctx.strokeStyle = '#2B1D16';
+    ctx.lineWidth = 0.5;
+    ctx.stroke(drop);
+  }
+  ctx.restore();
+}
 
 // Cortado, the site mascot, as a little sticker on every exported card.
 export function drawMascot(ctx, img, x, y, size) {
@@ -707,6 +746,28 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   // Cortado in the top right corner, role counts beside him
   const MS = 92;
   drawMascot(ctx, mascot, W - PAD - MS + 8, 22, MS);
+  // Full teams: Cortado shows the synergy rank on its face screen, with the
+  // score above the role counts.
+  const syn =
+    members.every(Boolean) &&
+    synergyScore(team.members, Object.fromEntries(team.members.map((id) => [id, loadoutOf(team, id)])));
+  if (syn) {
+    rankFace(ctx, syn.rank, W - PAD - MS + 8, 22, MS);
+    const right = W - PAD - MS - 6;
+    ctx.textAlign = 'right';
+    ctx.fillStyle = C.muted;
+    ctx.font = `600 13px ${BODY}`;
+    ctx.fillText('/100', right, 64);
+    const outW = ctx.measureText('/100').width;
+    ctx.fillStyle = C.fg;
+    ctx.font = `800 34px ${DISPLAY}`;
+    ctx.fillText(String(syn.score), right - outW - 4, 64);
+    const numW = ctx.measureText(String(syn.score)).width;
+    ctx.fillStyle = C.muted;
+    ctx.font = `500 12px ${MONO}`;
+    ctx.fillText('SYNERGY', right - outW - numW - 12, 64);
+    ctx.textAlign = 'left';
+  }
   ctx.font = `600 15px ${BODY}`;
   let rx = W - PAD - MS - 6;
   for (const [role, n] of Object.entries(analysis.roleCounts).reverse()) {

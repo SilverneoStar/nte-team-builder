@@ -6142,3 +6142,87 @@ th[aria-sort='descending'] .th-btn {
     linear-gradient(#0b0c10, #0b0c10) padding-box,
     linear-gradient(135deg, #8e94a6, #a29dbb 55%, #9aa0b0) border-box;
 }
+
+/* Character filters (CharacterFilters.jsx): a label, then round icon toggles
+   on dark discs. Picks in one row widen the search; rows narrow it. */
+.cfilter { display: grid; gap: 8px; }
+.cfilter__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cfilter__label { width: 64px; flex: none; font-size: 0.8rem; color: var(--muted); }
+.cfilter__icons { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0; }
+.cfilter__btn {
+  display: inline-grid; place-items: center; width: 38px; height: 38px; padding: 0;
+  border-radius: 50%; border: 1px solid #2b3242; background: #141824;
+  transition: border-color 0.12s, box-shadow 0.12s, background 0.12s;
+}
+.cfilter__btn > * { opacity: 0.55; transition: opacity 0.12s; }
+.cfilter__btn:hover > * { opacity: 0.85; }
+.cfilter__btn[aria-pressed='true'] { background: #222839; border-color: #ffffff; box-shadow: 0 0 0 2px var(--fg); }
+.cfilter__btn[aria-pressed='true'] > * { opacity: 1; }
+.cfilter__btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.cfilter__btn img, .cfilter__btn svg { display: block; }
+.cfilter__clear { margin-left: 4px; }
+@media (max-width: 560px) {
+  .cfilter__label { width: 100%; }
+  .cfilter__btn { width: 36px; height: 36px; }
+}
+
+/* Synergy score with Cortado (SynergyScore.jsx), as on the ZZZ site. */
+.syn-btn {
+  padding: 3px 10px;
+  min-height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--fg);
+  font: 600 0.75rem var(--font-body);
+  cursor: pointer;
+}
+.syn-btn:hover {
+  border-color: var(--fg);
+}
+.syn-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.syn { display: flex; gap: 14px; align-items: flex-start; padding: 12px; margin-bottom: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.syn-cortado { flex: none; width: 112px; height: 112px; display: block; position: relative; }
+.syn-cortado__rig { display: block; position: relative; width: 100%; height: 100%; transform-origin: 50% 92%; }
+.syn-cortado__img { position: relative; z-index: 1; width: 100%; height: 100%; display: block; }
+.syn-cortado__tail { transform-box: view-box; transform-origin: 44px 50px; animation: syn-wag 1.4s ease-in-out infinite; }
+.syn-cortado__star { transform-box: fill-box; transform-origin: center; animation: syn-twinkle 2.2s ease-in-out infinite; }
+.syn-cortado__star--2 { animation-delay: 0.5s; }
+.syn-cortado__star--3 { animation-delay: 1s; }
+.syn-cortado__sweat { animation: syn-sweat 2.4s ease-in infinite; }
+.syn-cortado--sp .syn-cortado__rig { animation: syn-bounce 1.6s ease-in-out infinite; }
+.syn-cortado--s .syn-cortado__rig { animation: syn-bob 2.2s ease-in-out infinite; }
+.syn-cortado--a .syn-cortado__rig { animation: syn-bob 3.2s ease-in-out infinite; }
+.syn-cortado--c .syn-cortado__rig { transform: rotate(-4deg) translateY(2px); }
+@keyframes syn-wag { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg); } }
+@keyframes syn-twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1.1); } }
+@keyframes syn-sweat { 0% { opacity: 0; transform: translateY(-2px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(4px); } }
+@keyframes syn-bounce { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px) rotate(-2deg); } 60% { transform: translateY(-6px) rotate(2deg); } }
+@keyframes syn-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.syn__body { flex: 1; min-width: 0; display: grid; gap: 6px; justify-items: start; }
+.syn__label { font: 700 0.72rem var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.syn__score { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.syn__score b { font: 800 2rem var(--font-display); line-height: 1; }
+.syn__mood { font-size: 0.82rem; color: var(--muted); margin-left: 6px; }
+.syn__bar, .syn__part-bar { display: block; width: 100%; height: 6px; border-radius: 999px; background: var(--band-fill); overflow: hidden; border: 1px solid var(--band-line); }
+/* Score bar: a framed track with a rounded fill inside it. The fill's colour
+   scale is sized to the whole track (--fill), so each score shows the colour
+   it reaches on the full scale. */
+.syn__bar { box-sizing: border-box; height: 12px; padding: 2px; overflow: hidden; }
+.syn__bar-fill {
+  display: block; height: 100%; min-width: 6px; border-radius: 999px;
+  background: linear-gradient(90deg, #7a7a7a 0%, #3fa5ff 40%, #c55cff 60%, #ffc21c 75%, #ffffff 92%);
+  background-size: calc(100% * 100 / var(--fill, 100)) 100%;
+}
+.syn__part-bar span { display: block; height: 100%; border-radius: inherit; }
+.syn__hint { margin: 0; }
+.syn__parts { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 8px; width: 100%; }
+.syn__parts li { display: grid; gap: 3px; }
+.syn__part-head { display: flex; justify-content: space-between; font-size: 0.85rem; }
+.syn__part-bar span { background: var(--fg); opacity: 0.75; }
+@media (prefers-reduced-motion: reduce) {
+  .syn-cortado__rig, .syn-cortado__tail, .syn-cortado__star, .syn-cortado__sweat { animation: none !important; }
+}

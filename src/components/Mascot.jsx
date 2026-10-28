@@ -109,7 +109,7 @@ const loadHat = () => {
 };
 
 // The fluffy ringed tail, drawn in four layers like the concept sheet.
-function Tail({ d }) {
+export function Tail({ d }) {
   return (
     <>
       <path d={d} stroke="#2B1D16" strokeWidth="7.8" fill="none" strokeLinecap="round" strokeDasharray="0.01 2.6" />
@@ -205,7 +205,7 @@ function Face({ kind, dice }) {
 }
 
 // The CSS animation scales the wrapper; the inner path keeps its own transform.
-const Star = ({ x, y, s = 1, className }) => (
+export const Star = ({ x, y, s = 1, className }) => (
   <g className={className}>
     <path
       transform={`translate(${x} ${y}) scale(${s})`}

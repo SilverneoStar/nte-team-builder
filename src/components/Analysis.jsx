@@ -4,8 +4,9 @@ import EsperCycle from './EsperCycle.jsx';
 import ElementGlyph from './ElementGlyph.jsx';
 import { roleIconUrl } from '../lib/icons.js';
 import StatText from './StatText.jsx';
+import SynergyScore from './SynergyScore.jsx';
 
-export default function Analysis({ analysis }) {
+export default function Analysis({ analysis, members = [], loadouts = {} }) {
   const { elementCounts, reactions, trios, roleCounts, notes } = analysis;
 
   return (
@@ -13,6 +14,7 @@ export default function Analysis({ analysis }) {
       <h2 id="analysis-title" className="section-title">
         Synergy
       </h2>
+      <SynergyScore members={members} loadouts={loadouts} />
       <div className="analysis__grid">
         <EsperCycle elementCounts={elementCounts} reactions={reactions} trios={trios} />
 

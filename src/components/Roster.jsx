@@ -1,11 +1,11 @@
 // The roster on the team builder: search, filters and the character cards.
 import { useMemo, useState } from 'react';
 import { CHARACTERS } from '../data/characters.js';
-import { ELEMENTS, PAIR_REACTIONS, ROLES } from '../data/elements.js';
-import ElementGlyph from './ElementGlyph.jsx';
+import { PAIR_REACTIONS } from '../data/elements.js';
 import Portrait from './Portrait.jsx';
 import RankBadge from './RankBadge.jsx';
 import RoleList from './RoleList.jsx';
+import CharacterFilters, { matchesCharacterFilters, useCharacterFilters } from './CharacterFilters.jsx';
 
 // Which new reactions a character would unlock if added to this team.
 function unlocks(character, presentElements, activeReactionIds) {
@@ -26,9 +26,7 @@ export default function Roster({ members, analysis, usage, dispatch, onPick = nu
   const inPicker = !!onPick;
   const idp = inPicker ? 'pick' : 'roster';
   const [query, setQuery] = useState('');
-  const [element, setElement] = useState('all');
-  const [role, setRole] = useState('all');
-  const [rarity, setRarity] = useState('all');
+  const [filters, setFilters] = useCharacterFilters();
   const [showUpcoming, setShowUpcoming] = useState(false);
 
   const present = useMemo(() => new Set(Object.keys(analysis.elementCounts)), [analysis]);
@@ -37,9 +35,7 @@ export default function Roster({ members, analysis, usage, dispatch, onPick = nu
 
   const list = CHARACTERS.filter((c) => {
     if (c.upcoming && !showUpcoming) return false;
-    if (element !== 'all' && c.element !== element) return false;
-    if (role !== 'all' && !c.roles.includes(role)) return false;
-    if (rarity !== 'all' && c.rarity !== rarity) return false;
+    if (!matchesCharacterFilters(c, filters)) return false;
     if (query && !c.name.toLowerCase().includes(query.trim().toLowerCase())) return false;
     return true;
   });
@@ -70,42 +66,8 @@ export default function Roster({ members, analysis, usage, dispatch, onPick = nu
       </div>
 
       <div className="filters">
-        <div className="chips" role="group" aria-label="Filter by element">
-          <button className="chip" aria-pressed={element === 'all'} onClick={() => setElement('all')}>
-            All
-          </button>
-          {ELEMENTS.map((el) => (
-            <button
-              key={el.id}
-              className="chip"
-              aria-pressed={element === el.id}
-              onClick={() => setElement(element === el.id ? 'all' : el.id)}
-            >
-              <ElementGlyph element={el.id} size={13} />
-              {el.name}
-            </button>
-          ))}
-        </div>
+        <CharacterFilters filters={filters} setFilters={setFilters} arcTypes={false} />
         <div className="filters__row">
-          <label className="select">
-            <span>Role</span>
-            <select id={`${idp}-role`} value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="all">Any</option>
-              {ROLES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="select">
-            <span>Rank</span>
-            <select id={`${idp}-rarity`} value={rarity} onChange={(e) => setRarity(e.target.value)}>
-              <option value="all">Any</option>
-              <option value="S">S</option>
-              <option value="A">A</option>
-            </select>
-          </label>
           <label className="check">
             <input
               id={`${idp}-upcoming`}

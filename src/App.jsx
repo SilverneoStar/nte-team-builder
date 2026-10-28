@@ -57,6 +57,11 @@ export default function App() {
   const selectedChar = selectedSlot != null ? CHARACTER_BY_ID[active.members[selectedSlot]] : null;
 
   const analysis = useMemo(() => analyzeTeam(active.members), [active.members]);
+  // Each member's gear, for the synergy score.
+  const loadouts = useMemo(
+    () => Object.fromEntries(active.members.filter(Boolean).map((id) => [id, loadoutOf(active, id)])),
+    [active],
+  );
   const usage = useMemo(() => usageInOtherTeams(state.teams, state.activeId), [state.teams, state.activeId]);
 
   useEffect(() => {
@@ -192,7 +197,7 @@ export default function App() {
               {state.notice}
             </p>
 
-            <Analysis analysis={analysis} />
+            <Analysis analysis={analysis} members={active.members} loadouts={loadouts} />
             <SharePanel team={active} dispatch={dispatch} />
           </div>
 
