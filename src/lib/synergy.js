@@ -24,7 +24,7 @@
 //                          equipped; the score is then out of 106.
 //   Awakenings & Arcs  up to 8 bonus points on top (not added to the total to
 //                          aim for), with the score capped at 100.
-import { CHARACTER_BY_ID } from '../data/characters.js';
+import { CHARACTER_BY_ID, acquisition } from '../data/characters.js';
 import { ELEMENTS, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { PASSIVES } from '../data/passives.js';
 import { PRESETS } from '../data/presets.js';
@@ -82,10 +82,14 @@ const PAIRS = new Set(
 // Bonus points per number of awakenings (0–6) and Arc copies (0–4). Three
 // and six awakenings light Resonance R3 and R6, so those steps count more.
 // A-rank characters and Arcs are far easier to collect, so their copies count
-// half.
+// half. Standard S-ranks count in full: in NTE they never show up on limited
+// banners, so their copies are no easier to get than a limited S-rank's.
+// Esper Zero isn't on any banner, so his count half, like an A-rank's.
 const AWAKENING_PTS = [0, 1, 1.6, 2.6, 3, 3.3, 4.2];
 const ARC_COPY_PTS = [0, 0.4, 0.8, 1.1, 1.4];
 const RARITY_WEIGHT = { S: 1, A: 0.5 };
+const COPY_WEIGHT = { limited: 1, standard: 1, free: 0.5, 'a-rank': 0.5 };
+const COPY_NAME = { limited: 'limited S-rank', standard: 'standard S-rank', free: 'not on a banner', 'a-rank': 'A-rank' };
 // R6 Resonances that buff the whole team ("Team ATK +10%…", "all allies…").
 const teamResonance = (id) => {
   const r6 = RESONANCES[id]?.find((r) => r.id === 'R6');
@@ -248,10 +252,9 @@ export function synergyScore(memberIds, loadouts = {}) {
     const bits = [];
     let pts = 0;
     invested.forEach(({ c, a, d, arc }) => {
-      pts += AWAKENING_PTS[a] * (RARITY_WEIGHT[c.rarity] ?? 1) + ARC_COPY_PTS[d] * (RARITY_WEIGHT[arc?.rarity] ?? 1);
-      bits.push(
-        `${short(c)} ${[a && `A${a} (${c.rarity}-rank)`, d && `Arc +${d}`].filter(Boolean).join(', ')}`,
-      );
+      const how = acquisition(c);
+      pts += AWAKENING_PTS[a] * COPY_WEIGHT[how] + ARC_COPY_PTS[d] * (RARITY_WEIGHT[arc?.rarity] ?? 1);
+      bits.push(`${short(c)} ${[a && `A${a} (${COPY_NAME[how]})`, d && `Arc +${d}`].filter(Boolean).join(', ')}`);
       const r6 = a >= 6 && team.length > 1 && teamResonance(c.id);
       if (r6) {
         pts += 1.5;

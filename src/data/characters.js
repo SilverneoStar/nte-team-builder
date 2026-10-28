@@ -14,6 +14,18 @@ export const DATA_VERSION = '1.4';
 
 export const ARC_TYPES = ['Solid', 'Liquid', 'Gas', 'Plasma', 'Condensate'];
 
+// Standard (permanent) S-rank characters. Unlike many gacha games, NTE doesn't
+// hand them out on limited banners (no losing a 50/50 to them), so their
+// copies only come from the standard banner. Esper Zero is a standard S-rank
+// too but isn't on any banner; his copies come from playing the game.
+// Every other S-rank is limited.
+export const STANDARD_S = new Set(['baicang', 'daffodill', 'fadia', 'hathor', 'jiuyuan', 'sakiri']);
+export const FREE_S = new Set(['zero']);
+
+/** 'limited', 'standard', 'free' or 'a-rank': where a character's copies come from. */
+export const acquisition = (c) =>
+  c.rarity === 'A' ? 'a-rank' : FREE_S.has(c.id) ? 'free' : STANDARD_S.has(c.id) ? 'standard' : 'limited';
+
 const stats = (hp, atk, def) => ({ hp, atk, def, critRate: 5, critDmg: 50 });
 
 export const CHARACTERS = [
