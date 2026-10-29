@@ -15,6 +15,7 @@ import Portrait from './Portrait.jsx';
 import { ZERO_LOOKS, setZeroLook, useZeroLook } from '../lib/portraits.js';
 import AscensionPlanner from './AscensionPlanner.jsx';
 import BuildTotals from './BuildTotals.jsx';
+import Shortcuts from './Shortcuts.jsx';
 import { ascensionCost } from '../data/ascension.js';
 import SkillsSection from './SkillsSection.jsx';
 import BondSection from './BondSection.jsx';
@@ -286,6 +287,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         <>
           <AscensionPlanner key={c.id} character={c} />
           <BuildTotals key={`totals-${c.id}`} character={c} />
+          <Shortcuts character={c} />
         </>
       ) : (
         <section>

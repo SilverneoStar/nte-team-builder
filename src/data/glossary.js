@@ -403,6 +403,17 @@ export const GLOSSARY = [
     text: 'A separate weekly allowance spent on city activities for Fons. Unused points don’t carry over.',
   },
   {
+    term: 'Selection boxes',
+    also: 'Anomaly, Character Esper, Arc Ascension and Anomaly Hunt Material Selection Boxes',
+    category: 'City & currency',
+    text: 'Hunter Exchange boxes, bought with Fons (some also from the Circle Bounty), that let you pick one material: a tier-1 anomaly material, skill book or Arc material, or an Anomaly Hunt boss drop. Each Esper and Arc page lists which pick suits it.',
+  },
+  {
+    term: 'Expansion Core',
+    category: 'City & currency',
+    text: 'A Hunter Exchange item, bought with Fons, that substitutes for missing materials when upgrading Esper abilities or Arcs. Rarer materials take more Cores.',
+  },
+  {
     term: 'Fons',
     category: 'City & currency',
     text: 'The city money earned from shops, minigames, heists and Realm of Greed. Also used for life skills.',

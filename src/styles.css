@@ -6294,3 +6294,61 @@ th[aria-sort='descending'] .th-btn {
 @media (prefers-reduced-motion: reduce) {
   .syn-cortado__rig, .syn-cortado__tail, .syn-cortado__star, .syn-cortado__sweat { animation: none !important; }
 }
+
+/* Shortcuts: Hunter Exchange boxes and Expansion Cores on the Materials tabs */
+.shortcuts__list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 8px;
+}
+.shortcut {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.shortcut__body {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  font-size: 0.82rem;
+}
+.shortcut__body > b {
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+.shortcut__pick,
+.shortcut__meta,
+.shortcut__note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+}
+.shortcut__pick strong {
+  color: var(--fg);
+}
+.shortcut__meta {
+  font-size: 0.74rem;
+  font-family: var(--font-mono);
+}
+
+.shortcut__cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: var(--fg);
+}
+.shortcut__meta {
+  column-gap: 4px;
+  row-gap: 0;
+}

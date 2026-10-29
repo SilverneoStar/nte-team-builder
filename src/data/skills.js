@@ -57,7 +57,7 @@ export const LIFE_COST = { seeds: 56, fons: 22000 };
 export const DREAMLESS_SOURCE = 'Mall and daily tasks';
 
 // [skill book family, weekly item] per character.
-const SKILL_MATS = {
+export const SKILL_MATS = {
   adler: ['expectations', 'dress-hem'],
   akane: ['synchronicity', 'good-boy-stamp'],
   aurelia: ['fng', 'good-boy-stamp'],

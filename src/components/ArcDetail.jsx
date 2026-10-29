@@ -11,6 +11,7 @@ import {
   arcAscensionTable,
 } from '../data/arcMaterials.js';
 import ArcPlayer from './ArcPlayer.jsx';
+import Shortcuts from './Shortcuts.jsx';
 import ExportDialog from './ExportDialog.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
 import MaterialIcon from './MaterialIcon.jsx';
@@ -336,6 +337,7 @@ export default function ArcDetail({ arc: a, onClose }) {
               content: (
                 <>
                   {ascend}
+{cost && <Shortcuts arc={a} />}
                   {farmCta}
                 </>
               ),
@@ -350,6 +352,7 @@ export default function ArcDetail({ arc: a, onClose }) {
               {obtain}
             </div>
             {ascend}
+{cost && <Shortcuts arc={a} />}
           </div>
           {farmCta}
         </>
