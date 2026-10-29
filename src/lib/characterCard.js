@@ -22,6 +22,7 @@ import {
   MONO,
   clipCard,
   drawBandBackdrop,
+  evenBands,
   drawRank,
   drawSilverFrame,
   ensureFonts,
@@ -50,12 +51,6 @@ const K = {
   num: '#ffc061',
   key: '#b9c3ff',
 };
-const BANDS = [
-  { y: -60, h: 190, a: 1 },
-  { y: 520, h: 130, a: 0.6 },
-  { y: 1100, h: 180, a: 0.8 },
-];
-
 /** Presets this character is in: community teams first (their own named team leading), then kit ideas. */
 export function teamsFor(character) {
   const list = PRESETS.filter((p) => p.members.includes(character.id));
@@ -188,7 +183,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   ctx.scale(scale, scale);
   ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, CHAR_CARD_W, CHAR_CARD_H);
-  drawBandBackdrop(ctx, CHAR_CARD_W, CHAR_CARD_H, BANDS);
+  drawBandBackdrop(ctx, CHAR_CARD_W, CHAR_CARD_H, evenBands(CHAR_CARD_H));
 
   const PAD = 40;
   const GAP = 24;

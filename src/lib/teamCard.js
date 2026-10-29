@@ -235,6 +235,29 @@ export function drawBandBackdrop(ctx, w, h, bands) {
   ctx.restore();
 }
 
+/**
+ * Bands for drawBandBackdrop: one height, evenly spaced over the card (the
+ * same rhythm as the site's background), alternating full and softer.
+ */
+export function evenBands(h, { count = Math.max(3, Math.round(h / 320)), bandH = 150 } = {}) {
+  const top = -h * 0.12;
+  const step = (h * 1.24) / count;
+  return Array.from({ length: count }, (_, i) => ({
+    y: Math.round(top + step * (i + 0.5) - bandH / 2),
+    h: bandH,
+    a: i % 2 ? 0.7 : 1,
+  }));
+}
+
+/** Width drawRoles would use, without drawing. */
+export function rolesWidth(ctx, roles, icons, { font, size = 20, gap = 6, sep = 16 }) {
+  ctx.font = font;
+  return roles.reduce(
+    (w, role, i) => w + (i ? sep : 0) + (icons?.[role] ? size + gap : 0) + ctx.measureText(role).width,
+    0,
+  );
+}
+
 /** Gold module squares at grid cells [[row, col], …]. */
 export function goldCells(ctx, x, y, cells, size, gap) {
   for (const [r, c] of cells) {
@@ -475,16 +498,9 @@ export function drawRank(ctx, rank, x, centerY, size) {
 }
 
 // Tilted pink rounded bands with dashed inner tracks, matching the app's backdrop.
-const BANDS = [
-  { y: -40, x: -120, h: 170, a: 1 },
-  { y: 150, x: -420, h: 110, a: 0.7 },
-  { y: 310, x: -60, h: 190, a: 1 },
-  { y: 500, x: -480, h: 120, a: 0.6 },
-  { y: 660, x: -180, h: 160, a: 0.8 },
-];
 function drawBands(ctx, W = CARD_W, H = CARD_H) {
-  // Taller cards repeat the band pattern down the page.
-  const bands = H > CARD_H ? [...BANDS, ...BANDS.map((b) => ({ ...b, y: b.y + CARD_H }))] : BANDS;
+  // Evenly spaced bands of one height, staggered left and right.
+  const bands = evenBands(H).map((b, i) => ({ ...b, x: i % 2 ? -420 : -120 }));
   ctx.save();
   ctx.translate(W / 2, H / 2);
   ctx.rotate((-12 * Math.PI) / 180);
@@ -791,7 +807,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const cols = grid ? 2 : 4;
   const cw = (W - PAD * 2 - gap * (cols - 1)) / cols;
   // 2x2: two rows share the height left over by the header, reactions and footer.
-  const ch = grid ? Math.floor((H - top - gap - (side ? 150 : 180)) / 2) : 416;
+  const ch = grid ? Math.floor((H - top - gap - (side ? 124 : 180)) / 2) : 416;
   (side ? [] : members).forEach((c, i) => {
     const x = PAD + (i % cols) * (cw + gap);
     const top = 136 + Math.floor(i / cols) * (ch + gap);
@@ -1087,7 +1103,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       ctx.restore();
 
       // Portrait: round frame on the Arc-type backdrop
-      const r = Math.min(92, (ch - 100) / 2);
+      const r = Math.min(102, (ch - 110) / 2);
       const cx = x + 30 + r;
       const cy = top + 24 + r;
       framedPortrait(ctx, images[i], c, { x: cx - r, y: cy - r, w: r * 2, h: r * 2, r, color: el, patterns });

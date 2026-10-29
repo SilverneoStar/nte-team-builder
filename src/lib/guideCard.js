@@ -26,6 +26,7 @@ import {
   MONO,
   clipCard,
   drawBandBackdrop,
+  evenBands,
   drawRank,
   drawSilverFrame,
   ensureFonts,
@@ -54,11 +55,6 @@ const K = {
   num: '#ffc061',
   key: '#b9c3ff',
 };
-const BANDS = [
-  { y: -40, h: 230, a: 1 },
-  { y: 760, h: 120, a: 0.55 },
-  { y: 1120, h: 170, a: 0.8 },
-];
 const HL = { color: K.label, keyColor: K.key, numColor: K.num };
 
 // ---------- data ----------
@@ -278,7 +274,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   ctx.scale(scale, scale);
   ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, W, H);
-  drawBandBackdrop(ctx, W, H, BANDS);
+  drawBandBackdrop(ctx, W, H, evenBands(H));
 
   const PAD = 40;
   const GAP = 22;

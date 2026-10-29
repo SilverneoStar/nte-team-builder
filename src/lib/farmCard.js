@@ -26,9 +26,11 @@ import {
   roundRect,
   wrap,
   drawBandBackdrop,
+  evenBands,
   goldCells,
   loadRoleIcons,
   drawRoles,
+  rolesWidth,
   drawMascot,
 } from './teamCard.js';
 import { drawLinksLine } from './cardLinks.js';
@@ -49,19 +51,6 @@ const K = {
   muted: '#bfc3cf',
   pink: '#e8488c',
 };
-
-// Diagonal pink bands behind the panels.
-const BANDS = [
-  { y: -60, h: 190, a: 1 },
-  { y: 380, h: 130, a: 0.6 },
-  { y: 800, h: 180, a: 0.8 },
-];
-
-const IG_BANDS = [
-  { y: -60, h: 200, a: 1 },
-  { y: 520, h: 150, a: 0.6 },
-  { y: 1120, h: 200, a: 0.8 },
-];
 
 // Fan-project line and site links. Wide: one row; Instagram: two rows.
 function footer(ctx, W, H, PAD, ig, bottomGap = 30) {
@@ -286,7 +275,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   ctx.scale(scale, scale);
   ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, W, H);
-  drawBandBackdrop(ctx, W, H, ig ? IG_BANDS : BANDS);
+  drawBandBackdrop(ctx, W, H, evenBands(H));
 
   const PAD = 32;
 
@@ -326,11 +315,14 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, tx0 + 86, ly);
-  drawRoles(ctx, c.roles, roleIcons, tx0 + 86 + ctx.measureText(el.name).width + 18, ly, {
-    font: `500 18px ${BODY}`,
-    color: K.muted,
-    size: 22,
-  });
+  // Roles beside the element when they fit, otherwise on their own line.
+  const roleOpts = { font: `500 18px ${BODY}`, color: K.muted, size: 22 };
+  let roleX = tx0 + 86 + ctx.measureText(el.name).width + 18;
+  if (roleX + rolesWidth(ctx, c.roles, roleIcons, roleOpts) > tx0 + TW) {
+    roleX = tx0;
+    ly += 32;
+  }
+  drawRoles(ctx, c.roles, roleIcons, roleX, ly, roleOpts);
 
   // What the totals cover (Instagram: two columns of two, under the name)
   ly += 44;
@@ -486,7 +478,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   clipCard(ctx, W, H);
   ctx.fillStyle = K.bg;
   ctx.fillRect(0, 0, W, H);
-  drawBandBackdrop(ctx, W, ig ? H : FARM_H, ig ? IG_BANDS : BANDS);
+  drawBandBackdrop(ctx, W, H, evenBands(H));
 
   const PAD = 32;
   const LW = ig ? 300 : 340;
@@ -533,9 +525,10 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   ctx.fillStyle = color;
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(`${arc.type} Arc`, tx0 + 82, ly);
+  const typeW = ctx.measureText(`${arc.type} Arc`).width;
   ctx.fillStyle = K.muted;
   ctx.font = `500 17px ${BODY}`;
-  ctx.fillText(` · ${arc.sub}`, tx0 + 82 + ctx.measureText(`${arc.type} Arc`).width + 8, ly);
+  ctx.fillText(`·  ${arc.sub}`, tx0 + 82 + typeW + 10, ly);
 
   // Who it's for
   if (users.length) {
@@ -562,10 +555,15 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   // How to get the Arc itself: the rest of the left column (wide), or a
   // full-width panel at the foot of the card (Instagram, placed below).
   const sources = ARC_SOURCES[arc.id] ?? [];
-  const SRC_TOP = ig ? H - 96 - 230 : 0;
+  // Instagram: the panel is as tall as its lines need (up to 230), and the
+  // material rows above take the rest.
+  ctx.font = `500 15px ${BODY}`;
+  const srcLines = sources.reduce((n, src) => n + wrap(ctx, src, W - 2 * PAD - 52, 3).length, 0);
+  const SRC_H = ig ? Math.min(230, 70 + srcLines * 20 + sources.length * 6) : 0;
+  const SRC_TOP = ig ? H - 96 - SRC_H : 0;
   if (ig && sources.length) {
     ctx.fillStyle = K.panel;
-    roundRect(ctx, PAD, SRC_TOP, W - 2 * PAD, 230, 14);
+    roundRect(ctx, PAD, SRC_TOP, W - 2 * PAD, SRC_H, 14);
     ctx.fill();
     ctx.strokeStyle = K.line;
     ctx.lineWidth = 1.5;
@@ -581,7 +579,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
     ctx.fillText('HOW TO GET', SX, ly);
     ctx.font = `500 15px ${BODY}`;
     const LINE = 20;
-    const bottom = ig ? SRC_TOP + 230 - 20 : ARC_FARM_H - 56;
+    const bottom = ig ? SRC_TOP + SRC_H - 20 : ARC_FARM_H - 56;
     let y = ly + 24;
     let shown = 0;
     for (const src of sources) {
@@ -622,7 +620,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   // ---- Groups ----
   const GAP = 20;
   const TOP = HY + 84 + GAP;
-  const ROW = ig ? Math.floor((H - 96 - 230 - GAP - TOP - GAP) / 2) : 252;
+  const ROW = ig ? Math.floor((H - 96 - SRC_H - GAP - TOP - (sources.length ? GAP : 0)) / 2) : 252;
   const half = (RW - GAP) / 2;
   group(ctx, RX, TOP, half, ROW, groups.arc, imgs);
   group(ctx, RX + half + GAP, TOP, half, ROW, groups.anomaly, imgs);

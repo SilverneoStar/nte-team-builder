@@ -38,10 +38,12 @@ import {
   roundRect,
   wrap,
   drawBandBackdrop,
+  evenBands,
   goldCells,
   fitLine,
   loadRoleIcons,
   drawRoles,
+  rolesWidth,
   drawMascot,
 } from './teamCard.js';
 
@@ -66,20 +68,6 @@ const K = {
   key: '#b9c3ff',
   label: '#cfd2dc',
 };
-
-// Diagonal pink bands behind the panels.
-const BANDS = [
-  { y: -60, h: 190, a: 1 },
-  { y: 360, h: 130, a: 0.6 },
-  { y: 760, h: 180, a: 0.8 },
-];
-
-// Instagram (4:5) card: the same bands spread over the taller canvas.
-const IG_BANDS = [
-  { y: -60, h: 200, a: 1 },
-  { y: 520, h: 150, a: 0.6 },
-  { y: 1120, h: 200, a: 0.8 },
-];
 
 const ROMAN = { 2: 'II', 3: 'III', 4: 'IV' };
 
@@ -601,7 +589,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ctx.scale(scale, scale);
   ctx.imageSmoothingQuality = 'high';
   clipCard(ctx, W, H);
-  drawBandBackdrop(ctx, W, H, ig ? IG_BANDS : BANDS);
+  drawBandBackdrop(ctx, W, H, evenBands(H));
 
   const PAD = 32;
 
@@ -649,11 +637,14 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ctx.fillStyle = elColor;
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, tx0 + 86, ly);
-  drawRoles(ctx, c.roles, roleIcons, tx0 + 86 + ctx.measureText(el.name).width + 18, ly, {
-    font: `500 18px ${BODY}`,
-    color: K.muted,
-    size: 22,
-  });
+  // Roles beside the element when they fit, otherwise on their own line.
+  const roleOpts = { font: `500 18px ${BODY}`, color: K.muted, size: 22 };
+  let roleX = tx0 + 86 + ctx.measureText(el.name).width + 18;
+  if (roleX + rolesWidth(ctx, c.roles, roleIcons, roleOpts) > tx0 + TW) {
+    roleX = tx0;
+    ly += 32;
+  }
+  drawRoles(ctx, c.roles, roleIcons, roleX, ly, roleOpts);
 
   ly += 36;
   ctx.font = `500 16px ${BODY}`;
