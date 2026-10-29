@@ -44,7 +44,7 @@ export default function Roster({ members, analysis, usage, dispatch, onPick = nu
     <section
       className={`roster${inPicker ? ' roster--picker' : ''}`}
       aria-labelledby={inPicker ? undefined : 'roster-title'}
-      aria-label={inPicker ? 'Characters' : undefined}
+      aria-label={inPicker ? 'Espers' : undefined}
     >
       <div className="roster__head">
         {!inPicker && (

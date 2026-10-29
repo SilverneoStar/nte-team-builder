@@ -109,9 +109,9 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
   return (
     <div className="page">
       <header className="page__head">
-        <h2 className="page__title">Characters</h2>
+        <h2 className="page__title">Espers</h2>
         <p className="muted">
-          {CHARACTERS.length} Espers. Select a character for details, reactions and featured teams.
+          {CHARACTERS.length} Espers. Select one for details, reactions and featured teams.
         </p>
       </header>
 

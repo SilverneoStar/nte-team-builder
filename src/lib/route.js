@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 // Hashes stay plain tokens so links work everywhere the app is hosted.
 export const VIEWS = [
   { id: 'builder', label: 'Team Builder' },
-  { id: 'characters', label: 'Characters' },
+  { id: 'characters', label: 'Espers' },
   { id: 'arcs', label: 'Arcs' },
   { id: 'console', label: 'Console' },
   { id: 'achievements', label: 'Achievements' },
