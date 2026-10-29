@@ -50,6 +50,8 @@ const UPDATED = {
   shinku: 2,
   'zero-male': 3,
   'zero-female': 2,
+  elyms: 2,
+  exe: 2,
 };
 /** File name and version of a character's portrait, e.g. "shinku.webp?v=2". */
 export const portraitPath = (id) => {

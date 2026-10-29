@@ -5,6 +5,12 @@ import { ARC_BY_ID } from '../data/arcs.js';
 import { loadImage } from './loadImage.js';
 
 const TYPES = new Set(['liquid', 'plasma', 'condensate', 'solid', 'gas']);
+
+// Art that was replaced keeps its file name; a version makes browsers fetch
+// the new copy. Bump when an Arc's art is replaced.
+const ART_VERSION = { 'echoes-on-hold': 2, 'dotted-horizon': 2 };
+/** Path of an Arc's artwork under arc-player/art/, with its version. */
+export const arcArtFile = (arcId) => `${arcId}.webp${ART_VERSION[arcId] ? `?v=${ART_VERSION[arcId]}` : ''}`;
 const shared = new Map();
 const once = (url) => {
   if (!shared.has(url)) shared.set(url, loadImage(url));
@@ -21,7 +27,7 @@ export async function loadArcArt(base, arcId, size = 256) {
     TYPES.has(type) ? once(`${P}/disc-${type}.svg`) : null,
     once(`${P}/hub.svg`),
     once(`${P}/case.svg`),
-    loadImage(`${P}/art/${arcId}.webp`),
+    loadImage(`${P}/art/${arcArtFile(arcId)}`),
   ]);
   if (!kase) return null;
   const c = document.createElement('canvas');
