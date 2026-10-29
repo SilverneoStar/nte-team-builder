@@ -47,10 +47,10 @@ export const BUILD_PROFILES = {
   // Pre-release (1.5 preview stream tags): early picks until the kits are out.
   elyms: {
     instantCycle: true,
-    note: 'Tagged Instant Cycle, so Cycle Intensity isn’t needed. An early pick from her role tags (Burst DPS, DMG Boost) until her kit is out.',
+    note: 'Instant Cycle, so Cycle Intensity isn’t needed. Her Ultimate gives the team ATK based on her own Base ATK, so ATK% stays high. An early pick until her full kit is out.',
   },
   exe: {
-    note: 'An early pick from his role tags (Main DPS, Summoner) until his kit is out. If his summons scale with ATK, ATK% may move up.',
+    note: 'An early pick from the 1.5 preview: his hits build Frames that his skills spend on Digital Echoes, and his Rating rises as he keeps attacking. Revisit once his full kit is out.',
   },
 };
 

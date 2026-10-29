@@ -287,6 +287,28 @@ export const SKILLS = {
       s('Life', 'Shining Idol', 'Unlocks Super Sound rounds on stage, for 1 extra City Stamina each.'),
     ],
   },
+  // Version 1.5, from the preview stream's skill showcase (as written up by
+  // community guides, Oct 29, 2026). Pre-release: may change at launch.
+  elyms: {
+    combat: [
+      s(B, 'Interference', 'At Weak Connection, hold during Basic Attack: Instant Glitch to trigger Interference for Cosmos damage.'),
+      s('Basic Attack (Enhanced)', 'Crosstalk', 'At Medium or Strong Connection, up to 3 attacks with the Dreamworn Terminal for Cosmos damage.'),
+      s(R, 'Intermittent Existence', 'Area Cosmos damage; raises Connection to Medium and grants Optical Illusion. Scans targets to set her Ultimate to single-target or area.'),
+      s('Redirect Skill (Enhanced)', 'Goodbye to You', 'Area Cosmos damage that spends all Optical Illusion stacks for a higher DMG Ratio; raises Connection from Medium to Strong and rescans targets.'),
+      s(U, 'Do You Get Deja Vu', 'Single-target or area form from her scans (area at Weak Connection); stronger Connection means a higher DMG Ratio. Resets Connection to Weak and gives the rest of the team ATK based on her Base ATK; recasting refreshes it.'),
+      s(S, 'I’m Here', 'The Dreamworn Terminal deals Cosmos damage; raises Connection from Weak to Medium with Optical Illusion, and rescans targets.'),
+    ],
+    life: [],
+  },
+  exe: {
+    combat: [
+      s(B, 'Brute-Force Hacking', 'The Hand of Y performs a 5-hit combo; the last hit can spend 10 Frames to export 1 Digital Echo.'),
+      s(R, 'Data Exfiltration', 'The Hand of Y deals damage and exports up to 5 Digital Echoes, based on the Frames he holds.'),
+      s(U, 'Mesh Collision', 'Enters the Shader Compile state: heavy area hits and Digital Echoes from his Frames. In this state every attack can spend Frames to export Digital Echoes.'),
+      s(S, null, null),
+    ],
+    life: [],
+  },
   adler: {
     combat: [
       s(B, 'Deliverance', 'Five-hit Incantation combo that gives Karma stacks.'),
