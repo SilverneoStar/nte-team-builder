@@ -21,7 +21,6 @@ import RankBadge from './RankBadge.jsx';
 import StatText from './StatText.jsx';
 import { fmt } from '../lib/format.js';
 import SwipeTabs from './SwipeTabs.jsx';
-import { PHONE, useMedia } from '../lib/useMedia.js';
 import ExportIcon from './ExportIcon.jsx';
 
 const CAPS = [20, 30, 40, 50, 60, 70, 80];
@@ -47,9 +46,8 @@ export default function ArcDetail({ arc: a, onClose }) {
   const sources = ARC_SOURCES[a.id] ?? [];
   const cost = arcAscensionCost(a, from, to);
   const table = arcAscensionTable(a);
-  const phone = useMedia(PHONE);
 
-  // Page sections: stacked on wider screens, swipeable slides on phones.
+  // Page sections, one per tab.
   const info = (
     <>
       <dl className="facts">
@@ -324,39 +322,25 @@ export default function ArcDetail({ arc: a, onClose }) {
         </button>
       </header>
 
-      {phone ? (
-        <SwipeTabs
-          key={a.id}
-          label={`${a.name} details`}
-          slides={[
-            { id: 'overview', label: 'Overview', content: info },
-            { id: 'obtain', label: 'How to get', content: obtain },
-            cost && {
-              id: 'materials',
-              label: 'Materials',
-              content: (
-                <>
-                  {ascend}
-{cost && <Shortcuts arc={a} />}
-                  {farmCta}
-                </>
-              ),
-            },
-          ].filter(Boolean)}
-        />
-      ) : (
-        <>
-          <div className="detail__grid">
-            <div className="detail__main">
-              {info}
-              {obtain}
-            </div>
-            {ascend}
-{cost && <Shortcuts arc={a} />}
-          </div>
-          {farmCta}
-        </>
-      )}
+      <SwipeTabs
+        key={a.id}
+        label={`${a.name} details`}
+        slides={[
+          { id: 'overview', label: 'Overview', content: info },
+          { id: 'obtain', label: 'How to get', content: obtain },
+          cost && {
+            id: 'materials',
+            label: 'Materials',
+            content: (
+              <>
+                {ascend}
+                <Shortcuts arc={a} />
+                {farmCta}
+              </>
+            ),
+          },
+        ].filter(Boolean)}
+      />
 
       {sharing && (
         <ExportDialog

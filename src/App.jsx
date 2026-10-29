@@ -136,7 +136,16 @@ export default function App() {
 
       <Suspense fallback={<PageLoading />}>
         {route.view === 'characters' && (
-          <CharactersPage characterId={route.characterId} activeTeam={active} onAdd={addFromIndex} />
+          <CharactersPage
+            characterId={route.characterId}
+            activeTeam={active}
+            onAdd={addFromIndex}
+            onApplyBuild={(charId, patch) => dispatch({ type: 'setLoadout', charId, patch })}
+            onLoadTeam={(team) => {
+              dispatch({ type: 'import', ...team });
+              navigate('builder');
+            }}
+          />
         )}
 
         {route.view === 'arcs' && <ArcsPage arcType={route.arcType} arcId={route.arcId} />}

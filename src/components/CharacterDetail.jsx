@@ -1,10 +1,9 @@
-// One character's page: header, Overview / Stats / Awakenings / Skills / Bond / Materials / My build, and the Export card button.
+// One Esper's page: header, then tabs (Overview, Build, Teams, Teammates, Stats,
+// Awakenings, Skills, Materials, Bond, My build) shown as a swipeable carousel
+// on every screen size, and the Export card button.
 import { ELEMENTS, ELEMENT_BY_ID, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { PRESETS } from '../data/presets.js';
-import { CHARACTER_BY_ID } from '../data/characters.js';
-import { ARCS, ARC_BY_ID, RECOMMENDED } from '../data/arcs.js';
-import { CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
-import CartridgeIcon from './CartridgeIcon.jsx';
+import { ARCS } from '../data/arcs.js';
 import MaxStats from './MaxStats.jsx';
 import EndgameStats from './EndgameStats.jsx';
 import FocusStats from './FocusStats.jsx';
@@ -32,11 +31,20 @@ import MyBuildEditor, { myBuildCurrent } from './MyBuildEditor.jsx';
 import { farmList } from '../data/farmList.js';
 import StatText from './StatText.jsx';
 import SwipeTabs from './SwipeTabs.jsx';
-import FeaturedTeams from './FeaturedTeams.jsx';
-import { PHONE, useMedia } from '../lib/useMedia.js';
+import { CharacterBuild, CharacterTeams } from './CharacterBuild.jsx';
+import Teammates from './Teammates.jsx';
 import ExportIcon from './ExportIcon.jsx';
 
-export default function CharacterDetail({ character: c, activeTeam, inActiveTeam, teamFull, onAdd, onClose }) {
+export default function CharacterDetail({
+  character: c,
+  activeTeam,
+  inActiveTeam,
+  teamFull,
+  onAdd,
+  onClose,
+  onApplyBuild,
+  onLoadTeam,
+}) {
   const [sharing, setSharing] = useState(false);
   const element = ELEMENT_BY_ID[c.element];
   const index = ELEMENTS.findIndex((e) => e.id === c.element);
@@ -45,9 +53,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   const trios = TRIO_REACTIONS.filter((r) => r.elements.includes(c.element));
   // Community teams first, then this site's kit-based ideas.
   const presets = PRESETS.filter((p) => p.members.includes(c.id)).sort((a, b) => Number(!!a.idea) - Number(!!b.idea));
-  const signature = ARCS.find((a) => a.signature === c.id);
   const arcCount = ARCS.filter((a) => a.type === c.arcType).length;
-  const phone = useMedia(PHONE);
   // Cards the Export card button offers, in picker order.
   const cardTypes = [
     CHARACTER_CONSOLE[c.id] && CHARACTER_CARDS.build,
@@ -56,7 +62,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
     presets.length > 0 && CHARACTER_CARDS.teams,
   ].filter(Boolean);
 
-  // Page sections: stacked on wider screens, swipeable slides on phones.
+  // Page sections, one per tab.
   const overview = (
     <div className="detail__main">
       <dl className="facts">
@@ -76,23 +82,6 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
             )}
           </dd>
         </div>
-        {signature && (
-          <div>
-            <dt>Signature Arc</dt>
-            <dd>{signature.name}</dd>
-          </div>
-        )}
-        {RECOMMENDED[c.id]?.length > 0 && (
-          <div>
-            <dt>Recommended Arcs</dt>
-            <dd>
-              {RECOMMENDED[c.id]
-                .filter((id) => ARC_BY_ID[id].signature !== c.id)
-                .map((id) => ARC_BY_ID[id].name)
-                .join(', ')}
-            </dd>
-          </div>
-        )}
         <div>
           <dt>Faction</dt>
           <dd>
@@ -109,18 +98,6 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         <div>
           <dt>Esper ability</dt>
           <dd>{c.ability ?? '—'}</dd>
-        </div>
-        <div>
-          <dt>Recommended Cartridges</dt>
-          <dd className="cart-list">
-            {cartridgesFor(c).length === 0 && <span className="muted">Not known yet</span>}
-            {cartridgesFor(c).map((id) => (
-              <span key={id} className="cart-list__item">
-                <CartridgeIcon id={id} size={22} />
-                {CARTRIDGE_BY_ID[id].name}
-              </span>
-            ))}
-          </dd>
         </div>
         {c.upcoming && (
           <div>
@@ -173,14 +150,6 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         </ul>
       </section>
 
-      {presets.length > 0 && (
-        <section>
-          <div className="featured-head">
-            <h3 className="mini-title">Featured in</h3>
-          </div>
-          <FeaturedTeams presets={presets} />
-        </section>
-      )}
     </div>
   );
   // Upcoming characters: everything shown may still change before release.
@@ -192,7 +161,6 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   ) : null;
   const stats = (
     <div className="stats">
-      {phone && upcomingNote}
       {/* Only real in-game values; until then, the stats to chase. */}
       {confirmedStats(c.id) ? <MaxStats stats={confirmedStats(c.id)} /> : <FocusStats character={c} />}
       <EndgameStats character={c} />
@@ -200,7 +168,6 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
   );
   const awakenings = (
     <section>
-      {upcomingNote}
       <h3 className="mini-title">Awakenings</h3>
       {AWAKENINGS[c.id] ? (
         <>
@@ -268,21 +235,10 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
       )}
     </section>
   );
-  const skills = (
-    <>
-      {upcomingNote}
-      <SkillsSection key={`skills-${c.id}`} character={c} />
-    </>
-  );
-  const bondTab = (
-    <>
-      {upcomingNote}
-      <BondSection character={c} />
-    </>
-  );
+  const skills = <SkillsSection key={`skills-${c.id}`} character={c} />;
+  const bondTab = <BondSection character={c} />;
   const materials = (
     <>
-      {upcomingNote}
       {ascensionCost(c.id) ? (
         <>
           <AscensionPlanner key={c.id} character={c} />
@@ -302,10 +258,7 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
     </>
   );
   const myBuild = CHARACTER_CONSOLE[c.id] ? (
-    <>
-      {phone && upcomingNote}
-      <MyBuildEditor character={c} activeTeam={activeTeam} onShare={(b) => setSharing({ mine: b })} />
-    </>
+    <MyBuildEditor character={c} activeTeam={activeTeam} onShare={(b) => setSharing({ mine: b })} />
   ) : null;
 
   return (
@@ -358,33 +311,27 @@ export default function CharacterDetail({ character: c, activeTeam, inActiveTeam
         </div>
       </header>
 
-      {phone ? (
-        <SwipeTabs
-          key={c.id}
-          label={`${c.name} details`}
-          slides={[
-            { id: 'overview', label: 'Overview', content: overview },
-            { id: 'stats', label: 'Stats', content: stats },
-            { id: 'awakenings', label: 'Awakenings', content: awakenings },
-            { id: 'skills', label: 'Skills', content: skills },
-            { id: 'bond', label: 'Bond', content: bondTab },
-            { id: 'materials', label: 'Materials', content: materials },
-            myBuild && { id: 'build', label: 'My build', content: myBuild },
-          ].filter(Boolean)}
-        />
-      ) : (
-        <>
-          <div className="detail__grid">
-            {overview}
-            {stats}
-          </div>
-          {awakenings}
-          {skills}
-          {bondTab}
-          {materials}
-          {myBuild}
-        </>
-      )}
+      {upcomingNote}
+      <SwipeTabs
+        key={c.id}
+        label={`${c.name} details`}
+        slides={[
+          { id: 'overview', label: 'Overview', content: overview },
+          {
+            id: 'build',
+            label: 'Build',
+            content: <CharacterBuild character={c} inActiveTeam={inActiveTeam} onApply={onApplyBuild} />,
+          },
+          { id: 'teams', label: 'Teams', content: <CharacterTeams character={c} onLoadTeam={onLoadTeam} /> },
+          { id: 'mates', label: 'Teammates', content: <Teammates character={c} /> },
+          { id: 'stats', label: 'Stats', content: stats },
+          { id: 'awakenings', label: 'Awakenings', content: awakenings },
+          { id: 'skills', label: 'Skills', content: skills },
+          { id: 'materials', label: 'Materials', content: materials },
+          { id: 'bond', label: 'Bond', content: bondTab },
+          myBuild && { id: 'mine', label: 'My build', content: myBuild },
+        ].filter(Boolean)}
+      />
 
       <div className="detail__actions">
         <button className="btn btn--primary" onClick={onAdd} disabled={inActiveTeam || teamFull}>

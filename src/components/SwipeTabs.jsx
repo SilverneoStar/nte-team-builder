@@ -2,8 +2,8 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
 /**
- * Phone layout for long pages: a row of tabs over sections you can swipe
- * between. The tab row sticks to the top while you read.
+ * Long pages as a carousel (phones and PC): a row of tabs over sections you
+ * can swipe or step between. The tab row sticks to the top while you read.
  *
  * Only the section on show is laid out and painted; the others stay mounted
  * (so typed-in values survive) but hidden. Switching plays a short slide-in,
@@ -143,10 +143,33 @@ export default function SwipeTabs({ slides, label }) {
           </section>
         ))}
       </div>
-      <div className="swipe__dots" aria-hidden="true">
-        {slides.map((s, i) => (
-          <span key={s.id} className={i === active ? 'is-on' : undefined} />
-        ))}
+      {/* Previous / next section, with dots for where you are. */}
+      <div className="swipe__nav">
+        <button
+          type="button"
+          className="swipe__step"
+          onClick={() => go(active - 1)}
+          disabled={active === 0}
+          aria-label={active > 0 ? `Previous: ${slides[active - 1].label}` : 'Previous'}
+        >
+          <span aria-hidden="true">‹</span>
+          <span className="swipe__step-label">{active > 0 ? slides[active - 1].label : ''}</span>
+        </button>
+        <div className="swipe__dots" aria-hidden="true">
+          {slides.map((s, i) => (
+            <span key={s.id} className={i === active ? 'is-on' : undefined} />
+          ))}
+        </div>
+        <button
+          type="button"
+          className="swipe__step swipe__step--next"
+          onClick={() => go(active + 1)}
+          disabled={active === slides.length - 1}
+          aria-label={active < slides.length - 1 ? `Next: ${slides[active + 1].label}` : 'Next'}
+        >
+          <span className="swipe__step-label">{active < slides.length - 1 ? slides[active + 1].label : ''}</span>
+          <span aria-hidden="true">›</span>
+        </button>
       </div>
     </div>
   );

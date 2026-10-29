@@ -75,7 +75,7 @@ function compare(a, b, col, dir) {
   return result ? result * dir : a.name.localeCompare(b.name);
 }
 
-export default function CharactersPage({ characterId, activeTeam, onAdd }) {
+export default function CharactersPage({ characterId, activeTeam, onAdd, onApplyBuild, onLoadTeam }) {
   useZeroLook();
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useCharacterFilters();
@@ -123,6 +123,8 @@ export default function CharactersPage({ characterId, activeTeam, onAdd }) {
           teamFull={activeTeam.members.every(Boolean)}
           onAdd={() => onAdd(selected.id)}
           onClose={() => navigate('characters')}
+          onApplyBuild={onApplyBuild}
+          onLoadTeam={onLoadTeam}
         />
       )}
 
