@@ -222,7 +222,7 @@ add({
   name: 'Heterogeneous Unit',
   group: 'Selection boxes',
   text: 'Stands in for enemy-drop materials (anomaly materials and Anomaly Hunt drops) you’re short of. Rarer materials take more Units.',
-  get: ['Not confirmed yet'],
+  get: ['Security Office', 'Events', 'Quests'],
 });
 
 // Circle Bounty and event boxes. Sources (Oct 2026): Icy Veins item pages;
