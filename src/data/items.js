@@ -232,6 +232,11 @@ for (const b of [
     get: ['Circle Bounty (Elite track)'],
   },
   {
+    name: 'S-Class Standard Character Selection Box',
+    text: pick('Sakiri, Hathor, Baicang or Fadia (standard S-rank Espers)'),
+    get: ['Not confirmed yet'],
+  },
+  {
     name: 'Arc-light Trove',
     text: pick('Fluff of Fortitude, Ferocity, Finesse, Fleetness or Fearlessness (S-rank Arcs)'),
     get: ['Elite Hunter Supplies (paid Circle Bounty pass) at Bounty Rank 30'],
