@@ -252,7 +252,7 @@ for (const b of [
   {
     name: 'S-Class Standard Character Selection Box',
     text: pick('Sakiri, Hathor, Baicang or Fadia (standard S-rank Espers)'),
-    get: ['Not confirmed yet'],
+    get: ['Events', 'Puka pass'],
   },
   {
     name: 'Arc-light Trove',
