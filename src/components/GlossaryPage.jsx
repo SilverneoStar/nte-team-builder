@@ -1,8 +1,14 @@
-// The Glossary page: game terms, reactions and statuses explained.
+// The Glossary page: game terms, reactions and statuses explained, plus an
+// Items section (each material with its icon, use, where to get it and who uses it).
 import { useMemo, useState } from 'react';
 import { ELEMENT_BY_ID, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { GLOSSARY, GLOSSARY_CATEGORIES } from '../data/glossary.js';
 import ElementGlyph from './ElementGlyph.jsx';
+import MaterialIcon from './MaterialIcon.jsx';
+import Portrait from './Portrait.jsx';
+import { ITEMS, ITEM_GROUPS } from '../data/items.js';
+import { CHARACTER_BY_ID } from '../data/characters.js';
+import { ARC_BY_ID } from '../data/arcs.js';
 
 // Reaction entries come straight from the game data so they never drift apart.
 const REACTION_ENTRIES = [
@@ -44,6 +50,15 @@ export default function GlossaryPage() {
     })).filter((g) => g.entries.length > 0);
   }, [query, category]);
 
+  const itemGroups = useMemo(() => {
+    if (category !== 'all' && category !== 'Items') return [];
+    const q = query.trim().toLowerCase();
+    const hit = (it) => !q || [it.name, it.text, ...it.get, it.group].some((s) => s.toLowerCase().includes(q));
+    return ITEM_GROUPS.map((g) => ({ g, items: ITEMS.filter((it) => it.group === g && hit(it)) })).filter(
+      (x) => x.items.length,
+    );
+  }, [query, category]);
+
   return (
     <div className="page">
       <header className="page__head">
@@ -67,7 +82,7 @@ export default function GlossaryPage() {
           <button className="chip" aria-pressed={category === 'all'} onClick={() => setCategory('all')}>
             All
           </button>
-          {GLOSSARY_CATEGORIES.map((c) => (
+          {[...GLOSSARY_CATEGORIES, 'Items'].map((c) => (
             <button
               key={c}
               className="chip"
@@ -80,7 +95,7 @@ export default function GlossaryPage() {
         </div>
       </div>
 
-      {groups.length === 0 && <p className="empty">No terms match “{query}”.</p>}
+      {groups.length === 0 && itemGroups.length === 0 && <p className="empty">No terms match “{query}”.</p>}
 
       {groups.map((g) => (
         <section key={g.cat} className="gloss-group" aria-labelledby={`g-${slug(g.cat)}`}>
@@ -111,6 +126,75 @@ export default function GlossaryPage() {
           </dl>
         </section>
       ))}
+
+      {itemGroups.length > 0 && (
+        <section className="gloss-group" aria-labelledby="g-items">
+          <h3 id="g-items" className="gloss-group__title">
+            Items
+          </h3>
+          <p className="muted small">What each material is for, where to get it, and which Espers and Arcs use it.</p>
+          {itemGroups.map(({ g, items }) => (
+            <div key={g} className="items-group">
+              <h4 className="micro-title">{g}</h4>
+              <ul className="items">
+                {items.map((it) => (
+                  <ItemCard key={it.name} item={it} />
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      )}
     </div>
+  );
+}
+
+const USED_SHOWN = 8;
+
+function ItemCard({ item: it }) {
+  const [open, setOpen] = useState(false);
+  const used = open ? it.usedBy : it.usedBy.slice(0, USED_SHOWN);
+  return (
+    <li className={`item${it.tier ? ` item--t${it.tier}` : ''}`} id={`item-${slug(it.name)}`}>
+      <span className="item__icon">
+        <MaterialIcon name={it.name} size={52} />
+      </span>
+      <div className="item__body">
+        <b className="item__name">
+          {it.name}
+          {it.tier && <span className="item__tier">T{it.tier}</span>}
+        </b>
+        <p className="item__text">{it.text}</p>
+        <p className="item__label">How to get</p>
+        <ul className="item__get">
+          {it.get.map((g) => (
+            <li key={g}>{g}</li>
+          ))}
+        </ul>
+        {it.usedBy.length > 0 && (
+          <>
+            <p className="item__label">Used by</p>
+            <div className="item__used">
+              {used.map((u) =>
+                u.kind === 'char' ? (
+                  <a key={u.id} href={`#character-${u.id}`} title={CHARACTER_BY_ID[u.id].name}>
+                    <Portrait character={CHARACTER_BY_ID[u.id]} size="sm" />
+                  </a>
+                ) : (
+                  <a key={u.id} href={`#arc-${u.id}`} className="item__arc">
+                    {ARC_BY_ID[u.id].name}
+                  </a>
+                ),
+              )}
+              {it.usedBy.length > USED_SHOWN && (
+                <button type="button" className="item__more" onClick={() => setOpen(!open)} aria-expanded={open}>
+                  {open ? 'Show fewer' : `+${it.usedBy.length - USED_SHOWN}`}
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </li>
   );
 }
