@@ -49,7 +49,7 @@ for (const [fam, names] of Object.entries(FAMILIES)) {
       get: [
         'Drops from open-world anomalies (higher tiers from tougher anomalies)',
         ...(i === 0 ? [`${BOXES.anomaly.name} (${HUNTER}; also Circle Bounty)`] : []),
-        'Expansion Core can stand in for missing copies',
+        'Heterogeneous Unit or Expansion Core can stand in for missing copies',
       ],
       usedBy: [
         ...charsWhere((id) => CHARACTER_MATERIALS[id]?.[0] === fam),
@@ -65,7 +65,11 @@ for (const [key, b] of Object.entries(BOSS_DROPS)) {
     name: b.name,
     group: 'Anomaly Hunt drops',
     text: 'Boss material for ascending Espers past level 30.',
-    get: [`Anomaly Hunt: ${b.source}`, `${BOXES.hunt.name} (${HUNTER})`],
+    get: [
+      `Anomaly Hunt: ${b.source}`,
+      `${BOXES.hunt.name} (${HUNTER})`,
+      'Heterogeneous Unit can stand in for missing copies',
+    ],
     usedBy: charsWhere((id) => CHARACTER_MATERIALS[id]?.[1] === key),
   });
 }
@@ -212,6 +216,14 @@ for (const b of [...Object.values(BOXES), EXPANSION_CORE]) {
     get: [`${b.sources.join(', ')}: ${b.cost.toLocaleString('en-US')} Fons each, stock ${b.stock}`],
   });
 }
+
+// Substitute for enemy-drop materials (in-game item text, Oct 2026).
+add({
+  name: 'Heterogeneous Unit',
+  group: 'Selection boxes',
+  text: 'Stands in for enemy-drop materials (anomaly materials and Anomaly Hunt drops) you’re short of. Rarer materials take more Units.',
+  get: ['Not confirmed yet'],
+});
 
 // Circle Bounty and event boxes. Sources (Oct 2026): Icy Veins item pages;
 // GameWith Circle Bounty guide.

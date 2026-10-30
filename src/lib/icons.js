@@ -33,6 +33,7 @@ const MATERIAL_ICONS = new Set([
   'fons',
   'a-page-from-delusions-shore',
   'beetle-coin',
+  'heterogeneous-unit',
   'riftcrystal',
   's-class-standard-character-selection-box',
   'eternal-shell-song',
