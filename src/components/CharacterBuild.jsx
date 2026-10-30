@@ -2,7 +2,7 @@
 // awakening order, with a button to equip it all) and Teams tab (featured
 // teams, each loadable into the team builder with everyone's recommended kit).
 import { useState } from 'react';
-import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess } from '../data/arcs.js';
+import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess, freeArcs } from '../data/arcs.js';
 import { CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
 import { CHARACTER_CONSOLE, SHAPES } from '../data/console.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
@@ -30,7 +30,9 @@ export function arcPicks(c) {
 export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
   const [done, setDone] = useState(false);
   const best = bestBuild(c);
-  const arcs = arcPicks(c);
+  const free = freeArcs(c.id);
+  // Free picks show in their own list, so the main list skips them (unless it's the signature).
+  const arcs = arcPicks(c).filter((a) => a.signature === c.id || !free.some((f) => f.id === a.id));
   const carts = cartridgesFor(c);
   const info = CHARACTER_CONSOLE[c.id];
   const order = AWAKENING_ORDER[c.id]?.order;
@@ -56,24 +58,23 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
           <ol className="build__arcs">
             {arcs.map((a) => (
               <li key={a.id}>
-                <a className={`arc-row${a.signature === c.id ? ' arc-row--sig' : ''}`} href={`#arc-${a.id}`}>
-                  <span className="arc-row__art">
-                    <ArcPlayer arc={a} />
-                  </span>
-                  <span className="arc-row__name">{a.name}</span>
-                  <RankBadge rank={a.rarity} size={18} />
-                  <span className="arc-row__tags">
-                    {a.signature === c.id && <span className="fit-tag fit-tag--kit">Signature</span>}
-                    {arcAccess(a.id) && <span className="fit-tag">{ACCESS[arcAccess(a.id)]}</span>}
-                    <span className="muted small">
-                      ATK {a.atk} · {a.sub}
-                      {a.estimated ? ' (est.)' : ''}
-                    </span>
-                  </span>
-                </a>
+                <ArcRow arc={a} character={c} />
               </li>
             ))}
           </ol>
+        </>
+      )}
+
+      {free.length > 0 && (
+        <>
+          <h4 className="micro-title">Free alternatives · no banners or pass</h4>
+          <ul className="build__arcs">
+            {free.map((a) => (
+              <li key={a.id}>
+                <ArcRow arc={a} character={c} free />
+              </li>
+            ))}
+          </ul>
         </>
       )}
 
@@ -190,6 +191,31 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
         </div>
       )}
     </section>
+  );
+}
+
+// One Arc as a linked row: art, name, rank, tags and stats.
+function ArcRow({ arc: a, character: c, free = false }) {
+  return (
+    <a className={`arc-row${a.signature === c.id ? ' arc-row--sig' : ''}${free ? ' arc-row--free' : ''}`} href={`#arc-${a.id}`}>
+      <span className="arc-row__art">
+        <ArcPlayer arc={a} />
+      </span>
+      <span className="arc-row__name">{a.name}</span>
+      <RankBadge rank={a.rarity} size={18} />
+      <span className="arc-row__tags">
+        {a.signature === c.id && <span className="fit-tag fit-tag--kit">Signature</span>}
+        {free ? (
+          <span className="fit-tag fit-tag--free">Free {a.rarity}-rank pick</span>
+        ) : (
+          arcAccess(a.id) && <span className="fit-tag">{ACCESS[arcAccess(a.id)]}</span>
+        )}
+        <span className="muted small">
+          ATK {a.atk} · {a.sub}
+          {a.estimated ? ' (est.)' : ''}
+        </span>
+      </span>
+    </a>
   );
 }
 

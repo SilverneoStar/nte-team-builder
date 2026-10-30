@@ -6,7 +6,7 @@ import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
-import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess } from '../data/arcs.js';
+import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess, freeArcs } from '../data/arcs.js';
 import { CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
 import { CHARACTER_CONSOLE, SHAPES } from '../data/console.js';
 import { AWAKENING_ORDER } from '../data/awakeningOrder.js';
@@ -116,7 +116,10 @@ export function arcPicks(character, best) {
     .filter((id) => id && id !== first.id)
     .map((id) => ARC_BY_ID[id])
     .filter(Boolean);
-  let more = listed.slice(0, 3);
+  // The free S- and A-rank alternatives always make the list, after the top guide pick(s).
+  const free = freeArcs(character.id).filter((a) => a.id !== first.id);
+  const guide = listed.filter((a) => !free.some((f) => f.id === a.id));
+  let more = [...guide.slice(0, 3 - free.length), ...free];
   const easy = (a) => ['free', 'pass'].includes(arcAccess(a.id));
   if (!more.some(easy)) {
     const alt = alternativesFor(character, first.id).arc;

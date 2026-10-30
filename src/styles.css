@@ -6680,3 +6680,12 @@ th[aria-sort='descending'] .th-btn {
   cursor: pointer;
   font-family: var(--font-body);
 }
+
+/* Free Arc alternatives on the Build tab */
+.fit-tag--free {
+  color: var(--good, #5ec27a);
+  border-color: color-mix(in srgb, var(--good, #5ec27a) 60%, transparent);
+}
+.arc-row--free {
+  border-style: dashed;
+}

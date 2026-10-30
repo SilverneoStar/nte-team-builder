@@ -5,7 +5,7 @@
 import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
-import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess, arcTag } from '../data/arcs.js';
+import { ARCS, ARC_BY_ID, FREE_ARCS, RECOMMENDED, arcAccess, arcTag } from '../data/arcs.js';
 import { CARTRIDGE_BY_ID, bonusStats, cartridgesFor, isPercentStat, moduleLevel } from '../data/gear.js';
 import {
   CHARACTER_CONSOLE,
@@ -142,7 +142,10 @@ export function alternativesFor(character, arcId, shownCarts = []) {
   const ok = (a) =>
     a && a.id !== arcId && a.type === character.arcType && a.rarity !== 'B' && EASY.includes(arcAccess(a.id));
   const sig = ARCS.find((a) => a.signature === character.id)?.id;
-  const listed = [...new Set([sig, ...(RECOMMENDED[character.id] ?? [])])].map((id) => ARC_BY_ID[id]);
+  // Free picks first (S-rank, then A-rank), then the signature and the guides' list.
+  const listed = [...new Set([...(FREE_ARCS[character.id] ?? []), sig, ...(RECOMMENDED[character.id] ?? [])])].map(
+    (id) => ARC_BY_ID[id],
+  );
   const altArc =
     listed.find(ok) ??
     ARCS.find((a) => ok(a) && a.name.startsWith('Fluff of')) ??

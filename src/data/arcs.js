@@ -210,6 +210,43 @@ export const RECOMMENDED = {
   zero: ['day-off', 'blow-up-the-crowd'],
 };
 
+// Free alternatives per character: one S-rank and one A-rank Arc of their
+// type that cost nothing to get (commissions, quests, events, Arc Exchange),
+// for players without the signature. Picked by this site (Oct 2026) from each
+// Arc's stats and passive against the character's kit; free Arcs the guides
+// already recommend come first. Upcoming characters are early picks.
+export const FREE_ARCS = {
+  adler: ['eternal-waltz', 'umbrella'],
+  akane: ['youthful-fantasy', 'shiny-days'],
+  aurelia: ['stellar-veil', 'oraora'],
+  baicang: ['camellia-society', 'a-time-will-come'],
+  blackbird: ['good-boys-grand-adventure', 'watch-your-heads'],
+  chaos: ['camellia-society', 'a-time-will-come'],
+  chiz: ['contemplative-cat', 'cosmos-daze-wild-reverie'],
+  daffodill: ['youthful-fantasy', 'shiny-days'],
+  edgar: ['youthful-fantasy', 'call-of-the-twisted-city'],
+  elyms: ['blow-up-the-crowd', 'the-forgotten'],
+  exe: ['raging-flames', 'oraora'],
+  fadia: ['eternal-waltz', 'the-good-the-bad-the-bitter'],
+  haniel: ['blow-up-the-crowd', 'time-bandit'],
+  hathor: ['raging-flames', 'oraora'],
+  hotori: ['hethereaus-keeper', 'the-forgotten'],
+  iroi: ['youthful-fantasy', 'clear-skies'],
+  jiuyuan: ['reality-refuge', 'the-forgotten'],
+  lacrimosa: ['youthful-fantasy', 'shiny-days'],
+  linko: ['raging-flames', 'oraora'],
+  mint: ['youthful-fantasy', 'clear-skies'],
+  nanally: ['raging-flames', 'oraora'],
+  sakiri: ['good-boys-grand-adventure', 'failing-you-heavy-in-my-heart'],
+  shinku: ['camellia-society', 'a-time-will-come'],
+  skia: ['good-boys-grand-adventure', 'watch-your-heads'],
+  zankou: ['contemplative-cat', 'watch-your-heads'],
+  zero: ['day-off', 'the-forgotten'],
+};
+
+/** [S-rank, A-rank] free Arcs for a character (either may be missing). */
+export const freeArcs = (id) => (FREE_ARCS[id] ?? []).map((x) => ARC_BY_ID[x]).filter(Boolean);
+
 /**
  * How an Arc is obtained, from ARC_SOURCES:
  * 'limited' (limited banners only), 'paid' (paid pack), 'pass' (Elite Hunter
