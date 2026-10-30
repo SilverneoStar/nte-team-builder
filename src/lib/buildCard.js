@@ -564,7 +564,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   const ig = format === 'ig';
   const W = ig ? BUILD_IG_W : BUILD_W;
   const H = ig ? BUILD_IG_H : BUILD_H;
-  await ensureFonts();
+  await ensureFonts(base);
   const c = build.character;
   const el = ELEMENT_BY_ID[c.element];
   const info = CHARACTER_CONSOLE[c.id];

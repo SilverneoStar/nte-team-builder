@@ -252,7 +252,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   const H = ig ? IG_H : FARM_H;
   const list = farmList(character.id);
   if (!list) return null;
-  await ensureFonts();
+  await ensureFonts(base);
   const c = character;
   const el = ELEMENT_BY_ID[c.element];
   const elColor = EL[c.element] ?? K.pink;
@@ -435,7 +435,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   const H = ig ? IG_H : ARC_FARM_H;
   const cost = arcAscensionCost(arc);
   if (!cost) return null;
-  await ensureFonts();
+  await ensureFonts(base);
   const color = ARC_COLORS[arc.type] ?? K.pink;
 
   const arcMats = cost.filter((m) => m.source === ARC_MATERIAL_SOURCE);

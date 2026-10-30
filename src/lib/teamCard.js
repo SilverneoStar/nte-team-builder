@@ -213,6 +213,57 @@ export function roundRect(ctx, x, y, w, h, r) {
 
 // Fits text to maxWidth, wrapping onto at most `lines` lines with an ellipsis.
 /** Charcoal background with the brand's diagonal pink bands (build and farm cards). */
+
+// ---- Element symbols pressed into the bands (same as the site's background) ----
+// The strip is the six symbols in white on transparent; tinted copies are made
+// once per colour and drawn three times: dark top edge, light lip, fill.
+let bandStrip = null;
+const tinted = new Map();
+/** Load the element strip used by the card bands (call before drawing). */
+export async function loadBandStrip(base = '/') {
+  if (!bandStrip) bandStrip = loadImage(`${base}icons/element-strip.webp`);
+  return bandStrip;
+}
+function tint(img, color) {
+  if (!tinted.has(color)) {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth || img.width;
+    c.height = img.naturalHeight || img.height;
+    const x = c.getContext('2d');
+    x.drawImage(img, 0, 0);
+    x.globalCompositeOperation = 'source-in';
+    x.fillStyle = color;
+    x.fillRect(0, 0, c.width, c.height);
+    tinted.set(color, c);
+  }
+  return tinted.get(color);
+}
+const PRESS = [
+  { dy: -1.5, color: 'rgba(0, 0, 0, 0.32)' },
+  { dy: 1.5, color: 'rgba(255, 150, 196, 0.16)' },
+  { dy: 0, color: 'rgba(0, 0, 0, 0.16)' },
+];
+// Different start per band, so the symbols don't line up in columns.
+const PRESS_X = [0, -170, -360, -90, -260, -40, -300];
+/** Press the symbols into one band (in the band's rotated coordinates). */
+function pressSymbols(ctx, img, x, y, w, h, i) {
+  if (!img) return;
+  const sh = h * 0.46;
+  const sw = (img.naturalWidth || img.width) * (sh / (img.naturalHeight || img.height));
+  const sy = y + (h - sh) / 2;
+  ctx.save();
+  roundRect(ctx, x + 60, y, w - 120, h, h / 2);
+  ctx.clip();
+  for (const p of PRESS) {
+    const t = tint(img, p.color);
+    for (let sx = x + 60 + (PRESS_X[i % PRESS_X.length] % sw); sx < x + w; sx += sw) {
+      ctx.drawImage(t, sx, sy + p.dy, sw, sh);
+    }
+  }
+  ctx.restore();
+}
+let stripNow = null;
+
 export function drawBandBackdrop(ctx, w, h, bands) {
   ctx.fillStyle = '#121318';
   ctx.fillRect(0, 0, w, h);
@@ -220,18 +271,19 @@ export function drawBandBackdrop(ctx, w, h, bands) {
   ctx.translate(w / 2, h / 2);
   ctx.rotate((-14 * Math.PI) / 180);
   ctx.translate(-w / 2, -h / 2);
-  for (const b of bands) {
+  bands.forEach((b, i) => {
     ctx.globalAlpha = b.a;
     ctx.fillStyle = 'rgba(194, 24, 91, 0.2)';
     roundRect(ctx, -400, b.y, w + 800, b.h, b.h / 2);
     ctx.fill();
+    pressSymbols(ctx, stripNow, -400, b.y, w + 800, b.h, i);
     ctx.setLineDash([12, 9]);
     ctx.strokeStyle = 'rgba(232, 72, 140, 0.28)';
     ctx.lineWidth = 2;
     roundRect(ctx, -300, b.y + 24, w + 600, b.h - 48, (b.h - 48) / 2);
     ctx.stroke();
     ctx.setLineDash([]);
-  }
+  });
   ctx.restore();
 }
 
@@ -505,12 +557,13 @@ function drawBands(ctx, W = CARD_W, H = CARD_H) {
   ctx.translate(W / 2, H / 2);
   ctx.rotate((-12 * Math.PI) / 180);
   ctx.translate(-W / 2, -H / 2);
-  for (const b of bands) {
+  for (const [i, b] of bands.entries()) {
     const w = W * 1.6;
     ctx.globalAlpha = b.a;
     ctx.fillStyle = 'rgba(194, 24, 91, 0.16)';
     roundRect(ctx, b.x, b.y, w, b.h, b.h / 2);
     ctx.fill();
+    pressSymbols(ctx, stripNow, b.x, b.y, w, b.h, i);
     ctx.setLineDash([10, 8]);
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'rgba(232, 72, 140, 0.24)';
@@ -522,7 +575,8 @@ function drawBands(ctx, W = CARD_W, H = CARD_H) {
   ctx.restore();
 }
 
-export async function ensureFonts() {
+export async function ensureFonts(base) {
+  if (base != null) stripNow = await loadBandStrip(base);
   if (!document.fonts?.load) return;
   try {
     await Promise.all([
@@ -670,7 +724,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const W = side ? SIDE_W : grid ? GRID_W : CARD_W;
   const H = side ? SIDE_H : grid ? GRID_H : CARD_H;
   const M = METRICS[grid ? 'grid' : 'row'];
-  await ensureFonts();
+  await ensureFonts(base);
   const members = team.members.map((id) => (id ? CHARACTER_BY_ID[id] : null));
   const mascot = await loadImage(`${base}mascot.svg`);
   const patterns = await loadPatterns(base, [...new Set(members.filter(Boolean).map((c) => c.arcType))]);

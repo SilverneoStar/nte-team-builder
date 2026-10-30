@@ -239,7 +239,7 @@ function outlined(ctx, text, x, y, font, fill, width = 6) {
 // ---------- card ----------
 
 export async function renderGuideCard(character, { base = '/', scale = 2 } = {}) {
-  await ensureFonts();
+  await ensureFonts(base);
   const c = character;
   const el = ELEMENT_BY_ID[c.element];
   const elColor = EL[c.element] ?? K.pink;

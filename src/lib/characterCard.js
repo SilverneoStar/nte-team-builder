@@ -150,7 +150,7 @@ function chip(ctx, x, y, text, { bg, fg, dots = [] }) {
 }
 
 export async function renderCharacterCard(character, { base = '/', scale = 2 } = {}) {
-  await ensureFonts();
+  await ensureFonts(base);
   const c = character;
   const el = ELEMENT_BY_ID[c.element];
   const elColor = EL[c.element] ?? K.pink;

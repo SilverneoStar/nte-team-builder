@@ -2732,7 +2732,13 @@ th[aria-sort='descending'] .th-btn {
 /* ---------- Backdrop: tilted pink bands, like the in-game menus ---------- */
 .backdrop {
   position: fixed;
-  inset: 0;
+  /* Sized to the tallest viewport (browser bars hidden), so it doesn't
+     stretch and jump when a phone's address bar slides in and out. */
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100lvh;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
