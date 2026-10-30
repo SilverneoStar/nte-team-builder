@@ -58,3 +58,16 @@ export const portraitPath = (id) => {
   const f = portraitFile(id);
   return UPDATED[f] ? `${f}.webp?v=${UPDATED[f]}` : `${f}.webp`;
 };
+
+// Where each portrait's face sits, as a fraction of the image height (the
+// middle of the face, between the eyes and the chin). Wide frames that crop a
+// square portrait (the Tall team image) centre on this, so faces aren't cut.
+const FACE_Y = {
+  adler: 0.47, akane: 0.42, aurelia: 0.47, baicang: 0.43, blackbird: 0.5, chaos: 0.47, chiz: 0.47,
+  daffodill: 0.43, edgar: 0.52, ellie: 0.55, elyms: 0.64, exe: 0.6, fadia: 0.55, haniel: 0.5,
+  hathor: 0.47, hotori: 0.55, iroi: 0.58, jiuyuan: 0.55, lacrimosa: 0.55, linko: 0.52, mint: 0.58,
+  nanally: 0.56, nitsa: 0.55, sakiri: 0.58, shinku: 0.6, skia: 0.55, zankou: 0.45,
+  'zero-female': 0.52, 'zero-male': 0.5, zero: 0.52,
+};
+/** Face centre (0–1 of the image height) of a character's current portrait. */
+export const faceY = (id) => FACE_Y[portraitFile(id)] ?? 0.5;

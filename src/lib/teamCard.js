@@ -6,7 +6,7 @@ import { loadImage } from './loadImage.js';
 // Export options moved to exportSettings.js; re-exported so older imports keep working.
 export { EXPORT_SCALE, EXPORT_SIZES, TEAM_LAYOUTS, canvasToBlob } from './exportSettings.js';
 import { loadArcArt } from './arcPlayer.js';
-import { portraitPath } from './portraits.js';
+import { faceY, portraitPath } from './portraits.js';
 import { loadPatterns, paintBackdrop, setPortraitShadow } from './arcPattern.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
@@ -174,15 +174,47 @@ export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
  * Arc-type backdrop, the art casting a soft shadow, an element-colour border.
  * The art fills the frame width and is cropped from the top.
  */
+// Portraits painted on their own background (no transparency): always fill the frame.
+const OPAQUE_PORTRAITS = new Set(['blackbird', 'ellie', 'nitsa']);
+const faded = new WeakMap();
+/** The portrait with its left and right edges faded out (cached per image). */
+function fadedSides(img) {
+  if (!faded.has(img)) {
+    const n = img.naturalWidth || img.width;
+    const c = document.createElement('canvas');
+    c.width = n;
+    c.height = img.naturalHeight || img.height;
+    const x = c.getContext('2d');
+    x.drawImage(img, 0, 0);
+    const g = x.createLinearGradient(0, 0, n, 0);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(0.1, 'rgba(0,0,0,1)');
+    g.addColorStop(0.9, 'rgba(0,0,0,1)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    x.globalCompositeOperation = 'destination-in';
+    x.fillStyle = g;
+    x.fillRect(0, 0, n, c.height);
+    faded.set(img, c);
+  }
+  return faded.get(img);
+}
+
 function framedPortrait(ctx, img, c, { x, y, w, h, r, color, patterns }) {
   paintBackdrop(ctx, { x, y, w, h, r, img: patterns[String(c.arcType || '').toLowerCase()] });
   ctx.save();
   roundRect(ctx, x, y, w, h, r);
   ctx.clip();
   if (img) {
-    const s = Math.max(w, h);
+    // Wide frames (the Tall team image) show a band of the square portrait.
+    // Portraits on a transparent background are drawn a little smaller than
+    // the frame (zoomed out), with their side edges faded into the backdrop;
+    // the band is centred so the face sits a little above the middle.
+    const wide = w > h * 1.2;
+    const zoom = wide && !OPAQUE_PORTRAITS.has(c.id) ? 0.84 : 1;
+    const s = Math.max(w * zoom, h);
+    const top = Math.min(Math.max(faceY(c.id) * s - h * 0.45, 0), s - h);
     setPortraitShadow(ctx, s);
-    ctx.drawImage(img, x + (w - s) / 2, y - (s - h) * 0.3, s, s);
+    ctx.drawImage(zoom < 1 ? fadedSides(img) : img, x + (w - s) / 2, y - top, s, s);
   } else {
     ctx.fillStyle = C.fg;
     ctx.font = `800 44px ${DISPLAY}`;
