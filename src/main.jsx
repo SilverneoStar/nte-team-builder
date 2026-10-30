@@ -6,6 +6,7 @@ import './styles.css';
 
 // Brushed-metal texture for the element strips (public asset, so set via the base path).
 document.documentElement.style.setProperty('--metal-tex', `url(${import.meta.env.BASE_URL}icons/brushed-metal.webp)`);
+document.documentElement.style.setProperty('--element-strip', `url(${import.meta.env.BASE_URL}icons/element-strip.webp)`);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

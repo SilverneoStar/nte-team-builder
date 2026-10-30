@@ -6689,3 +6689,65 @@ th[aria-sort='descending'] .th-btn {
 .arc-row--free {
   border-style: dashed;
 }
+
+/* Element symbols pressed into the background bands: a dark top edge, a
+   light bottom lip and a slightly darker fill, so they read as stamped in.
+   Each band starts the row at a different point, so they don't line up. */
+.backdrop span {
+  overflow: hidden;
+}
+.backdrop__press {
+  position: absolute;
+  inset: 0 60px;
+  -webkit-mask: var(--element-strip) repeat-x;
+  mask: var(--element-strip) repeat-x;
+  -webkit-mask-size: auto 46%;
+  mask-size: auto 46%;
+  -webkit-mask-position: var(--press-x, 0) 50%;
+  mask-position: var(--press-x, 0) 50%;
+  background: rgba(0, 0, 0, 0.16);
+}
+.backdrop__press--shade {
+  transform: translateY(-1.5px);
+  background: rgba(0, 0, 0, 0.32);
+}
+.backdrop__press--lip {
+  transform: translateY(1.5px);
+  background: rgba(255, 150, 196, 0.16);
+}
+.backdrop span:nth-child(1) {
+  --press-x: 0px;
+}
+.backdrop span:nth-child(2) {
+  --press-x: -170px;
+}
+.backdrop span:nth-child(3) {
+  --press-x: -360px;
+}
+.backdrop span:nth-child(4) {
+  --press-x: -90px;
+}
+.backdrop span:nth-child(5) {
+  --press-x: -260px;
+}
+/* Light theme: softer, pinker stamping */
+:root[data-theme='light'] .backdrop__press {
+  background: rgba(150, 30, 80, 0.05);
+}
+:root[data-theme='light'] .backdrop__press--shade {
+  background: rgba(150, 30, 80, 0.1);
+}
+:root[data-theme='light'] .backdrop__press--lip {
+  background: rgba(255, 255, 255, 0.55);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) .backdrop__press {
+    background: rgba(150, 30, 80, 0.05);
+  }
+  :root:not([data-theme='dark']) .backdrop__press--shade {
+    background: rgba(150, 30, 80, 0.1);
+  }
+  :root:not([data-theme='dark']) .backdrop__press--lip {
+    background: rgba(255, 255, 255, 0.55);
+  }
+}

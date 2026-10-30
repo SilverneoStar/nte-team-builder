@@ -88,11 +88,14 @@ export default function App() {
   return (
     <div className="app">
       <div className="backdrop" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
+        {/* Each band carries a row of the six element symbols, pressed into it. */}
+        {[0, 1, 2, 3, 4].map((k) => (
+          <span key={k}>
+            <i className="backdrop__press backdrop__press--shade" />
+            <i className="backdrop__press backdrop__press--lip" />
+            <i className="backdrop__press" />
+          </span>
+        ))}
       </div>
       <header className="masthead">
         <div className="masthead__line" aria-hidden="true" />
