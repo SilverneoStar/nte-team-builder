@@ -201,6 +201,24 @@ add({
   get: ['Recovers on its own', 'De-noise Solution', 'Exchange Annulith for more'],
 });
 add({
+  name: 'City Stamina',
+  group: 'Currency & stamina',
+  text: 'Spent on city activities. Some life skills let you spend extra in their minigame for better rewards.',
+  get: ['Recovers over time'],
+});
+add({
+  name: 'Fabricated Dice',
+  group: 'Currency & stamina',
+  text: 'Rolls on the Standard Board (Strange Encounters) for standard characters and rewards.',
+  get: ['Converted from 160 Annulith', 'Warp Exchange, Circle Bounty and events', 'Mall packs'],
+});
+add({
+  name: 'Solid Dice',
+  group: 'Currency & stamina',
+  text: 'Rolls on the limited character boards.',
+  get: ['Converted from 160 Annulith', 'Warp Exchange and events', 'Mall packs'],
+});
+add({
   name: 'De-noise Solution',
   group: 'Currency & stamina',
   text: 'Restores 60 Character Pixels.',

@@ -33,6 +33,9 @@ const MATERIAL_ICONS = new Set([
   'fons',
   'a-page-from-delusions-shore',
   'beetle-coin',
+  'solid-dice',
+  'fabricated-dice',
+  'city-stamina',
   'heterogeneous-unit',
   'riftcrystal',
   's-class-standard-character-selection-box',
@@ -102,7 +105,20 @@ export const materialSlug = (name) =>
     .replace(/^-|-$/g, '');
 
 /** URL of a material's icon, or null when we don't have one yet. */
+// Icons replaced under the same file name: a version makes browsers fetch the new copy.
+const ICON_VERSION = {
+  fons: 2,
+  'beetle-coin': 2,
+  'character-pixels': 2,
+  annulith: 2,
+  'anomaly-material-selection-box-i': 2,
+  'character-esper-material-selection-box-i': 2,
+  'arc-ascension-material-selection-box-i': 2,
+  'anomaly-hunt-material-selection-box': 2,
+  'expansion-core': 2,
+};
 export function materialIconUrl(name) {
   const slug = materialSlug(name);
-  return MATERIAL_ICONS.has(slug) ? `${BASE}icons/materials/${slug}.webp` : null;
+  if (!MATERIAL_ICONS.has(slug)) return null;
+  return `${BASE}icons/materials/${slug}.webp${ICON_VERSION[slug] ? `?v=${ICON_VERSION[slug]}` : ''}`;
 }
