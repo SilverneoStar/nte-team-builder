@@ -179,6 +179,12 @@ add({
   ],
 });
 add({
+  name: 'Riftcrystal',
+  group: 'Currency & stamina',
+  text: 'Paid currency. Exchanges 1 : 1 for Annulith and buys Mall packs.',
+  get: ['Top-up packs (real money; first purchase doubled)'],
+});
+add({
   name: 'Tri-Key',
   group: 'Currency & stamina',
   text: 'Pulls on the Arc banners (Arc Research Program).',
