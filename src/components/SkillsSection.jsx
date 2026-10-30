@@ -53,7 +53,7 @@ export default function SkillsSection({ character }) {
         </ol>
 
         <h3 className="mini-title skill-life-title">
-          Passives <span>unlocked with skill books</span>
+          Passives <span>unlocked with skill cards</span>
         </h3>
         {pas ? (
           <ol className="skill-list">
@@ -177,7 +177,7 @@ export default function SkillsSection({ character }) {
                 <thead>
                   <tr>
                     <th scope="col">One skill</th>
-                    <th scope="col">Skill books + family</th>
+                    <th scope="col">Skill cards + family</th>
                     <th scope="col" className="num-l">
                       Weekly
                     </th>

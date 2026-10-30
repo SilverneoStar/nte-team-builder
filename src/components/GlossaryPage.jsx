@@ -34,6 +34,8 @@ const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 export default function GlossaryPage() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
+  // Items show one group at a time (searching looks through all of them).
+  const [itemGroup, setItemGroup] = useState(ITEM_GROUPS[0]);
 
   const groups = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -51,13 +53,14 @@ export default function GlossaryPage() {
   }, [query, category]);
 
   const itemGroups = useMemo(() => {
-    if (category !== 'all' && category !== 'Items') return [];
     const q = query.trim().toLowerCase();
+    // Under All, items only appear for a search; under Items, one group at a time.
+    if (category === 'all' ? !q : category !== 'Items') return [];
     const hit = (it) => !q || [it.name, it.text, ...it.get, it.group].some((s) => s.toLowerCase().includes(q));
-    return ITEM_GROUPS.map((g) => ({ g, items: ITEMS.filter((it) => it.group === g && hit(it)) })).filter(
-      (x) => x.items.length,
-    );
-  }, [query, category]);
+    return ITEM_GROUPS.filter((g) => q || g === itemGroup)
+      .map((g) => ({ g, items: ITEMS.filter((it) => it.group === g && hit(it)) }))
+      .filter((x) => x.items.length);
+  }, [query, category, itemGroup]);
 
   return (
     <div className="page">
@@ -94,6 +97,24 @@ export default function GlossaryPage() {
           ))}
         </div>
       </div>
+
+      {category === 'Items' && (
+        <div className="chips items-chips" role="group" aria-label="Item groups">
+          {ITEM_GROUPS.map((g) => (
+            <button
+              key={g}
+              className="chip"
+              aria-pressed={!query.trim() && itemGroup === g}
+              onClick={() => {
+                setItemGroup(g);
+                setQuery('');
+              }}
+            >
+              {g} <span className="chip__n">{ITEMS.filter((it) => it.group === g).length}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {groups.length === 0 && itemGroups.length === 0 && <p className="empty">No terms match “{query}”.</p>}
 

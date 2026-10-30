@@ -20,7 +20,7 @@ export const BOXES = {
     cost: 1500,
     stock: 50,
     sources: ['Hunter Exchange', 'Circle Bounty'],
-    note: 'Pick one tier-1 skill book.',
+    note: 'Pick one tier-1 skill card.',
   },
   arc: {
     name: 'Arc Ascension Material Selection Box I',

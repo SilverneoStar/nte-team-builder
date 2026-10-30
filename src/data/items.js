@@ -14,10 +14,11 @@ export const ITEM_GROUPS = [
   'Anomaly materials',
   'Anomaly Hunt drops',
   'Weekly boss drops',
-  'Skill books',
+  'Skill cards',
   'Arc materials',
   'EXP',
-  'Currency',
+  'Bond gifts',
+  'Currency & stamina',
   'Selection boxes',
 ];
 
@@ -80,18 +81,19 @@ for (const [key, w] of Object.entries(WEEKLY_ITEMS)) {
   });
 }
 
-// Skill books.
+// Skill cards.
 for (const [fam, names] of Object.entries(SKILL_BOOKS)) {
   names.forEach((name, i) =>
     add({
       name,
-      group: 'Skill books',
+      group: 'Skill cards',
       tier: i + 1,
-      text: `${TIER[i]} skill book. Levels Esper skills and unlocks passives.`,
+      text: `${TIER[i]} skill card. Levels Esper skills and unlocks passives.`,
       get: [
         `${BOOK_SOURCE} (Character Pixels)`,
         'Hunter Exchange and city shops',
         ...(i === 0 ? [`${BOXES.books.name} (${HUNTER}; also Circle Bounty)`] : []),
+        ...(i < 2 ? [`Character Esper Ability Selection Box ${i ? 'II' : 'I'} (Circle Bounty)`] : []),
       ],
       usedBy: charsWhere((id) => SKILL_MATS[id]?.[0] === fam),
     }),
@@ -109,6 +111,7 @@ for (const [fam, names] of Object.entries(ARC_FAMILIES)) {
       get: [
         `${ARC_MATERIAL_SOURCE} (Anomaly Zone, Character Pixels)`,
         ...(i === 0 ? [`${BOXES.arc.name} (${HUNTER}; also Circle Bounty)`] : []),
+        ...(i < 2 ? [`Character Esper Ability Selection Box ${i ? 'II' : 'I'} (Circle Bounty)`] : []),
         'Expansion Core can stand in for missing copies',
       ],
       usedBy: arcsWhere((id) => ARC_MATERIALS[id][0] === fam),
@@ -130,24 +133,68 @@ ARC_DYES.forEach((d, i) =>
   }),
 );
 
-// Currency.
+// Bond gifts: raise Affection with any character.
+// Sources (Oct 2026): Icy Veins item pages; GameWith Circle Bounty guide.
+add({
+  name: 'A Handwritten Letter',
+  group: 'Bond gifts',
+  text: 'Gift for any character: +2,000 Affection. Doesn’t count toward the daily gift limit.',
+  get: ['Circle Bounty', 'Warp Exchange (60 Warp Pieces)', 'Mall bundles'],
+});
+add({
+  name: 'Eternal Shell Song',
+  group: 'Bond gifts',
+  text: 'Gift for any character: +400 Affection.',
+  get: ['Circle Bounty (free and Elite tracks)'],
+});
+
+// Currency and stamina.
 add({
   name: 'Beetle Coin',
-  group: 'Currency',
+  group: 'Currency & stamina',
   text: 'Spent on every level-up, ascension and skill upgrade, for Espers and Arcs alike.',
   get: [EXP_SOURCE, 'Events, quests and redeem codes'],
 });
 add({
   name: 'Fons',
-  group: 'Currency',
+  group: 'Currency & stamina',
   text: 'City money. Pays for life skills and Hunter Exchange items such as selection boxes and Expansion Cores.',
   get: ['Shops, minigames, heists and Realm of Greed'],
 });
 add({
   name: 'Dreamless Seed',
-  group: 'Currency',
+  group: 'Currency & stamina',
   text: 'Levels life skills (56 to take one from Lv 1 to 5).',
   get: [DREAMLESS_SOURCE],
+});
+
+add({
+  name: 'Annulith',
+  group: 'Currency & stamina',
+  text: 'Rare currency. Converts into Solid Dice, Fabricated Dice or Tri-Keys (160 each) and buys more Character Pixels.',
+  get: [
+    'Fons Limited-Time Shop (100 Fons each, up to 50)',
+    'Currency Shop (1 Riftcrystal each)',
+    'Circle Bounty Elite track, events and redeem codes',
+  ],
+});
+add({
+  name: 'Tri-Key',
+  group: 'Currency & stamina',
+  text: 'Pulls on the Arc banners (Arc Research Program).',
+  get: ['Converted from 160 Annulith', 'Events and Mall packs'],
+});
+add({
+  name: 'Character Pixels',
+  group: 'Currency & stamina',
+  text: 'Stamina for the upgrade stages (Houdinii’s Magic Stage and Schemes, Bubble Can Factory) and weekly boss rewards. Recovers over time up to a cap.',
+  get: ['Recovers on its own', 'De-noise Solution', 'Exchange Annulith for more'],
+});
+add({
+  name: 'De-noise Solution',
+  group: 'Currency & stamina',
+  text: 'Restores 60 Character Pixels.',
+  get: ['Circle Bounty (free and Elite tracks)', 'Energy Reserve Supply Crate (Mall)'],
 });
 
 // Selection boxes and Expansion Core.
@@ -158,6 +205,46 @@ for (const b of [...Object.values(BOXES), EXPANSION_CORE]) {
     text: b.note,
     get: [`${b.sources.join(', ')}: ${b.cost.toLocaleString('en-US')} Fons each, stock ${b.stock}`],
   });
+}
+
+// Circle Bounty and event boxes. Sources (Oct 2026): Icy Veins item pages;
+// GameWith Circle Bounty guide.
+const pick = (list) => `Pick one: ${list}.`;
+for (const b of [
+  {
+    name: 'Development EXP Selection Box I',
+    text: pick('Senior Hunter Guide ×15, Manhole Crook ×15 (Module EXP), Colorless Dye ×15 or Beetle Coin ×35,000'),
+    get: ['Circle Bounty (free track)'],
+  },
+  {
+    name: 'Development EXP Selection Box II',
+    text: pick('Elite Hunter Guide ×15, Manhole Boss ×15 (Module EXP), Chaotic Dye ×15 or Beetle Coin ×150,000'),
+    get: ['Circle Bounty (Elite track)'],
+  },
+  {
+    name: 'Character Esper Ability Selection Box I',
+    text: pick('8 of any tier-1 skill card or tier-1 Arc material'),
+    get: ['Circle Bounty (free track)'],
+  },
+  {
+    name: 'Character Esper Ability Selection Box II',
+    text: pick('10 of any tier-2 skill card or tier-2 Arc material'),
+    get: ['Circle Bounty (Elite track)'],
+  },
+  {
+    name: 'Arc-light Trove',
+    text: pick('Fluff of Fortitude, Ferocity, Finesse, Fleetness or Fearlessness (S-rank Arcs)'),
+    get: ['Elite Hunter Supplies (paid Circle Bounty pass) at Bounty Rank 30'],
+  },
+  {
+    name: 'Puka Membership Program S-Class Arc Selection Box',
+    text: pick(
+      'Reality Refuge, Youthful Fantasy, Good Boy’s Grand Adventure, Camellia Society, Raging Flames, Blow up the Crowd, Tears Beneath the Mask, Eternal Waltz or Song of the Whale',
+    ),
+    get: ['Puka Membership Program (event)'],
+  },
+]) {
+  add({ group: 'Selection boxes', ...b });
 }
 
 export const ITEMS = items;

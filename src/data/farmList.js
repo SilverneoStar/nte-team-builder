@@ -65,7 +65,7 @@ export function farmList(characterId) {
       },
       {
         id: 'books',
-        title: 'Skill books',
+        title: 'Skill cards',
         where: BOOK_SOURCE,
         items: pick(bookNames, tier),
       },

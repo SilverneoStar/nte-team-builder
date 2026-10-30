@@ -6854,3 +6854,13 @@ th[aria-sort='descending'] .th-btn {
   font: 600 0.74rem var(--font-body);
   cursor: pointer;
 }
+
+/* Glossary: item group chips */
+.items-chips {
+  margin: -4px 0 14px;
+}
+.chip__n {
+  margin-left: 4px;
+  font: 600 0.7rem var(--font-mono);
+  opacity: 0.6;
+}

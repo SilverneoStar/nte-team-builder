@@ -10,7 +10,7 @@ import { CHARACTER_MATERIALS, FAMILIES } from './ascension.js';
 export const SKILL_MAX = 10;
 export const LIFE_MAX = 5;
 
-// Skill books: three tiers, dropped in Houdinii's Schemes (also Hunter Exchange,
+// Skill cards (the site's code calls them books): three tiers, dropped in Houdinii's Schemes (also Hunter Exchange,
 // selection boxes and city shops).
 export const SKILL_BOOKS = {
   pigeon: ['Nestling’s Longing', 'Dove’s Flutter', 'The Olive Branch'],

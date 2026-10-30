@@ -406,7 +406,7 @@ export const GLOSSARY = [
     term: 'Selection boxes',
     also: 'Anomaly, Character Esper, Arc Ascension and Anomaly Hunt Material Selection Boxes',
     category: 'City & currency',
-    text: 'Hunter Exchange boxes, bought with Fons (some also from the Circle Bounty), that let you pick one material: a tier-1 anomaly material, skill book or Arc material, or an Anomaly Hunt boss drop. Each Esper and Arc page lists which pick suits it.',
+    text: 'Hunter Exchange boxes, bought with Fons (some also from the Circle Bounty), that let you pick one material: a tier-1 anomaly material, skill card or Arc material, or an Anomaly Hunt boss drop. Each Esper and Arc page lists which pick suits it.',
   },
   {
     term: 'Expansion Core',
