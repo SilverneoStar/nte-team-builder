@@ -75,7 +75,17 @@ export default function ArcDetail({ arc: a, onClose }) {
 
       {full && (
         <section className="arc-passive" aria-label="Passive">
-          <span className="arc-passive__label">Passive · {full.name}</span>
+          <span className="arc-passive__label">
+            Passive · {full.name}
+            {full.unconfirmed && (
+              <span className="est-tag" title="From a translated pre-release source; likely real but not confirmed yet">
+                Unconfirmed
+              </span>
+            )}
+          </span>
+          {full.unconfirmed && (
+            <p className="muted small">Translated pre-release text. Likely real, but wording and values may change at launch.</p>
+          )}
           {full.text.map((t) => (
             <p key={t}>
               <StatText>{t}</StatText>

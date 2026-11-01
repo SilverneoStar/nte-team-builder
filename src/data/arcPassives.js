@@ -7,9 +7,11 @@
 // Far Side of the Moon.
 
 export const ARC_PASSIVES = {
-  // Version 1.5 Arcs: passive text from the preview (translated, provided by
-  // the project owner, Nov 2026). May be worded differently at release.
+  // Version 1.5 Arcs: passive text from a translated pre-release source
+  // (provided by the project owner, Nov 2026). Likely real but not yet
+  // confirmed, so the site marks it `unconfirmed`.
   'dotted-horizon': {
+    unconfirmed: true,
     name: 'A fleeting moment of holding hands and walking together',
     text: [
       'CRIT DMG +32%.',
@@ -18,6 +20,7 @@ export const ARC_PASSIVES = {
     max: 'CRIT DMG +64%; summon DMG +56%, +4% per stack.',
   },
   'echoes-on-hold': {
+    unconfirmed: true,
     name: 'Recall',
     text: [
       'ATK +15%.',
