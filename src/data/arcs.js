@@ -17,9 +17,9 @@ const arc = (name, rarity, type, atk, sub, passive, signature = null, extra = {}
   ...extra,
 });
 
-// Arcs shown in a preview stream before release. Only the name, type and
-// banner are known: ATK and the secondary stat are the usual values for a
-// limited S-rank Arc (marked "est." on the site), and the passive is unknown.
+// Arcs shown before release. Passives are known (arcPassives.js); ATK and
+// the secondary stat are the usual values for a limited S-rank Arc until
+// confirmed (marked "est." on the site).
 const PREVIEW = { estimated: true, upcoming: true };
 
 export const ARCS = [
@@ -30,8 +30,8 @@ export const ARCS = [
   arc('Contemplative Cat', 'S', 'Gas', 512, 'Crit DMG 44%', 'Cosmos DMG rises with Fons held, up to 10 stacks.', 'chiz'),
   arc('Crime and Punishment', 'S', 'Gas', 570, 'Crit Rate 24%', 'Psyche DMG +20% and Cycle Intensity up. After Ultimate, team Crit DMG up.', 'blackbird'),
   arc('Day Off', 'S', 'Solid', 512, 'Charge Efficiency 33%', 'ATK up; Eclipse restores Ultimate Energy on kills. Free from the Eclipse side quest; built for Esper Zero.'),
-  arc('Dotted Horizon', 'S', 'Plasma', 570, 'Crit Rate 24%', 'Passive not revealed yet. Exe’s signature Arc, from the Encryption Special banner (Version 1.5).', 'exe', PREVIEW),
-  arc('Echoes on Hold', 'S', 'Solid', 570, 'Crit Rate 24%', 'Passive not revealed yet. Elyms’s signature Arc, from the Echo Special banner (Version 1.5).', 'elyms', PREVIEW),
+  arc('Dotted Horizon', 'S', 'Plasma', 570, 'Crit Rate 24%', 'CRIT DMG +32%; summons deal +28% DMG, stacking higher with each Chaos hit.', 'exe', PREVIEW),
+  arc('Echoes on Hold', 'S', 'Solid', 570, 'Crit Rate 24%', 'ATK +15%; team ignores DEF after her Ultimate’s follow-ups and Cosmos RES after her Redirect Skill.', 'elyms', PREVIEW),
   arc('Eternal Waltz', 'S', 'Condensate', 424, 'HP 41.25%', 'Max HP up; Mental DMG up after Ultimate.', 'fadia'),
   arc('Far Side of the Moon', 'S', 'Liquid', 570, 'Crit DMG 48%', 'Crit Rate +15%; Redirect Skill and Basic Attack DMG up, plus Lakshana DMG for 15s after a Redirect Skill.', 'akane'),
   arc('Fluff of Fearlessness', 'S', 'Solid', 512, 'Crit Rate 22%', 'ATK up for 10s after Ultimate.'),

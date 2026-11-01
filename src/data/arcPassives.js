@@ -7,6 +7,26 @@
 // Far Side of the Moon.
 
 export const ARC_PASSIVES = {
+  // Version 1.5 Arcs: passive text from the preview (translated, provided by
+  // the project owner, Nov 2026). May be worded differently at release.
+  'dotted-horizon': {
+    name: 'A fleeting moment of holding hands and walking together',
+    text: [
+      'CRIT DMG +32%.',
+      'The wearer’s summons deal 28% more DMG. Each time the wearer deals Chaos DMG, all their summons on the field gain another +2% DMG (up to 10 stacks, 20s; repeat hits refresh the duration).',
+    ],
+    max: 'CRIT DMG +64%; summon DMG +56%, +4% per stack.',
+  },
+  'echoes-on-hold': {
+    name: 'Recall',
+    text: [
+      'ATK +15%.',
+      'When the wearer’s Ultimate lands 3 hits of follow-up DMG, the whole team ignores 12% of enemy DEF and the wearer ignores another 10% for 20s.',
+      'When the wearer uses their Redirect Skill, the whole team ignores 8% of the enemy’s Cosmos RES for 20s.',
+      'Both effects refresh when triggered again, don’t stack with another copy in the team, and trigger as soon as the wearer enters combat.',
+    ],
+    max: 'ATK +30%; team ignores 20% DEF (wearer another 20%); team ignores 20% Cosmos RES.',
+  },
   'blow-up-the-crowd': {
     name: 'Beat King',
     text: [
