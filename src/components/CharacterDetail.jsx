@@ -21,7 +21,7 @@ import BondSection from './BondSection.jsx';
 import { AWAKENINGS, RESONANCES } from '../data/awakenings.js';
 import { AWAKENING_ORDER, ORDINAL } from '../data/awakeningOrder.js';
 import RoleList from './RoleList.jsx';
-import TagIcon from './TagIcon.jsx';
+import TagIcon, { tagKind } from './TagIcon.jsx';
 import { useState } from 'react';
 import ExportDialog from './ExportDialog.jsx';
 import { CHARACTER_CARDS } from '../lib/exportSettings.js';
@@ -283,8 +283,8 @@ export default function CharacterDetail({
           {c.tags?.length > 0 && (
             <ul className="tags">
               {c.tags.map((t) => (
-                <li key={t}>
-                  <TagIcon tag={t} size={15} />
+                <li key={t} data-kind={tagKind(t)}>
+                  <TagIcon tag={t} size={16} />
                   {t}
                 </li>
               ))}

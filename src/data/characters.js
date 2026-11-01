@@ -138,14 +138,14 @@ export const CHARACTERS = [
   },
   // Version 1.6 (expected): shown in the official 1.4 preview stream
   // (Pukaland Fest) with voice actors and wallpapers. Kit leaks say Ellie deals
-  // Incantation DMG; Nitsa is an ETD reserve, element not known yet.
+  // Incantation DMG; Nitsa is an ETD reserve; Psyche (mentioned Nov 2026).
   {
     id: 'ellie', name: 'Ellie', rarity: 'S', version: '1.6', element: 'incantation', roles: [],
     arcType: null, faction: null, ability: null,
     tags: [], stats: null, upcoming: true,
   },
   {
-    id: 'nitsa', name: 'Nitsa', rarity: 'S', version: '1.6', element: 'unknown', roles: [],
+    id: 'nitsa', name: 'Nitsa', rarity: 'S', version: '1.6', element: 'psyche', roles: [],
     arcType: null, faction: 'Bureau of Anomaly Control', unit: 'ETD Reserve', ability: null,
     tags: [], stats: null, upcoming: true,
   },

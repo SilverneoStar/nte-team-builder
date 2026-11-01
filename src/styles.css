@@ -6864,3 +6864,27 @@ th[aria-sort='descending'] .th-btn {
   font: 600 0.7rem var(--font-mono);
   opacity: 0.6;
 }
+
+/* Role tags styled like the game's: coloured pills, white mark and caps. */
+.tags li[data-kind] {
+  gap: 6px;
+  padding: 3px 12px 3px 7px;
+  color: #fff6f2;
+  font: 700 0.72rem var(--font-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+.tags li[data-kind='damage'] {
+  background: #d9474f;
+}
+.tags li[data-kind='support'] {
+  background: #d85a2a;
+}
+.tags li[data-kind='cycle'] {
+  background: #c4458b;
+}
+.tags li[data-kind] .tag-icon {
+  color: #fff6f2;
+  filter: none;
+}

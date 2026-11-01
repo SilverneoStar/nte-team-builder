@@ -1,15 +1,24 @@
 // Small icons for the in-game role tags (Main DPS, Burst DPS, Summoner...).
-// Drawn for this site in the spirit of the game's tag icons; they take the
-// text colour (tinted with the character's element on the profile).
+// Main DPS, Burst DPS, Summoner, Instant Cycle and DMG Boost are redrawn from
+// the game's own tag marks; the rest are drawn in the same style. They take
+// the text colour (white on the game-coloured tag pills).
+
+/** The game's pill colour group for a tag: damage (red), support (orange) or cycle (pink). */
+export const tagKind = (tag) =>
+  tag === 'Instant Cycle'
+    ? 'cycle'
+    : ['DMG Boost', 'Summoner', 'Healing', 'Shield', 'Control', 'RES Shred', 'DMG Redirection'].includes(tag)
+      ? 'support'
+      : 'damage';
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round' };
 
 const ICONS = {
-  // A peak over a bowl, like the game's Main DPS mark.
+  // Game mark: a snow-capped peak over a ring.
   'Main DPS': (
     <>
-      <path d="M12 3.5 19 13H5Z" fill="currentColor" />
-      <path d="M3.5 15.5Q12 23 20.5 15.5" {...S} />
+      <path d="M12 2.5 21 13.6q-1.8-1.4-3 .4-1.4-1.6-2.8.2-1.5-1.7-3.2.2-1.6-1.9-3.2-.2-1.4-1.8-2.8-.2-1.3-1.8-3 -.4Z" fill="currentColor" />
+      <ellipse cx="12" cy="18.4" rx="9" ry="2.7" fill="none" stroke="currentColor" strokeWidth="1.9" />
     </>
   ),
   // Two smaller peaks: supporting damage.
@@ -20,32 +29,41 @@ const ICONS = {
       <path d="M3.5 18.5h17" {...S} />
     </>
   ),
-  // A spiky burst on a base.
+  // Game mark: a jagged burst with a crack at its base.
   'Burst DPS': (
-    <path d="M3 20 4.6 9.5l4 4L12 3.5l3.4 10 4-4L21 20Z" fill="currentColor" />
-  ),
-  // A loop closing on itself.
-  'Instant Cycle': (
-    <>
-      <path d="M19 12a7 7 0 1 1-2.05-4.95" {...S} />
-      <path d="M20.2 4.2v4.6h-4.6" {...S} />
-      <circle cx="12" cy="12" r="2.4" fill="currentColor" />
-    </>
-  ),
-  // A gem lifted by chevrons.
-  'DMG Boost': (
-    <>
-      <path d="M12 2.8 16.8 8 12 13.5 7.2 8Z" fill="currentColor" />
-      <path d="m6 20.5 6-4 6 4" {...S} />
-    </>
-  ),
-  // A six-point star with an open centre.
-  Summoner: (
     <path
       fillRule="evenodd"
-      d="M12 2.5l2.6 4.6 5.3-.1-2.7 4.6 2.7 4.6-5.3-.1L12 21.5l-2.6-4.4-5.3.1 2.7-4.6-2.7-4.6 5.3.1Zm0 6.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4Z"
       fill="currentColor"
+      d="M12 2 14.3 8.3 18.6 5.2 17.5 10.5 22 11.5 18.4 14.6 21 19.8 15.6 18.6 12 22 8.4 18.6 3 19.8 5.6 14.6 2 11.5 6.5 10.5 5.4 5.2 9.7 8.3Zm-1.8 14.4 1.4-2 1.2 1.4 1.6-2.4-.9 3.4-1.3-1.2-1.4 2.2Z"
     />
+  ),
+  // Game mark: a broken ring with arrows, a four-point burst inside.
+  'Instant Cycle': (
+    <>
+      <path d="M5.2 8.6A7.8 7.8 0 0 1 12 4.2" {...S} />
+      <path d="M15.4 4.9A7.8 7.8 0 0 1 19.6 10.6" {...S} />
+      <path d="M19.4 14.4A7.8 7.8 0 0 1 14.2 19.5" {...S} />
+      <path d="M10 19.6A7.8 7.8 0 0 1 4.4 13.8" {...S} />
+      <path d="m10.4 2.6 2 1.6-1.8 1.8M21.4 9.2l-1.8 1.4-1.6-2M13.8 21.4l.4-1.9 2.3.4M2.6 15.4l1.8-1.6 1.6 2" {...S} strokeWidth="1.6" />
+      <path d="M12 7.6 13.2 10.8 16.4 12 13.2 13.2 12 16.4 10.8 13.2 7.6 12 10.8 10.8Z" fill="currentColor" />
+    </>
+  ),
+  // Game mark: a raised sword over an eye.
+  'DMG Boost': (
+    <>
+      <path d="M15.8 2.6 19.6 4 18.2 7.9 11.6 14.5 9.6 12.5Z" fill="currentColor" />
+      <path d="M7.6 11.6 12.4 16.4M9.2 15 5 19.2M4.2 17.6l2.2 2.2" {...S} strokeWidth="2" />
+      <path d="M13 18.6q4.5-4.6 9 0-4.5 4.6-9 0Z" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="17.5" cy="18.6" r="1.4" fill="currentColor" />
+    </>
+  ),
+  // Game mark: two interlocked triangles with a sparkle in the middle.
+  Summoner: (
+    <>
+      <path d="M12 2.8 20.6 17.6H3.4Z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M12 21.2 3.4 6.4h17.2Z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M12 8.2 13.1 10.9 15.8 12 13.1 13.1 12 15.8 10.9 13.1 8.2 12 10.9 10.9Z" fill="currentColor" />
+    </>
   ),
   // A drop that keeps dripping.
   DoT: (
