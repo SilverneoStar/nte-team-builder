@@ -32,6 +32,7 @@ export const PASSIVES = {
   blackbird: {
     p1: p('Thrushsong', 'Stain’s base DMG Bonus becomes 30% and lasts 20s. When Nova ends, the target takes extra Mental DMG equal to 20% of the DMG it took during Nova (not counting the triggering Support Skill or Nova itself), up to 1,000× Blackbird’s base ATK and unaffected by other buffs, then gets Nova once more. That second Nova can’t repeat this.', 'Stain and Nova'),
     p2: p('Ever Onward', 'Casting Judgment Upon Me gives 20 Malice.'),
+    trait: p('On the Wing', 'Outside combat, hold the movement stick and Dodge on the ground, or press Aim while falling, to become the Lonesome Bird and fly at high speed, collecting Oracle Stones in range. Flying drains Stamina.'),
   },
   chaos: {
     p1: p('Justice in Time', 'When Remora ends, the target takes Lakshana DMG equal to 800% of ATK. Each second of Remora beyond the base 5s adds 45%, up to 300% extra. Reapplying Remora resets its duration.', 'Remora'),

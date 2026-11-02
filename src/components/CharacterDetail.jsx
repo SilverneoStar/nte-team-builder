@@ -22,6 +22,7 @@ import { AWAKENINGS, RESONANCES } from '../data/awakenings.js';
 import { AWAKENING_ORDER, ORDINAL } from '../data/awakeningOrder.js';
 import RoleList from './RoleList.jsx';
 import TagIcon, { tagKind } from './TagIcon.jsx';
+import SkillIcon from './SkillIcon.jsx';
 import { useState } from 'react';
 import ExportDialog from './ExportDialog.jsx';
 import { CHARACTER_CARDS } from '../lib/exportSettings.js';
@@ -196,7 +197,8 @@ export default function CharacterDetail({
               <li key={w.id}>
                 <span className="awaken-id">{w.id}</span>
                 <span className="awaken-body">
-                  <b>
+                  <b className="skill-name">
+                    <SkillIcon character={c.id} k={w.id} />
                     {w.name}
                     {AWAKENING_ORDER[c.id]?.order.includes(w.id) && (
                       <span className="awaken-rank">{ORDINAL[AWAKENING_ORDER[c.id].order.indexOf(w.id)]} pick</span>
@@ -218,7 +220,10 @@ export default function CharacterDetail({
                   <li key={r.id}>
                     <span className="reso__dot is-on is-static">{r.id}</span>
                     <span className="awaken-body">
-                      <b>{r.name}</b>
+                      <b className="skill-name">
+                        <SkillIcon character={c.id} k="resonance" />
+                        {r.name}
+                      </b>
                       <span>
                         <StatText>{r.effect}</StatText>
                       </span>

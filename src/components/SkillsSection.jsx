@@ -4,6 +4,7 @@ import MaterialIcon from './MaterialIcon.jsx';
 import { LIFE_MAX, SKILL_LEVEL_COSTS, SKILL_MAX, SKILLS, skillCost } from '../data/skills.js';
 import { PASSIVES } from '../data/passives.js';
 import StatText from './StatText.jsx';
+import SkillIcon from './SkillIcon.jsx';
 import { fmt } from '../lib/format.js';
 
 const LEVELS = Array.from({ length: SKILL_MAX }, (_, i) => i + 1);
@@ -41,7 +42,10 @@ export default function SkillsSection({ character }) {
             <li key={sk.type}>
               <span className="skill-type">{sk.type}</span>
               <span className="awaken-body">
-                <b>{sk.name ?? 'Not published yet'}</b>
+                <b className="skill-name">
+                  <SkillIcon character={character.id} k={sk.type} />
+                  {sk.name ?? 'Not published yet'}
+                </b>
                 {sk.summary && (
                   <span>
                     <StatText>{sk.summary}</StatText>
@@ -58,13 +62,14 @@ export default function SkillsSection({ character }) {
         {pas ? (
           <ol className="skill-list">
             {[
-              ['Passive 1', pas.p1],
-              ['Passive 2', pas.p2],
-            ].map(([label, ps]) => (
+              ['Passive 1', pas.p1, 'p1'],
+              ['Passive 2', pas.p2, 'p2'],
+            ].map(([label, ps, key]) => (
               <li key={label}>
                 <span className="skill-type skill-type--passive">{label}</span>
                 <span className="awaken-body">
-                  <b>
+                  <b className="skill-name">
+                    <SkillIcon character={character.id} k={key} />
                     {ps.name}
                     {ps.boosts && <span className="passive-boost">{ps.boosts} Enhancement</span>}
                   </b>
@@ -86,7 +91,10 @@ export default function SkillsSection({ character }) {
               <li>
                 <span className="skill-type skill-type--trait">Trait</span>
                 <span className="awaken-body">
-                  <b>{pas.trait.name}</b>
+                  <b className="skill-name">
+                    <SkillIcon character={character.id} k="trait" />
+                    {pas.trait.name}
+                  </b>
                   <span>
                     <StatText>{pas.trait.text}</StatText>
                   </span>
