@@ -4,9 +4,9 @@
 // resistances not listed are 0%.
 //
 // TO REVISIT (Oct 2026) — adjust when new screenshots or corrections come in:
-// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa: rows below Break Intensity
+// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa, Chaos: rows below Break Intensity
 //   (Universal DMG, Healing, element DMG/RES) not captured yet; 0 assumed.
-// - The four older entries (Zero, Chaos, Sakiri, Blackbird) look like they were taken
+// - The three older entries (Zero, Sakiri, Blackbird) look like they were taken
 //   with an Arc equipped (ATK ~400–550 high, CRIT/Cycle above bare values).
 //   Build cards add the Arc on top, so those cards overcount. Retake bare.
 // - ATK_GROWTH (7.95x) comes from the five bare screens; recheck once more
@@ -27,7 +27,6 @@ const s = (hp, atk, def, adv, dmg = {}, res = {}) => ({
 
 const MEASURED = {
   zero: s(15150, 1122, 909, { critRate: 40.8, critDmg: 140, charge: 100, cycle: 0, breakInt: 126, universal: 10 }),
-  chaos: s(15756, 1132, 921, { critRate: 50.6, critDmg: 158, charge: 100, cycle: 18, breakInt: 72, universal: 15 }),
   sakiri: s(16483, 1034, 909, { critRate: 18, critDmg: 68, charge: 100, cycle: 18, breakInt: 30, universal: 21 }, { incantation: 91.5 }),
   blackbird: s(15514, 1238, 884, { critRate: 74, critDmg: 96, charge: 100, cycle: 18, breakInt: 18, universal: 14 }, { psyche: 37.5 }),
   // Bare Level 80 (nothing equipped), Oct 2026. Rows below Break Intensity
@@ -36,7 +35,8 @@ const MEASURED = {
   nanally: s(15998, 636, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   hathor: s(15998, 644, 884, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   chiz: s(15514, 660, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
-  // Zankou, Iroi, Shinku and Lacrimosa: bare Level 80 values from neverness.gg, Nov 2026.
+  // Zankou, Iroi, Shinku, Lacrimosa and Chaos: bare Level 80 values from neverness.gg, Nov 2026.
+  chaos: s(15756, 636, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   lacrimosa: s(15998, 636, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   shinku: s(16120, 636, 897, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   iroi: s(17210, 596, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
