@@ -12,7 +12,7 @@ const V = 2;
 
 const HAVE = {
   baicang: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
-  sakiri: ['basic', 'redirect', 'ultimate', 'support', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'], // passives to come
+  sakiri: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
   zero: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
   hotori: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
   nanally: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
