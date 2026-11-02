@@ -2,6 +2,7 @@
 import { LIFE_MAX, SKILLS } from '../data/skills.js';
 import { BOND, BOND_LEVELS, BOND_MAX, BOND_TOTAL, GIFT_LIMITS, NO_BOND, UNIVERSAL_GIFTS } from '../data/bond.js';
 import StatText from './StatText.jsx';
+import SkillIcon from './SkillIcon.jsx';
 import { fmt } from '../lib/format.js';
 
 const COSMETIC = { sticker: 'Sticker', avatar: 'Avatar', frame: 'Frame', namecard: 'Namecard' };
@@ -34,11 +35,14 @@ export default function BondSection({ character: c }) {
       </h3>
       {life.length ? (
         <ol className="skill-list">
-          {life.map((sk) => (
+          {life.map((sk, i) => (
             <li key={sk.name}>
               <span className="skill-type skill-type--life">{sk.type}</span>
               <span className="awaken-body">
-                <b>{sk.name}</b>
+                <b className="skill-name">
+                  <SkillIcon character={c.id} k={`life${i + 1}`} />
+                  {sk.name}
+                </b>
                 <span>
                   <StatText>{sk.summary}</StatText>
                 </span>

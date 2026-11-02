@@ -1,6 +1,7 @@
 // Official skill, passive, awakening and Resonance icons, where we have them
 // (white marks on transparent, in public/icons/skills/<character>/).
-// Keys: basic, redirect, ultimate, support, p1, p2, trait, A1–A6.
+// Keys: basic, redirect, ultimate, support, p1, p2, trait, A1–A6, and life1/life2
+// for the overworld (city) abilities in the order data/skills.js lists them.
 // Resonance uses one shared icon for every character (icons/skills/resonance.webp).
 // Source: icons from the game (provided by the project owner, Nov 2026);
 // which icon belongs to which skill and awakening was checked against the
@@ -10,6 +11,7 @@ const BASE = import.meta.env.BASE_URL;
 const V = 2;
 
 const HAVE = {
+  lacrimosa: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'],
   blackbird: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
   shinku: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
   iroi: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
