@@ -6907,3 +6907,7 @@ th[aria-sort='descending'] .th-btn {
 .skill-icon img {
   display: block;
 }
+
+.icon-credit {
+  margin-top: 8px;
+}

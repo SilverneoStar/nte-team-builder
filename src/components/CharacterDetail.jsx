@@ -22,7 +22,7 @@ import { AWAKENINGS, RESONANCES } from '../data/awakenings.js';
 import { AWAKENING_ORDER, ORDINAL } from '../data/awakeningOrder.js';
 import RoleList from './RoleList.jsx';
 import TagIcon, { tagKind } from './TagIcon.jsx';
-import SkillIcon from './SkillIcon.jsx';
+import SkillIcon, { SkillIconCredit } from './SkillIcon.jsx';
 import { useState } from 'react';
 import ExportDialog from './ExportDialog.jsx';
 import { CHARACTER_CARDS } from '../lib/exportSettings.js';
@@ -212,6 +212,7 @@ export default function CharacterDetail({
             ))}
           </ol>
           <p className="muted small">Each duplicate unlocks one awakening of your choice, in any order.</p>
+          <SkillIconCredit character={c.id} />
           {RESONANCES[c.id] && (
             <>
               <h3 className="mini-title reso-title">Resonance</h3>

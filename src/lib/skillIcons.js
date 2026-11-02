@@ -2,7 +2,9 @@
 // (white marks on transparent, in public/icons/skills/<character>/).
 // Keys: basic, redirect, ultimate, support, p1, p2, trait, A1–A6.
 // Resonance uses one shared icon for every character (icons/skills/resonance.webp).
-// Source: in-game icons provided by the project owner (Nov 2026).
+// Source: icons from the game (provided by the project owner, Nov 2026);
+// which icon belongs to which skill and awakening was checked against the
+// character kit pages on NTEBuild (https://www.ntebuild.com).
 const BASE = import.meta.env.BASE_URL;
 
 const HAVE = {
@@ -19,3 +21,6 @@ export function skillIconUrl(characterId, key) {
   if (k === 'resonance') return `${BASE}icons/skills/resonance.webp`;
   return HAVE[characterId]?.includes(k) ? `${BASE}icons/skills/${characterId}/${k}.webp` : null;
 }
+
+/** True when a character has any official skill icons. */
+export const hasSkillIcons = (characterId) => !!HAVE[characterId];

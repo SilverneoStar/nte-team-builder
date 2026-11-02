@@ -4,7 +4,7 @@ import MaterialIcon from './MaterialIcon.jsx';
 import { LIFE_MAX, SKILL_LEVEL_COSTS, SKILL_MAX, SKILLS, skillCost } from '../data/skills.js';
 import { PASSIVES } from '../data/passives.js';
 import StatText from './StatText.jsx';
-import SkillIcon from './SkillIcon.jsx';
+import SkillIcon, { SkillIconCredit } from './SkillIcon.jsx';
 import { fmt } from '../lib/format.js';
 
 const LEVELS = Array.from({ length: SKILL_MAX }, (_, i) => i + 1);
@@ -103,6 +103,7 @@ export default function SkillsSection({ character }) {
             </ol>
           </>
         )}
+        <SkillIconCredit character={character.id} />
       </section>
 
       {cost && (
