@@ -116,6 +116,7 @@ export const PASSIVES = {
   zankou: {
     p1: p('Silent Sunset', 'Scorch stacks up to 3 times. When an ally inflicts a DoT on a Scorched target, Zankou adds 1 Scorch stack that takes on that DoT’s DMG, type and duration. Scorch added this way can’t trigger it again.', 'Scorch'),
     p2: p('Crimson Reverie', 'Sets Zankou’s Cycle Energy to 100 on entering battle (once per battle, 30s cooldown), and her Cycle Intensity +100 while she’s on the team.'),
+    trait: p('Lost Focus', 'Out of combat, use the special skill to turn Invisible for 20s: Movement Speed +50% and enemies can’t detect Zankou.'),
   },
   zero: {
     p1: p('Appraiser', 'When the active character gains Ultimate Energy, restores HP equal to 50% of Zero’s base ATK.'),
