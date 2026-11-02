@@ -5,6 +5,7 @@ import { ELEMENTS, ELEMENT_BY_ID, PAIR_REACTIONS, TRIO_REACTIONS } from '../data
 import { PRESETS } from '../data/presets.js';
 import { ARCS } from '../data/arcs.js';
 import MaxStats from './MaxStats.jsx';
+import LevelStats from './LevelStats.jsx';
 import EndgameStats from './EndgameStats.jsx';
 import FocusStats from './FocusStats.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
@@ -164,6 +165,7 @@ export default function CharacterDetail({
     <div className="stats">
       {/* Only real in-game values; until then, the stats to chase. */}
       {confirmedStats(c.id) ? <MaxStats stats={confirmedStats(c.id)} /> : <FocusStats character={c} />}
+      <LevelStats character={c} />
       <EndgameStats character={c} />
     </div>
   );

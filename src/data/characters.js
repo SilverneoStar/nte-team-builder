@@ -38,12 +38,12 @@ export const CHARACTERS = [
   {
     id: 'blackbird', name: 'Blackbird', rarity: 'S', version: '1.4', element: 'psyche', roles: ['Damage', 'Buff'],
     arcType: 'Gas', faction: 'Yggash Court', ability: 'Naenia Merula',
-    tags: ['Instant Cycle', 'Main DPS', 'DMG Boost'], stats: null,
+    tags: ['Instant Cycle', 'Main DPS', 'DMG Boost'], stats: stats(1280, 84, 73),
   },
   {
     id: 'chaos', name: 'Chaos', rarity: 'S', version: '1.1', element: 'lakshana', roles: ['Damage'],
     arcType: 'Condensate', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: 'In the beginning, none could tell heaven from earth.',
-    tags: ['Main DPS'], stats: null,
+    tags: ['Main DPS'], stats: stats(1300, 80, 76),
   },
   {
     id: 'chiz', name: 'Chiz', rarity: 'S', version: '1.0', element: 'cosmos', roles: ['Damage'],
@@ -78,7 +78,7 @@ export const CHARACTERS = [
   {
     id: 'iroi', name: 'Iroi', rarity: 'S', version: '1.2', element: 'anima', roles: ['Survival', 'Buff'],
     arcType: 'Liquid', faction: 'Bureau of Anomaly Control', unit: 'CSU-2', ability: 'Infant Dream',
-    tags: ['Healing', 'DMG Boost'], stats: null,
+    tags: ['Healing', 'DMG Boost'], stats: stats(1420, 75, 75),
   },
   {
     id: 'jiuyuan', name: 'Jiuyuan', rarity: 'S', version: '1.0', element: 'anima', roles: ['Damage', 'Survival'],
@@ -93,7 +93,7 @@ export const CHARACTERS = [
   {
     id: 'linko', name: 'Linko', rarity: 'S', version: '1.3', element: 'anima', roles: ['Damage', 'Buff'],
     arcType: 'Plasma', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: 'Telepathy',
-    tags: ['Sub-DPS', 'RES Shred'], stats: null,
+    tags: ['Sub-DPS', 'RES Shred'], stats: stats(1280, 82, 76),
   },
   {
     id: 'nanally', name: 'Nanally', rarity: 'S', version: '1.0', element: 'anima', roles: ['Damage'],
@@ -108,17 +108,17 @@ export const CHARACTERS = [
   {
     id: 'shinku', name: 'Shinku', rarity: 'S', version: '1.2', element: 'cosmos', roles: ['Damage'],
     arcType: 'Condensate', faction: 'Bureau of Anomaly Control', unit: 'CSU-2', ability: 'Moonlit Crimson Dragon',
-    tags: ['Main DPS'], stats: null,
+    tags: ['Main DPS'], stats: stats(1330, 80, 74),
   },
   {
     id: 'zankou', name: 'Zankou', rarity: 'S', version: '1.3', element: 'incantation', roles: ['Damage'],
     arcType: 'Gas', faction: null, formerFaction: 'The Scarlet Letter', ability: 'Eye of Delusion',
-    tags: ['Main DPS', 'DoT', 'Follow-up Attack'], stats: null,
+    tags: ['Main DPS', 'DoT', 'Follow-up Attack'], stats: stats(1280, 83, 75),
   },
   {
     id: 'akane', name: 'Akane Rin', rarity: 'S', version: '1.4', element: 'lakshana', roles: ['Damage'],
     arcType: 'Liquid', faction: 'StarSign', ability: 'Unwritten Star',
-    tags: ['Main DPS'], stats: null,
+    tags: ['Main DPS'], stats: stats(1320, 80, 76),
   },
   // Version 1.5: revealed in the "Once Upon a Glitched Call" preview stream
   // (Oct 28, 2026): role tags, element (banner icons), Arc type (the disc on

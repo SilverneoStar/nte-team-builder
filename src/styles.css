@@ -6911,3 +6911,59 @@ th[aria-sort='descending'] .th-btn {
 .icon-credit {
   margin-top: 8px;
 }
+
+/* Stats tab: base stats at every level step */
+.level-stats {
+  margin-top: 1.25rem;
+}
+.level-stats > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.level-stats > summary::-webkit-details-marker {
+  display: none;
+}
+.level-stats > summary::after {
+  content: '▸';
+  color: var(--muted, #888);
+  transition: transform 0.15s;
+}
+.level-stats[open] > summary::after {
+  transform: rotate(90deg);
+}
+.level-stats > summary .mini-title {
+  margin: 0;
+}
+.level-stats__table {
+  width: 100%;
+  margin-top: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+.level-stats__table th,
+.level-stats__table td {
+  text-align: right;
+}
+.level-stats__table th:first-child {
+  text-align: left;
+}
+.level-stats__table thead th {
+  font-size: 0.8rem;
+}
+.level-stats__table thead .stat-label {
+  justify-content: flex-end;
+}
+.level-stats__table tr.is-ascended th {
+  color: var(--accent, #e8488c);
+}
+.stats .level-stats__table th,
+.stats .level-stats__table td {
+  padding: 6px 0 6px 12px;
+  font-size: 0.95rem;
+}
+.stats .level-stats__table th:first-child {
+  padding-left: 0;
+  font-family: var(--font-mono);
+}
