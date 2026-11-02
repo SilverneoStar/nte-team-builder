@@ -4,11 +4,8 @@
 // resistances not listed are 0%.
 //
 // TO REVISIT (Oct 2026) — adjust when new screenshots or corrections come in:
-// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa, Chaos, Blackbird, Akane, Linko, Hotori, Zero: rows below Break Intensity
+// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa, Chaos, Blackbird, Akane, Linko, Hotori, Zero, Sakiri: rows below Break Intensity
 //   (Universal DMG, Healing, element DMG/RES) not captured yet; 0 assumed.
-// - The older entry (Sakiri) looks like it was taken
-//   with an Arc equipped (ATK ~400–550 high, CRIT/Cycle above bare values).
-//   Build cards add the Arc on top, so those cards overcount. Retake bare.
 // - ATK_GROWTH (7.95x) comes from the five bare screens; recheck once more
 //   characters are measured bare.
 
@@ -26,7 +23,6 @@ const s = (hp, atk, def, adv, dmg = {}, res = {}) => ({
 });
 
 const MEASURED = {
-  sakiri: s(16483, 1034, 909, { critRate: 18, critDmg: 68, charge: 100, cycle: 18, breakInt: 30, universal: 21 }, { incantation: 91.5 }),
   // Bare Level 80 (nothing equipped), Oct 2026. Rows below Break Intensity
   // (Universal DMG, Healing, DMG bonuses) not captured yet; 0 assumed.
   daffodill: s(16180, 644, 873, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
@@ -37,6 +33,7 @@ const MEASURED = {
   blackbird: s(15514, 668, 884, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   akane: s(15998, 636, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   zero: s(15150, 676, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }), // the male version's table
+  sakiri: s(16483, 620, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   hotori: s(16120, 652, 848, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   linko: s(15514, 652, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   chaos: s(15756, 636, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
