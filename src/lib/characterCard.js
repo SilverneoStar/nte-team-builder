@@ -12,7 +12,7 @@ import { AWAKENING_ORDER } from '../data/awakeningOrder.js';
 import { bestBuild } from '../data/bestBuild.js';
 import { ENDGAME } from '../data/endgame.js';
 import { analyzeTeam } from './analyze.js';
-import { alternativesFor, cartTile, drawOrb, statLabel } from './buildCard.js';
+import { alternativesFor, cartTile, drawAwakenStep, loadAwakeningIcons, statLabel } from './buildCard.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
@@ -161,6 +161,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   const shown = teams.slice(0, MAX_TEAMS);
   const mates = [...new Set(shown.flatMap((p) => p.members))];
   const ao = AWAKENING_ORDER[c.id];
+  const awakenIcons = await loadAwakeningIcons(c.id);
 
   const [portrait, elIcon, mascot, arcArt, altArcArt, cartImg, ...rest] = await Promise.all([
     loadImage(`${base}characters/hd/${portraitPath(c.id)}`),
@@ -347,12 +348,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
     const cy = y + 14 + d / 2;
     ao.order.forEach((id, i) => {
       const cx = ix + d / 2 + i * (d + gap);
-      drawOrb(ctx, cx, cy, d / 2, elColor, i === 0);
-      ctx.textAlign = 'center';
-      ctx.font = `800 ${Math.round(d * 0.34)}px ${MONO}`;
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(id, cx, cy + d * 0.12);
-      ctx.textAlign = 'left';
+      drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id]);
     });
   }
 

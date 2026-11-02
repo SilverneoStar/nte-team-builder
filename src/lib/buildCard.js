@@ -20,6 +20,7 @@ import { suggestedBuild, suggestedCartStats } from '../data/consoleBuilds.js';
 import { MAX_STATS_LEVEL, confirmedStats } from '../data/maxStats.js';
 import { ENDGAME } from '../data/endgame.js';
 import { AWAKENING_ORDER } from '../data/awakeningOrder.js';
+import { skillIconUrl } from './skillIcons.js';
 import { encodeConsoleCode } from './consoleCode.js';
 import { fillStatText } from './statText.js';
 import { drawLinksBlock } from './cardLinks.js';
@@ -498,6 +499,46 @@ function consoleGrid(ctx, x, y, cell, layout, pieces) {
 
 // A flat Awakening badge, like the game's Awakening screen: dark disc, thick
 // glowing ring in the element colour. `first` adds a stronger glow and a check badge.
+/** Official awakening icons for a character, by id (A1–A6); missing ones are left out. */
+export async function loadAwakeningIcons(characterId) {
+  const ids = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'];
+  const imgs = await Promise.all(ids.map((id) => {
+    const url = skillIconUrl(characterId, id);
+    return url ? loadImage(url).catch(() => null) : null;
+  }));
+  return Object.fromEntries(ids.map((id, i) => [id, imgs[i]]).filter(([, im]) => im));
+}
+
+/**
+ * One step of the awakening order: the orb with the game's awakening icon and a
+ * small "A1" tag on its lower edge, or just the "A1" label when there's no icon.
+ */
+export function drawAwakenStep(ctx, cx, cy, d, color, first, id, icon) {
+  drawOrb(ctx, cx, cy, d / 2, color, first);
+  ctx.save();
+  ctx.textAlign = 'center';
+  if (!icon) {
+    ctx.font = `800 ${Math.round(d * 0.34)}px ${MONO}`;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(id, cx, cy + d * 0.12);
+    ctx.restore();
+    return;
+  }
+  const s = d * 0.56;
+  ctx.drawImage(icon, cx - s / 2, cy - s / 2 - d * 0.04, s, s);
+  const fs = Math.max(10, Math.round(d * 0.25));
+  ctx.font = `800 ${fs}px ${MONO}`;
+  const w = ctx.measureText(id).width + fs * 0.7;
+  const h = fs * 1.25;
+  const ty = cy + d / 2 - h * 0.45;
+  ctx.fillStyle = first ? shade(color, 0.15) : color;
+  roundRect(ctx, cx - w / 2, ty, w, h, h / 2);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(id, cx, ty + h * 0.76);
+  ctx.restore();
+}
+
 export function drawOrb(ctx, cx, cy, r, color, first) {
   const ring = Math.max(3, r * 0.17);
   ctx.save();
@@ -1023,6 +1064,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   const gridPieces = hasCurrent || ownBuild ? build.pieces : (build.recommended?.pieces ?? []);
   // Leave room under the grid for the Awakening order orbs.
   const ao = build.awakeningOrder?.length ? { order: build.awakeningOrder } : AWAKENING_ORDER[c.id];
+  const awakenIcons = await loadAwakeningIcons(c.id);
   const avail = bottom - 18 - y - (ao ? 96 : 0);
   const cell = Math.max(22, Math.min(ig ? 48 : 46, Math.floor((avail - 30 - 20) / 5)));
   const gridSize = cell * 5 + 20;
@@ -1073,11 +1115,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     const cy = orbTop + 28 + d / 2;
     ao.order.forEach((id, i) => {
       const cx = innerX + d / 2 + i * (d + gap);
-      drawOrb(ctx, cx, cy, d / 2, elColor, i === 0);
+      drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id]);
       ctx.textAlign = 'center';
-      ctx.font = `800 ${Math.round(d * 0.34)}px ${MONO}`;
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(id, cx, cy + d * 0.12);
       if (i < n - 1) {
         ctx.font = `600 ${Math.round(d * 0.36)}px ${BODY}`;
         ctx.fillStyle = K.muted;

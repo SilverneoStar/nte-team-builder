@@ -14,7 +14,7 @@ import { ENDGAME, parsePriority } from '../data/endgame.js';
 import { BUILD_PROFILES } from '../data/buildProfiles.js';
 import { bestBuild } from '../data/bestBuild.js';
 import { analyzeTeam } from './analyze.js';
-import { alternativesFor, cartTile, drawOrb } from './buildCard.js';
+import { alternativesFor, cartTile, drawAwakenStep, loadAwakeningIcons } from './buildCard.js';
 import { teamsFor } from './characterCard.js';
 import { fillStatText } from './statText.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
@@ -251,6 +251,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const prio = statPriority(c, best);
   const spec = CHARACTER_CONSOLE[c.id]?.spec;
   const ao = AWAKENING_ORDER[c.id];
+  const awakenIcons = await loadAwakeningIcons(c.id);
   const teams = teamsFor(c).slice(0, 4);
   const mates = [...new Set(teams.flatMap((p) => p.members))];
 
@@ -434,12 +435,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       const cy = y + 14 + d / 2;
       ao.order.forEach((id, i) => {
         const cx = ix + d / 2 + i * (d + gap);
-        drawOrb(ctx, cx, cy, d / 2, elColor, i === 0);
-        ctx.textAlign = 'center';
-        ctx.font = `800 ${Math.round(d * 0.34)}px ${MONO}`;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText(id, cx, cy + d * 0.12);
-        ctx.textAlign = 'left';
+        drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id]);
       });
     }
   }
