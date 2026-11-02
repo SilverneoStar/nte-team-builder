@@ -194,7 +194,7 @@ export const SKILLS = {
       s(S, 'Bang!', 'Swings Morpheus for damage, heals all allies and builds Imagination.'),
     ],
     life: [
-      s('Life', 'Welcome!', 'More shop visitors and less ingredient use.'),
+      s('Life', 'Come On In!', 'More shop visitors and less ingredient use.'),
       s('Life', 'Ride-Along Chat', 'Extra Fons on Swift Travel fares and a higher satisfaction cap.'),
     ],
   },
