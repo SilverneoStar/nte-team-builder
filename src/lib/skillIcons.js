@@ -5,7 +5,7 @@
 const BASE = import.meta.env.BASE_URL;
 
 const HAVE = {
-  blackbird: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'trait', 'resonance', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
+  blackbird: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'resonance', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
 };
 
 // Skill types as written in data/skills.js, to their icon keys.
