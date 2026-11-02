@@ -98,6 +98,7 @@ export const PASSIVES = {
   nanally: {
     p1: p('More Than Passionate', 'Vita Buds fire 10 Vita Pistils, one every 1s.', 'Blossom'),
     p2: p('Fair Duel', 'In Ichi-daime’s Authority, whenever an ally deals Esper Cycle DMG, Nanally follows up on one enemy for 60% of ATK as Anima DMG (scales with Basic Attack level). Once every 2s.'),
+    trait: p('Wall Run', 'Out of combat, use her Redirect Skill to run along walls and other surfaces.'),
   },
   sakiri: {
     p1: p('Can I Eat This?', 'A Scorched target takes 25% more DoT for each type of DoT on it, up to 100%.', 'Scorch'),
