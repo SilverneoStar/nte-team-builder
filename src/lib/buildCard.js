@@ -513,6 +513,14 @@ export async function loadAwakeningIcons(characterId) {
  * One step of the awakening order: the orb with the game's awakening icon and a
  * small "A1" tag on its lower edge, or just the "A1" label when there's no icon.
  */
+function luminance(hex) {
+  const m = /^#?([0-9a-f]{6})/i.exec(hex);
+  if (!m) return 0;
+  const n = parseInt(m[1], 16);
+  const lin = (v) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+}
+
 export function drawAwakenStep(ctx, cx, cy, d, color, first, id, icon) {
   drawOrb(ctx, cx, cy, d / 2, color, first);
   ctx.save();
@@ -524,17 +532,19 @@ export function drawAwakenStep(ctx, cx, cy, d, color, first, id, icon) {
     ctx.restore();
     return;
   }
-  const s = d * 0.56;
-  ctx.drawImage(icon, cx - s / 2, cy - s / 2 - d * 0.04, s, s);
+  const s = d * 0.7;
+  ctx.drawImage(icon, cx - s / 2, cy - s / 2 - d * 0.06, s, s);
   const fs = Math.max(10, Math.round(d * 0.25));
   ctx.font = `800 ${fs}px ${MONO}`;
   const w = ctx.measureText(id).width + fs * 0.7;
   const h = fs * 1.25;
   const ty = cy + d / 2 - h * 0.45;
-  ctx.fillStyle = first ? shade(color, 0.15) : color;
+  const tagBg = first ? shade(color, 0.15) : color;
+  ctx.fillStyle = tagBg;
   roundRect(ctx, cx - w / 2, ty, w, h, h / 2);
   ctx.fill();
-  ctx.fillStyle = '#ffffff';
+  // Dark text on light element colours (Lakshana gold, Anima green), white on the rest.
+  ctx.fillStyle = luminance(tagBg) > 0.45 ? '#16131b' : '#ffffff';
   ctx.fillText(id, cx, ty + h * 0.76);
   ctx.restore();
 }
