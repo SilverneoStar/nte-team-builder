@@ -525,7 +525,16 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
         if (!m) return;
         const cx = ix + R + j * step;
         const cy = y + 32 + R;
-        circle(ctx, mateImg[id], cx, cy, R, id === c.id ? K.gold : (EL[m.element] ?? K.line), id === c.id ? 3.5 : 2.5);
+        if (id === c.id) {
+          // The featured character sits in a soft gold frame; the ring keeps its element colour.
+          ctx.fillStyle = 'rgba(242, 193, 78, 0.14)';
+          roundRect(ctx, cx - R - 5, cy - R - 5, R * 2 + 10, R * 2 + 10, 10);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(242, 193, 78, 0.75)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+        circle(ctx, mateImg[id], cx, cy, R, EL[m.element] ?? K.line, 2.5);
       });
       // Reactions beside the portraits
       const a = analyzeTeam(p.members);
