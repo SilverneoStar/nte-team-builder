@@ -553,8 +553,8 @@ export function drawOrb(ctx, cx, cy, r, color, first) {
   const ring = Math.max(3, r * 0.17);
   ctx.save();
   // Outer glow
-  ctx.shadowColor = color;
-  ctx.shadowBlur = first ? r * 0.9 : r * 0.45;
+  ctx.shadowColor = `${color}66`;
+  ctx.shadowBlur = first ? r * 0.5 : r * 0.22;
   ctx.fillStyle = '#16131b';
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -568,7 +568,7 @@ export function drawOrb(ctx, cx, cy, r, color, first) {
   ctx.stroke();
   // Faint inner glow just inside the ring
   ctx.lineWidth = 2;
-  ctx.strokeStyle = `${color}55`;
+  ctx.strokeStyle = `${color}33`;
   ctx.beginPath();
   ctx.arc(cx, cy, r - ring - 1.5, 0, Math.PI * 2);
   ctx.stroke();
