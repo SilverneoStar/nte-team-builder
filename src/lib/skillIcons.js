@@ -11,6 +11,7 @@ const V = 2;
 
 const HAVE = {
   blackbird: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
+  iroi: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
   zankou: ['basic', 'redirect', 'ultimate', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
   linko: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
   akane: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
