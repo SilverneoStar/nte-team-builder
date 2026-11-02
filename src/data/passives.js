@@ -19,6 +19,7 @@ export const PASSIVES = {
   akane: {
     p1: p('Perfect Pitch', 'After the team first triggers Remora, until Akane leaves combat: Remora is reapplied regularly to the Overtone target and to every enemy in her Reverb Field. Reapplying Remora to a target deals extra Lakshana DMG that grows with the Remora time left on it. Exact numbers aren’t published yet.', 'Remora'),
     p2: p('Starlit Anthem', 'Akane’s DMG dealt +20% for 25s after casting Sonic Boom. Doesn’t stack; casting it again resets the duration.'),
+    trait: p('Play It by Ear', 'In the open world, Akane can pick up her guitar at any time and play whatever melody comes to mind.'),
   },
   aurelia: {
     p1: p('Harmonics', 'When a target’s Nova ends, it takes 3 more hits of Psyche DMG, each 50% of ATK.', 'Nova'),
