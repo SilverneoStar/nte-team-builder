@@ -4,7 +4,7 @@
 // resistances not listed are 0%.
 //
 // TO REVISIT (Oct 2026) — adjust when new screenshots or corrections come in:
-// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa, Chaos, Blackbird, Akane, Linko: rows below Break Intensity
+// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa, Chaos, Blackbird, Akane, Linko, Hotori: rows below Break Intensity
 //   (Universal DMG, Healing, element DMG/RES) not captured yet; 0 assumed.
 // - The two older entries (Zero, Sakiri) look like they were taken
 //   with an Arc equipped (ATK ~400–550 high, CRIT/Cycle above bare values).
@@ -37,6 +37,7 @@ const MEASURED = {
   // Raw Level 80 values from neverness.gg's stats-by-level tables, Nov 2026.
   blackbird: s(15514, 668, 884, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   akane: s(15998, 636, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
+  hotori: s(16120, 652, 848, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   linko: s(15514, 652, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   chaos: s(15756, 636, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   lacrimosa: s(15998, 636, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
