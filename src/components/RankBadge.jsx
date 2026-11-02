@@ -1,5 +1,8 @@
 // Rank badge in the style of the game's S / A / B icons: a dark disc with a
 // heavy italic letter, gradient fill and a clean white outline.
+// Each badge has its own gradient id: with a shared id, a badge inside a
+// hidden tab (display: none) took the others' colour with it.
+import { useId } from 'react';
 const GRADIENTS = {
   S: ['#ffe866', '#ff9d3a', '#ff3d8f'],
   A: ['#ff7ad9', '#e04cff', '#9c46ff'],
@@ -8,7 +11,7 @@ const GRADIENTS = {
 
 export default function RankBadge({ rank, size = 22 }) {
   const stops = GRADIENTS[rank] ?? ['#d7dbe4', '#a9b0bf', '#7d869a'];
-  const id = `rank-grad-${rank}`;
+  const id = `rank-grad-${useId().replace(/:/g, '')}`;
   return (
     <svg className="rank-badge" width={size} height={size} viewBox="0 0 32 32" role="img" aria-label={`${rank}-rank`}>
       <defs>
