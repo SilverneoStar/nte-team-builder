@@ -4,9 +4,9 @@
 // resistances not listed are 0%.
 //
 // TO REVISIT (Oct 2026) — adjust when new screenshots or corrections come in:
-// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan: rows below Break Intensity
+// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou: rows below Break Intensity
 //   (Universal DMG, Healing, element DMG/RES) not captured yet; 0 assumed.
-// - The eight older entries (Lacrimosa … Blackbird) look like they were taken
+// - The seven older entries (Lacrimosa … Blackbird) look like they were taken
 //   with an Arc equipped (ATK ~400–550 high, CRIT/Cycle above bare values).
 //   Build cards add the Arc on top, so those cards overcount. Retake bare.
 // - ATK_GROWTH (7.95x) comes from the five bare screens; recheck once more
@@ -29,7 +29,6 @@ const MEASURED = {
   lacrimosa: s(15998, 1192, 909, { critRate: 83, critDmg: 73.6, charge: 100, cycle: 120, breakInt: 60, universal: 11 }, { chaos: 50 }),
   shinku: s(16120, 1206, 897, { critRate: 83, critDmg: 115.6, charge: 100, cycle: 18, breakInt: 0, universal: 9 }, { cosmos: 10 }),
   iroi: s(17210, 1092, 909, { critRate: 15, critDmg: 69.6, charge: 112, cycle: 18, breakInt: 114, universal: 21 }, { anima: 37.5 }),
-  zankou: s(15514, 1230, 909, { critRate: 66, critDmg: 181.6, charge: 100, cycle: 130, breakInt: 0, universal: 13 }, { incantation: 10 }),
   zero: s(15150, 1122, 909, { critRate: 40.8, critDmg: 140, charge: 100, cycle: 0, breakInt: 126, universal: 10 }),
   chaos: s(15756, 1132, 921, { critRate: 50.6, critDmg: 158, charge: 100, cycle: 18, breakInt: 72, universal: 15 }),
   sakiri: s(16483, 1034, 909, { critRate: 18, critDmg: 68, charge: 100, cycle: 18, breakInt: 30, universal: 21 }, { incantation: 91.5 }),
@@ -40,6 +39,8 @@ const MEASURED = {
   nanally: s(15998, 636, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   hathor: s(15998, 644, 884, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   chiz: s(15514, 660, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
+  // Zankou: bare Level 80 values from neverness.gg, Nov 2026.
+  zankou: s(15514, 660, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   jiuyuan: s(15635, 652, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
 };
 

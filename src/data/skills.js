@@ -265,7 +265,7 @@ export const SKILLS = {
     combat: [
       s(B, 'Wildfire', 'Five-hit Incantation blade combo; the last hit pulls enemies and gives Hunt.'),
       s(R, 'Sanguine Dash', 'Switches to Illusion Form, applies Heartwrench and lowers Break in an area.'),
-      s(U, 'Inferno Flamenco', 'His main damage Ultimate, stronger after Bloodfeast Reverie.'),
+      s(U, 'Inferno Flamenco', 'Two Ultimates: Bloodfeast Reverie, when active, inflicts Vile Ash and readies a free enhanced Inferno Flamenco.'),
       s(S, 'Stoked Flame', 'One hit of Incantation damage.'),
     ],
     life: [
