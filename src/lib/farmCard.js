@@ -48,13 +48,13 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#bfc3cf',
+  muted: '#cdd1dc',
   pink: '#e8488c',
 };
 
 // Fan-project line and site links. Wide: one row; Instagram: two rows.
 function footer(ctx, W, H, PAD, ig, bottomGap = 30) {
-  ctx.font = `500 13px ${BODY}`;
+  ctx.font = `600 13px ${BODY}`;
   ctx.fillStyle = K.muted;
   ctx.fillText(
     'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games · Amounts may change with updates',
@@ -62,7 +62,7 @@ function footer(ctx, W, H, PAD, ig, bottomGap = 30) {
     H - bottomGap,
   );
   drawLinksLine(ctx, ig ? PAD : W - PAD, ig ? H - bottomGap - 26 : H - bottomGap, {
-    font: `500 13px ${BODY}`,
+    font: `600 13px ${BODY}`,
     color: K.muted,
     accent: K.fg,
     align: ig ? 'left' : 'right',
@@ -94,7 +94,7 @@ function panel(ctx, x, y, w, h, title, where) {
   ctx.fillText(title, x + 18, y + 32);
   const tw = ctx.measureText(title).width;
   ctx.fillStyle = K.muted;
-  ctx.font = `500 14px ${BODY}`;
+  ctx.font = `600 14px ${BODY}`;
   // Beside the title when it fits, otherwise on its own line underneath.
   if (ctx.measureText(where).width <= w - tw - 48) {
     ctx.fillText(where, x + 18 + tw + 12, y + 32);
@@ -179,7 +179,7 @@ function consolePanel(ctx, x, y, w, h, build, cartImg) {
   const main = build.cartStats?.main?.stat;
   if (main) {
     ctx.fillStyle = K.muted;
-    ctx.font = `500 13px ${BODY}`;
+    ctx.font = `600 13px ${BODY}`;
     ctx.textAlign = 'center';
     ctx.fillText(`Main: ${main}`, cx + size / 2, ty + size + 58);
     ctx.textAlign = 'left';
@@ -195,7 +195,7 @@ function consolePanel(ctx, x, y, w, h, build, cartImg) {
   ctx.font = `700 15px ${BODY}`;
   ctx.fillText(`${build.pieces.length} modules`, mx, ty + 14);
   ctx.fillStyle = K.muted;
-  ctx.font = `500 13px ${BODY}`;
+  ctx.font = `600 13px ${BODY}`;
   ctx.fillText(
     `gold = counts for ${cart.name}`,
     mx + ctx.measureText(`${build.pieces.length} modules`).width + 40,
@@ -316,7 +316,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, tx0 + 86, ly);
   // Roles beside the element when they fit, otherwise on their own line.
-  const roleOpts = { font: `500 18px ${BODY}`, color: K.muted, size: 22 };
+  const roleOpts = { font: `600 18px ${BODY}`, color: K.muted, size: 22 };
   let roleX = tx0 + 86 + ctx.measureText(el.name).width + 18;
   if (roleX + rolesWidth(ctx, c.roles, roleIcons, roleOpts) > tx0 + TW) {
     roleX = tx0;
@@ -337,7 +337,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   ctx.font = `700 13px ${MONO}`;
   ctx.fillText('TOTALS COVER', tx0 + 18, ly);
   ctx.fillStyle = K.fg;
-  ctx.font = `500 16px ${BODY}`;
+  ctx.font = `600 16px ${BODY}`;
   const lines = [
     'Level cap 20 → 80 (6 ascensions)',
     '4 combat skills Lv 1 → 10',
@@ -368,7 +368,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   ctx.fillText('MATERIALS TO FARM', RX + 24, HY + 55);
   const hw = ctx.measureText('MATERIALS TO FARM').width;
   ctx.fillStyle = K.muted;
-  ctx.font = `500 17px ${BODY}`;
+  ctx.font = `600 17px ${BODY}`;
   ctx.fillText('Ascend to Lv 80 and max every skill', RX + 24 + hw + 20, HY + 53);
   drawMascot(ctx, await loadImage(`${base}mascot.svg`), RX + RW - 102, HY - 8, 96);
 
@@ -527,7 +527,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   ctx.fillText(`${arc.type} Arc`, tx0 + 82, ly);
   const typeW = ctx.measureText(`${arc.type} Arc`).width;
   ctx.fillStyle = K.muted;
-  ctx.font = `500 17px ${BODY}`;
+  ctx.font = `600 17px ${BODY}`;
   ctx.fillText(`·  ${arc.sub}`, tx0 + 82 + typeW + 10, ly);
 
   // Who it's for
@@ -557,7 +557,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   const sources = ARC_SOURCES[arc.id] ?? [];
   // Instagram: the panel is as tall as its lines need (up to 230), and the
   // material rows above take the rest.
-  ctx.font = `500 15px ${BODY}`;
+  ctx.font = `600 15px ${BODY}`;
   const srcLines = sources.reduce((n, src) => n + wrap(ctx, src, W - 2 * PAD - 52, 3).length, 0);
   const SRC_H = ig ? Math.min(230, 70 + srcLines * 20 + sources.length * 6) : 0;
   const SRC_TOP = ig ? H - 96 - SRC_H : 0;
@@ -577,7 +577,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
     ctx.fillStyle = K.pink;
     ctx.font = `700 13px ${MONO}`;
     ctx.fillText('HOW TO GET', SX, ly);
-    ctx.font = `500 15px ${BODY}`;
+    ctx.font = `600 15px ${BODY}`;
     const LINE = 20;
     const bottom = ig ? SRC_TOP + SRC_H - 20 : ARC_FARM_H - 56;
     let y = ly + 24;
@@ -613,7 +613,7 @@ export async function renderArcFarmCard(arc, { base = '/', scale = 2, format = '
   ctx.fillText('ARC MATERIALS TO FARM', RX + 24, HY + 55);
   const hw = ctx.measureText('ARC MATERIALS TO FARM').width;
   ctx.fillStyle = K.muted;
-  ctx.font = `500 17px ${BODY}`;
+  ctx.font = `600 17px ${BODY}`;
   ctx.fillText(ig ? 'Lv 20 → 80 · 6 ascensions' : 'Level cap 20 → 80 · all 6 ascensions', RX + 24 + hw + 20, HY + 53);
   drawMascot(ctx, await loadImage(`${base}mascot.svg`), ig ? W - PAD - 96 + 6 : RX + RW - 102, ig ? PAD - 8 : HY - 8, 96);
 

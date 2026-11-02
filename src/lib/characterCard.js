@@ -44,8 +44,8 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#bfc3cf',
-  label: '#cfd2dc',
+  muted: '#cdd1dc',
+  label: '#dde0e8',
   pink: '#e8488c',
   gold: '#f2c14e',
   num: '#ffc061',
@@ -121,7 +121,7 @@ function iconLine(ctx, img, x, y, size, name, note, maxX, nameFont = `600 19px $
   ctx.fillText(nm, cx, y);
   cx += ctx.measureText(nm).width;
   if (note) {
-    ctx.font = `500 15px ${BODY}`;
+    ctx.font = `600 15px ${BODY}`;
     const t = `  ·  ${note}`;
     if (cx + ctx.measureText(t).width <= maxX) {
       ctx.fillStyle = K.muted;
@@ -223,7 +223,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   ctx.fillStyle = elColor;
   ctx.fillText(el.name, LX + 82, ly);
   const ew = ctx.measureText(el.name).width;
-  drawRoles(ctx, c.roles, roleIcons, LX + 94 + ew, ly, { font: `500 18px ${BODY}`, color: K.muted, size: 22 });
+  drawRoles(ctx, c.roles, roleIcons, LX + 94 + ew, ly, { font: `600 18px ${BODY}`, color: K.muted, size: 22 });
 
   // ---- Left: recommended build ----
   ly += 30;
@@ -323,7 +323,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
         ctx.fillStyle = K.inset;
         roundRect(ctx, tx, ty, tw, 46, 9);
         ctx.fill();
-        ctx.font = `500 15px ${BODY}`;
+        ctx.font = `600 15px ${BODY}`;
         ctx.fillStyle = K.label;
         ctx.fillText(names[k], tx + 12, ty + 29);
         ctx.textAlign = 'right';
@@ -393,17 +393,17 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
       const cx = tx + step * i + step / 2;
       const cy = ry + 58 + R;
       if (id === c.id) {
-        // Soft highlight behind the featured character's slot.
+        // Soft gold frame around the featured character's portrait; their name below turns gold.
         ctx.fillStyle = 'rgba(242, 193, 78, 0.14)';
-        roundRect(ctx, cx - step / 2 + 4, cy - R - 8, step - 8, R * 2 + 36, 12);
+        roundRect(ctx, cx - R - 8, cy - R - 8, R * 2 + 16, R * 2 + 16, 12);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(242, 193, 78, 0.55)';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(242, 193, 78, 0.8)';
+        ctx.lineWidth = 2;
         ctx.stroke();
       }
       circle(ctx, mateImg[id], cx, cy, R, EL[m.element] ?? K.line, 3);
       ctx.textAlign = 'center';
-      ctx.font = `${id === c.id ? 700 : 500} 14px ${BODY}`;
+      ctx.font = `${id === c.id ? 700 : 600} 14px ${BODY}`;
       ctx.fillStyle = id === c.id ? K.gold : K.label;
       ctx.fillText(fitLine(ctx, m.name, step - 6, 10), cx, cy + R + 20);
       ctx.textAlign = 'left';
@@ -451,20 +451,20 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
       ctx.fillText(ln, tx, ty);
       ty += 32;
     });
-    ctx.font = `500 16px ${BODY}`;
+    ctx.font = `600 16px ${BODY}`;
     ctx.fillStyle = K.label;
     wrap(ctx, `Try ${c.name} with anyone in the Team Builder and see the reactions.`, tw, 3).forEach((ln, i) =>
       ctx.fillText(ln, tx, ty + 6 + i * 22),
     );
   }
   if (teams.length > MAX_TEAMS) {
-    ctx.font = `500 16px ${BODY}`;
+    ctx.font = `600 16px ${BODY}`;
     ctx.fillStyle = K.muted;
     ctx.fillText(`+${teams.length - MAX_TEAMS} more on the site`, RX + 4, ry + 8);
   }
 
   // ---- Footer: links, then the legal line ----
-  const linksFont = `500 15px ${BODY}`;
+  const linksFont = `600 15px ${BODY}`;
   const lw = measureLinksLine(ctx, { font: linksFont, iconSize: 15, gap: 22 });
   drawLinksLine(ctx, (CHAR_CARD_W - lw) / 2, CHAR_CARD_H - 66, {
     font: linksFont,
@@ -473,7 +473,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
     iconSize: 15,
     gap: 22,
   });
-  ctx.font = `400 13px ${BODY}`;
+  ctx.font = `500 13px ${BODY}`;
   ctx.fillStyle = K.muted;
   ctx.textAlign = 'center';
   ctx.fillText(

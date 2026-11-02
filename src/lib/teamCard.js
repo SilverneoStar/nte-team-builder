@@ -34,11 +34,11 @@ const C = {
   panel2: '#1f2432',
   line: '#2b3242',
   fg: '#e7eaf2',
-  muted: '#bec5d4',
+  muted: '#cdd2de',
   accent: '#8e9cff',
   sig: '#f3d03e',
   num: '#ffc061',
-  label: '#c9cdd8',
+  label: '#dadde6',
 };
 
 // Bright element colours (same values as the --elb-* tokens).
@@ -612,9 +612,10 @@ export async function ensureFonts(base) {
   if (!document.fonts?.load) return;
   try {
     await Promise.all([
-      document.fonts.load(`800 64px ${DISPLAY}`),
-      document.fonts.load(`600 20px ${BODY}`),
-      document.fonts.load(`500 12px ${MONO}`),
+      // Every weight the cards use, so none is drawn in a fallback or synthesized face.
+      ...[700, 800].map((w) => document.fonts.load(`${w} 64px ${DISPLAY}`)),
+      ...[500, 600, 700].map((w) => document.fonts.load(`${w} 20px ${BODY}`)),
+      ...[400, 500, 700].map((w) => document.fonts.load(`${w} 12px ${MONO}`)),
       document.fonts.load(`italic 900 16px ${RANK_FONT}`),
     ]);
   } catch {
@@ -905,7 +906,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = C.muted;
-      ctx.font = `500 16px ${BODY}`;
+      ctx.font = `600 16px ${BODY}`;
       ctx.textAlign = 'center';
       ctx.fillText('Open slot', x + cw / 2, top + ch / 2);
       ctx.textAlign = 'left';
@@ -1009,7 +1010,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     drawRank(ctx, c.rarity, startX + iconW + elW + 8, elY - 5, M.rank);
 
     // Roles, each with its icon, centred as one line
-    ctx.font = `500 ${M.roleFont}px ${BODY}`;
+    ctx.font = `600 ${M.roleFont}px ${BODY}`;
     const ROLE_ICON = M.roleIcon;
     const roleY = top + 222 + d + M.roleGap;
     const parts = c.roles.map((role) => ({ role, w: ROLE_ICON + 4 + ctx.measureText(role).width }));
@@ -1171,7 +1172,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = C.muted;
-        ctx.font = `500 18px ${BODY}`;
+        ctx.font = `600 18px ${BODY}`;
         ctx.textAlign = 'center';
         ctx.fillText('Open slot', x + cw / 2, top + ch / 2);
         ctx.textAlign = 'left';
@@ -1263,7 +1264,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       fx += ctx.measureText(elName).width + 10;
       drawRank(ctx, c.rarity, fx, y - 6, 30);
       fx += 44;
-      ctx.font = `500 19px ${BODY}`;
+      ctx.font = `600 19px ${BODY}`;
       ctx.fillStyle = C.muted;
       c.roles.forEach((role, k) => {
         if (k > 0) {
@@ -1361,7 +1362,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   ];
   if (chips.length === 0) {
     ctx.fillStyle = C.muted;
-    ctx.font = `400 15px ${BODY}`;
+    ctx.font = `500 15px ${BODY}`;
     ctx.fillText('No reactions yet', px, ry);
   }
   let line = 1;
@@ -1393,7 +1394,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   // Long codes (full gear) move the legal line up and wrap onto two lines.
   const LEGAL = 'Unofficial fan project. Neverness to Everness \u00a9 Hotta Studio / Perfect World Games.';
   const code = encodeCardCode(team, loadoutOf);
-  ctx.font = `400 12px ${BODY}`;
+  ctx.font = `500 12px ${BODY}`;
   const legalW = ctx.measureText(LEGAL).width;
   const labelW = 46;
   const fits = (text, size) => {
@@ -1421,13 +1422,13 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const codeTop = H - 22 - (codeLines.length - 1) * lineGap;
   // Site and socials sit right-aligned just above the code. When the legal
   // line also moves up and the two would meet, the legal line goes one row higher.
-  const linksFont = `500 12px ${BODY}`;
+  const linksFont = `600 12px ${BODY}`;
   const linksY = codeTop - codeSize - 10;
   const linksW = measureLinksLine(ctx, { font: linksFont, iconSize: 13, gap: 18 });
   let legalY = sideBySide ? H - 24 : linksY;
   if (!sideBySide && PAD + legalW + 24 > W - PAD - linksW) legalY = linksY - 18;
   ctx.fillStyle = C.muted;
-  ctx.font = `400 12px ${BODY}`;
+  ctx.font = `500 12px ${BODY}`;
   ctx.fillText(LEGAL, PAD, legalY);
   drawLinksLine(ctx, W - PAD, linksY, {
     font: linksFont,

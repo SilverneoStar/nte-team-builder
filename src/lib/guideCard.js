@@ -48,8 +48,8 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#bfc3cf',
-  label: '#cfd2dc',
+  muted: '#cdd1dc',
+  label: '#dde0e8',
   pink: '#e8488c',
   gold: '#f2c14e',
   num: '#ffc061',
@@ -78,7 +78,7 @@ function priorityLines(ctx, groups, w, lines) {
   return out.slice(0, lines);
 }
 function drawPriority(ctx, groups, x, y, w, lines, lh, size) {
-  const font = `500 ${size}px ${BODY}`;
+  const font = `600 ${size}px ${BODY}`;
   ctx.font = font;
   const out = priorityLines(ctx, groups, w, lines);
   out.forEach((ln, i) => fillStatText(ctx, ln, x, y + i * lh, { font, maxWidth: w, ...HL }));
@@ -181,7 +181,7 @@ const TAG_STYLE = {
 
 /** Game text wrapped over up to `lines` lines, stat names and values highlighted. Returns lines used. */
 function statLines(ctx, text, x, y, w, lines, lh, size = 17) {
-  const font = `500 ${size}px ${BODY}`;
+  const font = `600 ${size}px ${BODY}`;
   const numFont = `700 ${size}px ${BODY}`;
   ctx.font = numFont;
   const out = wrap(ctx, text, w, lines);
@@ -338,9 +338,9 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     ctx.fillText(c.arcType, fx + 34, hy);
   }
   hy += 38;
-  const rx = drawRoles(ctx, c.roles, roleIcons, TX, hy, { font: `500 19px ${BODY}`, color: K.muted, size: 22 });
+  const rx = drawRoles(ctx, c.roles, roleIcons, TX, hy, { font: `600 19px ${BODY}`, color: K.muted, size: 22 });
   if (c.faction) {
-    ctx.font = `500 19px ${BODY}`;
+    ctx.font = `600 19px ${BODY}`;
     ctx.fillStyle = K.muted;
     ctx.fillText(fitLine(ctx, `  ·  ${c.faction}`, TX + HW - rx, 13), rx, hy);
   }
@@ -540,12 +540,12 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       const a = analyzeTeam(p.members);
       const names = [...a.trios.map((t) => `${t.name} Trio`), ...a.reactions.map((r) => r.name)];
       const rx = ix + 4 * step + 8;
-      ctx.font = `500 15px ${BODY}`;
+      ctx.font = `600 15px ${BODY}`;
       ctx.fillStyle = K.label;
       wrap(ctx, names.join(' · '), ix + iw - rx, 2).forEach((ln, k) => ctx.fillText(ln, rx, y + 32 + R - 4 + k * 20));
     });
     if (!teams.length) {
-      ctx.font = `500 18px ${BODY}`;
+      ctx.font = `600 18px ${BODY}`;
       ctx.fillStyle = K.muted;
       wrap(ctx, `Try ${c.name} with anyone in the Team Builder and see the reactions.`, iw, 3).forEach((ln, k) =>
         ctx.fillText(ln, ix, top + 20 + k * 26),
@@ -554,10 +554,10 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   }
 
   // ---- Footer ----
-  const linksFont = `500 15px ${BODY}`;
+  const linksFont = `600 15px ${BODY}`;
   const lw = measureLinksLine(ctx, { font: linksFont, iconSize: 15, gap: 22 });
   drawLinksLine(ctx, (W - lw) / 2, H - 60, { font: linksFont, color: K.muted, accent: K.fg, iconSize: 15, gap: 22 });
-  ctx.font = `400 13px ${BODY}`;
+  ctx.font = `500 13px ${BODY}`;
   ctx.fillStyle = K.muted;
   ctx.textAlign = 'center';
   ctx.fillText('Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games', W / 2, H - 30);

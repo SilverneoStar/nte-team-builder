@@ -57,7 +57,7 @@ const K = {
   inset: '#26272e',
   line: '#34353e',
   fg: '#eceef3',
-  muted: '#bfc3cf',
+  muted: '#cdd1dc',
   pink: '#e8488c',
   pinkSoft: 'rgba(232, 72, 140, 0.18)',
   gold: '#f2c14e',
@@ -66,7 +66,7 @@ const K = {
   // Stat highlights: values warm gold, stat names a soft periwinkle, labels light grey.
   num: '#ffc061',
   key: '#b9c3ff',
-  label: '#cfd2dc',
+  label: '#dde0e8',
 };
 
 const ROMAN = { 2: 'II', 3: 'III', 4: 'IV' };
@@ -240,7 +240,7 @@ function altLine(ctx, x, y, right, label, items) {
     ctx.fillText(name, cx, y);
     cx += ctx.measureText(name).width;
     if (it.note) {
-      ctx.font = `500 14px ${BODY}`;
+      ctx.font = `600 14px ${BODY}`;
       ctx.fillStyle = K.muted;
       const note = `  ·  ${it.note}`;
       if (cx + ctx.measureText(note).width <= right) {
@@ -276,7 +276,7 @@ function moduleRow(ctx, x, y, w, label, cartId, pieces, cartImg) {
   const perRow = Math.max(1, Math.floor((w - 106 + gap) / (tile + gap)));
   if (!pieces.length) {
     ctx.fillStyle = K.muted;
-    ctx.font = `500 15px ${BODY}`;
+    ctx.font = `600 15px ${BODY}`;
     ctx.fillText('No modules placed', startX, top + 42);
     return 34 + 72;
   }
@@ -641,7 +641,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ctx.font = `700 19px ${BODY}`;
   ctx.fillText(el.name, tx0 + 86, ly);
   // Roles beside the element when they fit, otherwise on their own line.
-  const roleOpts = { font: `500 18px ${BODY}`, color: K.muted, size: 22 };
+  const roleOpts = { font: `600 18px ${BODY}`, color: K.muted, size: 22 };
   let roleX = tx0 + 86 + ctx.measureText(el.name).width + 18;
   if (roleX + rolesWidth(ctx, c.roles, roleIcons, roleOpts) > tx0 + TW) {
     roleX = tx0;
@@ -650,7 +650,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   drawRoles(ctx, c.roles, roleIcons, roleX, ly, roleOpts);
 
   ly += 36;
-  ctx.font = `500 16px ${BODY}`;
+  ctx.font = `600 16px ${BODY}`;
   ctx.fillStyle = K.muted;
   const factionText = c.faction
     ? `${c.faction}${c.unit ? ` · ${c.unit}` : ''}`
@@ -675,7 +675,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   // (Instagram: under the Cartridge stats panel, drawn further down.)
   const linksBottom = H - 74 - 4;
   if (!ig && linksBottom - 48 - 16 > ly) {
-    drawLinksBlock(ctx, px, linksBottom, { font: `500 15px ${BODY}`, color: K.muted, accent: K.fg });
+    drawLinksBlock(ctx, px, linksBottom, { font: `600 15px ${BODY}`, color: K.muted, accent: K.fg });
   }
 
   // ---- Header strip ---- (wide: top right; Instagram: beside the portrait's foot)
@@ -700,7 +700,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   const specPx = ig ? 17 : 19;
   const spec = info ? (ig ? specShort(info.spec) : specText(info.spec)) : 'Console data not published yet.';
   fillStatText(ctx, spec, RX + 98, HY + 67, {
-    font: `500 ${specPx}px ${BODY}`,
+    font: `600 ${specPx}px ${BODY}`,
     numFont: `700 ${specPx}px ${BODY}`,
     color: K.muted,
     keyColor: K.key,
@@ -792,7 +792,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   panel(ctx, LCX, top, LCW, statsH, 'Key attributes');
   ctx.textAlign = 'right';
   ctx.fillStyle = K.muted;
-  ctx.font = `500 14px ${BODY}`;
+  ctx.font = `600 14px ${BODY}`;
   ctx.fillText(
     `${ms ? `Lv ${MAX_STATS_LEVEL} base${ms.estimated ? ' (est.)' : ''} + build` : 'from this build'}${eg ? ' / endgame target' : ''}`,
     LCX + LCW - 18,
@@ -801,7 +801,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ctx.textAlign = 'left';
   if (!stats.length) {
     ctx.fillStyle = K.muted;
-    ctx.font = `500 16px ${BODY}`;
+    ctx.font = `600 16px ${BODY}`;
     ctx.fillText('No stat values entered yet.', LCX + 18, top + 70);
   } else {
     // One row per stat: name, value, endgame target (gold).
@@ -817,7 +817,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
         ctx.fill();
       }
       const base = sy + rowH / 2 + 5;
-      ctx.font = `500 16px ${BODY}`;
+      ctx.font = `600 16px ${BODY}`;
       ctx.fillStyle = K.label;
       ctx.fillText(wrap(ctx, statLabel(st.stat), valueX - LCX - 130, 1)[0], LCX + 24, base);
       ctx.textAlign = 'right';
@@ -881,7 +881,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     ctx.fill();
     ctx.fillStyle = tag === 'Signature' ? '#1b1405' : K.pink;
     ctx.fillText(tag.toUpperCase(), LCX + LCW - tw - 10, arcY + 31);
-    ctx.font = `500 16px ${BODY}`;
+    ctx.font = `600 16px ${BODY}`;
     ctx.fillStyle = K.muted;
     const dupes = build.arcDupes ? ` · +${build.arcDupes}` : '';
     if (arcImg) ctx.drawImage(arcImg, tx, arcY + 76, 18, 18);
@@ -893,7 +893,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
       ['ATK', String(a.atk)],
       [subName, subVal],
     ]) {
-      ctx.font = `500 17px ${BODY}`;
+      ctx.font = `600 17px ${BODY}`;
       ctx.fillStyle = K.label;
       ctx.fillText(name, sx, arcY + 115);
       sx += ctx.measureText(name).width + 7;
@@ -920,14 +920,14 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     }
   } else {
     ctx.fillStyle = K.muted;
-    ctx.font = `500 16px ${BODY}`;
+    ctx.font = `600 16px ${BODY}`;
     ctx.fillText('No Arc chosen.', LCX + 18, arcY + 74);
   }
 
   // ---- Cartridge stats ----
   const cY = arcY + arcH + 14;
   const cH = ig ? IG_CART_H : bottom - cY;
-  if (ig) drawLinksBlock(ctx, LCX + 6, bottom - 6, { font: `500 15px ${BODY}`, color: K.muted, accent: K.fg });
+  if (ig) drawLinksBlock(ctx, LCX + 6, bottom - 6, { font: `600 15px ${BODY}`, color: K.muted, accent: K.fg });
   panel(ctx, LCX, cY, LCW, cH, 'Cartridge stats');
   const cs = build.cartStats;
   const rows = [
@@ -940,7 +940,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   if (!rows.length) {
     ctx.textAlign = 'right';
     ctx.fillStyle = K.muted;
-    ctx.font = `500 14px ${BODY}`;
+    ctx.font = `600 14px ${BODY}`;
     ctx.fillText('suggested priorities', LCX + LCW - 18, cY + 30);
     ctx.textAlign = 'left';
   }
@@ -1064,7 +1064,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     ctx.font = `600 16px ${BODY}`;
     ctx.fillText('Awakening order', innerX, orbTop + 14);
     const tw = ctx.measureText('Awakening order  ').width;
-    ctx.font = `500 13px ${BODY}`;
+    ctx.font = `600 13px ${BODY}`;
     ctx.fillText('one per duplicate', innerX + tw, orbTop + 14);
     const n = ao.order.length;
     const space = bottom - 14 - (orbTop + 28);
@@ -1097,7 +1097,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
           pieces: build.pieces,
         })
       : '';
-  ctx.font = `500 13px ${BODY}`;
+  ctx.font = `600 13px ${BODY}`;
   ctx.fillStyle = K.muted;
   ctx.fillText(
     'Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games',
