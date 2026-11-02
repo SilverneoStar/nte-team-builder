@@ -257,11 +257,7 @@ export default function App() {
         <p className="foot__notes">
           Your teams are saved only in this browser on this device. Nobody else can see or change them. Element
           reactions follow the Esper Cycle: each element reacts with its two neighbours. Game data is compiled from
-          community sources (including{' '}
-          <a href="https://www.ntebuild.com" target="_blank" rel="noopener noreferrer">
-            NTEBuild
-          </a>
-          ) and may lag behind patches. Item and skill icons are from the game. Neverness to Everness and all related content belong to Hotta
+          community sources and may lag behind patches. Neverness to Everness and all related content belong to Hotta
           Studio and Perfect World Games.
         </p>
       </footer>
