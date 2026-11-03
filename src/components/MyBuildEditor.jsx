@@ -14,6 +14,7 @@ import CartStatsEditor from './CartStatsEditor.jsx';
 import CartridgeIcon from './CartridgeIcon.jsx';
 import { MiniBoard } from './ConsolePage.jsx';
 import ExportIcon from './ExportIcon.jsx';
+import GearStats from './GearStats.jsx';
 
 const ALL_AWAKENINGS = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'];
 
@@ -240,6 +241,12 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
         Cartridge stats <span>1 main · 4 sub</span>
       </p>
       <CartStatsEditor value={build.cartStats} onChange={(v) => set({ cartStats: v })} idPrefix="mb" />
+
+      <GearStats
+        character={c}
+        gear={{ arc: build.arc, cartStats: build.cartStats, pieces: build.pieces, cartridge: build.cartridge }}
+        title="Stats with your build"
+      />
 
       <p className="mini-title mybuild__sub">
         Awakening order <span>one per duplicate · use the arrows to reorder</span>

@@ -15,6 +15,7 @@ import RankBadge from './RankBadge.jsx';
 import { AWAKENINGS, MAX_ARC_DUPES, MAX_DUPES } from '../data/awakenings.js';
 import ResonanceBadges from './ResonanceBadges.jsx';
 import StatText from './StatText.jsx';
+import GearStats from './GearStats.jsx';
 
 // Gear editor for one team member: Arc, Cartridge set and Console build.
 export default function LoadoutPanel({ character: c, loadout, onChange, onClose, dispatch }) {
@@ -380,6 +381,13 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
               </div>
             );
           })()}
+        <div className="gear-block gear-block--wide">
+          <GearStats
+            character={c}
+            gear={{ arc: loadout.arc, cartStats: loadout.cartStats, pieces: loadout.console, cartridge: loadout.cartridge }}
+            title="Stats with this loadout"
+          />
+        </div>
       </div>
     </section>
   );

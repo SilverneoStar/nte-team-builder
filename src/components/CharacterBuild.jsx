@@ -16,6 +16,7 @@ import ElementGlyph from './ElementGlyph.jsx';
 import Portrait from './Portrait.jsx';
 import RankBadge from './RankBadge.jsx';
 import StatText from './StatText.jsx';
+import GearStats from './GearStats.jsx';
 
 const ACCESS = { limited: 'Limited', paid: 'Paid', pass: 'Battle pass', free: 'F2P', banner: 'Arc banners' };
 const ROMAN = { 2: 'II', 3: 'III', 4: 'IV' };
@@ -125,6 +126,14 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
             </p>
           ))}
         </>
+      )}
+
+      {best && (
+        <GearStats
+          character={c}
+          gear={{ arc: best.arc, cartStats: best.cartStats, pieces: best.pieces, cartridge: best.cartridge }}
+          title="Stats with this build"
+        />
       )}
 
       {info && best && (
