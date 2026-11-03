@@ -1,6 +1,6 @@
 // Base HP, ATK and DEF at every level step (no gear), from Level 1 stats.
 // Source: the stats-by-level tables on neverness.gg (Nov 2026), sent in by the
-// project owner for 17 Espers.
+// project owner for 19 Espers.
 //
 // The game grows each stat from its Level 1 value along fixed tables: every
 // Esper with the same Level 1 ATK (or DEF) has the same ATK (or DEF) column.
@@ -22,6 +22,7 @@ const KNOWN = {
     55: [55, 107, 135, 163, 190, 217, 245, 273, 300, 327, 355, 383, 410, 437],
     75: [75, 146, 184, 222, 259, 296, 334, 372, 409, 446, 484, 522, 559, 596],
     70: [70, 137, 172, 207, 242, 277, 312, 347, 382, 417, 452, 487, 522, 557],
+    76: [76, 148, 186, 224, 262, 300, 338, 376, 414, 452, 490, 528, 566, 604],
     78: [78, 152, 191, 230, 269, 308, 347, 386, 425, 464, 503, 542, 581, 620],
     80: [80, 156, 196, 236, 276, 316, 356, 396, 436, 476, 516, 556, 596, 636],
     81: [81, 158, 199, 239, 279, 320, 361, 401, 441, 482, 523, 563, 603, 644],

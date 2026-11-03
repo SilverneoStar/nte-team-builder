@@ -11,6 +11,7 @@ const BASE = import.meta.env.BASE_URL;
 const V = 2;
 
 const HAVE = {
+  aurelia: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
   fadia: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
   mint: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
   jiuyuan: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],

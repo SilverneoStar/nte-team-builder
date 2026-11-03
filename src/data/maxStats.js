@@ -4,7 +4,7 @@
 // resistances not listed are 0%.
 //
 // TO REVISIT (Oct 2026) — adjust when new screenshots or corrections come in:
-// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa, Chaos, Blackbird, Akane, Linko, Hotori, Zero, Sakiri, Baicang, Adler, Skia, Mint, Fadia: rows below Break Intensity
+// - Daffodil, Nanally, Hathor, Chiz, Jiuyuan, Zankou, Iroi, Shinku, Lacrimosa, Chaos, Blackbird, Akane, Linko, Hotori, Zero, Sakiri, Baicang, Adler, Skia, Mint, Fadia, Aurelia: rows below Break Intensity
 //   (Universal DMG, Healing, element DMG/RES) not captured yet; 0 assumed.
 // - ATK_GROWTH (7.95x) comes from the five bare screens; recheck once more
 //   characters are measured bare.
@@ -34,6 +34,7 @@ const MEASURED = {
   akane: s(15998, 636, 921, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   zero: s(15150, 676, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }), // the male version's table
   fadia: s(17089, 596, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
+  aurelia: s(11878, 604, 727, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   mint: s(12120, 596, 727, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   skia: s(13332, 557, 667, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   adler: s(14302, 437, 994, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
