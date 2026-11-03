@@ -7,7 +7,9 @@
 //   DEF = character DEF × (1 + DEF%) + flat DEF
 // and everything else (CRIT, DMG bonuses, Intensity) is added as is. The Arc's
 // ATK is taken at max level. Bonuses that need a condition (Arc passives,
-// 4-piece set effects) aren't counted.
+// 4-piece set effects) aren't counted; the game's Attributes screen leaves
+// Arc passives out too. Checked against in-game Lacrimosa screens with and
+// without an Arc (Nov 2026).
 import { ARC_BY_ID } from '../data/arcs.js';
 import { bonusStats } from '../data/gear.js';
 import { consoleStats } from '../data/console.js';
@@ -47,8 +49,9 @@ export function computeStats(character, gear = {}, level = '80') {
   const rows = [
     { stat: 'HP', base: at.hp, total: Math.round(at.hp * (1 + take('HP%') / 100) + take('HP')) },
     {
+      // Like the game's Attributes screen: base ATK includes the Arc's ATK.
       stat: 'ATK',
-      base: at.atk,
+      base: at.atk + (arc?.atk ?? 0),
       total: Math.round((at.atk + (arc?.atk ?? 0)) * (1 + take('ATK%') / 100) + take('ATK')),
     },
     { stat: 'DEF', base: at.def, total: Math.round(at.def * (1 + take('DEF%') / 100) + take('DEF')) },

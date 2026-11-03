@@ -17,7 +17,7 @@ export default function GearStats({ character: c, gear, title = 'Stats with this
     <section className="gear-totals" aria-label={title}>
       <div className="gear-totals__head">
         <p className="mini-title">
-          {title} <span>Arc at max level</span>
+          {title} <span>base ATK includes the Arc</span>
         </p>
         <label className="gear-totals__level">
           <span>Level</span>
