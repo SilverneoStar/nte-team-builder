@@ -343,8 +343,9 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
     ctx.fillText('AWAKEN', ix, y);
     const n = ao.order.length;
     const room = BOTTOM - 16 - (y + 14);
-    const d = Math.max(30, Math.min(44, room, (iw - (n - 1) * 14) / n));
-    const gap = Math.min(22, (iw - n * d) / Math.max(1, n - 1));
+    // Orbs fill the panel's width, as large as the space allows.
+    const d = Math.max(30, Math.min(58, room, (iw - (n - 1) * 8) / n));
+    const gap = (iw - n * d) / Math.max(1, n - 1);
     const cy = y + 14 + d / 2;
     ao.order.forEach((id, i) => {
       const cx = ix + d / 2 + i * (d + gap);

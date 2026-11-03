@@ -430,8 +430,9 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     if (ao?.order?.length && y < GY + ROW1 - 70) {
       label(ctx, 'AWAKENING ORDER', ix, y);
       const n = ao.order.length;
-      const d = Math.min(44, (iw - (n - 1) * 12) / n, GY + ROW1 - 22 - (y + 14));
-      const gap = Math.min(20, (iw - n * d) / Math.max(1, n - 1));
+      // Orbs fill the panel's width, as large as the space allows.
+      const d = Math.min(58, (iw - (n - 1) * 8) / n, GY + ROW1 - 16 - (y + 14));
+      const gap = (iw - n * d) / Math.max(1, n - 1);
       const cy = y + 14 + d / 2;
       ao.order.forEach((id, i) => {
         const cx = ix + d / 2 + i * (d + gap);
@@ -514,13 +515,13 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       const name = fitLine(ctx, p.name, iw - (p.idea ? 96 : 0), 13);
       ctx.fillText(name, ix, y + 16);
       if (p.idea) tag(ctx, 'KIT IDEA', ix + ctx.measureText(name).width + 10, y + 15, TAG_STYLE['BATTLE PASS']);
-      const R = Math.min(26, (rowH - 44) / 2);
+      const R = Math.min(28, (rowH - 40) / 2);
       const step = R * 2 + 10;
       p.members.forEach((id, j) => {
         const m = CHARACTER_BY_ID[id];
         if (!m) return;
         const cx = ix + R + j * step;
-        const cy = y + 32 + R;
+        const cy = y + 28 + R;
         if (id === c.id) {
           // The featured character sits in a soft gold frame; the ring keeps its element colour.
           ctx.fillStyle = 'rgba(242, 193, 78, 0.14)';
@@ -538,7 +539,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       const rx = ix + 4 * step + 8;
       ctx.font = `600 15px ${BODY}`;
       ctx.fillStyle = K.label;
-      wrap(ctx, names.join(' · '), ix + iw - rx, 2).forEach((ln, k) => ctx.fillText(ln, rx, y + 32 + R - 4 + k * 20));
+      wrap(ctx, names.join(' · '), ix + iw - rx, 2).forEach((ln, k) => ctx.fillText(ln, rx, y + 28 + R - 4 + k * 20));
     });
     if (!teams.length) {
       ctx.font = `600 18px ${BODY}`;
