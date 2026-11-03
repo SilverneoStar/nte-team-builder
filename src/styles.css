@@ -6895,8 +6895,10 @@ th[aria-sort='descending'] .th-btn {
   --tag: #48925f;
 }
 .tags li[data-kind] .tag-icon {
-  color: var(--tag);
-  filter: none;
+  /* A softer, slightly greyed version of the tag colour */
+  --tag-soft: color-mix(in srgb, var(--tag) 72%, #8d8f99);
+  color: var(--tag-soft);
+  filter: drop-shadow(0 0.5px 0.5px rgba(0, 0, 0, 0.35));
 }
 
 /* Official skill, passive and awakening icons beside their names */
@@ -7404,5 +7406,14 @@ th[aria-sort='descending'] .th-btn {
   mask: no-repeat center / contain;
 }
 .tags li[data-kind] .tag-icon--mark {
-  background: var(--tag);
+  /* Brushed-metal sheen over the softened tag colour */
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--tag-soft) 45%, #ffffff) 0%,
+      var(--tag-soft) 32%,
+      color-mix(in srgb, var(--tag-soft) 70%, #1a1a20) 52%,
+      color-mix(in srgb, var(--tag-soft) 80%, #ffffff) 72%,
+      color-mix(in srgb, var(--tag-soft) 75%, #1a1a20) 100%
+    );
 }
