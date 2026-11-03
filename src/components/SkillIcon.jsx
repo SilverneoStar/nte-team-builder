@@ -15,12 +15,12 @@ export function SkillIconCredit({ character }) {
   );
 }
 
-export default function SkillIcon({ character, k, size = 34 }) {
+export default function SkillIcon({ character, k, size = 42 }) {
   const src = skillIconUrl(character, k);
   if (!src) return null;
   return (
     <span className="skill-icon" style={{ width: size, height: size }} aria-hidden="true">
-      <img src={src} alt="" width={size - 8} height={size - 8} loading="lazy" decoding="async" />
+      <img src={src} alt="" width={size - 6} height={size - 6} loading="lazy" decoding="async" />
     </span>
   );
 }

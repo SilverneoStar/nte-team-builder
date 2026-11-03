@@ -15,6 +15,7 @@ import CartridgeIcon from './CartridgeIcon.jsx';
 import { MiniBoard } from './ConsolePage.jsx';
 import ExportIcon from './ExportIcon.jsx';
 import GearStats from './GearStats.jsx';
+import AwakenChip from './AwakenChip.jsx';
 
 const ALL_AWAKENINGS = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'];
 
@@ -260,9 +261,7 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
               </span>
             )}
             <span className="awaken-edit">
-              <span className={`awaken-chain__id${i === 0 ? ' is-first' : ''}`} title={names[id] ?? id}>
-                {id}
-              </span>
+              <AwakenChip character={c.id} id={id} first={i === 0} title={names[id] ?? id} />
               <span className="awaken-edit__moves">
                 <button type="button" aria-label={`Move ${id} earlier`} disabled={i === 0} onClick={() => move(i, -1)}>
                   ‹

@@ -36,6 +36,7 @@ import SwipeTabs from './SwipeTabs.jsx';
 import { CharacterBuild, CharacterTeams } from './CharacterBuild.jsx';
 import Teammates from './Teammates.jsx';
 import ExportIcon from './ExportIcon.jsx';
+import AwakenChip from './AwakenChip.jsx';
 
 export default function CharacterDetail({
   character: c,
@@ -187,7 +188,7 @@ export default function CharacterDetail({
                         →
                       </span>
                     )}
-                    <span className={`awaken-chain__id${i === 0 ? ' is-first' : ''}`}>{id}</span>
+                    <AwakenChip character={c.id} id={id} first={i === 0} />
                   </li>
                 ))}
               </ol>

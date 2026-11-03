@@ -17,6 +17,7 @@ import Portrait from './Portrait.jsx';
 import RankBadge from './RankBadge.jsx';
 import StatText from './StatText.jsx';
 import GearStats from './GearStats.jsx';
+import AwakenChip from './AwakenChip.jsx';
 
 const ACCESS = { limited: 'Limited', paid: 'Paid', pass: 'Battle pass', free: 'F2P', banner: 'Arc banners' };
 const ROMAN = { 2: 'II', 3: 'III', 4: 'IV' };
@@ -163,7 +164,7 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
                     →
                   </span>
                 )}
-                <span className={`awaken-chain__id${i === 0 ? ' is-first' : ''}`}>{id}</span>
+                <AwakenChip character={c.id} id={id} first={i === 0} />
               </li>
             ))}
           </ol>
