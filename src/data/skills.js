@@ -298,7 +298,11 @@ export const SKILLS = {
       s(U, 'Do You Get Deja Vu', 'Single-target or area form from her scans (area at Weak Connection); stronger Connection means a higher DMG Ratio. Resets Connection to Weak and gives the rest of the team ATK based on her Base ATK; recasting refreshes it.'),
       s(S, 'I’m Here', 'The Dreamworn Terminal deals Cosmos damage; raises Connection from Weak to Medium with Optical Illusion, and rescans targets.'),
     ],
-    life: [],
+    // Closed-beta text (machine-translated), Nov 2026.
+    life: [
+      s('Life', 'Social Networks', 'As a Logistics Center assistant: driver satisfaction +5, up to 2 more drivers, and 1 extra driver dispatched at a time.'),
+      s('Life', 'Network of Connections', 'During Instant Hammer Drop, the first furniture exchange in the Collection Showcase needs 1 fewer collectible (the first two at a higher level); resets each cycle.'),
+    ],
   },
   exe: {
     combat: [
