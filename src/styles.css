@@ -6865,36 +6865,37 @@ th[aria-sort='descending'] .th-btn {
   opacity: 0.6;
 }
 
-/* Role tags styled like the game's: coloured pills, white mark and caps. */
+/* Role tags: outlined pills in the game's tag colours, with the mark in that colour. */
 .tags li[data-kind] {
   gap: 6px;
-  padding: 3px 12px 3px 7px;
-  color: #fff6f2;
+  padding: 2px 12px 2px 7px;
+  border: 1.5px solid var(--tag);
+  background: transparent;
+  color: var(--fg);
   font: 700 0.72rem var(--font-body);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 .tags li[data-kind='damage'] {
-  background: #d9474f;
+  --tag: #d9474f;
 }
 .tags li[data-kind='support'] {
-  background: #d85a2a;
+  --tag: #d85a2a;
 }
 .tags li[data-kind='cycle'] {
-  background: #c4458b;
+  --tag: #c4458b;
 }
 .tags li[data-kind='dot'] {
-  background: #a1656a;
+  --tag: #a1656a;
 }
 .tags li[data-kind='fua'] {
-  background: #9c8f5e;
+  --tag: #9c8f5e;
 }
 .tags li[data-kind='heal'] {
-  background: #48925f;
+  --tag: #48925f;
 }
 .tags li[data-kind] .tag-icon {
-  color: #fff6f2;
+  color: var(--tag);
   filter: none;
 }
 
@@ -7403,5 +7404,5 @@ th[aria-sort='descending'] .th-btn {
   mask: no-repeat center / contain;
 }
 .tags li[data-kind] .tag-icon--mark {
-  background: #fff6f2;
+  background: var(--tag);
 }
