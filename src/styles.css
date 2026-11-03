@@ -7417,3 +7417,76 @@ th[aria-sort='descending'] .th-btn {
       color-mix(in srgb, var(--tag-soft) 75%, #1a1a20) 100%
     );
 }
+
+/* Profile header as a grid: portrait, title and actions, with the role tags
+   in their own row so they can spread out on phones instead of stacking. */
+.detail__head--esper {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'portrait title actions'
+    'portrait tags actions';
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 6px;
+}
+.detail__head--esper > .portrait {
+  grid-area: portrait;
+}
+.detail__head--esper > .detail__title {
+  grid-area: title;
+  align-self: end;
+}
+.detail__head--esper > .detail__head-actions {
+  grid-area: actions;
+}
+.detail__tags {
+  grid-area: tags;
+  align-self: start;
+  margin: 0;
+}
+.detail__head--esper:not(:has(.detail__tags)) > .detail__title {
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+.detail__tags li {
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .detail__head--esper {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'portrait actions'
+      'portrait title'
+      'tags tags';
+    column-gap: 12px;
+    row-gap: 4px;
+  }
+  .detail__head--esper > .detail__head-actions {
+    justify-self: end;
+    align-self: start;
+  }
+  .detail__head--esper > .detail__title {
+    align-self: start;
+  }
+  .detail__head--esper .portrait--xl {
+    width: 96px;
+    height: 96px;
+  }
+  .detail__head--esper .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+  .detail__head--esper .detail__title .eyebrow__meta {
+    white-space: nowrap;
+    flex-wrap: nowrap;
+  }
+  .detail__tags {
+    margin-top: 6px;
+    gap: 6px;
+  }
+  .detail__tags li[data-kind] {
+    padding: 2px 10px 2px 6px;
+    font-size: 0.68rem;
+  }
+}

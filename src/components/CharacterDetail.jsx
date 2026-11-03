@@ -274,7 +274,7 @@ export default function CharacterDetail({
 
   return (
     <article className="detail" style={{ '--el': element.color }} aria-labelledby="detail-name">
-      <header className="detail__head">
+      <header className="detail__head detail__head--esper">
         <Portrait character={c} size="xl" backdrop />
         <div className="detail__title">
           <p className="eyebrow">
@@ -291,16 +291,6 @@ export default function CharacterDetail({
           <h2 id="detail-name" className="detail__name">
             {c.name}
           </h2>
-          {c.tags?.length > 0 && (
-            <ul className="tags">
-              {c.tags.map((t) => (
-                <li key={t} data-kind={tagKind(t)}>
-                  <TagIcon tag={t} size={16} />
-                  {t}
-                </li>
-              ))}
-            </ul>
-          )}
           {c.id === 'zero' && <ZeroLookPick />}
         </div>
         <div className="detail__head-actions">
@@ -320,6 +310,16 @@ export default function CharacterDetail({
             ×
           </button>
         </div>
+      {c.tags?.length > 0 && (
+        <ul className="tags detail__tags">
+          {c.tags.map((t) => (
+            <li key={t} data-kind={tagKind(t)}>
+              <TagIcon tag={t} size={16} />
+              {t}
+            </li>
+          ))}
+        </ul>
+      )}
       </header>
 
       {upcomingNote}
