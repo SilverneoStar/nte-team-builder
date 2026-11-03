@@ -7303,3 +7303,85 @@ th[aria-sort='descending'] .th-btn {
     animation: none;
   }
 }
+
+/* Community alternative builds (Build and Awakenings tabs) */
+.alt-block {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+.alt-block .alt-block {
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+}
+.alt-block__title {
+  margin: 0 0 8px;
+  font: 600 0.72rem var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.alt-block__title span {
+  color: var(--muted);
+  font-weight: 400;
+}
+.alt-arcs {
+  margin: 0 0 8px;
+  padding-left: 1.4em;
+  display: grid;
+  gap: 3px;
+}
+.alt-arcs li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 420px;
+}
+.alt-arcs a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+.alt-arcs a:hover {
+  text-decoration: underline;
+}
+.alt-arcs__pct {
+  font-family: var(--font-mono);
+  color: var(--hl-num);
+  font-weight: 700;
+}
+.alt-arcs__pct.is-unknown {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.8em;
+}
+.alt-dl {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.alt-dl > div {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 8px;
+}
+.alt-dl dt {
+  font: 600 0.72rem var(--font-mono);
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 2px;
+}
+.alt-dl dd {
+  margin: 0;
+}
+.alt-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+@media (min-width: 900px) {
+  .alt-block__title {
+    font-size: 0.8rem;
+  }
+}

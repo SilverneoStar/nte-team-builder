@@ -8,7 +8,8 @@
 const o = (order, alt = null) => ({ order, alt });
 
 export const AWAKENING_ORDER = {
-  adler: o(['A1', 'A6', 'A2', 'A5', 'A3', 'A4'], 'Shield-focused: take A3, A6 and A4 first.'),
+  // Adler: shield-first order (the earlier entry was a copy of Baicang's); community sheet, Nov 2026.
+  adler: o(['A3', 'A6', 'A4', 'A1', 'A2', 'A5']),
   aurelia: o(['A6', 'A1', 'A2', 'A5', 'A3', 'A4']),
   baicang: o(['A1', 'A6', 'A2', 'A5', 'A3', 'A4']),
   blackbird: o(['A1', 'A3', 'A6', 'A5', 'A4', 'A2'], 'Support build: A4 → A5 → A6 → A1 → A3 → A2.'),

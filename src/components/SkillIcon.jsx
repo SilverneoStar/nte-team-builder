@@ -1,16 +1,32 @@
 // A skill, passive or awakening icon on a dark disc (or nothing without one).
 import { hasSkillIcons, skillIconUrl } from '../lib/skillIcons.js';
+import { COMMUNITY_BUILDS, COMMUNITY_SOURCE } from '../data/communityBuilds.js';
 
-/** Credit line for pages that show skill icons. */
+/** Credit line for pages that show skill icons or community alternatives. */
 export function SkillIconCredit({ character }) {
-  if (!hasSkillIcons(character)) return null;
+  const icons = hasSkillIcons(character);
+  const community = !!COMMUNITY_BUILDS[character];
+  if (!icons && !community) return null;
   return (
     <p className="muted small icon-credit">
-      Skill and awakening icons are from the game. Kit details cross-checked with{' '}
-      <a href="https://www.ntebuild.com" target="_blank" rel="noopener noreferrer">
-        NTEBuild
-      </a>
-      .
+      {icons && (
+        <>
+          Skill and awakening icons are from the game. Kit details cross-checked with{' '}
+          <a href="https://www.ntebuild.com" target="_blank" rel="noopener noreferrer">
+            NTEBuild
+          </a>
+          .{' '}
+        </>
+      )}
+      {community && (
+        <>
+          Community alternatives from the{' '}
+          <a href={COMMUNITY_SOURCE.url} target="_blank" rel="noopener noreferrer">
+            {COMMUNITY_SOURCE.name}
+          </a>{' '}
+          sheet by {COMMUNITY_SOURCE.by}.
+        </>
+      )}
     </p>
   );
 }

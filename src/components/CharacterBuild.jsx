@@ -17,6 +17,8 @@ import Portrait from './Portrait.jsx';
 import RankBadge from './RankBadge.jsx';
 import StatText from './StatText.jsx';
 import GearStats from './GearStats.jsx';
+import CommunityAlt from './CommunityAlt.jsx';
+import { SkillIconCredit } from './SkillIcon.jsx';
 import AwakenChip from './AwakenChip.jsx';
 
 const ACCESS = { limited: 'Limited', paid: 'Paid', pass: 'Battle pass', free: 'F2P', banner: 'Arc banners' };
@@ -171,6 +173,8 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
         </>
       )}
 
+      <CommunityAlt character={c} />
+
       {best && (
         <div className="build__actions">
           <button
@@ -200,6 +204,7 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
           )}
         </div>
       )}
+      <SkillIconCredit character={c.id} />
     </section>
   );
 }

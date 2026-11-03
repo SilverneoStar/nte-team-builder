@@ -37,6 +37,7 @@ import { CharacterBuild, CharacterTeams } from './CharacterBuild.jsx';
 import Teammates from './Teammates.jsx';
 import ExportIcon from './ExportIcon.jsx';
 import AwakenChip from './AwakenChip.jsx';
+import { CommunityAwaken } from './CommunityAlt.jsx';
 
 export default function CharacterDetail({
   character: c,
@@ -195,6 +196,7 @@ export default function CharacterDetail({
               {AWAKENING_ORDER[c.id].alt && <p className="muted small">{AWAKENING_ORDER[c.id].alt}</p>}
             </div>
           )}
+          <CommunityAwaken character={c} />
           <ol className="awaken-list">
             {AWAKENINGS[c.id].map((w) => (
               <li key={w.id}>
