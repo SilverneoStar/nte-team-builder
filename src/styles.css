@@ -7153,3 +7153,95 @@ th[aria-sort='descending'] .th-btn {
     font-size: 1.05rem;
   }
 }
+
+/* The same larger sizes for the rest of the site on wider screens. */
+@media (min-width: 900px) {
+  .nav__link {
+    padding: 8px 16px;
+    font-size: 0.95rem;
+  }
+  .page__title {
+    font-size: 2.3rem;
+  }
+  .search {
+    max-width: 280px;
+    padding: 9px 14px;
+    font-size: 0.95rem;
+  }
+  .chip {
+    padding: 5px 12px;
+    font-size: 0.88rem;
+  }
+  .chip__n {
+    font-size: 0.76rem;
+  }
+  .cfilter__btn {
+    width: 42px;
+    height: 42px;
+  }
+  .type-tab {
+    font-size: 1.02rem;
+  }
+  /* Team Builder */
+  .slot__name {
+    font-size: 1.06rem;
+  }
+  .slot__meta {
+    font-size: 0.82rem;
+  }
+  .gear-chip {
+    padding: 3px 9px;
+    font-size: 0.76rem;
+  }
+  .roster .grid {
+    /* Two roomy columns, so names like "Blackbird" don't break mid-word. */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 178px), 1fr));
+    gap: 8px;
+  }
+  .card {
+    font-size: 0.96rem;
+  }
+  .card__name {
+    overflow-wrap: break-word;
+  }
+  .card__role {
+    font-size: 0.84rem;
+  }
+  /* Arcs */
+  .arc-card__name {
+    font-size: 1.1rem;
+  }
+  .arc-card__field {
+    font-size: 0.82rem;
+  }
+  .arc-card__passive {
+    font-size: 0.96rem;
+  }
+  .arc-user {
+    font-size: 0.9rem;
+  }
+  /* Espers grid */
+  .char-tile__name {
+    font-size: 1.02rem;
+  }
+  .char-tile__roles {
+    font-size: 0.82rem;
+  }
+  /* Console */
+  .console-char {
+    font-size: 0.88rem;
+  }
+  /* Glossary and Achievements */
+  .gloss__term {
+    font-size: 1.1rem;
+  }
+  .gloss__item {
+    font-size: 0.98rem;
+  }
+  .ach__name {
+    font-size: 1.04rem;
+  }
+  .ach__text {
+    font-size: 0.93rem;
+  }
+}
