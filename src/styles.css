@@ -7245,3 +7245,61 @@ th[aria-sort='descending'] .th-btn {
     font-size: 0.93rem;
   }
 }
+
+/* Cortado's S-rank emote: the S glows and pulses, the tail wags, sparkles pop. */
+.mascot--srank .mascot__rig {
+  animation: cortado-wiggle 1.2s ease-in-out 2;
+}
+.mascot--srank .mascot__tail {
+  transform-origin: 44px 50px;
+  animation: cortado-tail 1.2s ease-in-out 2 forwards;
+}
+.mascot__s {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.mascot--srank .mascot__s {
+  animation: cortado-s-glow 2.4s ease-out both;
+}
+.mascot--srank .mascot__star {
+  animation: cortado-star 1.2s ease-out 0.5s both;
+}
+.mascot--srank .mascot__star--2 {
+  animation-delay: 0.62s;
+}
+.mascot--srank .mascot__star--3 {
+  animation-delay: 0.74s;
+}
+@keyframes cortado-s-glow {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+    filter: drop-shadow(0 0 0 rgba(255, 210, 90, 0));
+  }
+  25% {
+    transform: scale(1.25);
+    opacity: 1;
+    filter: drop-shadow(0 0 2.6px rgba(255, 210, 90, 1));
+  }
+  40% {
+    transform: scale(1);
+  }
+  60% {
+    filter: drop-shadow(0 0 1px rgba(255, 210, 90, 0.6));
+  }
+  80% {
+    filter: drop-shadow(0 0 2.4px rgba(255, 210, 90, 0.95));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 1px rgba(255, 226, 176, 0.7));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mascot--srank .mascot__rig,
+  .mascot--srank .mascot__tail,
+  .mascot--srank .mascot__s,
+  .mascot--srank .mascot__star {
+    animation: none;
+  }
+}

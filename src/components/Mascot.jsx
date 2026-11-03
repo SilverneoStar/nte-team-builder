@@ -31,6 +31,7 @@ const EMOTES = [
   { id: 'sparkle', label: 'sparkles after a refill', ms: 1200 },
   { id: 'charge', label: 'goes into charging mode', ms: 2600 },
   { id: 'dice', label: 'rolls dice eyes', ms: 2000 },
+  { id: 'srank', label: 'shows off an S rank', ms: 2400 },
 ];
 // Dice eyes: faces flicker while they tumble, then land on the rolled values.
 const DICE_ROLL_MS = 1000;
@@ -217,6 +218,41 @@ export const Star = ({ x, y, s = 1, className }) => (
   </g>
 );
 
+// The S-rank face: the gold rank letter on the face screen, glowing, with a
+// happy brow and blush, like the game's S rating.
+function SRankFace() {
+  // Same gold as the S rank in lib/synergy.js (kept here so the header stays light).
+  const stops = ['#fff27a', '#ffc21c', '#ff8a00'];
+  return (
+    <g className="mascot__srank">
+      <defs>
+        <linearGradient id="mascot-s-grad" x1="0" y1="0" x2="0" y2="1">
+          {stops.map((c, i) => (
+            <stop key={c} offset={`${(i / (stops.length - 1)) * 100}%`} stopColor={c} />
+          ))}
+        </linearGradient>
+      </defs>
+      <rect x="20.2" y="27.2" width="23.6" height="13.1" rx="6.5" fill="#2E1F17" />
+      <path d="M24.6 29.8 Q32 27.4 39.4 29.8" stroke="#9A8F88" strokeWidth="1.1" fill="none" strokeLinecap="round" />
+      <ellipse cx="22.6" cy="38" rx="1.6" ry="0.9" fill="#F4A7A0" />
+      <ellipse cx="41.4" cy="38" rx="1.6" ry="0.9" fill="#F4A7A0" />
+      <text
+        className="mascot__s"
+        x="32"
+        y="38.6"
+        textAnchor="middle"
+        fontSize="10.6"
+        fontStyle="italic"
+        fontWeight="900"
+        fontFamily="Inter, 'Arial Black', sans-serif"
+        fill="url(#mascot-s-grad)"
+      >
+        S
+      </text>
+    </g>
+  );
+}
+
 export default function Mascot() {
   const [hat, setHat] = useState(loadHat);
   const [emote, setEmote] = useState(null); // { id, n }
@@ -291,7 +327,7 @@ export default function Mascot() {
         <span className="mascot__rig">
           {/* Behind the body: tail, wheels, speed lines */}
           <svg className="mascot__layer mascot__layer--back" viewBox="0 0 64 64" aria-hidden="true">
-            {id === 'wag' && (
+            {(id === 'wag' || id === 'srank') && (
               <g className="mascot__tail">
                 <Tail d="M42 50 Q54 52 57 42 Q59.4 34 56 27.6" />
               </g>
@@ -340,7 +376,7 @@ export default function Mascot() {
             height="200"
           />
           {/* In front: new face and sparkles */}
-          {(face || id === 'sparkle' || id === 'swim') && (
+          {(face || id === 'sparkle' || id === 'swim' || id === 'srank') && (
             <svg className="mascot__layer mascot__layer--front" viewBox="0 0 64 64" aria-hidden="true">
               {face && <Face kind={face} dice={dice} />}
               {id === 'charge' && (
@@ -391,7 +427,8 @@ export default function Mascot() {
                   </g>
                 </>
               )}
-              {id === 'sparkle' && (
+              {id === 'srank' && <SRankFace />}
+              {(id === 'sparkle' || id === 'srank') && (
                 <>
                   <Star x={8} y={14} s={1.1} className="mascot__star" />
                   <Star x={57} y={18} s={0.9} className="mascot__star mascot__star--2" />
