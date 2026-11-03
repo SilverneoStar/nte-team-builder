@@ -19,7 +19,7 @@ const OWN_KIND = {
 };
 export const tagKind = (tag) =>
   OWN_KIND[tag] ??
-  (['DMG Boost', 'Summoner', 'Break Boost', 'RES Shred'].includes(tag) ? 'support' : 'damage');
+  (['DMG Boost', 'Summoner', 'Break Boost'].includes(tag) ? 'support' : 'damage');
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round' };
 
@@ -29,14 +29,6 @@ const ICONS = {
     <>
       <path d="M12 2.5 21 13.6q-1.8-1.4-3 .4-1.4-1.6-2.8.2-1.5-1.7-3.2.2-1.6-1.9-3.2-.2-1.4-1.8-2.8-.2-1.3-1.8-3 -.4Z" fill="currentColor" />
       <ellipse cx="12" cy="18.4" rx="9" ry="2.7" fill="none" stroke="currentColor" strokeWidth="1.9" />
-    </>
-  ),
-  // Two smaller peaks: supporting damage.
-  'Sub-DPS': (
-    <>
-      <path d="M8.5 6 14 14H3Z" fill="currentColor" />
-      <path d="M16 9.5 21 16h-7.5Z" fill="currentColor" opacity="0.65" />
-      <path d="M3.5 18.5h17" {...S} />
     </>
   ),
   // Game mark: a jagged burst with a crack at its base.
@@ -110,13 +102,6 @@ const ICONS = {
       <circle cx="12" cy="12" r="5.2" {...S} />
       <path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4" {...S} />
       <circle cx="12" cy="12" r="1.8" fill="currentColor" />
-    </>
-  ),
-  // A shield torn by claw marks.
-  'RES Shred': (
-    <>
-      <path d="M12 3 19 5.8v5.4c0 4.4-3 7.6-7 9.3-4-1.7-7-4.9-7-9.3V5.8Z" {...S} />
-      <path d="m9.2 8.2-1.4 6M12.8 8.2l-1.4 6M16.4 8.2 15 14" {...S} strokeWidth="1.8" />
     </>
   ),
   // Two strikes in a row.

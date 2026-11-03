@@ -93,7 +93,7 @@ export const CHARACTERS = [
   {
     id: 'linko', name: 'Linko', rarity: 'S', version: '1.3', element: 'anima', roles: ['Damage', 'Buff'],
     arcType: 'Plasma', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: 'Telepathy',
-    tags: ['Sub-DPS', 'RES Shred'], stats: stats(1280, 82, 76),
+    tags: ['Burst DPS', 'Follow-up Attack'], stats: stats(1280, 82, 76),
   },
   {
     id: 'nanally', name: 'Nanally', rarity: 'S', version: '1.0', element: 'anima', roles: ['Damage'],
