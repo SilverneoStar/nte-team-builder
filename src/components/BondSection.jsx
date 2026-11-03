@@ -3,6 +3,8 @@ import { LIFE_MAX, SKILLS } from '../data/skills.js';
 import { BOND, BOND_LEVELS, BOND_MAX, BOND_TOTAL, GIFT_LIMITS, NO_BOND, UNIVERSAL_GIFTS } from '../data/bond.js';
 import StatText from './StatText.jsx';
 import SkillIcon from './SkillIcon.jsx';
+import BetaHidden from './BetaHidden.jsx';
+import { isBeta, useShowBeta } from '../lib/betaInfo.js';
 import { fmt } from '../lib/format.js';
 
 const COSMETIC = { sticker: 'Sticker', avatar: 'Avatar', frame: 'Frame', namecard: 'Namecard' };
@@ -24,7 +26,9 @@ function GiftRow({ gift, best }) {
 
 // Overworld (life) abilities, Bond levels and favourite gifts for one character.
 export default function BondSection({ character: c }) {
-  const life = SKILLS[c.id]?.life ?? [];
+  const showBeta = useShowBeta();
+  const betaLife = isBeta(c.id, 'life') && !showBeta;
+  const life = betaLife ? [] : (SKILLS[c.id]?.life ?? []);
   const bond = BOND[c.id];
   const first = c.name.split(' ')[0];
 
@@ -50,6 +54,8 @@ export default function BondSection({ character: c }) {
             </li>
           ))}
         </ol>
+      ) : betaLife ? (
+        <BetaHidden what={`${c.name}’s overworld abilities`} />
       ) : (
         <p className="muted small">Overworld abilities will be added once they’re published.</p>
       )}

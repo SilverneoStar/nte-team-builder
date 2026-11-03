@@ -1,6 +1,8 @@
 // One Arc's page: the 2D player, stats, passive, who uses it, how to get it and its materials.
 import { useState } from 'react';
 import { ARC_SOURCES, FIELD_EFFECTS, RECOMMENDED } from '../data/arcs.js';
+import BetaHidden from './BetaHidden.jsx';
+import { BETA_ARCS, useShowBeta } from '../lib/betaInfo.js';
 import { ARC_PASSIVES } from '../data/arcPassives.js';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
 import {
@@ -42,7 +44,9 @@ export default function ArcDetail({ arc: a, onClose }) {
   const named = new Set([a.signature, ...recs.map((c) => c.id)]);
   const others = CHARACTERS.filter((c) => c.arcType === a.type && !named.has(c.id));
   const field = FIELD_EFFECTS[a.id];
-  const full = ARC_PASSIVES[a.id];
+  const showBeta = useShowBeta();
+  const betaHidden = BETA_ARCS.has(a.id) && !showBeta;
+  const full = betaHidden ? null : ARC_PASSIVES[a.id];
   const sources = ARC_SOURCES[a.id] ?? [];
   const cost = arcAscensionCost(a, from, to);
   const table = arcAscensionTable(a);
@@ -63,7 +67,7 @@ export default function ArcDetail({ arc: a, onClose }) {
             {a.sub} {a.estimated && <span className="est-tag" title="Estimated: usual value for a limited S-rank Arc">est.</span>}
           </dd>
         </div>
-        {!full && (
+        {!full && !betaHidden && (
           <div>
             <dt>Passive</dt>
             <dd>
@@ -73,6 +77,7 @@ export default function ArcDetail({ arc: a, onClose }) {
         )}
       </dl>
 
+      {betaHidden && <BetaHidden what={`${a.name}’s passive`} />}
       {full && (
         <section className="arc-passive" aria-label="Passive">
           <span className="arc-passive__label">

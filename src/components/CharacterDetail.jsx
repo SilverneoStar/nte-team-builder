@@ -38,6 +38,8 @@ import Teammates from './Teammates.jsx';
 import ExportIcon from './ExportIcon.jsx';
 import AwakenChip from './AwakenChip.jsx';
 import { CommunityAwaken } from './CommunityAlt.jsx';
+import BetaHidden from './BetaHidden.jsx';
+import { BETA, isBeta, setShowBeta, useShowBeta } from '../lib/betaInfo.js';
 
 export default function CharacterDetail({
   character: c,
@@ -156,6 +158,7 @@ export default function CharacterDetail({
 
     </div>
   );
+  const showBeta = useShowBeta();
   // Upcoming characters: everything shown may still change before release.
   const upcomingNote = c.upcoming ? (
     <p className="upcoming-note">
@@ -174,9 +177,11 @@ export default function CharacterDetail({
   const awakenings = (
     <section>
       <h3 className="mini-title">Awakenings</h3>
-      {AWAKENINGS[c.id] ? (
+      {isBeta(c.id, 'awakenings') && !showBeta ? (
+        <BetaHidden what={`${c.name}’s awakenings and Resonance`} />
+      ) : AWAKENINGS[c.id] ? (
         <>
-          {c.upcoming && (
+          {isBeta(c.id, 'awakenings') && (
             <p className="muted small">From closed-beta text; values shown as X aren’t out yet and may change at release.</p>
           )}
           {AWAKENING_ORDER[c.id] && (
@@ -326,6 +331,19 @@ export default function CharacterDetail({
       </header>
 
       {upcomingNote}
+      {BETA[c.id] && (
+        <div className="beta-note" role="note">
+          <p>
+            <span className="beta-tag">Beta</span>{' '}
+            {showBeta
+              ? 'Parts of this page come from closed-beta information and may change before release.'
+              : 'Beta information for this Esper (closed-beta kit details) is hidden. Official info from streams and PVs still shows.'}
+          </p>
+          <button type="button" className="btn btn--quiet btn--small" onClick={() => setShowBeta(!showBeta)} aria-pressed={showBeta}>
+            {showBeta ? 'Hide beta info' : 'Show beta info'}
+          </button>
+        </div>
+      )}
       <SwipeTabs
         key={c.id}
         label={`${c.name} details`}

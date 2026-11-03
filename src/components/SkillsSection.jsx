@@ -3,6 +3,8 @@ import { useState } from 'react';
 import MaterialIcon from './MaterialIcon.jsx';
 import { LIFE_MAX, SKILL_LEVEL_COSTS, SKILL_MAX, SKILLS, skillCost } from '../data/skills.js';
 import { PASSIVES } from '../data/passives.js';
+import BetaHidden from './BetaHidden.jsx';
+import { isBeta, useShowBeta } from '../lib/betaInfo.js';
 import StatText from './StatText.jsx';
 import SkillIcon, { SkillIconCredit } from './SkillIcon.jsx';
 import { fmt } from '../lib/format.js';
@@ -13,7 +15,9 @@ const LEVELS = Array.from({ length: SKILL_MAX }, (_, i) => i + 1);
 // needed to level them.
 export default function SkillsSection({ character }) {
   const data = SKILLS[character.id];
-  const pas = PASSIVES[character.id];
+  const showBeta = useShowBeta();
+  const betaPas = isBeta(character.id, 'passives') && !showBeta;
+  const pas = betaPas ? null : PASSIVES[character.id];
   const [from, setFrom] = useState(1);
   const [to, setTo] = useState(SKILL_MAX);
   const [passives, setPassives] = useState(true);
@@ -80,6 +84,8 @@ export default function SkillsSection({ character }) {
               </li>
             ))}
           </ol>
+        ) : betaPas ? (
+          <BetaHidden what={`${character.name}’s passives`} />
         ) : (
           <p className="muted small">Passives will be added once they’re published.</p>
         )}

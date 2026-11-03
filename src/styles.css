@@ -7499,3 +7499,43 @@ th[aria-sort='descending'] .th-btn {
     font-size: 0.68rem;
   }
 }
+
+/* Beta information: a note with a show/hide toggle, and stand-ins when hidden */
+.beta-tag {
+  display: inline-block;
+  padding: 0 7px;
+  border: 1px solid color-mix(in srgb, #e0a23a 70%, var(--line));
+  border-radius: 999px;
+  color: #c98a23;
+  font: 700 0.68rem/1.6 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.beta-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 8px 12px;
+  border: 1px dashed color-mix(in srgb, #e0a23a 55%, var(--line));
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.beta-note p {
+  margin: 0;
+  flex: 1 1 260px;
+}
+.beta-hidden {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}

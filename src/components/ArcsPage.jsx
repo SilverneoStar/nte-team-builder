@@ -9,6 +9,7 @@ import Portrait from './Portrait.jsx';
 import MoreList from './MoreList.jsx';
 import RankBadge from './RankBadge.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
+import { BETA_ARCS, useShowBeta } from '../lib/betaInfo.js';
 import ArcPlayer from './ArcPlayer.jsx';
 import StatText from './StatText.jsx';
 
@@ -27,6 +28,7 @@ export default function ArcsPage({ arcType, arcId }) {
     ? ARC_TYPES.find((t) => t.toLowerCase() === arcType)
     : 'all';
   const [rank, setRank] = useState('all');
+  const showBeta = useShowBeta();
   const [query, setQuery] = useState('');
 
   const counts = useMemo(
@@ -168,7 +170,11 @@ export default function ArcsPage({ arcType, arcId }) {
                   </dl>
                 </div>
                 <p className="arc-card__passive">
-                  <StatText>{a.passive}</StatText>
+                  {BETA_ARCS.has(a.id) && !showBeta ? (
+                    <span className="muted">Passive from beta info (hidden).</span>
+                  ) : (
+                    <StatText>{a.passive}</StatText>
+                  )}
                 </p>
                 {FIELD_EFFECTS[a.id] && <p className="arc-card__field">Outside combat: {FIELD_EFFECTS[a.id].name}</p>}
                 {(sig || recs.length > 0) && (
