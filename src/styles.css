@@ -6894,6 +6894,15 @@ th[aria-sort='descending'] .th-btn {
 .tags li[data-kind='heal'] {
   --tag: #48925f;
 }
+.tags li[data-kind='control'] {
+  --tag: #8a8d96;
+}
+.tags li[data-kind='shield'] {
+  --tag: #6270e6;
+}
+.tags li[data-kind='redirect'] {
+  --tag: #3398a8;
+}
 .tags li[data-kind] .tag-icon {
   /* A softer, slightly greyed version of the tag colour */
   --tag-soft: color-mix(in srgb, var(--tag) 72%, #8d8f99);

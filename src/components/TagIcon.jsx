@@ -5,12 +5,21 @@
 
 /**
  * The game's pill colour group for a tag: damage (red), support (orange),
- * cycle (pink), DoT (dusty rose), follow-up (olive) or healing (green).
+ * cycle (pink), DoT (dusty rose), follow-up (olive), healing (green), control
+ * (grey), shield (blue) or damage redirection (teal).
  */
-const OWN_KIND = { 'Instant Cycle': 'cycle', DoT: 'dot', 'Follow-up Attack': 'fua', Healing: 'heal' };
+const OWN_KIND = {
+  'Instant Cycle': 'cycle',
+  DoT: 'dot',
+  'Follow-up Attack': 'fua',
+  Healing: 'heal',
+  Control: 'control',
+  Shield: 'shield',
+  'DMG Redirection': 'redirect',
+};
 export const tagKind = (tag) =>
   OWN_KIND[tag] ??
-  (['DMG Boost', 'Summoner', 'Shield', 'Control', 'RES Shred', 'DMG Redirection'].includes(tag) ? 'support' : 'damage');
+  (['DMG Boost', 'Summoner', 'Break Boost', 'RES Shred'].includes(tag) ? 'support' : 'damage');
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round' };
 
@@ -145,6 +154,10 @@ const GAME_MARKS = {
   DoT: 'dot',
   'Follow-up Attack': 'follow-up-attack',
   Healing: 'healing',
+  Control: 'control',
+  'Break Boost': 'break-boost',
+  'DMG Redirection': 'dmg-redirection',
+  Shield: 'shield',
 };
 
 export const hasTagIcon = (tag) => tag in ICONS || tag in GAME_MARKS;
