@@ -6,22 +6,31 @@
 // on NTE's own mechanics: the Esper Cycle, reaction passives, roles, Instant
 // Cycle, Arcs, Cartridges, awakenings and Resonance.
 //
-// Points (94 in total, scaled to 100):
-//   Esper Cycle        30  a reaction (18), every member's element reacting
-//                          with a teammate's (7), a trio (Charge, Discord) (5)
-//   Reaction passives  20  a member's first passive boosts a reaction this
-//                          team triggers (10 each)
-//   Roles              20  Damage, Buff and Survival; three or more Main DPS
-//                          fight over field time (−4)
-//   Team buffs         10  DMG Boost, RES Shred and Break Boost for a damage
-//                          dealer (5 each)
-//   Instant Cycle       6  Esper Zero or Blackbird refill the Esper Meter, so
-//                          the team reacts far more often
+// Points (82 in total, scaled to 100) for how well the members enable each other, using
+// the game's own role tags (Main DPS, Burst DPS, Instant Cycle, DMG Boost,
+// Break Boost, Healing, Shield, DMG Redirection, Control, DoT, Follow-up
+// Attack, Summoner) and attribute names (Cycle Intensity, Break Intensity):
+//   Esper Cycle        26  a reaction (16), every member's element reacting
+//                          with a teammate's (6), a trio (Charge, Discord) (4)
+//   Reaction passives  14  a member's first passive boosts a reaction this
+//                          team triggers (7 each)
+//   Roles & field time 16  Damage, Buff and Survival (5 / 4 / 4), and one
+//                          on-field carry with swap-in partners (3); three or
+//                          more Main DPS fight over field time (−4)
+//   Team support       10  DMG Boost or Break Boost for a damage dealer (5),
+//                          sustain from Healing, Shield or DMG Redirection
+//                          (5), Control for an AoE, DoT or Burst teammate (3),
+//                          a Summoner's damage for a DMG Boost (3); capped at 10
+//   Tag combos     bonus 8 two DoT members stacking on one target (4), or
+//                          Follow-up Attacks with Hexed, whose follow-ups
+//                          they add to (4)
+//   Esper Meter         8  Instant Cycle refills it (8), or Cycle Intensity
+//                          on the gear speeds it up (4)
 //   Known team          8  a community team (8), a kit-based idea (5), or
 //                          pairs from them
 //   Gear (bonus part)  12  recommended or signature Arcs and recommended
 //                          Cartridge sets. Only counted once some gear is
-//                          equipped; the score is then out of 106.
+//                          equipped; the score is then out of 94.
 //   Awakenings & Arcs  up to 8 bonus points on top (not added to the total to
 //                          aim for), with the score capped at 100.
 import { CHARACTER_BY_ID, acquisition } from '../data/characters.js';
@@ -29,7 +38,8 @@ import { ELEMENTS, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { PASSIVES } from '../data/passives.js';
 import { PRESETS } from '../data/presets.js';
 import { ARC_BY_ID, RECOMMENDED } from '../data/arcs.js';
-import { cartridgesFor } from '../data/gear.js';
+import { bonusStats, cartridgesFor } from '../data/gear.js';
+import { consoleStats } from '../data/console.js';
 import { RESONANCES } from '../data/awakenings.js';
 import { areNeighbours } from './analyze.js';
 
@@ -63,12 +73,8 @@ export const SYNERGY_MOODS = {
 };
 
 const round = (n) => Math.round(n * 10) / 10;
-// Role tags that help a teammate deal damage.
-const BUFF_TAGS = [
-  ['DMG Boost', 'raises the team’s DMG'],
-  ['RES Shred', 'lowers enemy RES'],
-  ['Break Boost', 'speeds up Break'],
-];
+const hasTag = (c, tag) => !!c.tags?.includes(tag);
+const SUSTAIN_TAGS = ['Healing', 'Shield', 'DMG Redirection'];
 const key = (ids) => [...ids].sort().join('|');
 const short = (c) => c.name.replace(/^Esper /, '');
 
@@ -112,7 +118,7 @@ export function synergyScore(memberIds, loadouts = {}) {
   const cycleBits = [];
   let cycle = 0;
   if (reactions.length) {
-    cycle += 18;
+    cycle += 16;
     cycleBits.push(reactions.map((r) => r.name).join(', '));
   }
   const isolated = team.filter(
@@ -120,19 +126,19 @@ export function synergyScore(memberIds, loadouts = {}) {
   );
   if (team.length >= 2 && reactions.length) {
     if (!isolated.length) {
-      cycle += 7;
+      cycle += 6;
       cycleBits.push('every element reacts with a teammate');
     } else cycleBits.push(`${isolated.map(short).join(', ')} has no neighbouring element here`);
   }
   if (trios.length) {
-    cycle += 5;
+    cycle += 4;
     cycleBits.push(`${trios.map((t) => t.name).join(', ')} trio`);
   }
   parts.push({
     id: 'cycle',
     label: 'Esper Cycle',
     points: cycle,
-    max: 30,
+    max: 26,
     detail: cycleBits.length ? cycleBits.join('; ') : 'No neighbouring elements yet, so no reactions',
   });
 
@@ -142,56 +148,124 @@ export function synergyScore(memberIds, loadouts = {}) {
   parts.push({
     id: 'boosts',
     label: 'Reaction passives',
-    points: Math.min(20, boosted.length * 10),
-    max: 20,
+    points: Math.min(14, boosted.length * 7),
+    max: 14,
     detail: boosted.length
       ? boosted.map((c) => `${short(c)}: ${PASSIVES[c.id].p1.name} boosts ${PASSIVES[c.id].p1.boosts}`).join('; ')
       : 'No passive here boosts a reaction this team triggers',
   });
 
-  // Roles: Damage, Buff and Survival, without too many main carries.
+  // Roles and field time: Damage, Buff and Survival, and a carry who stays on
+  // the field with partners who swap in (Burst DPS, supports), instead of
+  // several Main DPS fighting over field time.
   const has = (role) => team.some((c) => c.roles.includes(role));
-  let rolePts = (has('Damage') ? 8 : 0) + (has('Buff') ? 6 : 0) + (has('Survival') ? 6 : 0);
+  let rolePts = (has('Damage') ? 5 : 0) + (has('Buff') ? 4 : 0) + (has('Survival') ? 4 : 0);
   const roleBits = ['Damage', 'Buff', 'Survival'].filter(has);
-  const carries = team.filter((c) => c.tags?.includes('Main DPS')).length;
-  if (carries >= 3) {
+  const carries = team.filter((c) => hasTag(c, 'Main DPS'));
+  const swappers = team.filter((c) => !hasTag(c, 'Main DPS'));
+  if (carries.length === 1 && swappers.length >= 2) {
+    rolePts += 3;
+    roleBits.push(`${short(carries[0])} holds the field while the others swap in`);
+  } else if (!carries.length && team.filter((c) => hasTag(c, 'Burst DPS')).length >= 2) {
+    rolePts += 2;
+    roleBits.push('Burst DPS take turns on the field');
+  }
+  if (carries.length >= 3) {
     rolePts -= 4;
-    roleBits.push(`${carries} Main DPS share field time (−4)`);
+    roleBits.push(`${carries.length} Main DPS share field time (−4)`);
   }
   parts.push({
     id: 'roles',
-    label: 'Roles',
+    label: 'Roles & field time',
     points: Math.max(0, rolePts),
-    max: 20,
+    max: 16,
     detail: roleBits.length ? roleBits.join(', ') : 'No clear roles yet',
   });
 
-  // Team buffs: DMG Boost, RES Shred and Break Boost from a member, for a
-  // teammate who deals the damage.
-  const buffBits = [];
-  BUFF_TAGS.forEach(([tag, text]) => {
-    const givers = team.filter((c) => c.tags?.includes(tag));
-    const helped = givers.length && team.some((c) => !givers.includes(c) && c.roles.includes('Damage'));
-    if (helped) buffBits.push(`${givers.map(short).join(', ')}: ${text}`);
-  });
+  // Team support: tags that help someone else, counted when that someone is here.
+  const supBits = [];
+  let sup = 0;
+  const others = (givers) => team.filter((c) => !givers.includes(c));
+  const dealers = (list) => list.filter((c) => c.roles.includes('Damage'));
+  const boosters = team.filter((c) => hasTag(c, 'DMG Boost') || hasTag(c, 'Break Boost'));
+  if (boosters.length && dealers(others(boosters)).length) {
+    sup += 5;
+    supBits.push(
+      `${boosters.map(short).join(', ')} ${boosters.length > 1 ? 'boost' : 'boosts'} ${dealers(others(boosters)).map(short).join(', ')}`,
+    );
+  }
+  const sustain = team.filter((c) => SUSTAIN_TAGS.some((t) => hasTag(c, t)));
+  if (sustain.length && team.length > 1) {
+    sup += 5;
+    supBits.push(
+      `${sustain.map((c) => `${short(c)} (${SUSTAIN_TAGS.filter((t) => hasTag(c, t)).join(', ')})`).join(', ')} keeps the team alive`,
+    );
+  }
+  const control = team.filter((c) => hasTag(c, 'Control'));
+  const groupers = others(control).filter((c) => hasTag(c, 'DoT') || hasTag(c, 'Burst DPS') || hasTag(c, 'Summoner'));
+  if (control.length && groupers.length) {
+    sup += 3;
+    supBits.push(`${control.map(short).join(', ')} holds enemies for ${groupers.map(short).join(', ')}`);
+  }
+  const summoners = team.filter((c) => hasTag(c, 'Summoner'));
+  if (summoners.length && team.some((c) => !summoners.includes(c) && hasTag(c, 'DMG Boost'))) {
+    sup += 3;
+    supBits.push(`${summoners.map(short).join(', ')}’s summons gain from the DMG Boost`);
+  }
   parts.push({
     id: 'buffs',
-    label: 'Team buffs',
-    points: Math.min(10, buffBits.length * 5),
+    label: 'Team support',
+    points: Math.min(10, sup),
     max: 10,
-    detail: buffBits.length ? buffBits.join('; ') : 'No DMG Boost, RES Shred or Break Boost for a teammate',
+    detail: supBits.length
+      ? supBits.join('; ')
+      : 'No DMG Boost, Break Boost, Healing, Shield, DMG Redirection or Control for a teammate',
   });
 
-  // Instant Cycle.
-  const instant = team.filter((c) => c.tags?.includes('Instant Cycle'));
+  // Tag combos: members whose tags feed each other.
+  const comboBits = [];
+  let combo = 0;
+  const dots = team.filter((c) => hasTag(c, 'DoT'));
+  if (dots.length >= 2) {
+    combo += 4;
+    comboBits.push(`${dots.map(short).join(', ')} stack DoT on the same target`);
+  }
+  const fua = team.filter((c) => hasTag(c, 'Follow-up Attack'));
+  if (fua.length && names.has('Hexed')) {
+    combo += 4;
+    comboBits.push(`${fua.map(short).join(', ')}: Follow-up Attacks with Hexed's extra follow-ups`);
+  }
+  parts.push({
+    id: 'combos',
+    label: 'Tag combos (bonus)',
+    points: combo,
+    max: 8,
+    bonus: true,
+    detail: comboBits.length ? comboBits.join('; ') : 'No DoT pair, and no Follow-up Attack with Hexed',
+  });
+
+  // Esper Meter: Instant Cycle refills it; otherwise Cycle Intensity on the gear helps.
+  const instant = team.filter((c) => hasTag(c, 'Instant Cycle'));
+  const cycleGear = team
+    .map((c) => {
+      const lo = loadouts[c.id] ?? {};
+      const arc = lo.arc && ARC_BY_ID[lo.arc];
+      const v = bonusStats(arc, lo.cartStats, consoleStats(c.id, lo.console ?? [], lo.cartridge)).find(
+        (b) => b.stat === 'Cycle Intensity',
+      )?.value;
+      return v ? { c, v } : null;
+    })
+    .filter(Boolean);
   parts.push({
     id: 'instant',
-    label: 'Instant Cycle',
-    points: instant.length ? 6 : 0,
-    max: 6,
+    label: 'Esper Meter',
+    points: instant.length ? 8 : cycleGear.length ? 4 : 0,
+    max: 8,
     detail: instant.length
-      ? `${instant.map(short).join(' and ')} ${instant.length > 1 ? 'refill' : 'refills'} the Esper Meter, so the team reacts more often`
-      : 'No Instant Cycle: reactions wait on the Esper Meter (Cycle Intensity helps)',
+      ? `${instant.map(short).join(' and ')} ${instant.length > 1 ? 'refill' : 'refills'} the Esper Meter (Instant Cycle), so the team reacts more often`
+      : cycleGear.length
+        ? `Cycle Intensity on ${cycleGear.map((x) => `${short(x.c)} (+${x.v})`).join(', ')} speeds up reactions`
+        : 'No Instant Cycle: reactions wait on the Esper Meter (Cycle Intensity on the gear helps)',
   });
 
   // Known team.
