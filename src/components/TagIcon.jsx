@@ -3,13 +3,14 @@
 // marks (GAME_MARKS); the rest are drawn in the same style. They take
 // the text colour (white on the game-coloured tag pills).
 
-/** The game's pill colour group for a tag: damage (red), support (orange) or cycle (pink). */
+/**
+ * The game's pill colour group for a tag: damage (red), support (orange),
+ * cycle (pink), DoT (dusty rose), follow-up (olive) or healing (green).
+ */
+const OWN_KIND = { 'Instant Cycle': 'cycle', DoT: 'dot', 'Follow-up Attack': 'fua', Healing: 'heal' };
 export const tagKind = (tag) =>
-  tag === 'Instant Cycle'
-    ? 'cycle'
-    : ['DMG Boost', 'Summoner', 'Healing', 'Shield', 'Control', 'RES Shred', 'DMG Redirection'].includes(tag)
-      ? 'support'
-      : 'damage';
+  OWN_KIND[tag] ??
+  (['DMG Boost', 'Summoner', 'Shield', 'Control', 'RES Shred', 'DMG Redirection'].includes(tag) ? 'support' : 'damage');
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round' };
 
@@ -141,6 +142,9 @@ const GAME_MARKS = {
   Summoner: 'summoner',
   'Instant Cycle': 'instant-cycle',
   'DMG Boost': 'dmg-boost',
+  DoT: 'dot',
+  'Follow-up Attack': 'follow-up-attack',
+  Healing: 'healing',
 };
 
 export const hasTagIcon = (tag) => tag in ICONS || tag in GAME_MARKS;

@@ -6884,6 +6884,15 @@ th[aria-sort='descending'] .th-btn {
 .tags li[data-kind='cycle'] {
   background: #c4458b;
 }
+.tags li[data-kind='dot'] {
+  background: #a1656a;
+}
+.tags li[data-kind='fua'] {
+  background: #9c8f5e;
+}
+.tags li[data-kind='heal'] {
+  background: #48925f;
+}
 .tags li[data-kind] .tag-icon {
   color: #fff6f2;
   filter: none;
