@@ -12,6 +12,12 @@
 const p = (name, text, boosts = null) => ({ name, text, boosts });
 
 export const PASSIVES = {
+  // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).
+  exe: {
+    p1: p('Bonus Points', 'When Exe triggers a Chaos Esper Cycle (“Dark Star” in the beta text) below SS Rating, his Rating jumps straight to SS.'),
+    p2: p('Temporary Overclock', 'Each Digital Echo hit cuts the Redirect Skill cooldown by Xs. Whenever a summon on the team deals DMG, Exe gains X% DMG (stacking per summoner, up to a cap) for the rest of the battle.'),
+    core: p('Quantization Algorithm', 'Hits earn Frames. His Rating (B, A, S, SS, SSS) climbs with hits, skills, his Ultimate, Support Skill, perfect dodges and counters, and each team Esper Cycle; higher Ratings earn Frames faster. Rating drains over time when idle and drops sharply when he is hit.'),
+  },
   adler: {
     p1: p('Temperance', 'Whenever Scorch is inflicted, the target also gets one of three random debuffs for 15s: ATK -20%, Esper Resistance -10% or Break Efficiency +10%. The same debuff doesn’t stack.', 'Scorch'),
     p2: p('Righteous Heart', 'Adler’s DEF +20%.'),

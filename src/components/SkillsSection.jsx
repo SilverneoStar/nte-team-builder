@@ -84,6 +84,15 @@ export default function SkillsSection({ character }) {
           <p className="muted small">Passives will be added once they’re published.</p>
         )}
 
+        {pas?.core && (
+          <>
+            <h3 className="mini-title skill-life-title">Core mechanic</h3>
+            <p className="small">
+              <b>{pas.core.name}.</b> <StatText>{pas.core.text}</StatText>
+            </p>
+          </>
+        )}
+
         {pas?.trait && (
           <>
             <h3 className="mini-title skill-life-title">Other abilities</h3>

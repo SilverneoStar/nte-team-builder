@@ -176,6 +176,9 @@ export default function CharacterDetail({
       <h3 className="mini-title">Awakenings</h3>
       {AWAKENINGS[c.id] ? (
         <>
+          {c.upcoming && (
+            <p className="muted small">From closed-beta text; values shown as X aren’t out yet and may change at release.</p>
+          )}
           {AWAKENING_ORDER[c.id] && (
             <div className="awaken-order" data-el={c.element}>
               <p className="awaken-order__title">

@@ -204,6 +204,16 @@ export const AWAKENINGS = {
     ['Theopneustos', 'ATK +10% for 20s after a Support Skill.'],
     ['Deceptive Liberation', 'Appraise and Engrave extra DMG becomes 300% ATK.'],
   ),
+  // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).
+  // Skill names follow the 1.5 stream: Data Exfiltration, Shader Compile, Digital Echoes.
+  exe: a(
+    ['Hello, Minecraft', 'Chaos DMG +X% while his Rating is SS or higher.'],
+    ['define X/Y', 'ATK +10% / 12% / 15% / 20% / 30% at Rating B / A / S / SS / SSS.'],
+    ['For Playing Together Forever', 'Data Exfiltration pulls nearby enemies in and lowers their Chaos RES by X% for Xs.'],
+    ['kill process', 'Summons on the field deal X% more DMG, and Digital Echoes a further X%.'],
+    ['null pointer', 'In Shader Compile, Digital Echoes hit nearby enemies as they vanish for X% of ATK.'],
+    ['Log-Driven Skeleton Code', 'Gaining Frames heals him (Rating points gained × X% ATK); spending Frames adds extra Rating.'],
+  ),
 };
 
 // Resonance: two bonuses that switch on automatically when a character has
@@ -240,6 +250,8 @@ export const RESONANCES = {
   skia: r(['Cubical Survival Manual', 'Arresting Art, Shadow Hound Chase and The Pack +1 skill level.'], ['Employee of the Month', 'Each Fang Thrust lock lowers the target’s Lakshana RES.']),
   zankou: r(['Scarlet Feast', 'Six skills +1 level; Bloodfeast Reverie and Inferno Flamenco DMG +20%.'], ['Venom Flame', 'ATK +40% for 20s after dealing DMG; enhanced for 60s after defeating a Scorched target.']),
   akane: r(['Diatonic', 'Basic Attack, Redirect Skill and Ultimate +1 skill level; full String Energy on entering battle; Synced Resonance and Sonic Boom hit harder.'], ['Counterpoint', 'Refunds 10 String Energy after each Synced Resonance; Crit DMG +64% for 25s after it.']),
+  // Exe: closed-beta text, values not out yet.
+  exe: r(['Save an Unimaginable Future', 'Basic Attack, Redirect Skill and Ultimate +1 skill level; Charge Efficiency +X%; his Rating no longer drops until he leaves battle.'], ['Load Unprovable Treasure', 'Rating builds X% faster and unlocks Ω Rating, where define X/Y gives +50% ATK instead; in Shader Compile his Basic Attack can finish off bosses under 10% HP.']),
   zero: r(['Discern', 'Appraisal, Appraise and Engrave and Divide by Zero +1 skill level.'], ['Zero Display', 'Team ATK +10% for 20s when Zero triggers a Cosmos Esper Cycle.']),
 };
 
