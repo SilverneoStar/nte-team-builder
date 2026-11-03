@@ -16,6 +16,7 @@ import { CARTRIDGE_BY_ID, bonusStats, cartridgesFor, isPercentStat } from '../da
 import { loadoutOf } from './teamsReducer.js';
 import { analyzeTeam } from './analyze.js';
 import { activeResonance } from '../data/awakenings.js';
+import { skillIconUrl } from './skillIcons.js';
 import { encodeCardCode, splitCardCode } from './cardCode.js';
 import { consoleStats } from '../data/console.js';
 import { SYNERGY_MOODS, SYNERGY_RANK_STOPS, synergyScore } from './synergy.js';
@@ -631,6 +632,63 @@ export const GRID_H = 1350;
 // 'side': 2x2 with each member as a wide card, portrait on the left, details on the right.
 export const SIDE_W = 1600;
 export const SIDE_H = 1000;
+/** Official awakening icons for a character by id (A1–A6); missing ones are left out. */
+async function awakeningIcons(characterId) {
+  const ids = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'];
+  const imgs = await Promise.all(
+    ids.map((id) => {
+      const url = skillIconUrl(characterId, id);
+      return url ? loadImage(url).catch(() => null) : null;
+    }),
+  );
+  return Object.fromEntries(ids.map((id, i) => [id, imgs[i]]).filter(([, im]) => im));
+}
+
+/**
+ * One awakening tile. With the game's icon: an outlined tile with the icon
+ * (and the id beside it when there's room); taken ones are lit in the element
+ * colour, the rest dimmed. Without an icon: the plain "A1" pill.
+ */
+function awTile(ctx, px, py, w, h, id, on, el, icon, font) {
+  ctx.save();
+  if (!icon) {
+    ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.06)';
+    roundRect(ctx, px, py, w, h, 6);
+    ctx.fill();
+    if (!on) {
+      ctx.strokeStyle = C.line;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.fillStyle = on ? C.bg : C.muted;
+    ctx.font = `700 ${font}px ${MONO}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(id, px + w / 2, py + h / 2 + 1);
+    ctx.restore();
+    return;
+  }
+  ctx.fillStyle = on ? `${el}38` : 'rgba(255, 255, 255, 0.04)';
+  roundRect(ctx, px, py, w, h, 7);
+  ctx.fill();
+  ctx.strokeStyle = on ? el : C.line;
+  ctx.lineWidth = on ? 2 : 1;
+  ctx.stroke();
+  const withText = w >= h + font * 1.6;
+  const is = Math.min(w, h) - 6;
+  const ix = withText ? px + 4 : px + (w - is) / 2;
+  ctx.globalAlpha = on ? 1 : 0.4;
+  ctx.drawImage(icon, ix, py + (h - is) / 2, is, is);
+  if (withText) {
+    ctx.fillStyle = on ? C.fg : C.muted;
+    ctx.font = `700 ${font}px ${MONO}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(id, (ix + is + px + w) / 2, py + h / 2 + 1);
+  }
+  ctx.restore();
+}
+
 // Member panel metrics per layout (offsets from the panel top).
 const METRICS = {
   row: {
@@ -638,6 +696,7 @@ const METRICS = {
     cy: 86,
     shift: 0,
     frame: { w: 136, h: 126, y: 20, r: 18 },
+    frameSplit: { w: 136, h: 126, y: 20, r: 18 },
     nameFont: 22,
     gearFont: 15,
     gearLine: 19,
@@ -645,7 +704,7 @@ const METRICS = {
     bonusName: 12,
     bonusNum: 14,
     alwaysTwoLines: false,
-    aw: { w: 34, h: 20, step: 24, font: 11, rr: 14, rStep: 34 },
+    aw: { w: 34, h: 20, step: 24, font: 11, rr: 14, rStep: 34, iw: 34, ih: 34, istep: 38 },
     elFont: 13,
     elIcon: 20,
     rank: 24,
@@ -661,6 +720,8 @@ const METRICS = {
     cy: 104,
     shift: 34,
     frame: { w: 236, h: 148, y: 22, r: 22 },
+    // With awakening icons: awakenings split on both sides, so the portrait can be wider.
+    frameSplit: { w: 296, h: 160, y: 22, r: 22 },
     nameFont: 28,
     gearFont: 18,
     gearLine: 22,
@@ -668,7 +729,7 @@ const METRICS = {
     bonusName: 16,
     bonusNum: 18,
     alwaysTwoLines: true,
-    aw: { w: 42, h: 28, step: 36, font: 14, rr: 19, rStep: 40 },
+    aw: { w: 42, h: 28, step: 36, font: 14, rr: 19, rStep: 40, iw: 64, ih: 36, istep: 42 },
     awTwoCol: true,
     elFont: 17,
     elIcon: 26,
@@ -765,6 +826,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const images = await Promise.all(
     members.map((c) => (c ? loadImage(`${base}characters/hd/${portraitPath(c.id)}`) : null)),
   );
+  const awIcons = await Promise.all(members.map((c) => (c ? awakeningIcons(c.id) : {})));
   const analysis = analyzeTeam(team.members);
   // Official element and role icons.
   const elementIds = [...new Set(members.filter(Boolean).map((c) => c.element))];
@@ -926,43 +988,24 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     // Portrait in a frame shaped for the layout, on the Arc-type backdrop:
     // Wide (1 x 4): an upright rounded frame. Tall (2 x 2): a broad rounded frame.
     const cx = x + cw / 2;
-    const F = M.frame;
+    const icons = awIcons[i];
+    const hasIcons = Object.keys(icons).length > 0;
+    // Tall (2 x 2) with icons: A1–A3 and R3 on the left, A4–A6, R6 and
+    // duplicates on the right, so the portrait sits centred between them.
+    const split = hasIcons;
+    const F = split ? M.frameSplit : M.frame;
     framedPortrait(ctx, images[i], c, { x: cx - F.w / 2, y: top + F.y, w: F.w, h: F.h, r: F.r, color: el, patterns });
 
-    // Awakenings A1-A6 down the left edge, then R3 / R6 Resonance circles.
     const gearAw = loadoutOf(team, c.id);
     const onSet = new Set(gearAw.awakenings);
-    const colX = x + 14;
-    const pillW = M.aw.w;
-    const pillH = M.aw.h;
-    // Tall (2 x 2) layout: two columns of three, Resonance side by side below.
-    const twoCol = !!M.awTwoCol;
-    for (let k = 0; k < 6; k++) {
-      const id = `A${k + 1}`;
-      const on = onSet.has(id);
-      const px = twoCol ? colX + (k % 2) * (pillW + 6) : colX;
-      const py = twoCol ? top + 18 + Math.floor(k / 2) * M.aw.step : top + 18 + k * M.aw.step;
-      ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.06)';
-      roundRect(ctx, px, py, pillW, pillH, 6);
-      ctx.fill();
-      if (!on) {
-        ctx.strokeStyle = C.line;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-      ctx.fillStyle = on ? C.bg : C.muted;
-      ctx.font = `700 ${M.aw.font}px ${MONO}`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(id, px + pillW / 2, py + pillH / 2 + 1);
-    }
     const reso = activeResonance(onSet.size);
-    ['R3', 'R6'].forEach((id, k) => {
+    const pillW = hasIcons ? M.aw.iw : M.aw.w;
+    const pillH = hasIcons ? M.aw.ih : M.aw.h;
+    const step = hasIcons ? M.aw.istep : M.aw.step;
+    const colX = x + 14;
+    const rightX = x + cw - 14 - pillW;
+    const resoCircle = (id, rcx, rcy) => {
       const on = reso[id];
-      const rcx = twoCol ? colX + pillW / 2 + k * (pillW + 6) : colX + pillW / 2;
-      const rcy = twoCol
-        ? top + 18 + 3 * M.aw.step + M.aw.rr + 6
-        : top + 18 + 6 * M.aw.step + M.aw.rr + 4 + k * M.aw.rStep;
       ctx.beginPath();
       ctx.arc(rcx, rcy, M.aw.rr, 0, Math.PI * 2);
       ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.04)';
@@ -972,17 +1015,48 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       ctx.stroke();
       ctx.fillStyle = on ? C.bg : C.muted;
       ctx.font = `700 ${M.aw.font}px ${MONO}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
       ctx.fillText(id, rcx, rcy + 1);
-    });
+    };
+    let dupAt = null;
+    if (split) {
+      for (let k = 0; k < 6; k++) {
+        const id = `A${k + 1}`;
+        const px = k < 3 ? colX : rightX;
+        const py = top + (M.awTwoCol ? 22 : 18) + (k % 3) * step;
+        awTile(ctx, px, py, pillW, pillH, id, onSet.has(id), el, icons[id], M.aw.font);
+      }
+      const rcy = top + (M.awTwoCol ? 22 : 18) + 3 * step + M.aw.rr + 2;
+      resoCircle('R3', colX + pillW / 2, rcy);
+      resoCircle('R6', rightX + pillW / 2, rcy);
+      dupAt = { x: rightX + pillW / 2, y: rcy + M.aw.rr + 10 };
+    } else {
+      // Awakenings down the left edge (two columns of three in the tall layout), then R3 / R6.
+      const twoCol = !!M.awTwoCol;
+      for (let k = 0; k < 6; k++) {
+        const id = `A${k + 1}`;
+        const px = twoCol ? colX + (k % 2) * (pillW + 6) : colX;
+        const py = twoCol ? top + 18 + Math.floor(k / 2) * step : top + 18 + k * step;
+        awTile(ctx, px, py, pillW, pillH, id, onSet.has(id), el, icons[id], M.aw.font);
+      }
+      ['R3', 'R6'].forEach((id, k) => {
+        const rcx = twoCol ? colX + pillW / 2 + k * (pillW + 6) : colX + pillW / 2;
+        const rcy = twoCol
+          ? top + 18 + 3 * step + M.aw.rr + 6
+          : top + 18 + 6 * step + M.aw.rr + 4 + k * M.aw.rStep;
+        resoCircle(id, rcx, rcy);
+      });
+    }
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
 
-    // Duplicate count, top-right corner
+    // Duplicate count: under R6 when split, otherwise the top-right corner.
     if (gearAw.dupes) {
       const dText = `+${gearAw.dupes}`;
       ctx.font = `700 ${M.dupFont}px ${MONO}`;
       const dW = ctx.measureText(dText).width + 16;
-      pill(ctx, x + cw - 12 - dW, top + 16, dText, {
+      pill(ctx, dupAt ? dupAt.x - dW / 2 : x + cw - 12 - dW, dupAt ? dupAt.y : top + 16, dText, {
         bg: C.panel2,
         fg: C.muted,
         font: `700 ${M.dupFont}px ${MONO}`,
@@ -993,9 +1067,10 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     // Name and element
     ctx.textAlign = 'center';
     ctx.fillStyle = C.fg;
-    const d = M.shift;
+    const d = M.shift + (split ? M.frameSplit.h - M.frame.h : 0);
     ctx.font = `700 ${M.nameFont}px ${BODY}`;
-    ctx.fillText(fitLine(ctx, c.name, cw - 24, 16), cx, top + 176 + d);
+    // Clear of the awakening columns.
+    ctx.fillText(fitLine(ctx, c.name, cw - 2 * (pillW + 24), 16), cx, top + 176 + d);
     ctx.font = `${M.tiles ? 600 : 500} ${M.elFont}px ${MONO}`;
     ctx.fillStyle = el;
     const elName = ELEMENT_BY_ID[c.element].name.toUpperCase();
@@ -1017,7 +1092,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     const sepW = ctx.measureText('  \u00b7  ').width;
     const total = parts.reduce((sum, p) => sum + p.w, 0) + sepW * (parts.length - 1);
     // Stay clear of the awakening column on the left edge.
-    let rx2 = Math.max(cx - total / 2, x + 56);
+    let rx2 = Math.max(cx - total / 2, split ? x : x + pillW + 20);
     ctx.fillStyle = C.muted;
     parts.forEach((p, k) => {
       if (k > 0) {
@@ -1203,23 +1278,16 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
       const ay = cy + r + 14;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+      const sIcons = awIcons[i];
+      const tileH = Object.keys(sIcons).length ? pw : 24;
       for (let k = 0; k < 6; k++) {
-        const on = onSet.has(`A${k + 1}`);
-        const px = ax0 + k * (pw + 4);
-        ctx.fillStyle = on ? el : 'rgba(255, 255, 255, 0.06)';
-        roundRect(ctx, px, ay, pw, 24, 6);
-        ctx.fill();
-        if (!on) {
-          ctx.strokeStyle = C.line;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-        ctx.fillStyle = on ? C.bg : C.muted;
-        ctx.font = `700 13px ${MONO}`;
-        ctx.fillText(`A${k + 1}`, px + pw / 2, ay + 13);
+        const id = `A${k + 1}`;
+        awTile(ctx, ax0 + k * (pw + 4), ay, pw, tileH, id, onSet.has(id), el, sIcons[id], 13);
       }
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
       const reso = activeResonance(onSet.size);
-      const ry2 = ay + 44;
+      const ry2 = ay + tileH + 20;
       ['R3', 'R6'].forEach((id, k) => {
         const on = reso[id];
         const rcx = cx - 36 + k * 38;
