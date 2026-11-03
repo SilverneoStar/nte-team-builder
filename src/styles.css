@@ -7385,3 +7385,14 @@ th[aria-sort='descending'] .th-btn {
     font-size: 0.8rem;
   }
 }
+
+/* Game tag marks drawn as masks in the text colour */
+.tag-icon--mark {
+  display: inline-block;
+  background: currentColor;
+  -webkit-mask: no-repeat center / contain;
+  mask: no-repeat center / contain;
+}
+.tags li[data-kind] .tag-icon--mark {
+  background: #fff6f2;
+}

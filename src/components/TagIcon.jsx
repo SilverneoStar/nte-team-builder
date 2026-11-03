@@ -1,6 +1,6 @@
 // Small icons for the in-game role tags (Main DPS, Burst DPS, Summoner...).
-// Main DPS, Burst DPS, Summoner, Instant Cycle and DMG Boost are redrawn from
-// the game's own tag marks; the rest are drawn in the same style. They take
+// Main DPS, Burst DPS, Summoner, Instant Cycle and DMG Boost use the game's own
+// marks (GAME_MARKS); the rest are drawn in the same style. They take
 // the text colour (white on the game-coloured tag pills).
 
 /** The game's pill colour group for a tag: damage (red), support (orange) or cycle (pink). */
@@ -133,9 +133,29 @@ const ICONS = {
   ),
 };
 
-export const hasTagIcon = (tag) => tag in ICONS;
+// The game's own tag marks, cut from in-game screenshots (white on transparent),
+// drawn as a mask so they take the text colour like the drawn ones.
+const GAME_MARKS = {
+  'Main DPS': 'main-dps',
+  'Burst DPS': 'burst-dps',
+  Summoner: 'summoner',
+  'Instant Cycle': 'instant-cycle',
+  'DMG Boost': 'dmg-boost',
+};
+
+export const hasTagIcon = (tag) => tag in ICONS || tag in GAME_MARKS;
 
 export default function TagIcon({ tag, size = 16 }) {
+  if (GAME_MARKS[tag]) {
+    const url = `url(${import.meta.env.BASE_URL}icons/tags/${GAME_MARKS[tag]}.webp)`;
+    return (
+      <span
+        className="tag-icon tag-icon--mark"
+        style={{ width: size + 5, height: size + 5, WebkitMaskImage: url, maskImage: url }}
+        aria-hidden="true"
+      />
+    );
+  }
   const icon = ICONS[tag];
   if (!icon) return null;
   return (
