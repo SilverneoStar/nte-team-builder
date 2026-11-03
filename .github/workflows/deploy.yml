@@ -24,7 +24,9 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - run: npm install
+      # Exact package versions from package-lock.json when it exists, and no
+      # install scripts, so a hijacked package can't run code during the build.
+      - run: if [ -f package-lock.json ]; then npm ci --ignore-scripts; else npm install --ignore-scripts; fi
       # The site lives under /nte-team-builder/, so asset paths need that prefix.
       - run: npm run build -- --base=/nte-team-builder/
       # File sizes of the built scripts and styles, shown as notes on the run.
