@@ -7578,3 +7578,37 @@ th[aria-sort='descending'] .th-btn {
   align-items: center;
   gap: 8px;
 }
+
+/* Item families (three tiers of one item) share a card: a column of tier
+   icons and the tier names, each in its tier colour (as in the ZZZ builder). */
+.item__icons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.item--family .item__icon {
+  width: 52px;
+  height: 52px;
+}
+.item__tiers {
+  list-style: none;
+  margin: 4px 0 6px;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 0.86rem;
+}
+.item__tiers li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.item__tiers .item__tier {
+  flex: none;
+  background: var(--tier);
+  color: #111;
+}
+.item__tier-text {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
