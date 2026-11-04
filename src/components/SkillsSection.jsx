@@ -75,7 +75,9 @@ export default function SkillsSection({ character }) {
                   <b className="skill-name">
                     <SkillIcon character={character.id} k={key} />
                     {ps.name}
-                    {ps.boosts && <span className="passive-boost">{ps.boosts} Enhancement</span>}
+                    {[ps.boosts].flat().filter(Boolean).map((b) => (
+                      <span key={b} className="passive-boost">{b} Enhancement</span>
+                    ))}
                   </b>
                   <span>
                     <StatText>{ps.text}</StatText>

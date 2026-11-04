@@ -7,6 +7,8 @@ import { useMemo, useState } from 'react';
 import { MASCOT_HATS, Star, Tail } from './Mascot.jsx';
 import { SYNERGY_MOODS as MOODS, SYNERGY_RANKS, SYNERGY_RANK_STOPS as RANK_STOPS, synergyScore } from '../lib/synergy.js';
 
+import { useShowBeta } from '../lib/betaInfo.js';
+
 const BASE = import.meta.env.BASE_URL;
 
 
@@ -80,7 +82,9 @@ function RankCortado({ rank }) {
 
 export default function SynergyScore({ members, loadouts }) {
   const [open, setOpen] = useState(false);
-  const result = useMemo(() => synergyScore(members, loadouts), [members, loadouts]);
+  const beta = useShowBeta();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const result = useMemo(() => synergyScore(members, loadouts), [members, loadouts, beta]);
   if (!result.filled) return null;
   const { score, rank, parts } = result;
   const mood = MOODS[rank].word;

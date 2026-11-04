@@ -42,6 +42,7 @@ import { bonusStats, cartridgesFor } from '../data/gear.js';
 import { consoleStats } from '../data/console.js';
 import { RESONANCES } from '../data/awakenings.js';
 import { areNeighbours } from './analyze.js';
+import { isBeta, showBeta } from './betaState.js';
 
 /** Rank letters from best to worst, with the lowest score for each. */
 export const SYNERGY_RANKS = [
@@ -144,14 +145,17 @@ export function synergyScore(memberIds, loadouts = {}) {
 
   // Reaction passives that pay off in this team.
   const names = new Set([...reactions, ...trios].map((r) => r.name));
-  const boosted = team.filter((c) => PASSIVES[c.id]?.p1?.boosts && names.has(PASSIVES[c.id].p1.boosts));
+  // A first passive may boost one reaction or several; beta passives count only when beta info is shown.
+  const p1Boosts = (c) =>
+    isBeta(c.id, 'passives') && !showBeta() ? [] : [PASSIVES[c.id]?.p1?.boosts].flat().filter((b) => b && names.has(b));
+  const boosted = team.filter((c) => p1Boosts(c).length);
   parts.push({
     id: 'boosts',
     label: 'Reaction passives',
     points: Math.min(14, boosted.length * 7),
     max: 14,
     detail: boosted.length
-      ? boosted.map((c) => `${short(c)}: ${PASSIVES[c.id].p1.name} boosts ${PASSIVES[c.id].p1.boosts}`).join('; ')
+      ? boosted.map((c) => `${short(c)}: ${PASSIVES[c.id].p1.name} boosts ${p1Boosts(c).join(' and ')}`).join('; ')
       : 'No passive here boosts a reaction this team triggers',
   });
 

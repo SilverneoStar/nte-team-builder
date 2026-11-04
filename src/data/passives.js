@@ -12,6 +12,12 @@
 const p = (name, text, boosts = null) => ({ name, text, boosts });
 
 export const PASSIVES = {
+  // Elyms: closed-beta text, Nov 2026.
+  elyms: {
+    p1: p('Relay Node', 'Charge: when the active character gains Ultimate Energy through Charge, the team’s Cosmos DMG Bonus +3.75% for 3s, stacking up to 8 times (refreshes). Remora: when anyone applies Remora, Elyms applies another Remora to that target 7.5s later (once every 7s; it doesn’t trigger itself).', ['Charge', 'Remora']),
+    p2: p('Guarantee Mechanism', 'Crit DMG +10%.'),
+    trait: p('Are You There?', 'While Elyms is idle, there’s a chance she greets you with a small gift, once a day.'),
+  },
   // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).
   exe: {
     p1: p('Bonus Points', 'When Exe triggers a Chaos Esper Cycle (“Dark Star” in the beta text) below SS Rating, his Rating jumps straight to SS.'),
