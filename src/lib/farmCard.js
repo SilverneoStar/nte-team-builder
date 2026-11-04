@@ -179,77 +179,125 @@ const ROMAN = { 2: 'II', 3: 'III', 4: 'IV' };
 function consolePanel(ctx, x, y, w, h, build, cartImg) {
   const cart = CARTRIDGE_BY_ID[build.cartridge];
   panel(ctx, x, y, w, h, 'Console gear', 'Rabbit Hole');
-  const size = 104;
-  // Cartridge tile
-  const cx = x + 24;
-  const ty = y + 52;
-  tile(ctx, cx, ty, size, { name: cart.name, qty: null, kind: 'boss', badge: false }, cartImg);
+  const top = y + 50;
+  const bottom = y + h - 16;
+
+  // Left: the Cartridge set, as large as the column allows, name and main stat under it.
+  const colW = Math.round(Math.min(170, w * 0.3));
   const main = build.cartStats?.main?.stat;
+  const size = Math.floor(Math.min(colW - 8, bottom - top - 44 - (main ? 22 : 0)));
+  const cx = x + 18 + (colW - size) / 2;
+  const cy = top + Math.max(0, (bottom - top - size - 44 - (main ? 22 : 0)) / 2);
+  tile(ctx, cx, cy, size, { name: cart.name, qty: null, kind: 'boss', badge: false }, cartImg);
   if (main) {
+    ctx.font = `700 15px ${BODY}`;
+    const nameLines = wrap(ctx, cart.name, size + 12, 2).length;
     ctx.fillStyle = K.muted;
     ctx.font = `600 13px ${BODY}`;
     ctx.textAlign = 'center';
-    ctx.fillText(`Main: ${main}`, cx + size / 2, ty + size + 58);
+    ctx.fillText('MAIN STAT', cx + size / 2, cy + size + 22 + nameLines * 18 + 2);
+    ctx.fillStyle = '#ffd27a';
+    ctx.font = `700 15px ${BODY}`;
+    ctx.fillText(main, cx + size / 2, cy + size + 22 + nameLines * 18 + 20);
     ctx.textAlign = 'left';
   }
 
-  // Modules: one chip per shape with its count
+  // Right: one chip per module shape with its count, then the sub stats.
   const counts = new Map();
   for (const p of build.pieces) counts.set(p.shape, (counts.get(p.shape) ?? 0) + 1);
   const setShapes = new Set(SET_SHAPES[build.cartridge] ?? []);
-  const mx = cx + size + 34;
-  const mw = x + w - 24 - mx;
+  const mx = x + 18 + colW + 22;
+  const mw = x + w - 20 - mx;
+  let my = top + 4;
   ctx.fillStyle = K.fg;
-  ctx.font = `700 15px ${BODY}`;
-  ctx.fillText(`${build.pieces.length} modules`, mx, ty + 14);
-  ctx.fillStyle = K.muted;
+  ctx.font = `700 17px ${BODY}`;
+  const head = `${build.pieces.length} modules`;
+  ctx.fillText(head, mx, my + 12);
+  // Legend: gold outline = shapes that count toward the set bonus.
   ctx.font = `600 13px ${BODY}`;
-  ctx.fillText(
-    `gold = counts for ${cart.name}`,
-    mx + ctx.measureText(`${build.pieces.length} modules`).width + 40,
-    ty + 14,
-  );
-  const chipW = 64;
-  const chipH = 62;
-  const perRow = Math.max(1, Math.floor((mw + 10) / (chipW + 10)));
-  [...counts].forEach(([shape, n], i) => {
-    const sx = mx + (i % perRow) * (chipW + 10);
-    const sy = ty + 28 + Math.floor(i / perRow) * (chipH + 8);
+  const legend = 'count toward the set';
+  const lw = ctx.measureText(legend).width;
+  const lx = mx + mw - lw;
+  ctx.strokeStyle = '#f2c14e';
+  ctx.lineWidth = 2;
+  roundRect(ctx, lx - 22, my + 1, 14, 14, 4);
+  ctx.stroke();
+  ctx.fillStyle = K.muted;
+  ctx.fillText(legend, lx, my + 12);
+  my += 26;
+
+  const n = counts.size;
+  const gapC = 10;
+  // One row when the chips can stay readable (at least 56px), otherwise wrap.
+  let perRow = Math.min(n, Math.max(1, Math.floor((mw + gapC) / (56 + gapC))));
+  // A tall panel (Instagram) has room for two rows of bigger chips.
+  const oneRowW = (mw - (perRow - 1) * gapC) / perRow;
+  if (oneRowW < 72 && bottom - my >= 200) perRow = Math.ceil(n / 2);
+  const chipW = Math.min(perRow < n ? 68 : 96, Math.floor((mw - (perRow - 1) * gapC) / perRow));
+  const chipH = Math.round(chipW * 0.92);
+  [...counts].forEach(([shape, cnt], i) => {
+    const sx = mx + (i % perRow) * (chipW + gapC);
+    const sy = my + Math.floor(i / perRow) * (chipH + 8);
     const inSet = setShapes.has(shape);
     ctx.fillStyle = K.inset;
-    roundRect(ctx, sx, sy, chipW, chipH, 10);
+    roundRect(ctx, sx, sy, chipW, chipH, 12);
     ctx.fill();
     ctx.strokeStyle = inSet ? '#f2c14e' : K.line;
-    ctx.lineWidth = inSet ? 2 : 1.5;
+    ctx.lineWidth = inSet ? 2.5 : 1.5;
     ctx.stroke();
     const cells = SHAPES[shape].cells;
     const rows = Math.max(...cells.map((c) => c[0])) + 1;
     const cols = Math.max(...cells.map((c) => c[1])) + 1;
-    const cs = Math.min(9, 30 / Math.max(rows, cols));
+    const box = chipW * 0.42;
+    const cs = Math.min(chipW * 0.16, (box - (Math.max(rows, cols) - 1) * 2) / Math.max(rows, cols));
     const gw = cols * cs + (cols - 1) * 2;
     const gh = rows * cs + (rows - 1) * 2;
-    goldCells(ctx, sx + 6 + (28 - gw) / 2, sy + 6 + (36 - gh) / 2, cells, cs, 2);
+    const area = chipH - 22;
+    goldCells(ctx, sx + 10 + (box - gw) / 2, sy + 6 + (area - gh) / 2, cells, cs, 2);
     ctx.fillStyle = '#ffffff';
-    ctx.font = `800 15px ${MONO}`;
-    ctx.fillText(`×${n}`, sx + 36, sy + 29);
-    ctx.fillStyle = K.muted;
-    ctx.font = `600 10px ${MONO}`;
+    ctx.font = `800 ${Math.round(chipW * 0.22)}px ${MONO}`;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`×${cnt}`, sx + 14 + box, sy + 6 + area / 2);
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#c9cbd6';
+    ctx.font = `700 11px ${MONO}`;
     ctx.textAlign = 'center';
-    ctx.fillText(`TYPE ${ROMAN[SHAPES[shape].type]}`, sx + chipW / 2, sy + chipH - 8);
+    ctx.fillText(`TYPE ${ROMAN[SHAPES[shape].type]}`, sx + chipW / 2, sy + chipH - 9);
     ctx.textAlign = 'left';
   });
-  const chipRows = Math.ceil(counts.size / perRow);
+  my += Math.ceil(n / perRow) * (chipH + 8) + 10;
 
-  // Sub stats to look for
+  // Sub stats to look for, as pills
   const subs = [...new Set((build.pieces[0]?.stats?.subs ?? []).map((sub) => sub.stat))];
-  if (subs.length) {
+  if (subs.length && my + 40 <= bottom + 8) {
     ctx.fillStyle = K.muted;
     ctx.font = `600 13px ${BODY}`;
-    const ly = ty + 28 + chipRows * (chipH + 8) + 16;
-    ctx.fillText('Module sub stats to look for', mx, ly);
-    ctx.fillStyle = K.fg;
-    ctx.font = `600 14px ${BODY}`;
-    wrap(ctx, subs.join(' · '), mw, 2).forEach((l, i) => ctx.fillText(l, mx, ly + 22 + i * 19));
+    ctx.fillText('Module sub stats to look for', mx, my + 4);
+    my += 14;
+    // One row of pills when a slightly smaller font makes them fit.
+    let f = 13;
+    const rowW = () => subs.reduce((t, st) => t + ctx.measureText(st).width + 18 + 7, -7);
+    for (ctx.font = `700 ${f}px ${BODY}`; f > 11 && rowW() > mw; ) ctx.font = `700 ${--f}px ${BODY}`;
+    let px = mx;
+    for (const st of subs) {
+      const pw = ctx.measureText(st).width + 18;
+      if (px > mx && px + pw > mx + mw) {
+        px = mx;
+        my += 30;
+      }
+      if (my + 24 > bottom + 8) break;
+      ctx.fillStyle = K.inset;
+      roundRect(ctx, px, my, pw, 24, 12);
+      ctx.fill();
+      ctx.strokeStyle = K.line;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.fillStyle = K.fg;
+      ctx.textBaseline = 'middle';
+      ctx.fillText(st, px + 9, my + 13);
+      ctx.textBaseline = 'alphabetic';
+      px += pw + 7;
+    }
   }
 }
 
