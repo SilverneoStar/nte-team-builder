@@ -219,6 +219,7 @@ export function groupFamilies(items) {
       group: it.group,
       members: run.map((m, k) => ({ name: m.name, tier: m.tier, text: sameText ? null : texts[k] })),
       text: sameText ? texts[0] : null,
+      note: run.find((m) => m.note)?.note ?? null,
       get,
       usedBy,
     });
@@ -241,6 +242,7 @@ function ItemCard({ item: it }) {
           {it.tier && <span className="item__tier">T{it.tier}</span>}
         </b>
         <p className="item__text">{it.text}</p>
+        {it.note && <p className="item__text">{it.note}</p>}
         <p className="item__label">How to get</p>
         <ul className="item__get">
           {it.get.map((g) => (
@@ -328,6 +330,7 @@ function FamilyCard({ item: it }) {
           ))}
         </ol>
         {it.text && <p className="item__text">{it.text}</p>}
+        {it.note && <p className="item__text">{it.note}</p>}
         <p className="item__label">How to get</p>
         <ul className="item__get">
           {it.get.map((g) => (

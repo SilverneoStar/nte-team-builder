@@ -168,17 +168,21 @@ add({
 });
 
 // Currency and stamina.
-// Carrota: Rewind currency for pulling Modules. Source (Nov 2026): Nerds Chalk Carrota guide.
+// Carrota: Rewind currency for pulling Modules. Sources (Nov 2026): the in-game
+// Rewind Rules and Rewind screens; Nerds Chalk Carrota guide (unlock levels, drops).
+const CUSTOM_REWIND =
+  'Normal and Hard offer Random Pick (60 per pull, 600 for ten) or Customize by Module: lock up to 8 Module shapes on the board for a better chance at them. Each shape costs 10, and every duplicate of a shape adds 5 to that shape’s price (8 different shapes: 80; 4 shapes twice each: 120; 8 of one shape: 360).';
 [
-  ['Bronze Carrota', 'Easy Rewind', 'Every Rabbit Hole stage (the most common)'],
-  ['Silver Carrota', 'Normal Rewind (Hunter Level 20)', 'Higher Rabbit Hole stages'],
-  ['Gold Carrota', 'Hard Rewind (Hunter Level 30)', 'Elite and hard Rabbit Hole clears'],
-].forEach(([name, mode, from], i) =>
+  ['Bronze Carrota', 'Spent on Easy Rewind: 80 per pull, 800 for ten.', 'Every Rabbit Hole stage (the most common)'],
+  ['Silver Carrota', 'Spent on Normal Rewind (Hunter Level 20).', 'Higher Rabbit Hole stages'],
+  ['Gold Carrota', 'Spent on Hard Rewind (Hunter Level 30).', 'Elite and hard Rabbit Hole clears'],
+].forEach(([name, text, from], i) =>
   add({
     name,
     group: 'Currency & stamina',
     tier: i + 1,
-    text: `Spent on ${mode} to pull Modules: 80 per pull, 800 for ten.`,
+    text: i ? `${text} Random Pick or Customize by Module (see below).` : text,
+    note: CUSTOM_REWIND,
     get: [`${from}; collect from the NPC after a clear`],
   }),
 );
