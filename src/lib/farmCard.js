@@ -34,6 +34,7 @@ import {
   drawMascot,
 } from './teamCard.js';
 import { drawLinksLine } from './cardLinks.js';
+import { drawTagPills, loadTagMarks } from './cardTags.js';
 import { fmt } from './format.js';
 
 export const FARM_W = 1600;
@@ -268,6 +269,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   const cartImg = build?.cartridge ? await loadImage(`${base}icons/cartridges/${build.cartridge}.webp`) : null;
 
   const roleIcons = await loadRoleIcons(base, c.roles);
+  const tagMarks = await loadTagMarks(base, c.tags);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(W * scale);
   canvas.height = Math.round(H * scale);
@@ -323,6 +325,8 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
     ly += 32;
   }
   drawRoles(ctx, c.roles, roleIcons, roleX, ly, roleOpts);
+  // In-game tags (Main DPS, Instant Cycle...) on their own row.
+  if (c.tags?.length) ly = drawTagPills(ctx, c.tags, tagMarks, tx0, ly + 16, TW, { size: 14, color: K.fg }) - 6;
 
   // What the totals cover (Instagram: two columns of two, under the name)
   ly += 44;
