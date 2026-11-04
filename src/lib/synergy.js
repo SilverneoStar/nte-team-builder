@@ -97,6 +97,11 @@ const ARC_COPY_PTS = [0, 0.4, 0.8, 1.1, 1.4];
 const RARITY_WEIGHT = { S: 1, A: 0.5 };
 const COPY_WEIGHT = { limited: 1, standard: 1, free: 0.5, 'a-rank': 0.5 };
 const COPY_NAME = { limited: 'limited S-rank', standard: 'standard S-rank', free: 'not on a banner', 'a-rank': 'A-rank' };
+// Second passives with a smaller pay-off in a reaction team (3 points each,
+// within the Reaction passives part).
+const P2_LINKS = {
+  chiz: { reaction: 'Charge', why: 'Charge Efficiency +20% turns each Charge into more Ultimate Energy' },
+};
 // Awakenings and Resonances that pay off on a reaction (counted when taken
 // and the team triggers that reaction).
 const REACTION_AWAKENINGS = {
@@ -155,14 +160,19 @@ export function synergyScore(memberIds, loadouts = {}) {
   const p1Boosts = (c) =>
     isBeta(c.id, 'passives') && !showBeta() ? [] : [PASSIVES[c.id]?.p1?.boosts].flat().filter((b) => b && names.has(b));
   const boosted = team.filter((c) => p1Boosts(c).length);
+  const p2Linked = team.filter((c) => P2_LINKS[c.id] && names.has(P2_LINKS[c.id].reaction));
   parts.push({
     id: 'boosts',
     label: 'Reaction passives',
-    points: Math.min(14, boosted.length * 7),
+    points: Math.min(14, boosted.length * 7 + p2Linked.length * 3),
     max: 14,
-    detail: boosted.length
-      ? boosted.map((c) => `${short(c)}: ${PASSIVES[c.id].p1.name} boosts ${p1Boosts(c).join(' and ')}`).join('; ')
-      : 'No passive here boosts a reaction this team triggers',
+    detail:
+      boosted.length || p2Linked.length
+        ? [
+            ...boosted.map((c) => `${short(c)}: ${PASSIVES[c.id].p1.name} boosts ${p1Boosts(c).join(' and ')}`),
+            ...p2Linked.map((c) => `${short(c)}: ${PASSIVES[c.id].p2.name}, ${P2_LINKS[c.id].why}`),
+          ].join('; ')
+        : 'No passive here boosts a reaction this team triggers',
   });
 
   // Roles and field time: Damage, Buff and Survival, and a carry who stays on
