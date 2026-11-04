@@ -137,7 +137,7 @@ export const AWAKENINGS = {
     ['Across the Airwaves', 'Oversync resets Full-Frequency Pulse cooldown.'],
     ['Starlit Whispers', 'Synced Strikes in the Resonance Field add Anima area DMG.'],
     ['Love, Loud and Clear', 'Pulse Synced Strikes trigger Cycle effects; +50% DMG if an ally can’t Cycle.'],
-    ['The World Answers', 'Allies gain 25% Synced Strike Crit Rate and Charge while she is active.'],
+    ['The World Answers', 'While Linko is on the team, every Synced Strike gains 25% Crit Rate, and teammates’ Synced Strikes generate Ultimate Energy.'],
   ),
   mint: a(
     ['Task Force Operation', 'Caramel Crisp hits reset Super Claws cooldown (once per 3s).'],
