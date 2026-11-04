@@ -43,7 +43,7 @@ export const PASSIVES = {
     p2: p('Moderate Working', 'Baicang’s ATK +20%, and she backs up ETD-4 teammates. Switching to her while Skia is stealthed attacks at once and adds a Power Word Silence (30s cooldown). When Fadia drops below 20% HP, Baicang attacks once, heals Fadia and adds a Power Word Silence (30s cooldown). Switching to her while Lacrimosa is a bat gives a super jump.'),
   },
   blackbird: {
-    p1: p('Thrushsong', 'Stain’s base DMG Bonus becomes 30% and lasts 20s. When Nova ends, the target takes extra Mental DMG equal to 20% of the DMG it took during Nova (not counting the triggering Support Skill or Nova itself), up to 1,000× Blackbird’s base ATK and unaffected by other buffs, then gets Nova once more. That second Nova can’t repeat this.', 'Stain and Nova'),
+    p1: p('Thrushsong', 'Stain’s base DMG Bonus becomes 30% and lasts 20s. When Nova ends, the target takes extra Mental DMG equal to 20% of the DMG it took during Nova (not counting the triggering Support Skill or Nova itself), up to 1,000× Blackbird’s base ATK and unaffected by other buffs, then gets Nova once more. That second Nova can’t repeat this.', ['Stain', 'Nova']),
     p2: p('Ever Onward', 'Casting Judgment Upon Me gives 20 Malice.'),
     trait: p('On the Wing', 'Outside combat, hold the movement stick and Dodge on the ground, or press Aim while falling, to become the Lonesome Bird and fly at high speed, collecting Oracle Stones in range. Flying drains Stamina.'),
   },
