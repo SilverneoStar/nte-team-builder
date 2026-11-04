@@ -106,32 +106,23 @@ function panel(ctx, x, y, w, h, title, where) {
   return 12;
 }
 
-// One material: icon tile with its amount, name underneath.
+// One material: its icon (no frame) with the amount on it, name underneath.
 function tile(ctx, x, y, size, item, img) {
-  const accent = KIND[item.kind] ?? K.muted;
-  ctx.fillStyle = K.inset;
-  roundRect(ctx, x, y, size, size, 12);
-  ctx.fill();
-  const g = ctx.createLinearGradient(0, y + size * 0.55, 0, y + size);
-  g.addColorStop(0, 'rgba(0,0,0,0)');
-  g.addColorStop(1, `${accent}55`);
-  ctx.fillStyle = g;
-  roundRect(ctx, x, y, size, size, 12);
-  ctx.fill();
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 2;
-  roundRect(ctx, x, y, size, size, 12);
-  ctx.stroke();
   if (img) {
-    const s = size * 0.74;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 3;
+    const s = size * 0.96;
     ctx.drawImage(img, x + (size - s) / 2, y + (size - s) / 2 - 4, s, s);
+    ctx.restore();
   }
   // Amount badge
   if (item.badge === false) {
     ctx.fillStyle = K.fg;
     ctx.font = `600 14px ${BODY}`;
     ctx.textAlign = 'center';
-    wrap(ctx, item.name, size + 22, 2).forEach((l, i) => ctx.fillText(l, x + size / 2, y + size + 22 + i * 18));
+    wrap(ctx, item.name, size + 12, 2).forEach((l, i) => ctx.fillText(l, x + size / 2, y + size + 22 + i * 18));
     ctx.textAlign = 'left';
     return;
   }
@@ -151,13 +142,15 @@ function tile(ctx, x, y, size, item, img) {
   ctx.fillStyle = K.fg;
   ctx.font = `600 14px ${BODY}`;
   ctx.textAlign = 'center';
-  wrap(ctx, item.name, size + 22, 2).forEach((l, i) => ctx.fillText(l, x + size / 2, y + size + 22 + i * 18));
+  wrap(ctx, item.name, size + 12, 2).forEach((l, i) => ctx.fillText(l, x + size / 2, y + size + 22 + i * 18));
   ctx.textAlign = 'left';
 }
 
-function group(ctx, x, y, w, h, g, imgs, size = 104) {
+function group(ctx, x, y, w, h, g, imgs, maxSize = 150) {
   const shift = panel(ctx, x, y, w, h, g.title, g.where);
   const n = g.items.length;
+  // As large as the panel allows: under the title, above a two-line name.
+  const size = Math.floor(Math.min(maxSize, h - 46 - shift - 12 - 44, (w - 36 - (n - 1) * 16) / n));
   const gap = Math.min(44, (w - 36 - n * size) / Math.max(1, n - 1));
   const startX = x + (w - (n * size + (n - 1) * gap)) / 2;
   // Tile plus a two-line name, centred in the space under the title.
@@ -389,7 +382,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
     group(ctx, x, TOP, w1, ROW, by[id], imgs);
     x += w1 + GAP;
   }
-  group(ctx, x, TOP, RX + RW - x, ROW, by.exp, imgs, ig ? 92 : 104);
+  group(ctx, x, TOP, RX + RW - x, ROW, by.exp, imgs);
   // Row 2: anomaly family + skill books
   const half = (RW - GAP) / 2;
   group(ctx, RX, TOP + ROW + GAP, half, ROW, by.family, imgs);
