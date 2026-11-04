@@ -14,6 +14,7 @@ import { ENDGAME, parsePriority } from '../data/endgame.js';
 import { BUILD_PROFILES } from '../data/buildProfiles.js';
 import { bestBuild } from '../data/bestBuild.js';
 import { analyzeTeam } from './analyze.js';
+import { drawTagPills, loadTagMarks, tagPillsWidth } from './cardTags.js';
 import { alternativesFor, cartTile, drawAwakenStep, loadAwakeningIcons } from './buildCard.js';
 import { teamsFor } from './characterCard.js';
 import { fillStatText } from './statText.js';
@@ -271,6 +272,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const W = GUIDE_CARD_W;
   const H = GUIDE_CARD_H;
   const roleIcons = await loadRoleIcons(base, c.roles);
+  const tagMarks = await loadTagMarks(base, c.tags);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(W * scale);
   canvas.height = Math.round(H * scale);
@@ -337,13 +339,25 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     ctx.font = `600 20px ${BODY}`;
     ctx.fillStyle = K.label;
     ctx.fillText(c.arcType, fx + 34, hy);
+    fx += 34 + ctx.measureText(c.arcType).width;
   }
+  const factsY = hy;
+  const factsEnd = fx;
   hy += 38;
   const rx = drawRoles(ctx, c.roles, roleIcons, TX, hy, { font: `600 19px ${BODY}`, color: K.muted, size: 22 });
   if (c.faction) {
     ctx.font = `600 19px ${BODY}`;
     ctx.fillStyle = K.muted;
     ctx.fillText(fitLine(ctx, `  ·  ${c.faction}`, TX + HW - rx, 13), rx, hy);
+  }
+  // In-game tags under the roles; with a two-line name there's no room there,
+  // so they sit at the end of the facts row instead.
+  if (c.tags?.length) {
+    const tagOpts = { size: 15, color: K.fg };
+    const tw = tagPillsWidth(ctx, c.tags, tagMarks, tagOpts);
+    if (hy + 16 + 28 <= PY + PH) drawTagPills(ctx, c.tags, tagMarks, TX, hy + 16, W - PAD - TX, tagOpts);
+    else if (factsEnd + 24 + tw <= W - PAD) drawTagPills(ctx, c.tags, tagMarks, factsEnd + 24, factsY - 21, tw + 1, tagOpts);
+    else drawTagPills(ctx, c.tags, tagMarks, TX, PY + PH - 28, W - PAD - TX, { ...tagOpts, size: 13 });
   }
 
   const GY = PY + PH + 26;

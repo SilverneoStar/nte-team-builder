@@ -137,6 +137,21 @@ ARC_DYES.forEach((d, i) =>
   }),
 );
 
+// Module EXP. Sources (Nov 2026): Icy Veins item pages; The Games Wiki.
+[
+  ['Manhole Thug', 1000, ['Rabbit Hole', 'Fons Limited Time Shop (150 Fons)', 'Mall Shop (100 Beetle Coins)']],
+  ['Manhole Crook', 5000, ['Rabbit Hole', 'Material Selection Box', 'Fons Limited Time Shops (750 Fons)', 'Bagel, Bolt and Medal Shops']],
+  ['Manhole Boss', 20000, ['Rabbit Hole', 'Material Selection Box']],
+].forEach(([name, exp, get], i) =>
+  add({
+    name,
+    group: 'EXP',
+    tier: i + 1,
+    text: `Module EXP: +${exp.toLocaleString('en-US')} EXP to one Module or Cartridge.`,
+    get,
+  }),
+);
+
 // Bond gifts: raise Affection with any character.
 // Sources (Oct 2026): Icy Veins item pages; GameWith Circle Bounty guide.
 add({
@@ -153,6 +168,20 @@ add({
 });
 
 // Currency and stamina.
+// Carrota: Rewind currency for pulling Modules. Source (Nov 2026): Nerds Chalk Carrota guide.
+[
+  ['Bronze Carrota', 'Easy Rewind', 'Every Rabbit Hole stage (the most common)'],
+  ['Silver Carrota', 'Normal Rewind (Hunter Level 20)', 'Higher Rabbit Hole stages'],
+  ['Gold Carrota', 'Hard Rewind (Hunter Level 30)', 'Elite and hard Rabbit Hole clears'],
+].forEach(([name, mode, from], i) =>
+  add({
+    name,
+    group: 'Currency & stamina',
+    tier: i + 1,
+    text: `Spent on ${mode} to pull Modules: 80 per pull, 800 for ten.`,
+    get: [`${from}; collect from the NPC after a clear`],
+  }),
+);
 add({
   name: 'Beetle Coin',
   group: 'Currency & stamina',

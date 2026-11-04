@@ -1,6 +1,7 @@
 // Character teams card: a tall (4:5) image for one character. Left column:
 // portrait and recommended build. Right column: the featured teams they're in,
 // with each team's reactions. Shared from the character page's "Featured in".
+import { drawTagPills, loadTagMarks } from './cardTags.js';
 import { loadArcArt } from './arcPlayer.js';
 import { portraitPath } from './portraits.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
@@ -177,6 +178,7 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   const mateImg = Object.fromEntries(mates.map((id, i) => [id, rest[alt.cartridges.length + i]]));
 
   const roleIcons = await loadRoleIcons(base, c.roles);
+  const tagMarks = await loadTagMarks(base, c.tags);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(CHAR_CARD_W * scale);
   canvas.height = Math.round(CHAR_CARD_H * scale);
@@ -225,6 +227,8 @@ export async function renderCharacterCard(character, { base = '/', scale = 2 } =
   ctx.fillText(el.name, LX + 82, ly);
   const ew = ctx.measureText(el.name).width;
   drawRoles(ctx, c.roles, roleIcons, LX + 94 + ew, ly, { font: `600 18px ${BODY}`, color: K.muted, size: 22 });
+  // In-game tags (Main DPS, Instant Cycle...) on their own row.
+  if (c.tags?.length) ly = drawTagPills(ctx, c.tags, tagMarks, LX, ly + 16, COL, { size: 14, color: K.fg }) - 10;
 
   // ---- Left: recommended build ----
   ly += 30;

@@ -10,6 +10,11 @@ export const arcTypeIconUrl = (type) => `${BASE}icons/arc-types/${type.toLowerCa
 
 // Material icons we have files for (public/icons/materials/<slug>.webp).
 const MATERIAL_ICONS = new Set([
+  'bronze-carrota',
+  'silver-carrota',
+  'manhole-thug',
+  'manhole-crook',
+  'manhole-boss',
   'beaty',
   'versey',
   'harmony',

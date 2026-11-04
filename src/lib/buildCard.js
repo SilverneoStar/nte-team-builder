@@ -24,6 +24,7 @@ import { skillIconUrl } from './skillIcons.js';
 import { encodeConsoleCode } from './consoleCode.js';
 import { fillStatText } from './statText.js';
 import { drawLinksBlock } from './cardLinks.js';
+import { drawTagPills, loadTagMarks } from './cardTags.js';
 import { loadoutOf } from './teamsReducer.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
@@ -636,6 +637,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ]);
 
   const roleIcons = await loadRoleIcons(base, c.roles);
+  const tagMarks = await loadTagMarks(base, c.tags);
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(W * scale);
   canvas.height = Math.round(H * scale);
@@ -699,6 +701,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     ly += 32;
   }
   drawRoles(ctx, c.roles, roleIcons, roleX, ly, roleOpts);
+  // In-game tags (Main DPS, Instant Cycle...) on their own row.
+  if (c.tags?.length) ly = drawTagPills(ctx, c.tags, tagMarks, tx0, ly + 16, TW, { size: 14, color: K.fg }) - 6;
 
   ly += 36;
   ctx.font = `600 16px ${BODY}`;
@@ -709,7 +713,10 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
       ? `Former ${c.formerFaction}`
       : '';
   const lines = ig ? 1 : 2;
-  for (const line of wrap(ctx, factionText, TW, lines)) {
+  // Instagram: the tag row takes the faction line's place, so the header still
+  // clears the Console panel.
+  const showFaction = !(ig && c.tags?.length);
+  for (const line of showFaction ? wrap(ctx, factionText, TW, lines) : []) {
     ctx.fillText(line, tx0, ly);
     ly += 22;
   }
