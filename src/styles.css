@@ -4687,6 +4687,14 @@ th[aria-sort='descending'] .th-btn {
   image-rendering: pixelated;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
 }
+.medal--coin.medal--cortado {
+  width: 22px;
+  height: 22px;
+  margin: -3px;
+}
+.medal--coin.medal--cortado img {
+  image-rendering: auto;
+}
 .medal--u {
   position: relative;
   background: var(--surface-2);
