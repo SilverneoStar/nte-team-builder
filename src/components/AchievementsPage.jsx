@@ -16,7 +16,18 @@ const SORTS = [
   { id: 'todo', label: 'Not done first' },
 ];
 
+// Bronze, Silver and Gold use the game's Carrota coins.
+const COIN = { B: 'bronze', S: 'silver', G: 'gold' };
+
 function Medal({ tier }) {
+  if (COIN[tier]) {
+    return (
+      <span className="medal medal--coin" title={TIER_LABEL[tier]}>
+        <img src={`${import.meta.env.BASE_URL}icons/medal-${COIN[tier]}.webp`} alt="" width="20" height="20" />
+        <span className="sr-only">{TIER_LABEL[tier]}</span>
+      </span>
+    );
+  }
   return (
     <span className={`medal medal--${tier.toLowerCase()}`} title={TIER_LABEL[tier]}>
       <span className="sr-only">{TIER_LABEL[tier]}</span>
