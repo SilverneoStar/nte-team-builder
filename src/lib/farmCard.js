@@ -106,6 +106,23 @@ function panel(ctx, x, y, w, h, title, where) {
   return 12;
 }
 
+// The item name under its icon: bold, bright and with a dark halo so it reads
+// over the patterned panels.
+function itemName(ctx, name, x, y, size) {
+  ctx.save();
+  ctx.font = `700 15px ${BODY}`;
+  ctx.textAlign = 'center';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = 'rgba(8,8,12,0.75)';
+  ctx.lineWidth = 3;
+  ctx.fillStyle = '#ffffff';
+  wrap(ctx, name, size + 12, 2).forEach((l, i) => {
+    ctx.strokeText(l, x + size / 2, y + size + 22 + i * 18);
+    ctx.fillText(l, x + size / 2, y + size + 22 + i * 18);
+  });
+  ctx.restore();
+}
+
 // One material: its icon (no frame) with the amount on it, name underneath.
 function tile(ctx, x, y, size, item, img) {
   if (img) {
@@ -119,30 +136,27 @@ function tile(ctx, x, y, size, item, img) {
   }
   // Amount badge
   if (item.badge === false) {
-    ctx.fillStyle = K.fg;
-    ctx.font = `600 14px ${BODY}`;
-    ctx.textAlign = 'center';
-    wrap(ctx, item.name, size + 12, 2).forEach((l, i) => ctx.fillText(l, x + size / 2, y + size + 22 + i * 18));
-    ctx.textAlign = 'left';
+    itemName(ctx, item.name, x, y, size);
     return;
   }
   const label = item.qty == null ? 'as needed' : `×${short(item.qty)}`;
-  ctx.font = `800 ${item.qty == null ? 12 : 16}px ${MONO}`;
-  const bw = ctx.measureText(label).width + 14;
-  const bx = x + size - bw - 6;
-  const by = y + size - 28;
-  ctx.fillStyle = 'rgba(12,12,16,0.88)';
-  roundRect(ctx, bx, by, bw, 22, 11);
+  ctx.font = `800 ${item.qty == null ? 13 : 18}px ${MONO}`;
+  const bw = ctx.measureText(label).width + 16;
+  const bh = item.qty == null ? 22 : 26;
+  const bx = x + size - bw - 2;
+  const by = y + size - bh - 4;
+  ctx.fillStyle = 'rgba(10,10,14,0.94)';
+  roundRect(ctx, bx, by, bw, bh, bh / 2);
   ctx.fill();
-  ctx.fillStyle = item.qty == null ? K.muted : '#ffffff';
+  ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = item.qty == null ? '#c9cbd6' : '#ffffff';
   ctx.textBaseline = 'middle';
-  ctx.fillText(label, bx + 7, by + 12);
+  ctx.fillText(label, bx + 8, by + bh / 2 + 1);
   ctx.textBaseline = 'alphabetic';
   // Name
-  ctx.fillStyle = K.fg;
-  ctx.font = `600 14px ${BODY}`;
-  ctx.textAlign = 'center';
-  wrap(ctx, item.name, size + 12, 2).forEach((l, i) => ctx.fillText(l, x + size / 2, y + size + 22 + i * 18));
+  itemName(ctx, item.name, x, y, size);
   ctx.textAlign = 'left';
 }
 

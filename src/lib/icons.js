@@ -113,18 +113,11 @@ export const materialSlug = (name) =>
 /** URL of a material's icon, or null when we don't have one yet. */
 // Icons replaced under the same file name: a version makes browsers fetch the new copy.
 const ICON_VERSION = {
-  fons: 2,
-  'beetle-coin': 2,
-  'character-pixels': 2,
-  annulith: 2,
-  'anomaly-material-selection-box-i': 2,
-  'character-esper-material-selection-box-i': 2,
-  'arc-ascension-material-selection-box-i': 2,
-  'anomaly-hunt-material-selection-box': 2,
-  'expansion-core': 2,
+  // (all default to 3; entries here only if bumped again)
 };
 export function materialIconUrl(name) {
   const slug = materialSlug(name);
   if (!MATERIAL_ICONS.has(slug)) return null;
-  return `${BASE}icons/materials/${slug}.webp${ICON_VERSION[slug] ? `?v=${ICON_VERSION[slug]}` : ''}`;
+  // v3: every icon upscaled for sharper detail (Nov 2026).
+  return `${BASE}icons/materials/${slug}.webp?v=${ICON_VERSION[slug] ?? 3}`;
 }
