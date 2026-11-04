@@ -97,6 +97,12 @@ const ARC_COPY_PTS = [0, 0.4, 0.8, 1.1, 1.4];
 const RARITY_WEIGHT = { S: 1, A: 0.5 };
 const COPY_WEIGHT = { limited: 1, standard: 1, free: 0.5, 'a-rank': 0.5 };
 const COPY_NAME = { limited: 'limited S-rank', standard: 'standard S-rank', free: 'not on a banner', 'a-rank': 'A-rank' };
+// Awakenings and Resonances that pay off on a reaction (counted when taken
+// and the team triggers that reaction).
+const REACTION_AWAKENINGS = {
+  mint: { A3: ['Blossom', 'Hexed'] },
+  zankou: { A2: ['Scorch', 'Hexed'], R6: ['Scorch'] },
+};
 // R6 Resonances that buff the whole team ("Team ATK +10%…", "all allies…").
 const teamResonance = (id) => {
   const r6 = RESONANCES[id]?.find((r) => r.id === 'R6');
@@ -333,6 +339,14 @@ export function synergyScore(memberIds, loadouts = {}) {
       const how = acquisition(c);
       pts += AWAKENING_PTS[a] * COPY_WEIGHT[how] + ARC_COPY_PTS[d] * (RARITY_WEIGHT[arc?.rarity] ?? 1);
       bits.push(`${short(c)} ${[a && `A${a} (${COPY_NAME[how]})`, d && `Arc +${d}`].filter(Boolean).join(', ')}`);
+      const taken = new Set([...(loadouts[c.id]?.awakenings ?? []), ...(a >= 6 ? ['R6'] : []), ...(a >= 3 ? ['R3'] : [])]);
+      for (const [aw, reacts] of Object.entries(REACTION_AWAKENINGS[c.id] ?? {})) {
+        const hit = reacts.filter((r) => names.has(r));
+        if (taken.has(aw) && hit.length) {
+          pts += 1;
+          bits.push(`${short(c)}’s ${aw} pays off on ${hit.join(' and ')}`);
+        }
+      }
       const r6 = a >= 6 && team.length > 1 && teamResonance(c.id);
       if (r6) {
         pts += 1.5;
