@@ -4,9 +4,14 @@
 import { BOSS_DROPS, CHARACTER_MATERIALS, FAMILIES, MAX_LEVEL, ascensionCost } from './ascension.js';
 import { BOOK_SOURCE, LIFE_MAX, SKILL_MAX, skillCost } from './skills.js';
 
-// Character EXP items. The total needed for Lv 1 → 80 isn't published in the
-// guides we use yet, so the card lists them without amounts.
+// Character EXP items: Rising 1,000, Senior 5,000, Elite 20,000 EXP each.
 export const EXP_GUIDES = ['Rising Hunter Guide', 'Senior Hunter Guide', 'Elite Hunter Guide'];
+export const GUIDE_EXP = [1000, 5000, 20000];
+// Lv 1 → 80 total, approximate (Nov 2026). In-game Level Development screens:
+// Lv 50 → 80 asks for 260 Elite + 4 Rising (≈5.20M) and Lv 40 → 49 for 27 Elite
+// + 4 Rising (≈0.54M); per-level bars of 48,090 (Lv 40), 127,580 (Lv 60) and
+// 207,810 (Lv 70) agree. Lv 1 → 40 (≈0.85M) is a community estimate.
+export const CHARACTER_EXP_TOTAL = 6_650_000;
 export const EXP_SOURCE = 'EXP & Beetle Coins zone';
 
 const sum = (lists) => {
@@ -55,7 +60,13 @@ export function farmList(characterId) {
         id: 'exp',
         title: 'Character EXP',
         where: EXP_SOURCE,
-        items: EXP_GUIDES.map((name, i) => ({ name, qty: null, kind: tier(i) })),
+        // Elite Guides cover it all; the smaller guides show their EXP so
+        // leftovers can be counted in.
+        items: EXP_GUIDES.map((name, i) =>
+          i === 2
+            ? { name, qty: Math.ceil(CHARACTER_EXP_TOTAL / GUIDE_EXP[i]), approx: true, kind: tier(i) }
+            : { name, qty: null, label: `${GUIDE_EXP[i] / 1000}k EXP each`, kind: tier(i) },
+        ),
       },
       {
         id: 'family',

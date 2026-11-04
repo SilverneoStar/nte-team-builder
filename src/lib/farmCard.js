@@ -139,7 +139,7 @@ function tile(ctx, x, y, size, item, img) {
     itemName(ctx, item.name, x, y, size);
     return;
   }
-  const label = item.qty == null ? 'as needed' : `×${short(item.qty)}`;
+  const label = item.label ?? (item.qty == null ? 'as needed' : (item.approx ? `≈${short(item.qty)}` : `×${short(item.qty)}`));
   ctx.font = `800 ${item.qty == null ? 13 : 18}px ${MONO}`;
   const bw = ctx.measureText(label).width + 16;
   const bh = item.qty == null ? 22 : 26;
