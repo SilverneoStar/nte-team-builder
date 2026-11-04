@@ -1,9 +1,11 @@
 // In-game achievements, by category.
-// Source (Oct 2026): The Games Wiki NTE achievement pages (updated Aug 2026):
-// 388 achievements in 8 categories. Requirements are short summaries; check
+// Sources: The Games Wiki NTE achievement pages (updated Aug 2026) for the
+// first 388; the 67 added in Nov 2026 (patches 1.2–1.4) come from ZeroLuck's
+// achievement tracker, with ranks from GameWith where it lists them. 455 in
+// 8 categories. Requirements are short summaries; check
 // the in-game text for exact wording. Where the wiki lists the same goal
 // twice (it sometimes does), both entries are kept so counts match the game.
-// Tiers: B = Bronze, S = Silver, G = Gold, H = Hidden (the game hides its
+// Tiers: B = Bronze, S = Silver, G = Gold, U = rank not confirmed yet, H = Hidden (the game hides its
 // requirement until it's unlocked, so the page treats them as spoilers).
 
 export const ACHIEVEMENT_CATEGORIES = [
@@ -22,6 +24,8 @@ export const TIERS = [
   { id: 'S', label: 'Silver' },
   { id: 'G', label: 'Gold' },
   { id: 'H', label: 'Hidden' },
+  // Newer achievements whose rank no source lists yet.
+  { id: 'U', label: 'Tier TBC' },
 ];
 
 const RAW = {
@@ -35,7 +39,7 @@ const RAW = {
     ['S', 'A Rainy Day in Hethereau', 'Complete the “Weather Watch” quest series.'],
     ['S', 'Alice’s Baking Wonderland', 'Complete the “Sweet Cakes, Bitter Cakes...” quest series.'],
     ['S', 'Beep! Citizen ID', 'Complete the “New Anomaly Citizen ID!” quest series.'],
-    ['S', 'Don’t Let Me Stop!', 'Complete the “Drift Away, Legend!” quest series.'],
+    ['S', 'Don’t Stop Me Now!', 'Complete the “Drift Away, Legend!” quest series.', 'Don’t Let Me Stop!'],
     ['S', 'Guess Who I Am?', 'Complete the “Transform! Huhehaha!” quest series.'],
     ['S', 'Heroes Not Selling, Help Us Out', 'Complete the “Heroes Don’t Always Arrive in Moments of Glory” quest series.'],
     ['S', 'It’s! Snowing!', 'Complete the “A Retrograde Poem for You” quest series.'],
@@ -53,6 +57,19 @@ const RAW = {
     ['G', 'The Train Keeps Moving', 'Complete the “A Legendary(?) Band’s First Page” quest series.'],
     ['G', 'Want to eat... Tomato Jelly', 'Complete the “Tomato Jelly Rampage: Live Report!” quest series.'],
     ['G', 'Where Dreams Begin!', 'Complete the “Unforeseen Yet Foretold” quest series.'],
+    // Added Nov 2026 (1.2–1.4 content).
+    ['U', 'Adventure Awaits', 'Leave the Fuzzy Village (999 Nights).'],
+    ['U', 'Clear Horizon', 'Complete the “Fogden Game” quest series.'],
+    ['G', 'Debts and Dues', 'Complete the “A Research in Scarlet” questline.'],
+    ['U', 'Detention Blues', 'Complete the “A Breeze Through the Cage” questline.'],
+    ['U', 'Dragon Hunter', 'Clear “999 Nights” on Normal difficulty.'],
+    ['G', 'Dreams Adrift', 'Complete the “Dreamwalk Corridor” questline.'],
+    ['U', 'Fuzzy’s Precious! Grrgl!', 'Complete the quest “Gone Fuzzy”.'],
+    ['U', 'Gone Bad', 'Complete the quest “Fuzzy Club”.'],
+    ['U', 'Hardworking Fuzzy', 'Complete the quest “The Hero Is a Part-Timer”.'],
+    ['U', 'Nothing Really Happened', 'Complete the quest “All Quiet in the Future”.'],
+    ['U', 'One Fuzzy Move Ahead', 'Complete the quest “The Fuzzy’s Gambit”.'],
+    ['U', 'Sword or Guitar?', 'Complete the quest “Rex Fuzzendae”.'],
   ],
   explore: [
     ['B', '33729 I', 'Unlock 1 ReroRero Phone Booth.'],
@@ -108,6 +125,13 @@ const RAW = {
     ['S', 'Where Did My Inspiration Go?!', 'Complete the Anomaly Commission “Inspiration Terminator”.'],
     ['S', 'You Moved First!', 'Complete the Anomaly Commission “Change Your Perspective?”.'],
     ['G', 'Adamant Cage', 'Reach Divination Level 10.'],
+    // Added Nov 2026 (1.2–1.4 content).
+    ['U', 'Broken Refrain', 'Complete the Anomaly Commission “Finale: Da Capo”.'],
+    ['U', 'Cagebreaker', 'Complete the Anomaly Commission “Sunken Door”.'],
+    ['U', 'Falling Petals', 'Complete the Anomaly Commission “Twin Blooms”.'],
+    ['U', 'Lights Out', 'Complete the Anomaly Commission “Lantern Parade”.'],
+    ['U', 'This Bear Will Lead!', 'Complete the Anomaly Commission “Storybook Skirmish”.'],
+    ['U', 'Thus Spoke Sunya', 'Complete the Anomaly Commission “Fawn Alone”.'],
   ],
   fight: [
     ['B', 'Bumper Harvest I', 'Trigger Charge 10 times.'],
@@ -290,6 +314,23 @@ const RAW = {
     ['G', 'Regional Flavor Master', 'Unlock 5 coffee shops.'],
     ['G', 'The Room Comes Alive', 'Obtain 100 pieces of furniture.'],
     ['G', 'The Seven', 'Obtain 7 vehicles.'],
+    // Added Nov 2026 (1.2–1.4 content).
+    ['B', 'A Glass of Water: Half Full', 'Obtain 1 “Glass of Water” at the auction.'],
+    ['B', 'Because I Love Soccer', 'Obtain 1 “Golden Flying Ball” at the auction.'],
+    ['B', 'Future Audience', 'Obtain 1 “Azure Strings” at the auction.'],
+    ['B', 'Our Path', 'Obtain 1 “Dream Path” at the auction.'],
+    ['B', 'The Kapé', 'Obtain 1 “Celebrations to: Kapé” at the auction.'],
+    ['U', 'Who Says True Love Weighs You Down?', 'Obtain 1 “Butterflies to Flowers” at the auction.'],
+    ['B', 'Guardian of Order', 'Meet Skia at the street-side bulletin board, checking the announcements.'],
+    ['B', 'Hmm! Hmm! Observation Log', 'Meet Edgar at Nacupeda Park, studying and copying Nacupeda.'],
+    ['B', 'Path of Balanced Efficiency', 'Meet Hathor at the gas station just after she refuels.'],
+    ['B', 'Silent Fall', 'Meet Daffodill training in Miguel District.'],
+    ['B', 'Thoughtful Butler', 'Meet Adler shopping for groceries at Origami Market.'],
+    ['U', 'You too?', 'Meet Haniel cheering in the crowd at a Kokoro Rider show.'],
+    ['B', 'Dawn in Detention', 'Survive the first round of detention and discover one surprise.'],
+    ['S', 'Detention Strikes Back', 'Clear the next round of detention and uncover two surprises.'],
+    ['G', 'Return of the Dawn', 'Master every detention encounter and reap three unexpected rewards.'],
+    ['S', 'Breakout Together', 'Use a special spot to leave the Detention Facility and escape.'],
   ],
   play: [
     ['B', 'Block Vanishing Act', 'Place 1st in Tetrominoes.'],
@@ -331,6 +372,30 @@ const RAW = {
     ['G', 'King of Speed', 'Win 50 Racing PVP battles.'],
     ['G', 'Less Is More', 'Place 1st in Tetrominoes 30 times.'],
     ['G', 'The Undefeated Champ', 'Place 1st in Little Sparrow 30 times.'],
+    // Added Nov 2026 (1.2–1.4 content).
+    ['B', 'Rookie OP', 'Earn 10,000 Praise Jams in total on Bagel.'],
+    ['S', 'Bagel Celebrity', 'Earn 50,000 Praise Jams in total on Bagel.'],
+    ['G', 'Influential User', 'Earn 100,000 Praise Jams in total on Bagel.'],
+    ['U', 'Going Pro', 'Recruit 3 players in Volley Star.'],
+    ['U', 'Full Roster', 'Recruit 7 players in Volley Star.'],
+    ['U', 'Maxed Out', 'Max out 1 player’s talent in Volley Star.'],
+    ['U', 'Miracle Spike', 'Land a perfect spike in Volley Star.'],
+    ['U', 'No Continues', 'Clear every stage in Volley Star.'],
+    ['U', 'Crowned Champions!', 'Win the championship in Volley Star’s Championship mode.'],
+    ['U', 'Global Elite', 'Place in the top 10 of the Volley Star World Rankings.'],
+    ['U', 'Court Conqueror', 'Reach No. 1 in the Volley Star World Rankings.'],
+    ['U', 'Fight Club', 'Take part in Fight Club for the first time.'],
+    ['U', 'Hethereau Brawler King', 'Win the Fight Club championship for the first time.'],
+    ['U', 'Stormwall', 'Defeat Lil’ Nado on Easy Sparring.'],
+    ['U', 'Stormbreaker', 'Defeat Lil’ Nado on Serious Match.'],
+    ['U', 'I Am the Storm', 'Defeat Lil’ Nado on Final Bout.'],
+    ['U', 'Fuzzy Hero', 'Clear “999 Nights” on Hard difficulty.'],
+    ['U', 'Legend of Warren', 'Clear “999 Nights” on Nightmare difficulty.'],
+    ['U', 'I Choose You!', 'Hire a Mercenary Fuzzy once.'],
+    ['U', 'Chest Master', 'Open 100 chests.'],
+    ['U', 'Appraise It!', 'Obtain 7 pieces of equipment with an appraisal value of 33.'],
+    ['U', 'Watch Your Step!', 'In the Chocolate Volcano, defeat 3 monsters with lava.'],
+    ['U', 'Continental Breakfast', 'Clear Red Mist Invasion, Hop Once: Cake Ace, Hop Twice: Cake Ace, Defend Against Bubbles, Leave None Standing and the rest of the set.'],
   ],
   interest: [
     ['B', 'A Pack of Spicy Sticks', 'Finish the vending machine easter egg with the young boy.'],
@@ -370,6 +435,13 @@ const RAW = {
     ['G', 'The Art of Inhaling Food', 'Fill the Hunger Bar 50 times.'],
     ['G', 'The Whisker’s Net Catches All', 'Summon Officer Whisker with Hethereau’s Keeper, then get punished by him.'],
     ['G', 'Vehicle Destroyer', 'Finish the vehicle brothers easter egg.'],
+    // Added Nov 2026 (1.2–1.4 content).
+    ['U', 'Hold Your Breath', 'Take Mold damage 33 times.'],
+    ['U', 'I’ll Be Back', 'Restart at the bonfire 10 times after defeat.'],
+    ['U', 'It’s 100!', 'Roll 100 with the dice.'],
+    ['U', 'Mind the Hot Chocolate', 'Take burn damage 33 times.'],
+    ['U', 'Nah, I’d Win', 'Fail “Test Your Luck” at the Lucky Fuzzy 33 times.'],
+    ['U', 'Pinky Promise', 'Gaze at the night sky with Linko at Hethereau Skytower and make a pinky promise beneath the stars.'],
   ],
   social: [
     ['B', 'Affection Master', 'Reach Affection Lv 10 with 5 characters.'],
@@ -428,6 +500,11 @@ const RAW = {
     ['H', 'Too Kind...', 'Give Skia 10 gifts.'],
     ['H', 'Reliable Partner', 'Reach Affection Lv 5 with Skia.'],
     ['H', 'Part of the Routine', 'Reach Affection Lv 10 with Skia.'],
+    // Added Nov 2026 (1.2–1.4 content).
+    ['B', 'In This Moment', 'Give Aurelia gifts 3 times.'],
+    ['S', 'Spring and Sea', 'Give Aurelia gifts 10 times.'],
+    ['S', 'Bond & Harmony', 'Reach Affection Level 5 with Aurelia.'],
+    ['G', 'Dearest Friend', 'Reach Affection Level 10 with Aurelia.'],
   ],
 };
 
@@ -446,8 +523,9 @@ const slug = (s) =>
 // player's saved progress survives reordering this file.
 export const ACHIEVEMENTS = Object.entries(RAW).flatMap(([category, rows]) => {
   const seen = new Map();
-  return rows.map(([tier, name, text], order) => {
-    let id = `${category}-${slug(name) || 'unnamed'}`;
+  // A 4th field keeps the id of an entry that was renamed, so saved ticks stay.
+  return rows.map(([tier, name, text, idName], order) => {
+    let id = `${category}-${slug(idName ?? name) || 'unnamed'}`;
     const n = (seen.get(id) ?? 0) + 1;
     seen.set(id, n);
     if (n > 1) id = `${id}-${tier.toLowerCase()}${n > 2 ? n : ''}`;

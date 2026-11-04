@@ -4671,6 +4671,21 @@ th[aria-sort='descending'] .th-btn {
 .medal--g {
   background: linear-gradient(135deg, #ffe08a, #c9921c);
 }
+.medal--u {
+  position: relative;
+  background: var(--surface-2);
+  border: 1.5px solid var(--muted);
+  box-shadow: none;
+}
+.medal--u::after {
+  content: '?';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font: 700 10px/1 system-ui, sans-serif;
+  color: var(--muted);
+}
 .medal--h {
   background: var(--surface-2);
   border: 1.5px dashed var(--muted);

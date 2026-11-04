@@ -4,7 +4,7 @@ import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORIES, ACHIEVEMENT_CHARACTERS, TIERS } f
 import { useAchievementProgress } from '../lib/achievementProgress.js';
 
 const TIER_LABEL = Object.fromEntries(TIERS.map((t) => [t.id, t.label]));
-const TIER_RANK = { G: 0, S: 1, B: 2, H: 3 };
+const TIER_RANK = { G: 0, S: 1, B: 2, U: 3, H: 4 };
 const CAT_INDEX = Object.fromEntries(ACHIEVEMENT_CATEGORIES.map((c, i) => [c.id, i]));
 const CAT_LABEL = Object.fromEntries(ACHIEVEMENT_CATEGORIES.map((c) => [c.id, c.label]));
 
@@ -308,7 +308,7 @@ export default function AchievementsPage({ category: catParam }) {
 
       <div className="ach-foot">
         <p className="muted small">
-          Achievement list compiled from community sources (Aug 2026) and may lag behind new patches. Requirements are
+          Achievement list compiled from community sources (updated Nov 2026, up to patch 1.4) and may lag behind new patches. Requirements are
           summaries; check the in-game text for exact wording.
         </p>
         <button
