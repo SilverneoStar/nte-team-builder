@@ -3,7 +3,7 @@
 // AllThings.how guides.
 // Each entry: { term, also?, category, text, related? }
 export const GLOSSARY_CATEGORIES = [
-  'Esper Cycle', 'Reactions', 'Characters', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Modes', 'City & currency',
+  'Esper Cycle', 'Reactions', 'Characters', 'Skills & kit', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Modes', 'City & currency',
 ];
 
 export const GLOSSARY = [
@@ -138,6 +138,129 @@ export const GLOSSARY = [
     text: 'A gear set. Equipping enough pieces of the same Cartridge set unlocks its 2-piece and 4-piece bonuses.',
   },
 
+  // Skills & kit: the general words used in skill, passive and awakening text.
+  {
+    term: 'Esper Ability',
+    category: 'Skills & kit',
+    text: 'The game’s name for a character’s powers. The Esper Ability tab holds their skills and passives, and every character has a named ability of their own (shown as “Esper ability” on this app’s cards).',
+    related: ['Combat skills', 'Passive'],
+  },
+  {
+    term: 'Combat skills',
+    also: 'Skill level',
+    category: 'Skills & kit',
+    text: 'The four active skills every character has: Basic Attack, Redirect Skill, Ultimate and Support Skill. Each levels from 1 to 10 with skill cards and Beetle Coins, and some R3 Resonances add extra levels on top.',
+    related: ['Basic Attack', 'Redirect Skill', 'Ultimate', 'Support Skill'],
+  },
+  {
+    term: 'Basic Attack',
+    category: 'Skills & kit',
+    text: 'A character’s normal attack string, usually a five-hit combo (“Five-hit … combo” in skill text). Many change when held or after a dodge, and many build the character’s own resource as they hit.',
+    related: ['Character resource'],
+  },
+  {
+    term: 'Redirect Skill',
+    category: 'Skills & kit',
+    text: 'A character’s main active skill, used on a cooldown between Basic Attacks. It often spends or builds the character’s own resource; Esper Zero’s and Blackbird’s also trigger Instant Cycle.',
+    related: ['Cooldown', 'Instant Cycle'],
+  },
+  {
+    term: 'Ultimate',
+    category: 'Skills & kit',
+    text: 'A character’s strongest skill, cast once their Ultimate Energy is full. Many Ultimates also give the character a stronger state for a few seconds.',
+    related: ['Ultimate Energy'],
+  },
+  {
+    term: 'Ultimate Energy',
+    category: 'Skills & kit',
+    text: 'The bar that unlocks a character’s Ultimate. It fills as they fight, and some skills, passives and awakenings grant it directly, to themselves or to teammates.',
+  },
+  {
+    term: 'Passive',
+    also: 'Passive 1 and 2',
+    category: 'Skills & kit',
+    text: 'Two always-on effects per character, unlocked with skill cards. Passive 1 is usually the character’s Reaction Enhancement; Passive 2 is a personal or team bonus.',
+    related: ['Reaction Enhancement'],
+  },
+  {
+    term: 'Reaction Enhancement',
+    also: 'e.g. Scorch Enhancement',
+    category: 'Skills & kit',
+    text: 'A passive that strengthens one or two reactions when the character takes part in them. This app tags those passives on each character page, and the Synergy score counts them.',
+    related: ['Reaction', 'Passive'],
+  },
+  {
+    term: 'Trait',
+    category: 'Skills & kit',
+    text: 'An extra ability outside the combat skills and passives. Most are for exploring or city life, like gliding, flying or small gifts; a few, such as Hathor’s, also work in combat.',
+  },
+  {
+    term: 'Core mechanic',
+    category: 'Skills & kit',
+    text: 'The named rule a character’s kit is built around, shown on the character page when the game spells it out.',
+    related: ['Character resource'],
+  },
+  {
+    term: 'Character resource',
+    also: 'Personal gauge',
+    category: 'Skills & kit',
+    text: 'Many characters build their own resource as they fight and spend it for stronger hits, such as Crime, Malice, Grain, Frames or String Energy. Each one only exists in that character’s kit, and their skill text says how it’s built and spent.',
+  },
+  {
+    term: 'Stacks',
+    category: 'Skills & kit',
+    text: 'Effects that can apply several times, each adding the same bonus up to a cap. Text like “caps at 16” gives the cap; reapplying an effect that “refreshes” resets its timer instead of adding a stack.',
+  },
+  {
+    term: 'Cooldown',
+    category: 'Skills & kit',
+    text: 'The wait before a skill or effect can be used again. Some awakenings shorten it, and some effects note their own cooldown, such as “(5s cooldown)”.',
+  },
+  {
+    term: 'On-field and off-field',
+    also: 'Active character',
+    category: 'Skills & kit',
+    text: 'The on-field character is the one you’re controlling; the rest of the team is off-field. Some effects only work, or work better, while the character is off-field.',
+    related: ['Support Skill'],
+  },
+  {
+    term: 'Synced Strike',
+    category: 'Skills & kit',
+    text: 'A hit a teammate makes together with the active character, set up by Linko’s skills. Each one counts as the triggering character’s element, so it can feed reactions and element buffs.',
+    related: ['Follow-up Attack'],
+  },
+  {
+    term: 'DMG Ratio',
+    also: '% ATK',
+    category: 'Skills & kit',
+    text: 'How strong a hit is, given as a share of a stat, usually ATK. A hit that deals 200% ATK does twice the character’s ATK before other bonuses and the enemy’s DEF and RES.',
+    related: ['Base ATK'],
+  },
+  {
+    term: 'Base ATK',
+    category: 'Skills & kit',
+    text: 'A character’s ATK from their level plus their Arc’s ATK, before percentage bonuses. Team buffs “based on Base ATK” scale with this number, not with the character’s total ATK.',
+    related: ['Base stats'],
+  },
+  {
+    term: 'DEF ignore',
+    category: 'Skills & kit',
+    text: 'Effects that “ignore X% DEF” treat the target’s DEF as that much lower for the hit, which raises the damage it takes.',
+  },
+  {
+    term: 'Element RES',
+    also: 'Esper Ability RES',
+    category: 'Skills & kit',
+    text: 'An enemy’s resistance to one element. Lowering it (RES Shred) raises the damage that element deals to them.',
+    related: ['RES Shred'],
+  },
+  {
+    term: 'Hitstun immunity',
+    also: 'Interrupt',
+    category: 'Skills & kit',
+    text: 'Being hit normally interrupts a character’s attack. Effects that grant hitstun immunity, or say an attack “isn’t interrupted”, let the character keep attacking through hits.',
+  },
+
   // Combat
   {
     term: 'Break',
@@ -182,6 +305,11 @@ export const GLOSSARY = [
     text: 'The open-world city where NTE takes place.',
   },
   // Roles & tags
+  {
+    term: 'Summoner',
+    category: 'Roles & tags',
+    text: 'Characters who call extra units onto the field to fight beside the team, such as Exe’s Digital Echoes. Some passives and awakenings boost damage from summons.',
+  },
   {
     term: 'Damage',
     also: 'DPS role',
