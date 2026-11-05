@@ -16,7 +16,7 @@ const SORTS = [
   { id: 'todo', label: 'Not done first' },
 ];
 
-// Bronze, Silver and Gold use the game's Carrota coins; Tier TBC is Cortado
+// Bronze, Silver and Gold use the game's Carrota coins; Tier TBD is Cortado
 // rolling his dice eyes.
 const COIN = { B: 'bronze-carrota.webp', S: 'silver-carrota.webp', G: 'gold-carrota.webp', U: 'tbc.svg' };
 

@@ -7634,3 +7634,8 @@ th[aria-sort='descending'] .th-btn {
   width: 24px;
   height: 24px;
 }
+
+/* Page error fallback (ErrorBoundary) */
+.page-error a.btn {
+  text-decoration: none;
+}

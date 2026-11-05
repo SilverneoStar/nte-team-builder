@@ -2,7 +2,7 @@
 // slots, loadout panel, analysis, roster and sharing), and the other pages,
 // chosen by the address after # (see lib/route.js). Teams live in a reducer
 // (lib/teamsReducer.js) and are saved in this browser (lib/storage.js).
-import { Suspense, lazy, useEffect, useMemo, useReducer, useState } from 'react';
+import { Suspense, useEffect, useMemo, useReducer, useState } from 'react';
 import { CHARACTER_BY_ID, DATA_VERSION } from './data/characters.js';
 import { analyzeTeam, usageInOtherTeams } from './lib/analyze.js';
 import { navigate, useHashRoute, VIEWS } from './lib/route.js';
@@ -20,15 +20,17 @@ import PickDialog from './components/PickDialog.jsx';
 import TeamSlots from './components/TeamSlots.jsx';
 import TeamTabs from './components/TeamTabs.jsx';
 import Mascot from './components/Mascot.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
+import { lazyPage } from './lib/lazyPage.js';
 
 // The team builder loads first; every other page (and the export dialog) is
 // fetched only when it's opened, so the first visit downloads much less.
-const AchievementsPage = lazy(() => import('./components/AchievementsPage.jsx'));
-const ArcsPage = lazy(() => import('./components/ArcsPage.jsx'));
-const CharactersPage = lazy(() => import('./components/CharactersPage.jsx'));
-const ConsolePage = lazy(() => import('./components/ConsolePage.jsx'));
-const ExportDialog = lazy(() => import('./components/ExportDialog.jsx'));
-const GlossaryPage = lazy(() => import('./components/GlossaryPage.jsx'));
+const AchievementsPage = lazyPage(() => import('./components/AchievementsPage.jsx'));
+const ArcsPage = lazyPage(() => import('./components/ArcsPage.jsx'));
+const CharactersPage = lazyPage(() => import('./components/CharactersPage.jsx'));
+const ConsolePage = lazyPage(() => import('./components/ConsolePage.jsx'));
+const ExportDialog = lazyPage(() => import('./components/ExportDialog.jsx'));
+const GlossaryPage = lazyPage(() => import('./components/GlossaryPage.jsx'));
 
 /** Shown for a moment while a page's code downloads. */
 function PageLoading() {
@@ -137,6 +139,7 @@ export default function App() {
         </div>
       </header>
 
+      <ErrorBoundary resetKey={route.view}>
       <Suspense fallback={<PageLoading />}>
         {route.view === 'characters' && (
           <CharactersPage
@@ -165,6 +168,7 @@ export default function App() {
 
         {route.view === 'glossary' && <GlossaryPage />}
       </Suspense>
+      </ErrorBoundary>
 
       {route.view === 'builder' && (
         <main className="layout">
@@ -247,9 +251,11 @@ export default function App() {
       )}
 
       {exporting && (
-        <Suspense fallback={null}>
-          <ExportDialog team={active} onClose={() => setExporting(false)} />
-        </Suspense>
+        <ErrorBoundary resetKey="export">
+          <Suspense fallback={null}>
+            <ExportDialog team={active} onClose={() => setExporting(false)} />
+          </Suspense>
+        </ErrorBoundary>
       )}
 
       <footer className="foot">

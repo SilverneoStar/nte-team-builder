@@ -5,7 +5,7 @@
 // 8 categories. Requirements are short summaries; check
 // the in-game text for exact wording. Where the wiki lists the same goal
 // twice (it sometimes does), both entries are kept so counts match the game.
-// Tiers: B = Bronze, S = Silver, G = Gold, U = rank not confirmed yet, H = Hidden (the game hides its
+// Tiers: B = Bronze, S = Silver, G = Gold, U = rank to be determined, H = Hidden (the game hides its
 // requirement until it's unlocked, so the page treats them as spoilers).
 
 export const ACHIEVEMENT_CATEGORIES = [
@@ -25,7 +25,7 @@ export const TIERS = [
   { id: 'G', label: 'Gold' },
   { id: 'H', label: 'Hidden' },
   // Newer achievements whose rank no source lists yet.
-  { id: 'U', label: 'Tier TBC' },
+  { id: 'U', label: 'Tier TBD' },
 ];
 
 const RAW = {
