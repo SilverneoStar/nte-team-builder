@@ -245,7 +245,7 @@ export const GLOSSARY = [
   {
     term: 'DEF ignore',
     category: 'Skills & kit',
-    text: 'Effects that “ignore X% DEF” treat the target’s DEF as that much lower for the hit, which raises the damage it takes.',
+    text: 'Effects that “ignore X% DEF” skip that share of the target’s DEF for the hit: ignoring 20% means only the other 80% of its DEF reduces the damage, so the hit lands harder. It’s different from DEF shred, which lowers the enemy’s DEF itself for everyone attacking it.',
   },
   {
     term: 'Element RES',
