@@ -19,8 +19,9 @@ export const ARC_PASSIVES = {
     ],
     max: 'CRIT DMG +64%; summon DMG +56%, +4% per stack.',
   },
+  // Echoes on Hold: confirmed by the CN 1.5 release (translated in-game
+  // text shared by NTE Updates on X, Nov 5 2026).
   'echoes-on-hold': {
-    unconfirmed: true,
     name: 'Recall',
     text: [
       'ATK +15%.',

@@ -38,5 +38,5 @@ export const BETA = {
   exe: { awakenings: true, passives: true, life: true },
   elyms: { life: true, passives: true },
 };
-export const BETA_ARCS = new Set(['dotted-horizon', 'echoes-on-hold']);
+export const BETA_ARCS = new Set(['dotted-horizon']);
 export const isBeta = (id, part) => !!BETA[id]?.[part];
