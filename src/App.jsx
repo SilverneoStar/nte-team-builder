@@ -32,12 +32,20 @@ const ConsolePage = lazyPage(() => import('./components/ConsolePage.jsx'));
 const ExportDialog = lazyPage(() => import('./components/ExportDialog.jsx'));
 const GlossaryPage = lazyPage(() => import('./components/GlossaryPage.jsx'));
 
-/** Shown for a moment while a page's code downloads. */
+/**
+ * Shown while a page's code downloads. Quick loads show nothing; if it takes
+ * a moment, Cortado's loading emote fades in (spinner eyes, filling bar).
+ */
 function PageLoading() {
+  const base = import.meta.env.BASE_URL;
   return (
-    <p className="page-loading muted" role="status">
-      Loading…
-    </p>
+    <div className="page-loading" role="status">
+      <picture>
+        <source srcSet={`${base}cortado-loading-still.svg`} media="(prefers-reduced-motion: reduce)" />
+        <img src={`${base}cortado-loading.svg`} alt="" width="112" height="112" />
+      </picture>
+      <span>Loading…</span>
+    </div>
   );
 }
 

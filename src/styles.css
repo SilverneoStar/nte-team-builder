@@ -6229,8 +6229,35 @@ th[aria-sort='descending'] .th-btn {
 
 /* Brief placeholder while a page's code downloads (see App.jsx). */
 .page-loading {
-  padding: 32px 0;
-  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 40px 0;
+  color: var(--muted);
+  font: 700 0.95rem var(--font-body);
+  /* Quick loads stay blank; Cortado only appears if it takes a moment. */
+  animation: page-loading-in 0.25s ease-out 0.35s both;
+}
+.page-loading img {
+  display: block;
+  width: 112px;
+  height: 112px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+}
+@keyframes page-loading-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-loading {
+    animation: none;
+  }
 }
 
 /* Cosmos numbers: silver blended with lavender (plain Cosmos white/grey reads flat) */
