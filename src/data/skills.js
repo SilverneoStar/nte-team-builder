@@ -311,7 +311,10 @@ export const SKILLS = {
       s(U, 'Mesh Collision', 'Enters the Shader Compile state: heavy area hits and Digital Echoes from his Frames. In this state every attack can spend Frames to export Digital Echoes.'),
       s(S, null, null),
     ],
-    life: [],
+    // Closed-beta text (machine-translated), Nov 2026. Name not published yet.
+    life: [
+      s('Life', null, 'As a Logistics Center assistant: driver rest time −25% at Lv 1 and −25% more at Lv 3, delivery time −5% at Lv 2 and −5% more at Lv 4, and +1 daily order refresh at Lv 5.'),
+    ],
   },
   adler: {
     combat: [

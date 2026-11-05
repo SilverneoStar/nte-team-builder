@@ -40,12 +40,12 @@ export default function BondSection({ character: c }) {
       {life.length ? (
         <ol className="skill-list">
           {life.map((sk, i) => (
-            <li key={sk.name}>
+            <li key={sk.name ?? i}>
               <span className="skill-type skill-type--life">{sk.type}</span>
               <span className="awaken-body">
                 <b className="skill-name">
                   <SkillIcon character={c.id} k={`life${i + 1}`} />
-                  {sk.name}
+                  {sk.name ?? 'Name not published yet'}
                 </b>
                 <span>
                   <StatText>{sk.summary}</StatText>

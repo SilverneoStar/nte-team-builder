@@ -35,7 +35,7 @@ export const subscribeBeta = (fn) => {
 // What comes from beta information (closed-beta text, leaks), per Esper and
 // per Arc. Official info (stream, PVs, banners) always shows.
 export const BETA = {
-  exe: { awakenings: true, passives: true },
+  exe: { awakenings: true, passives: true, life: true },
   elyms: { life: true, passives: true },
 };
 export const BETA_ARCS = new Set(['dotted-horizon', 'echoes-on-hold']);
