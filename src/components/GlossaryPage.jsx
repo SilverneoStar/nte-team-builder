@@ -30,6 +30,7 @@ const REACTION_ENTRIES = [
 
 const ALL = [...GLOSSARY, ...REACTION_ENTRIES];
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const whoName = (e) => (e.who ? (CHARACTER_BY_ID[e.who[0]]?.name ?? '') : '');
 
 export default function GlossaryPage() {
   const [query, setQuery] = useState('');
@@ -42,13 +43,21 @@ export default function GlossaryPage() {
     const matches = ALL.filter(
       (e) =>
         (category === 'all' || e.category === category) &&
-        (!q || [e.term, e.also, e.text].some((s) => s?.toLowerCase().includes(q))),
+        (!q ||
+          [e.term, e.also, e.text, ...(e.who ?? []).map((id) => CHARACTER_BY_ID[id]?.name)].some((s) =>
+            s?.toLowerCase().includes(q),
+          )),
     );
     return GLOSSARY_CATEGORIES.map((cat) => ({
       cat,
       entries: matches
         .filter((e) => e.category === cat)
-        .sort((a, b) => (cat === 'Reactions' ? 0 : a.term.localeCompare(b.term))),
+        .sort((a, b) =>
+          cat === 'Reactions'
+            ? 0
+            : // Esper mechanics stay together by Esper, then A–Z.
+              whoName(a).localeCompare(whoName(b)) || a.term.localeCompare(b.term),
+        ),
     })).filter((g) => g.entries.length > 0);
   }, [query, category]);
 
@@ -136,6 +145,14 @@ export default function GlossaryPage() {
                   )}
                   <span className="gloss__term">{e.term}</span>
                   {e.also && <span className="gloss__also">{e.also}</span>}
+                  {e.who?.map((id) =>
+                    CHARACTER_BY_ID[id] ? (
+                      <a key={id} href={`#character-${id}`} className="gloss__who" title={CHARACTER_BY_ID[id].name}>
+                        <Portrait character={CHARACTER_BY_ID[id]} size="sm" />
+                        {CHARACTER_BY_ID[id].name}
+                      </a>
+                    ) : null,
+                  )}
                   {e.kind && <span className="reaction__kind">{e.kind}</span>}
                 </dt>
                 <dd>

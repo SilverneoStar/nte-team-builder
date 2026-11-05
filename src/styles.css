@@ -7612,3 +7612,25 @@ th[aria-sort='descending'] .th-btn {
   color: var(--muted);
   font-size: 0.8rem;
 }
+
+/* Glossary: the Esper an Esper-mechanics entry belongs to */
+.gloss__who {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 2px 10px 2px 2px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-decoration: none;
+}
+.gloss__who:hover {
+  border-color: var(--fg);
+}
+.gloss__who .portrait {
+  width: 24px;
+  height: 24px;
+}
