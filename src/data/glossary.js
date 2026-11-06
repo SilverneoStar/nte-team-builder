@@ -364,7 +364,7 @@ export const GLOSSARY = [
   { term: 'Menacing Gaze', also: 'Instant Strike', who: ['shinku'], category: 'Esper mechanics',
     text: 'Shinku’s trait: standing still on the field for over 2s builds stacks (Critical Dodges, last-moment dodges, add more). Her next hit ends it with an Instant Strike worth +100% damage per stack. Awakening A3 lets it build while off-field, and A4 raises the cap to 16 with a stun at full stacks.' },
   { term: 'Fang Thrust', who: ['skia'], category: 'Esper mechanics',
-    text: 'Skia’s shadow attacks that lock onto enemies, sent by her Basic Attack and made stronger by her Ultimate, The Pack. With Passive 1, a Fang Thrust that locks onto an enemy under Remora (slowed by the Remora reaction) applies Remora again.',
+    text: 'Skia’s shadow attacks that lock onto enemies, sent by his Basic Attack and made stronger by his Ultimate, The Pack. With Passive 1, a Fang Thrust that locks onto an enemy under Remora (slowed by the Remora reaction) applies Remora again.',
     related: ['Remora'] },
   { term: 'Hunt and Delusion', who: ['zankou'], category: 'Esper mechanics',
     text: 'The last hit of Zankou’s Basic Attack gives her Hunt. Awakening A1 makes Hunt permanent (+40% damage) and adds Delusion (+50% Crit DMG on the team’s DoT, damage over time). A3 adds interrupt resistance to Hunt and healing to Delusion.' },
