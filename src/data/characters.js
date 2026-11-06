@@ -66,7 +66,7 @@ export const CHARACTERS = [
     tags: ['DMG Redirection'], stats: stats(1410, 75, 75),
   },
   {
-    id: 'hathor', name: 'Hathor', rarity: 'S', version: '1.0', element: 'lakshana', roles: ['Damage', 'Buff'],
+    id: 'hathor', name: 'Hathor', rarity: 'S', version: '1.0', element: 'lakshana', roles: ['Damage'],
     arcType: 'Plasma', faction: 'Sterry Express', ability: "Wanderer's Pact",
     tags: ['Burst DPS'], stats: stats(1320, 81, 73),
   },
