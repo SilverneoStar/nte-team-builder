@@ -61,7 +61,7 @@ export const CHARACTERS = [
     tags: ['Burst DPS', 'Instant Cycle'], stats: stats(1250, 85, 75),
   },
   {
-    id: 'fadia', name: 'Fadia', rarity: 'S', version: '1.0', element: 'psyche', roles: ['Survival', 'Damage'],
+    id: 'fadia', name: 'Fadia', rarity: 'S', version: '1.0', element: 'psyche', roles: ['Survival'],
     arcType: 'Condensate', faction: 'Bureau of Anomaly Control', unit: 'ETD-4', ability: 'Lilith',
     tags: ['DMG Redirection'], stats: stats(1410, 75, 75),
   },
@@ -71,7 +71,7 @@ export const CHARACTERS = [
     tags: ['Burst DPS'], stats: stats(1320, 81, 73),
   },
   {
-    id: 'hotori', name: 'Hotori', rarity: 'S', version: '1.0', element: 'cosmos', roles: ['Buff', 'Damage'],
+    id: 'hotori', name: 'Hotori', rarity: 'S', version: '1.0', element: 'cosmos', roles: ['Buff'],
     arcType: 'Solid', faction: 'Eibon Antique Shop', ability: 'Duino Elegies',
     tags: ['Burst DPS', 'DMG Boost'], stats: stats(1330, 82, 70),
   },
@@ -81,7 +81,7 @@ export const CHARACTERS = [
     tags: ['Healing', 'DMG Boost'], stats: stats(1420, 75, 75),
   },
   {
-    id: 'jiuyuan', name: 'Jiuyuan', rarity: 'S', version: '1.0', element: 'anima', roles: ['Damage', 'Survival'],
+    id: 'jiuyuan', name: 'Jiuyuan', rarity: 'S', version: '1.0', element: 'anima', roles: ['Damage'],
     arcType: 'Solid', faction: 'Sterry Express', ability: 'Ordinance of Cycles',
     tags: ['Burst DPS', 'Control'], stats: stats(1290, 82, 75),
   },
@@ -91,7 +91,7 @@ export const CHARACTERS = [
     tags: ['Main DPS', 'DoT'], stats: stats(1320, 80, 75),
   },
   {
-    id: 'linko', name: 'Linko', rarity: 'S', version: '1.3', element: 'anima', roles: ['Damage', 'Buff'],
+    id: 'linko', name: 'Linko', rarity: 'S', version: '1.3', element: 'anima', roles: ['Damage'],
     arcType: 'Plasma', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: 'Telepathy',
     tags: ['Burst DPS', 'Follow-up Attack'], stats: stats(1280, 82, 76),
   },
@@ -166,7 +166,7 @@ export const CHARACTERS = [
     tags: ['Healing'], stats: stats(1350, 53, 68),
   },
   {
-    id: 'haniel', name: 'Haniel', rarity: 'A', version: '1.0', element: 'psyche', roles: ['Buff', 'Damage'],
+    id: 'haniel', name: 'Haniel', rarity: 'A', version: '1.0', element: 'psyche', roles: ['Buff'],
     arcType: 'Solid', faction: 'Sterry Express', ability: 'Amazing Grace',
     tags: ['DMG Boost'], stats: stats(1130, 62, 70),
   },
