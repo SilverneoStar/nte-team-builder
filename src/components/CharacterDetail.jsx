@@ -39,6 +39,7 @@ import ExportIcon from './ExportIcon.jsx';
 import AwakenChip from './AwakenChip.jsx';
 import { CommunityAwaken } from './CommunityAlt.jsx';
 import BetaHidden from './BetaHidden.jsx';
+import LeakSection from './LeakSection.jsx';
 import { BETA, isBeta, setShowBeta, useShowBeta } from '../lib/betaInfo.js';
 
 export default function CharacterDetail({
@@ -156,6 +157,7 @@ export default function CharacterDetail({
         </ul>
       </section>
 
+      <LeakSection character={c} />
     </div>
   );
   const showBeta = useShowBeta();
@@ -336,8 +338,12 @@ export default function CharacterDetail({
           <p>
             <span className="beta-tag">Beta</span>{' '}
             {showBeta
-              ? 'Parts of this page come from closed-beta information and may change before release.'
-              : 'Beta information for this Esper (closed-beta kit details) is hidden. Official info from streams and PVs still shows.'}
+              ? BETA[c.id].leaks
+                ? 'This page includes datamined kit crumbs, which are unofficial and likely to change before release.'
+                : 'Parts of this page come from closed-beta information and may change before release.'
+              : BETA[c.id].leaks
+                ? 'Datamined kit crumbs for this Esper are hidden. Official info from streams and PVs still shows.'
+                : 'Beta information for this Esper (closed-beta kit details) is hidden. Official info from streams and PVs still shows.'}
           </p>
           <button type="button" className="btn btn--quiet btn--small" onClick={() => setShowBeta(!showBeta)} aria-pressed={showBeta}>
             {showBeta ? 'Hide beta info' : 'Show beta info'}

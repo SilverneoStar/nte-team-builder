@@ -7666,3 +7666,26 @@ th[aria-sort='descending'] .th-btn {
 .page-error a.btn {
   text-decoration: none;
 }
+
+/* Datamined kit crumbs (LeakSection) */
+.leak {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px dashed color-mix(in srgb, #e0a23a 55%, var(--line));
+  border-radius: 12px;
+}
+.leak .mini-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.leak__group h4 {
+  margin: 12px 0 4px;
+  font-size: 0.9rem;
+}
+.leak__group ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}

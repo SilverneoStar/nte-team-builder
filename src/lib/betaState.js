@@ -37,6 +37,9 @@ export const subscribeBeta = (fn) => {
 export const BETA = {
   exe: { awakenings: true, passives: true, life: true },
   elyms: { life: true, passives: true },
+  // Datamined kit crumbs (src/data/leaks.js).
+  nitsa: { leaks: true },
+  ellie: { leaks: true },
 };
 export const BETA_ARCS = new Set(['dotted-horizon']);
 export const isBeta = (id, part) => !!BETA[id]?.[part];
