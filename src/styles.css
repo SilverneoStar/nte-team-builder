@@ -7689,3 +7689,47 @@ th[aria-sort='descending'] .th-btn {
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
+/* Skill rows: a fixed-width type chip so every row's text starts at the same
+   place; variants ("Enhanced", "Follow-up") sit as a note under the type. On
+   phones the chip goes above the text, which then uses the full width. */
+.skill-list .skill-type {
+  width: 8.4em;
+  min-width: 0;
+  box-sizing: border-box;
+  white-space: normal;
+}
+.skill-type--variant {
+  display: grid;
+  gap: 1px;
+}
+.skill-type small {
+  font-size: 0.92em;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+}
+.skill-icon--empty {
+  opacity: 0.45;
+}
+@media (max-width: 640px) {
+  .skill-list li {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .skill-list .skill-type,
+  .skill-type--variant {
+    width: auto;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    align-self: flex-start;
+  }
+  .skill-type small::before {
+    content: '· ';
+  }
+  .skill-list .awaken-body {
+    width: 100%;
+  }
+}

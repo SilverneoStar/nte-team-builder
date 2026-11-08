@@ -9,6 +9,17 @@ import StatText from './StatText.jsx';
 import SkillIcon, { SkillIconCredit } from './SkillIcon.jsx';
 import { fmt } from '../lib/format.js';
 
+// "Basic Attack (Enhanced)" shows as the skill type with a smaller note under it.
+function SkillType({ type }) {
+  const m = /^(.*?) \((.+)\)$/.exec(type);
+  return (
+    <span className={`skill-type${m ? ' skill-type--variant' : ''}`}>
+      {m ? m[1] : type}
+      {m && <small>{m[2]}</small>}
+    </span>
+  );
+}
+
 const LEVELS = Array.from({ length: SKILL_MAX }, (_, i) => i + 1);
 
 // A character's combat skills and passives, plus a planner for the materials
@@ -44,10 +55,10 @@ export default function SkillsSection({ character }) {
         <ol className="skill-list">
           {data.combat.map((sk) => (
             <li key={sk.type}>
-              <span className="skill-type">{sk.type}</span>
+              <SkillType type={sk.type} />
               <span className="awaken-body">
                 <b className="skill-name">
-                  <SkillIcon character={character.id} k={sk.type} />
+                  <SkillIcon character={character.id} k={sk.type.replace(/ \(.+\)$/, '')} placeholder />
                   {sk.name ?? 'Not published yet'}
                 </b>
                 {sk.summary && (

@@ -31,9 +31,13 @@ export function SkillIconCredit({ character }) {
   );
 }
 
-export default function SkillIcon({ character, k, size = 42 }) {
+export default function SkillIcon({ character, k, size = 42, placeholder = false }) {
   const src = skillIconUrl(character, k);
-  if (!src) return null;
+  // In a list where other rows have icons, an empty disc keeps the names lined up.
+  if (!src)
+    return placeholder && hasSkillIcons(character) ? (
+      <span className="skill-icon skill-icon--empty" style={{ width: size, height: size }} aria-hidden="true" />
+    ) : null;
   return (
     <span className="skill-icon" style={{ width: size, height: size }} aria-hidden="true">
       <img src={src} alt="" width={size - 6} height={size - 6} loading="lazy" decoding="async" />
