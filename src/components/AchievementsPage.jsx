@@ -3,8 +3,8 @@ import { useMemo, useState } from 'react';
 import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORIES, ACHIEVEMENT_CHARACTERS, TIERS } from '../data/achievements.js';
 import { useAchievementProgress } from '../lib/achievementProgress.js';
 
-const TIER_LABEL = Object.fromEntries(TIERS.map((t) => [t.id, t.label]));
-const TIER_RANK = { G: 0, S: 1, B: 2, U: 3, H: 4 };
+const TIER_LABEL = { ...Object.fromEntries(TIERS.map((t) => [t.id, t.label])), H: 'Hidden' };
+const TIER_RANK = { G: 0, S: 1, B: 2, U: 3 };
 const CAT_INDEX = Object.fromEntries(ACHIEVEMENT_CATEGORIES.map((c, i) => [c.id, i]));
 const CAT_LABEL = Object.fromEntries(ACHIEVEMENT_CATEGORIES.map((c) => [c.id, c.label]));
 
@@ -85,11 +85,14 @@ export default function AchievementsPage({ category: catParam }) {
     for (const a of ACHIEVEMENTS) {
       const c = (byCat[a.category] ||= { done: 0, total: 0 });
       const t = (byTier[a.tier] ||= { done: 0, total: 0 });
+      const h = a.hidden ? (byTier.hidden ||= { done: 0, total: 0 }) : null;
       c.total += 1;
       t.total += 1;
+      if (h) h.total += 1;
       if (done.has(a.id)) {
         c.done += 1;
         t.done += 1;
+        if (h) h.done += 1;
       }
     }
     return { byCat, byTier, done: ACHIEVEMENTS.filter((a) => done.has(a.id)).length };
@@ -100,13 +103,13 @@ export default function AchievementsPage({ category: catParam }) {
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
     const filtered = inCategory.filter((a) => {
-      if (tier !== 'all' && a.tier !== tier) return false;
+      if (tier === 'hidden' ? !a.hidden : tier !== 'all' && a.tier !== tier) return false;
       if (status === 'done' && !done.has(a.id)) return false;
       if (status === 'todo' && done.has(a.id)) return false;
       if (showWho && who !== 'all' && !new RegExp(`\\b${who}\\b`).test(a.text)) return false;
       if (q) {
         // Hidden requirements only count toward a search once they're shown.
-        const textVisible = a.tier !== 'H' || spoilers || revealed.has(a.id);
+        const textVisible = !a.hidden || spoilers || revealed.has(a.id);
         if (!a.name.toLowerCase().includes(q) && !(textVisible && a.text.toLowerCase().includes(q))) return false;
       }
       return true;
@@ -158,6 +161,13 @@ export default function AchievementsPage({ category: catParam }) {
               </strong>
             </li>
           ))}
+          <li>
+            <Medal tier="H" />
+            <span>Hidden</span>
+            <strong>
+              {stats.byTier.hidden?.done ?? 0}/{stats.byTier.hidden?.total ?? 0}
+            </strong>
+          </li>
         </ul>
       </section>
 
@@ -219,6 +229,14 @@ export default function AchievementsPage({ category: catParam }) {
               {t.label}
             </button>
           ))}
+          <button
+            className="chip chip--medal"
+            aria-pressed={tier === 'hidden'}
+            onClick={() => setTier(tier === 'hidden' ? 'all' : 'hidden')}
+          >
+            <Medal tier="H" />
+            Hidden
+          </button>
         </div>
         <div className="chips" role="group" aria-label="Filter by progress">
           {[
@@ -288,7 +306,7 @@ export default function AchievementsPage({ category: catParam }) {
         <ul className="ach-list">
           {list.map((a) => {
             const isDone = done.has(a.id);
-            const hidden = a.tier === 'H' && !spoilers && !revealed.has(a.id);
+            const hidden = a.hidden && !spoilers && !revealed.has(a.id);
             return (
               <li key={a.id} className={`ach${isDone ? ' ach--done' : ''}`} data-tier={a.tier.toLowerCase()}>
                 <input
@@ -320,6 +338,7 @@ export default function AchievementsPage({ category: catParam }) {
                       <CatIcon id={a.category} />
                       {CAT_LABEL[a.category]}
                     </span>}
+                  {a.hidden && <span className="ach__tier">Hidden</span>}
                   <span className="ach__tier">{TIER_LABEL[a.tier]}</span>
                 </span>
               </li>
