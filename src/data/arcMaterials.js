@@ -53,6 +53,7 @@ export const ARC_MATERIALS = {
   'good-boys-grand-adventure': ['dessert', 'numeral'],
   'hethereaus-keeper': ['appleseed', 'silhouette'],
   'marching-beyond-time': ['drama', 'whispers'],
+  'dotted-horizon': ['liquid', 'numeral'],
   'echoes-on-hold': ['beaty', 'silhouette'],
   'raging-flames': ['liquid', 'delusions'],
   'ravenous-blade': ['beaty', 'numeral'],

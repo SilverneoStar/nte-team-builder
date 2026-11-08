@@ -9,15 +9,15 @@
 export const ARC_PASSIVES = {
   // Version 1.5 Arcs: passive text from a translated pre-release source
   // (provided by the project owner, Nov 2026). Likely real but not yet
-  // confirmed, so the site marks it `unconfirmed`.
+  // confirmed, so the site marks it `unconfirmed`. Dotted Horizon's main stat
+  // (Crit DMG 48%) and materials: NTE Updates on X, Nov 2026.
   'dotted-horizon': {
     unconfirmed: true,
     name: 'A fleeting moment of holding hands and walking together',
     text: [
-      'CRIT DMG +32%.',
       'The wearer’s summons deal 28% more DMG. Each time the wearer deals Chaos DMG, all their summons on the field gain another +2% DMG (up to 10 stacks, 20s; repeat hits refresh the duration).',
     ],
-    max: 'CRIT DMG +64%; summon DMG +56%, +4% per stack.',
+    max: 'Summon DMG +56%, +4% per stack.',
   },
   // Echoes on Hold: confirmed by the CN 1.5 release (translated in-game
   // text shared by NTE Updates on X, Nov 5 2026).

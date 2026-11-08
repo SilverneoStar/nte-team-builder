@@ -3,8 +3,8 @@
 // role, arc type; some sources call Condensate "Synthesis"); Dexerto wiki profiles (faction, Esper ability, role tags,
 // Level 1 base stats, kept for reference; role tags checked against in-game character screens, Oct 2026; the app shows Level 80 stats from maxStats.js). Fields set to null are not yet published by those sources.
 //
-// roles: the in-game role comes first; extra roles reflect what community
-// guides use the character for (e.g. Hotori is a Buffer who also burst-damages).
+// roles: one role per Esper, the one shown in-game (their main job); the role
+// tags under it (Burst DPS, DMG Boost…) go in "tags".
 // "unit" is a squad inside the faction (e.g. ETD-6 in the Bureau of Anomaly Control).
 // "formerFaction" is shown with a "Former" tag.
 // "version": the game version the character was released in (launch is 1.0;
@@ -36,7 +36,7 @@ export const CHARACTERS = [
     tags: ['Main DPS', 'DoT'], stats: stats(1370, 81, 66),
   },
   {
-    id: 'blackbird', name: 'Blackbird', rarity: 'S', version: '1.4', element: 'psyche', roles: ['Damage', 'Buff'],
+    id: 'blackbird', name: 'Blackbird', rarity: 'S', version: '1.4', element: 'psyche', roles: ['Damage'],
     arcType: 'Gas', faction: 'Yggash Court', ability: 'Naenia Merula',
     tags: ['Instant Cycle', 'Main DPS', 'DMG Boost'], stats: stats(1280, 84, 73),
   },
@@ -71,12 +71,12 @@ export const CHARACTERS = [
     tags: ['Burst DPS'], stats: stats(1320, 81, 73),
   },
   {
-    id: 'hotori', name: 'Hotori', rarity: 'S', version: '1.0', element: 'cosmos', roles: ['Buff', 'Damage'],
+    id: 'hotori', name: 'Hotori', rarity: 'S', version: '1.0', element: 'cosmos', roles: ['Buff'],
     arcType: 'Solid', faction: 'Eibon Antique Shop', ability: 'Duino Elegies',
     tags: ['Burst DPS', 'DMG Boost'], stats: stats(1330, 82, 70),
   },
   {
-    id: 'iroi', name: 'Iroi', rarity: 'S', version: '1.2', element: 'anima', roles: ['Survival', 'Buff'],
+    id: 'iroi', name: 'Iroi', rarity: 'S', version: '1.2', element: 'anima', roles: ['Survival'],
     arcType: 'Liquid', faction: 'Bureau of Anomaly Control', unit: 'CSU-2', ability: 'Infant Dream',
     tags: ['Healing', 'DMG Boost'], stats: stats(1420, 75, 75),
   },
@@ -125,7 +125,7 @@ export const CHARACTERS = [
   // their signature Arc banners), materials and banner dates. Kits, stats and
   // Esper abilities aren't out yet. "banner": limited board, dates in UTC+8.
   {
-    id: 'elyms', name: 'Elyms', rarity: 'S', version: '1.5', element: 'cosmos', roles: ['Damage', 'Buff'],
+    id: 'elyms', name: 'Elyms', rarity: 'S', version: '1.5', element: 'cosmos', roles: ['Buff'],
     arcType: 'Solid', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
     tags: ['Instant Cycle', 'DMG Boost', 'Burst DPS'], stats: null, upcoming: true,
     banner: { name: 'Android Dreams', from: 'Nov 11 (after update)', to: 'Dec 2, 05:59' },

@@ -36,7 +36,6 @@ export const subscribeBeta = (fn) => {
 // per Arc. Official info (stream, PVs, banners) always shows.
 export const BETA = {
   exe: { awakenings: true, passives: true, life: true },
-  elyms: { life: true, passives: true },
   // Datamined kit crumbs (src/data/leaks.js).
   nitsa: { leaks: true },
   ellie: { leaks: true },

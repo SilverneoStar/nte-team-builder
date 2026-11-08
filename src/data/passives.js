@@ -12,10 +12,11 @@
 const p = (name, text, boosts = null) => ({ name, text, boosts });
 
 export const PASSIVES = {
-  // Elyms: closed-beta text, Nov 2026.
+  // Elyms: CN release (translated by NTE Official CC, Nov 2026); the Charge
+  // trigger is from the closed-beta text.
   elyms: {
-    p1: p('Relay Node', 'Charge: when the active character gains Ultimate Energy through Charge, the team’s Cosmos DMG Bonus +3.75% for 3s, stacking up to 8 times (refreshes). Remora: when anyone applies Remora, Elyms applies another Remora to that target 7.5s later (once every 7s; it doesn’t trigger itself).', ['Charge', 'Remora']),
-    p2: p('Guarantee Mechanism', 'Crit DMG +10%.'),
+    p1: p('Relay Node', 'Charge: when the active character gains Ultimate Energy through Charge, the team’s Cosmos DMG +3.75% for up to 30s, stacking up to 8 times (+30% max). Remora: Elyms applies another Remora to the target 7.5s later (once every 7s; that Remora doesn’t trigger this again).', ['Charge', 'Remora']),
+    p2: p('Pity System', 'Crit DMG +10%.'),
     trait: p('Are You There?', 'While Elyms is idle, there’s a chance she greets you with a small gift, once a day.'),
   },
   // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).

@@ -204,6 +204,16 @@ export const AWAKENINGS = {
     ['Theopneustos', 'ATK +10% for 20s after a Support Skill.'],
     ['Deceptive Liberation', 'Appraise and Engrave extra DMG becomes 300% ATK.'],
   ),
+  // Elyms: CN release (translated by NTE Official CC, Nov 2026). English
+  // awakening names aren't out yet.
+  elyms: a(
+    ['Awakening 1', 'Team Crit DMG +10% for 20s per Optical Illusion stack spent by Do You Get Deja Vu (recasting refreshes it and resets the stacks).'],
+    ['Awakening 2', 'Do You Get Deja Vu multiplier +30%; Goodbye to You ignores 5% DEF per Optical Illusion stack spent.'],
+    ['Awakening 3', 'Gains 3 Optical Illusion when Connection goes from Medium to Strong; Optical Illusion caps at 4 stacks.'],
+    ['Awakening 4', 'Team Crit DMG +20% while Elyms is on the team and alive.'],
+    ['Awakening 5', 'The Ones Who Left multiplier +100%; starts battle with 100 Cycle value (once per battle, 30s cooldown).'],
+    ['Awakening 6', 'Remembrance DMG +25% per Optical Illusion stack spent before casting Do You Get Deja Vu.'],
+  ),
   // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).
   // Skill names follow the 1.5 stream: Data Exfiltration, Shader Compile, Digital Echoes.
   exe: a(
@@ -250,6 +260,7 @@ export const RESONANCES = {
   skia: r(['Cubical Survival Manual', 'Arresting Art, Shadow Hound Chase and The Pack +1 skill level.'], ['Employee of the Month', 'Each Fang Thrust lock lowers the target’s Lakshana RES.']),
   zankou: r(['Scarlet Feast', 'Six skills +1 level; Bloodfeast Reverie and Inferno Flamenco DMG +20%.'], ['Venom Flame', 'ATK +40% for 20s after dealing DMG; enhanced for 60s after defeating a Scorched target.']),
   akane: r(['Diatonic', 'Basic Attack, Redirect Skill and Ultimate +1 skill level; full String Energy on entering battle; Synced Resonance and Sonic Boom hit harder.'], ['Counterpoint', 'Refunds 10 String Energy after each Synced Resonance; Crit DMG +64% for 25s after it.']),
+  elyms: r(['Resonance 3', 'Basic Attack, Redirect Skill and Ultimate +1 skill level; I’m Here or a Redirect Skill raises Connection straight to Strong (with both step-up effects), and Goodbye to You can be cast instantly.'], ['Resonance 6', 'Team ignores 12% of all enemy RES while Elyms is on the team and alive; Goodbye to You multiplier rises to 168% per Optical Illusion stack spent.']),
   // Exe: closed-beta text, values not out yet.
   exe: r(['Save an Unimaginable Future', 'Basic Attack, Redirect Skill and Ultimate +1 skill level; Charge Efficiency +X%; his Rating no longer drops until he leaves battle.'], ['Load Unprovable Treasure', 'Rating builds X% faster and unlocks Ω Rating, where define X/Y gives +50% ATK instead; in Shader Compile his Basic Attack can finish off bosses under 10% HP.']),
   zero: r(['Discern', 'Appraisal, Appraise and Engrave and Divide by Zero +1 skill level.'], ['Zero Display', 'Team ATK +10% for 20s when Zero triggers a Cosmos Esper Cycle.']),
