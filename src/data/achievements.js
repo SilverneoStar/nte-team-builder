@@ -1,22 +1,24 @@
 // In-game achievements, by category.
 // Sources: The Games Wiki NTE achievement pages (updated Aug 2026) for the
 // first 388; the 67 added in Nov 2026 (patches 1.2–1.4) come from ZeroLuck's
-// achievement tracker, with ranks from GameWith where it lists them. 455 in
-// 8 categories. Requirements are short summaries; check
+// achievement tracker, with ranks from GameWith where it lists them. 456 in
+// 8 categories (Beyond the Forks of Fate added from an in-game screenshot). Requirements are short summaries; check
 // the in-game text for exact wording. Where the wiki lists the same goal
 // twice (it sometimes does), both entries are kept so counts match the game.
 // Tiers: B = Bronze, S = Silver, G = Gold, U = rank to be determined, H = Hidden (the game hides its
 // requirement until it's unlocked, so the page treats them as spoilers).
 
+// In the game's order and with its names; ids stay short for links.
+// icon: the game's category badge, in public/icons/achievements/.
 export const ACHIEVEMENT_CATEGORIES = [
-  { id: 'quest', label: 'Quest', blurb: 'Finish side-quest series.' },
-  { id: 'explore', label: 'Explore', blurb: 'Anomaly Commissions, phone booths, towers and logins.' },
-  { id: 'fight', label: 'Fight', blurb: 'Reactions, Ultimates, Breaks and dodges in combat.' },
-  { id: 'develop', label: 'Develop', blurb: 'Levels, Arcs, Console, skills and Beetle Coins.' },
-  { id: 'city', label: 'City', blurb: 'Houses, vehicles, auctions, Tycoon and city life.' },
-  { id: 'play', label: 'Play', blurb: 'Mini-games: racing, fishing, Little Sparrow and more.' },
+  { id: 'explore', label: 'Exploration', blurb: 'Anomaly Commissions, divination, phone booths, towers and logins.' },
+  { id: 'fight', label: 'Battle', blurb: 'Reactions, Ultimates, Breaks and dodges in combat.' },
+  { id: 'quest', label: 'Quests', blurb: 'Finish side-quest series.' },
   { id: 'interest', label: 'Interest', blurb: 'Easter eggs, pets, divination and odd moments.' },
-  { id: 'social', label: 'Social', blurb: 'Gifts and Affection with each character.' },
+  { id: 'social', label: 'Bond', blurb: 'Gifts and Affection with each character.' },
+  { id: 'develop', label: 'Develop', blurb: 'Levels, Arcs, Console, skills and Beetle Coins.' },
+  { id: 'play', label: 'Gameplay', blurb: 'Mini-games: racing, fishing, Little Sparrow and more.' },
+  { id: 'city', label: 'City', blurb: 'Houses, vehicles, auctions, Tycoon and city life.' },
 ];
 
 export const TIERS = [
@@ -125,6 +127,7 @@ const RAW = {
     ['S', 'Where Did My Inspiration Go?!', 'Complete the Anomaly Commission “Inspiration Terminator”.'],
     ['S', 'You Moved First!', 'Complete the Anomaly Commission “Change Your Perspective?”.'],
     ['G', 'Adamant Cage', 'Reach Divination Level 10.'],
+    ['G', 'Beyond the Forks of Fate', 'Reach Divination Level 15.'],
     // Added Nov 2026 (1.2–1.4 content).
     ['U', 'Broken Refrain', 'Complete the Anomaly Commission “Finale: Da Capo”.'],
     ['U', 'Cagebreaker', 'Complete the Anomaly Commission “Sunken Door”.'],

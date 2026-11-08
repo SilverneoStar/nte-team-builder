@@ -8,6 +8,12 @@ const TIER_RANK = { G: 0, S: 1, B: 2, U: 3, H: 4 };
 const CAT_INDEX = Object.fromEntries(ACHIEVEMENT_CATEGORIES.map((c, i) => [c.id, i]));
 const CAT_LABEL = Object.fromEntries(ACHIEVEMENT_CATEGORIES.map((c) => [c.id, c.label]));
 
+// The game's badge for a category, tinted to the text colour (CSS mask).
+function CatIcon({ id }) {
+  const url = `${import.meta.env.BASE_URL}icons/achievements/${id}.webp`;
+  return <span className="ach-cat-icon" aria-hidden="true" style={{ '--icon': `url("${url}")` }} />;
+}
+
 const SORTS = [
   { id: 'game', label: 'Category order' },
   { id: 'tier-high', label: 'Gold first' },
@@ -170,6 +176,7 @@ export default function AchievementsPage({ category: catParam }) {
             aria-selected={category === c.id}
             href={`#achievements-${c.id}`}
           >
+            <CatIcon id={c.id} />
             {c.label}{' '}
             <span>
               {stats.byCat[c.id]?.done ?? 0}/{stats.byCat[c.id]?.total ?? 0}
@@ -309,7 +316,10 @@ export default function AchievementsPage({ category: catParam }) {
                   )}
                 </div>
                 <span className="ach__meta">
-                  {category === 'all' && <span className="ach__cat">{CAT_LABEL[a.category]}</span>}
+                  {category === 'all' && <span className="ach__cat">
+                      <CatIcon id={a.category} />
+                      {CAT_LABEL[a.category]}
+                    </span>}
                   <span className="ach__tier">{TIER_LABEL[a.tier]}</span>
                 </span>
               </li>

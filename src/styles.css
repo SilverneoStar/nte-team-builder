@@ -7733,3 +7733,32 @@ th[aria-sort='descending'] .th-btn {
     width: 100%;
   }
 }
+
+/* Achievement category badges (the game's icons), tinted with the text colour. */
+.ach-cat-icon {
+  flex: none;
+  display: inline-block;
+  width: 1.35em;
+  height: 1.35em;
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+  vertical-align: -0.3em;
+}
+.type-tab .ach-cat-icon {
+  padding: 0;
+  border-radius: 0;
+  background: currentColor;
+}
+.type-tab[aria-selected='true'] .ach-cat-icon {
+  color: var(--accent);
+}
+.ach__cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ach__cat .ach-cat-icon {
+  width: 1.4em;
+  height: 1.4em;
+}
