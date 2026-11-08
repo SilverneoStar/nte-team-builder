@@ -35,6 +35,7 @@ const HAVE = {
   zankou: ['basic', 'redirect', 'ultimate', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'],
   linko: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'],
   akane: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'],
+  elyms: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'], // cut from the NTE Official CC kit slides
 };
 
 // Skill types as written in data/skills.js, to their icon keys.
