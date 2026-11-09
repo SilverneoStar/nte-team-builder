@@ -1,7 +1,7 @@
 // In-game achievements, by category.
 // Sources: The Games Wiki NTE achievement pages (updated Aug 2026) for the
 // first 388; the 67 added in Nov 2026 (patches 1.2–1.4) come from ZeroLuck's
-// achievement tracker, with ranks from GameWith where it lists them. 447 in
+// achievement tracker, with ranks from GameWith where it lists them. 446 in
 // 8 categories (Beyond the Forks of Fate added from an in-game screenshot). Requirements are short summaries; check
 // the in-game text for exact wording. Where the wiki lists the same goal
 // twice (it sometimes does), both entries are kept so counts match the game.
@@ -82,7 +82,6 @@ const RAW = {
     ['B', 'Blackjack II', 'Open 10 21’s Gifts.'],
     ['B', 'Blackjack III', 'Open 50 21’s Gifts.'],
     ['B', 'Day Seven', 'Log in on 7 days in total.'],
-    ['B', 'Free Pass', 'Unlock 5 Wertheimer Towers in total.'],
     ['B', 'Orichalcum Cage', 'Reach Divination Level 3.'],
     ['B', 'Skyline I', 'Unlock 1 Wertheimer Tower.'],
     ['B', 'Skyline II', 'Unlock 5 Wertheimer Towers in total.'],
