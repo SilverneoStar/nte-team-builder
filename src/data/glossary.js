@@ -3,7 +3,7 @@
 // AllThings.how guides.
 // Each entry: { term, also?, category, text, related?, who? } (`who`: character ids)
 export const GLOSSARY_CATEGORIES = [
-  'Esper Cycle', 'Reactions', 'Characters', 'Skills & kit', 'Esper mechanics', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Modes', 'City & currency',
+  'Esper Cycle', 'Reactions', 'Characters', 'Skills & kit', 'Esper mechanics', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Combat tech', 'Modes', 'City & currency',
 ];
 
 export const GLOSSARY = [
@@ -382,6 +382,53 @@ export const GLOSSARY = [
     text: 'Blossom plants a Vita Bud, which fires Vita Pistils at nearby enemies for area damage. Several Espers change them: Jiuyuan adds Buds, Iroi makes copies, Nanally fires more Pistils, Mint widens their area, and Hotori keeps them attacking during Time Stop.',
     related: ['Blossom', 'Charge'] },
 
+  // Combat tech: from community combat guides (Nov 2026); exact timing windows
+  // haven't been tested publicly, so none are given.
+  {
+    term: 'Animation cancel',
+    category: 'Combat tech',
+    text: 'Cutting a move’s end lag short. The recovery at the end of a basic attack string can be cancelled with a dodge, a character swap or a parry, so you can act again sooner.',
+    related: ['Swap Parry', 'Skill Parry', 'Critical Dodge'],
+  },
+  {
+    term: 'Skill Parry',
+    category: 'Combat tech',
+    text: 'Using a skill to parry an enemy attack. It also cancels that skill’s recovery, so it doubles as an animation cancel.',
+    related: ['Animation cancel'],
+  },
+  {
+    term: 'Critical Riposte',
+    category: 'Combat tech',
+    text: 'The counter attack from pressing Basic Attack right after a Critical Dodge. It hits hard, and some characters have their own version.',
+    related: ['Critical Dodge'],
+  },
+  {
+    term: 'Swap-in attack',
+    also: 'Relay, entry attack',
+    category: 'Combat tech',
+    text: 'When you switch characters, the incoming Esper attacks as they enter while the outgoing one is still finishing up. Depending on the character it’s a dash-in strike or an area burst.',
+    related: ['Support Skill', 'Swap Parry'],
+  },
+  {
+    term: 'Swap Parry',
+    also: 'Swap Normal',
+    category: 'Combat tech',
+    text: 'Switching characters just as an enemy attack lands: the incoming Esper parries it as their entry. The main defensive quick-swap trick.',
+    related: ['Swap-in attack', 'Animation cancel'],
+  },
+  {
+    term: 'Swap ready',
+    category: 'Combat tech',
+    text: 'A pulsing circle on a character’s portrait means they can be swapped in. Some characters change the rules: Mint needs more time on the field before she can swap out, and Esper Zero’s skill allows an instant swap.',
+    who: ['mint', 'zero'],
+    related: ['Swap-in attack'],
+  },
+  {
+    term: 'Input buffer',
+    category: 'Combat tech',
+    text: 'In action games, the game remembering a button pressed slightly early and doing it as soon as it can. How long NTE remembers presses hasn’t been documented yet.',
+    related: ['Animation cancel'],
+  },
   // Combat
   {
     term: 'Break',
@@ -391,7 +438,8 @@ export const GLOSSARY = [
   {
     term: 'Critical Dodge',
     category: 'Combat',
-    text: 'Dodging at the last moment before an attack lands. Some characters follow it with a special counter attack, called a Critical Riposte.',
+    text: 'Dodging at the last moment before an attack lands, when the enemy flashes red. You’re briefly invincible, and some characters follow it with a special counter attack, called a Critical Riposte.',
+    related: ['Critical Riposte'],
   },
   {
     term: 'Support Skill',
