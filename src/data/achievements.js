@@ -1,7 +1,7 @@
 // In-game achievements, by category.
 // Sources: The Games Wiki NTE achievement pages (updated Aug 2026) for the
 // first 388; the 67 added in Nov 2026 (patches 1.2–1.4) come from ZeroLuck's
-// achievement tracker, with ranks from GameWith where it lists them. 446 in
+// achievement tracker, with ranks from GameWith where it lists them. 450 in
 // 8 categories (Beyond the Forks of Fate added from an in-game screenshot). Requirements are short summaries; check
 // the in-game text for exact wording. Where the wiki lists the same goal
 // twice (it sometimes does), both entries are kept so counts match the game.
@@ -131,6 +131,10 @@ const RAW = {
     // Added Nov 2026 (1.2–1.4 content).
     ['S', 'Broken Refrain', 'Complete the Anomaly Commission “Finale: Da Capo”.'],
     ['S', 'Cagebreaker', 'Complete the Anomaly Commission “Sunken Door”.'],
+    ['S', 'One Strange Ride', 'Complete the Anomaly Commission “Last Bus Out”.'],
+    ['S', 'Mirrorbound', 'Complete the Anomaly Commission “Lilliput in the Looking Glass”.'],
+    ['S', 'Rest Easy', 'Complete the Anomaly Commission “Perfectly Ordinary Dream”.'],
+    ['S', 'Frightfully Fun', 'Complete the Anomaly Commission “No Rest for the Cookies”.'],
     ['S', 'Falling Petals', 'Complete the Anomaly Commission “Twin Blooms”.'],
     ['S', 'Lights Out', 'Complete the Anomaly Commission “Lantern Parade”.'],
     ['S', 'This Bear Will Lead!', 'Complete the Anomaly Commission “Storybook Skirmish”.'],
