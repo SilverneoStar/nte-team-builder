@@ -1,7 +1,7 @@
 // In-game achievements, by category.
 // Sources: The Games Wiki NTE achievement pages (updated Aug 2026) for the
 // first 388; the 67 added in Nov 2026 (patches 1.2–1.4) come from ZeroLuck's
-// achievement tracker, with ranks from GameWith where it lists them. 454 in
+// achievement tracker, with ranks from GameWith where it lists them. 447 in
 // 8 categories (Beyond the Forks of Fate added from an in-game screenshot). Requirements are short summaries; check
 // the in-game text for exact wording. Where the wiki lists the same goal
 // twice (it sometimes does), both entries are kept so counts match the game.
@@ -176,7 +176,6 @@ const RAW = {
     ['B', 'Soul Color I', 'Trigger Stain 10 times.'],
     ['S', 'Soul Color II', 'Trigger Stain 50 times.'],
     ['G', 'Soul Color III', 'Trigger Stain 200 times.'],
-    ['B', 'Speed Above All', 'Trigger a Critical Dodge 200 times.'],
     ['B', 'Speed Above All I', 'Trigger a Critical Dodge 10 times.'],
     ['B', 'Speed Above All II', 'Trigger a Critical Dodge 50 times.'],
     ['B', 'Speed Above All III', 'Trigger a Critical Dodge 100 times.'],
@@ -185,7 +184,6 @@ const RAW = {
     ['B', 'Stopped Thinking I', 'Trigger Remora 10 times.'],
     ['S', 'Stopped Thinking II', 'Trigger Remora 50 times.'],
     ['G', 'Stopped Thinking III', 'Trigger Remora 200 times.'],
-    ['B', 'Variation Movement', 'Cast a Redirect Skill 300 times.'],
     ['B', 'Variation Movement I', 'Cast a skill 10 times.'],
     ['B', 'Variation Movement II', 'Cast a skill 50 times.'],
     ['B', 'Variation Movement III', 'Cast a skill 100 times.'],
@@ -193,7 +191,6 @@ const RAW = {
     ['G', 'Variation Movement V', 'Cast a skill 300 times.'],
   ],
   develop: [
-    ['B', '33729', 'Unlock 5 ReroRero Phone Booths.'],
     ['B', 'Beetle Bounty', 'Obtain 10,000,000 Beetle Coins.'],
     ['B', 'Beetle Coin Researcher', 'Obtain 1,000,000 Beetle Coins.'],
     ['B', 'Big Spender', 'Obtain 500,000 Beetle Coins.'],
@@ -202,7 +199,6 @@ const RAW = {
     ['B', 'Brawl III', 'Upgrade 1 Arc to Lv 60.'],
     ['B', 'Brawl IV', 'Upgrade 1 Arc to Lv 80.'],
     ['B', 'Careful Maintenance', 'Obtain 1 Arc.'],
-    ['B', 'Classic Clear', 'Upgrade 1 orange Console Module to Lv 20.'],
     ['B', 'Coins Keep Rolling In', 'Obtain 100,000 Beetle Coins.'],
     ['B', 'Consecutive Normal Punches I', 'Upgrade any character’s Basic Attack 5 times.'],
     ['B', 'Definition of Power I', 'Upgrade any character’s Skill 5 times.'],
@@ -223,7 +219,6 @@ const RAW = {
     ['B', 'Lone Signal', 'Complete the Anomaly Commission “Deep Blue Sorrow”.'],
     ['B', 'Luck and Strategy Combined', 'Make 10 rolls.'],
     ['B', 'Neon Master', 'Upgrade Life Skills 50 times.'],
-    ['B', 'OG Legend', 'Upgrade 1 orange Console Cartridge to Lv 10.'],
     ['B', 'One-Man Army I', 'Raise 1 character to Lv 20.'],
     ['B', 'One-Man Army II', 'Raise 1 character to Lv 40.'],
     ['B', 'One-Man Army III', 'Raise 1 character to Lv 60.'],
@@ -292,7 +287,6 @@ const RAW = {
     ['B', 'The Queen Wears Landric', 'Spot Fadia coming back from shopping.'],
     ['B', 'Trying to Breathe in the Concrete Jungle', 'Upgrade Life Skills once.'],
     ['B', 'Ultimate Racer', 'Obtain 7 vehicles.'],
-    ['B', 'Unit-01', 'Obtain 1 vehicle.'],
     ['B', 'Want Some Beans?', 'Unlock 1 coffee shop.'],
     ['S', 'Bidding Fanatic', 'Join 10 auctions.'],
     ['S', 'Burn Your Cosmos', 'Spend 500 City Stamina in total.'],
@@ -334,7 +328,6 @@ const RAW = {
     ['B', 'Dawn in Detention', 'Survive the first round of detention and discover one surprise.'],
     ['S', 'Detention Strikes Back', 'Clear the next round of detention and uncover two surprises.'],
     ['G', 'Return of the Dawn', 'Master every detention encounter and reap three unexpected rewards.'],
-    ['Sh', 'Breakout Together', 'Use a special spot to leave the Detention Facility and escape.'],
   ],
   play: [
     ['B', 'Block Vanishing Act', 'Place 1st in Tetrominoes.'],
@@ -400,12 +393,12 @@ const RAW = {
     ['S', 'Continental Breakfast', 'Clear Red Mist Invasion, Hop Once: Cake Ace, Hop Twice: Cake Ace, Defend Against Bubbles, Leave None Standing and the rest of the set.'],
   ],
   interest: [
+    ['Sh', 'Breakout Together', 'Use a special spot to leave the Detention Facility and escape.'],
     ['Bh', 'A Pack of Spicy Sticks Promise', 'Finish the vending machine easter egg with the young boy.', 'A Pack of Spicy Sticks'],
     ['Bh', 'Broken Machine’s Generosity', 'Finish the broken vending machine easter egg.'],
     ['B', 'Can I Pet It!', 'Pet a small animal.'],
     ['Bh', 'Fake Car Owner Chronicles', 'Finish the car enthusiast easter egg.'],
     ['B', 'Fate’s Calling', 'Do a divination.'],
-    ['B', 'Fate’s Echo', 'Reach Divination Level 10.'],
     ['B', 'Flip-Flopping Future', 'Do 10 divinations.'],
     ['B', 'Fluffy Addiction', 'Pet small animals 10 times.'],
     ['Bh', 'Gangster Dreams', 'Finish “The Great Coluccis” easter egg.'],
