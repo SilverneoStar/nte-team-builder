@@ -1,4 +1,5 @@
 // The Console page: lay out modules and Cartridges for a character, with codes and a build image.
+import { fillCartValues } from '../data/cartValues.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { decodeConsoleCode, encodeConsoleCode } from '../lib/consoleCode.js';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
@@ -37,7 +38,6 @@ import {
   bonusStats,
   formatStat,
   isPercentStat,
-  keepCartValues,
   moduleLevel,
   moduleRange,
   unlockedSubs,
@@ -275,7 +275,7 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                   type="button"
                   className="btn btn--quiet"
                   onClick={() => {
-                    applyBuild({ ...suggested, cartStats: keepCartValues(cartStats, suggested.cartStats) });
+                    applyBuild({ ...suggested, cartStats: fillCartValues(cartStats, suggested.cartStats) });
                     setStatus(
                       `Loaded the suggested layout for ${CARTRIDGE_BY_ID[suggested.cartridge].name}. Adjust the stats below the set.`,
                     );

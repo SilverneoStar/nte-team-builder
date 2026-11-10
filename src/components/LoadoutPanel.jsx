@@ -4,7 +4,8 @@ import CartridgeIcon from './CartridgeIcon.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
 import { MiniBoard } from './ConsolePage.jsx';
 import { CHARACTER_CONSOLE, FREE_CELLS, setProgress, specBonus, usedCells } from '../data/console.js';
-import { CARTRIDGES, CARTRIDGE_BY_ID, cartridgesFor, keepCartValues } from '../data/gear.js';
+import { CARTRIDGES, CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
+import { fillCartValues } from '../data/cartValues.js';
 import { suggestedBuild, suggestedCartStats } from '../data/consoleBuilds.js';
 import StatAdvice from './StatAdvice.jsx';
 import { loadSavedConsoles } from '../lib/consoles.js';
@@ -289,7 +290,7 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
             const sb = specBonus(c.id, loadout.console);
             const setName = cart ? cart.name : 'the recommended set';
             // Keep values the person already entered for the same stat.
-            const withValues = (st) => keepCartValues(loadout.cartStats, st);
+            const withValues = (st) => fillCartValues(loadout.cartStats, st);
             return (
               <div className="gear-block gear-block--wide">
                 <label className="mini-title" htmlFor="gear-console">
@@ -375,7 +376,8 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
                 />
                 <StatAdvice character={c} cartridge={loadout.cartridge} />
                 <p className="muted small">
-                  Adjust the stats and enter the values from your Cartridge. Module stats are entered per module in the
+                  Suggested stats come with their best S-rank values (+20); values you’ve already entered for the
+                  same stat are kept. Adjust the stats and enter the values from your Cartridge. Module stats are entered per module in the
                   Console tab.
                 </p>
               </div>

@@ -12,20 +12,10 @@ import { MAX_STATS } from './maxStats.js';
 import { suggestedBuild } from './consoleBuilds.js';
 import { recommendStats } from './buildProfiles.js';
 
-const ELEMENT_DMG = ['Cosmos', 'Anima', 'Incantation', 'Chaos', 'Psyche', 'Lakshana', 'Mental']
-  .map((e) => [`${e} DMG%`, 37.5]);
+import { CART_MAIN_MAX, CART_SUB_S } from './cartValues.js';
 
-// Cartridge main stat, S-rank at +20.
-export const CART_MAIN_MAX = {
-  'HP%': 37.5, 'ATK%': 37.5, 'DEF%': 52.5, 'CRIT Rate': 30, 'CRIT DMG': 60,
-  'Healing%': 34.5, 'Break Intensity': 180, 'Cycle Intensity': 180,
-  ...Object.fromEntries(ELEMENT_DMG),
-};
-// Cartridge sub stats, S-rank (fixed values). DMG% is Universal DMG.
-export const CART_SUB_S = {
-  HP: 1000, 'HP%': 12.5, ATK: 80, 'ATK%': 12.5, DEF: 80, 'DEF%': 17.5,
-  'CRIT Rate': 10, 'CRIT DMG': 20, 'DMG%': 10, 'Break Intensity': 60, 'Cycle Intensity': 60,
-};
+export { CART_MAIN_MAX, CART_SUB_S };
+
 // Module main stats (flat ATK and HP) at +20, by module Type.
 export const MODULE_MAIN_MAX = { 2: { atk: 25, hp: 336 }, 3: { atk: 38, hp: 504 }, 4: { atk: 50, hp: 672 } };
 // Module sub stats, S-rank, by module Type.
