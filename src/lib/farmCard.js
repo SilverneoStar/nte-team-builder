@@ -332,13 +332,21 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
     id: 'arc',
     title: `Arc · ${bestArc.name}`,
     where: `Lv 20 → ${ARC_MAX_LEVEL} · ${ARC_MATERIAL_SOURCE} and anomalies`,
-    // Its Beetle Coin goes into the currency total, so the row is all materials.
     items: arcCost.filter((m) => m.kind !== 'coins'),
   };
   if (arcCost) {
-    const coins = arcCost.find((m) => m.kind === 'coins')?.qty ?? 0;
-    const money = list.groups.find((g) => g.id === 'money');
-    money.items = money.items.map((m) => (m.name === 'Beetle Coin' ? { ...m, qty: m.qty + coins } : m));
+    // Items the character already needs are added to that panel instead of
+    // being listed twice (an Arc's anomaly drops, its Beetle Coin).
+    for (const g of list.groups) {
+      g.items = g.items.map((m) => {
+        const extra = arcCost.find((x) => x.name === m.name);
+        return extra ? { ...m, qty: m.qty + extra.qty } : m;
+      });
+    }
+    const shared = new Set(list.groups.flatMap((g) => g.items.map((m) => m.name)));
+    const merged = arcGroup.items.filter((m) => shared.has(m.name));
+    arcGroup.items = arcGroup.items.filter((m) => !shared.has(m.name));
+    if (merged.length) arcGroup.where = `Lv 20 → ${ARC_MAX_LEVEL} · ${ARC_MATERIAL_SOURCE} · anomaly drops added above`;
   }
   if (arcGroup) {
     const missing = arcGroup.items.map((m) => m.name).filter((n) => !imgs.has(n));
