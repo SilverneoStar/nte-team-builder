@@ -19,6 +19,8 @@ import { alternativesFor, cartTile, drawAwakenStep, loadAwakeningIcons } from '.
 import { teamsFor } from './characterCard.js';
 import { fillStatText } from './statText.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
+import { materialIconUrl } from './icons.js';
+import { ARC_MAX_LEVEL, arcAscensionCost } from '../data/arcMaterials.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
   BODY,
@@ -268,6 +270,11 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   ]);
   const moreImgs = rest.slice(0, arcs.more.length);
   const mateImg = Object.fromEntries(mates.map((id, i) => [id, rest[arcs.more.length + i]]));
+  // The best Arc's Lv 20 → 80 ascension materials, shown under it.
+  const arcMats = (arcs.best && arcAscensionCost(arcs.best)) ?? [];
+  const arcMatImgs = await Promise.all(
+    arcMats.map((m) => (materialIconUrl(m.name) ? loadImage(materialIconUrl(m.name)) : null)),
+  );
 
   const W = GUIDE_CARD_W;
   const H = GUIDE_CARD_H;
@@ -485,6 +492,24 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       16,
     );
     y += A + 16;
+    if (arcMats.length) {
+      ctx.font = `600 12px ${MONO}`;
+      ctx.fillStyle = K.muted;
+      ctx.fillText(`ASCEND LV 20 → ${ARC_MAX_LEVEL}`, ix, y + 2);
+      const cw = iw / arcMats.length;
+      const S = 30;
+      arcMats.forEach((m, i) => {
+        const mx = ix + i * cw;
+        if (arcMatImgs[i]) ctx.drawImage(arcMatImgs[i], mx + (cw - S) / 2, y + 10, S, S);
+        ctx.font = `700 14px ${MONO}`;
+        ctx.fillStyle = K.fg;
+        ctx.textAlign = 'center';
+        const q = m.qty >= 1e4 ? `${+(m.qty / 1e3).toFixed(0)}K` : `×${m.qty}`;
+        ctx.fillText(q, mx + cw / 2, y + 58);
+        ctx.textAlign = 'left';
+      });
+      y += 72;
+    }
     const room = R2Y + ROW2 - 14 - y;
     const rowH = Math.min(78, room / Math.max(1, arcs.more.length));
     const S = Math.min(62, rowH - 12);

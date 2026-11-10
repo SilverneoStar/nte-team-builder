@@ -9,8 +9,8 @@ import { bestBuild } from '../data/bestBuild.js';
 import { CARTRIDGE_BY_ID } from '../data/gear.js';
 import { SET_SHAPES, SHAPES } from '../data/console.js';
 import { materialIconUrl } from './icons.js';
-import { ARC_DYES, ARC_MATERIAL_SOURCE, arcAscensionCost } from '../data/arcMaterials.js';
-import { ARC_SOURCES, RECOMMENDED } from '../data/arcs.js';
+import { ARC_DYES, ARC_MATERIAL_SOURCE, ARC_MAX_LEVEL, arcAscensionCost } from '../data/arcMaterials.js';
+import { ARC_BY_ID, ARC_SOURCES, RECOMMENDED } from '../data/arcs.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
@@ -38,7 +38,8 @@ import { drawTagPills, loadTagMarks } from './cardTags.js';
 import { fmt } from './format.js';
 
 export const FARM_W = 1600;
-export const FARM_H = 920;
+// Taller than the build card: a fourth row holds the best Arc's ascension.
+export const FARM_H = 1154;
 // Instagram portrait post (4:5), offered for both farming cards.
 export const IG_W = 1080;
 export const IG_H = 1350;
@@ -305,7 +306,7 @@ function consolePanel(ctx, x, y, w, h, build, cartImg) {
 export async function renderFarmCard(character, { base = '/', scale = 2, format = 'wide' } = {}) {
   const ig = format === 'ig';
   const W = ig ? IG_W : FARM_W;
-  const H = ig ? IG_H : FARM_H;
+  let H = ig ? IG_H : FARM_H;
   const list = farmList(character.id);
   if (!list) return null;
   await ensureFonts(base);
@@ -325,6 +326,22 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
 
   const roleIcons = await loadRoleIcons(base, c.roles);
   const tagMarks = await loadTagMarks(base, c.tags);
+  // The best Arc (signature, else top recommended): Lv 20 → 80 ascension.
+  const bestArc = build?.arc && ARC_BY_ID[build.arc];
+  const arcCost = bestArc && arcAscensionCost(bestArc);
+  const arcGroup = arcCost && {
+    id: 'arc',
+    title: `Arc · ${bestArc.name}`,
+    where: `Lv 20 → ${ARC_MAX_LEVEL} · ${ARC_MATERIAL_SOURCE} and anomalies`,
+    items: arcCost.map((m) => (m.kind === 'coins' ? m : { ...m })),
+  };
+  // Without an Arc row the wide card keeps its shorter height.
+  if (!ig && !arcGroup) H = FARM_H - 234;
+  if (arcGroup) {
+    const missing = arcGroup.items.map((m) => m.name).filter((n) => !imgs.has(n));
+    const more = await Promise.all(missing.map((n) => (materialIconUrl(n) ? loadImage(materialIconUrl(n)) : null)));
+    missing.forEach((n, k) => imgs.set(n, more[k]));
+  }
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(W * scale);
   canvas.height = Math.round(H * scale);
@@ -383,11 +400,20 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   // In-game tags (Main DPS, Instant Cycle...) on their own row.
   if (c.tags?.length) ly = drawTagPills(ctx, c.tags, tagMarks, tx0, ly + 16, TW, { size: 14, color: K.fg }) - 6;
 
-  // What the totals cover (Instagram: two columns of two, under the name)
+  // What the totals cover (Instagram: two columns, under the name)
+  const lines = [
+    'Level cap 20 → 80 (6 ascensions)',
+    '4 combat skills Lv 1 → 10',
+    'Both passives',
+    'Life skill Lv 1 → 5',
+    // (Instagram: the Arc row's own title says it.)
+    ...(arcGroup && !ig ? [`Best Arc Lv 20 → ${ARC_MAX_LEVEL}`] : []),
+  ];
+  const boxH = ig ? 104 : 38 + lines.length * 28;
   ly += 44;
-  if (ig) ly = py + LW - 104 + 26;
+  if (ig) ly = py + LW - boxH + 26;
   ctx.fillStyle = K.panel;
-  roundRect(ctx, tx0, ly - 26, TW, ig ? 104 : 150, 14);
+  roundRect(ctx, tx0, ly - 26, TW, boxH, 14);
   ctx.fill();
   ctx.strokeStyle = K.line;
   ctx.lineWidth = 1.5;
@@ -397,12 +423,6 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   ctx.fillText('TOTALS COVER', tx0 + 18, ly);
   ctx.fillStyle = K.fg;
   ctx.font = `600 16px ${BODY}`;
-  const lines = [
-    'Level cap 20 → 80 (6 ascensions)',
-    '4 combat skills Lv 1 → 10',
-    'Both passives',
-    'Life skill Lv 1 → 5',
-  ];
   lines.forEach((t, i) => {
     const lx = ig ? tx0 + 18 + (i % 2) * (TW / 2) : px + 18;
     const lyy = ig ? ly + 26 + Math.floor(i / 2) * 28 : ly + 22 + i * 28;
@@ -435,7 +455,7 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   const by = Object.fromEntries(list.groups.map((g) => [g.id, g]));
   const GAP = 20;
   const TOP = HY + 84 + GAP;
-  const ROW = ig ? 250 : 214;
+  const ROW = ig ? (arcGroup ? 192 : 250) : 214;
   // Row 1: boss + weekly + EXP
   const w1 = ig ? 300 : 316;
   let x = RX;
@@ -449,15 +469,17 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   const half = (RW - GAP) / 2;
   group(ctx, RX, TOP + ROW + GAP, half, ROW, by.family, imgs);
   group(ctx, RX + half + GAP, TOP + ROW + GAP, half, ROW, by.books, imgs);
-  // Row 3: currency + console gear
+  // Row 3: currency + console gear; row 4: the best Arc.
   const r3 = TOP + 2 * (ROW + GAP);
-  const ROW3 = ig ? H - 96 - r3 : 250;
+  const ARC_ROW = arcGroup ? (ig ? 184 : ROW) : 0;
+  const ROW3 = ig ? H - 96 - r3 - (arcGroup ? ARC_ROW + GAP : 0) : 250;
   if (build?.cartridge) {
     group(ctx, RX, r3, half, ROW3, by.money, imgs);
     consolePanel(ctx, RX + half + GAP, r3, half, ROW3, build, cartImg);
   } else {
     group(ctx, RX, r3, RW, ROW3, by.money, imgs);
   }
+  if (arcGroup) group(ctx, RX, r3 + ROW3 + GAP, RW, ARC_ROW, arcGroup, imgs);
 
   // ---- Footer ----
   footer(ctx, W, H, PAD, ig);
