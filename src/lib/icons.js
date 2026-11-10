@@ -114,6 +114,7 @@ export const materialSlug = (name) =>
 // Icons replaced under the same file name: a version makes browsers fetch the new copy.
 const ICON_VERSION = {
   // (all default to 3; entries here only if bumped again)
+  'hollow-flowerseed': 4, // new in-game art (CN 1.5), Nov 2026
 };
 export function materialIconUrl(name) {
   const slug = materialSlug(name);
