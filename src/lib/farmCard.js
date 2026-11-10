@@ -38,8 +38,7 @@ import { drawTagPills, loadTagMarks } from './cardTags.js';
 import { fmt } from './format.js';
 
 export const FARM_W = 1600;
-// Taller than the build card: a fourth row holds the best Arc's ascension.
-export const FARM_H = 1154;
+export const FARM_H = 920;
 // Instagram portrait post (4:5), offered for both farming cards.
 export const IG_W = 1080;
 export const IG_H = 1350;
@@ -306,7 +305,7 @@ function consolePanel(ctx, x, y, w, h, build, cartImg) {
 export async function renderFarmCard(character, { base = '/', scale = 2, format = 'wide' } = {}) {
   const ig = format === 'ig';
   const W = ig ? IG_W : FARM_W;
-  let H = ig ? IG_H : FARM_H;
+  const H = ig ? IG_H : FARM_H;
   const list = farmList(character.id);
   if (!list) return null;
   await ensureFonts(base);
@@ -333,10 +332,14 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
     id: 'arc',
     title: `Arc · ${bestArc.name}`,
     where: `Lv 20 → ${ARC_MAX_LEVEL} · ${ARC_MATERIAL_SOURCE} and anomalies`,
-    items: arcCost.map((m) => (m.kind === 'coins' ? m : { ...m })),
+    // Its Beetle Coin goes into the currency total, so the row is all materials.
+    items: arcCost.filter((m) => m.kind !== 'coins'),
   };
-  // Without an Arc row the wide card keeps its shorter height.
-  if (!ig && !arcGroup) H = FARM_H - 234;
+  if (arcCost) {
+    const coins = arcCost.find((m) => m.kind === 'coins')?.qty ?? 0;
+    const money = list.groups.find((g) => g.id === 'money');
+    money.items = money.items.map((m) => (m.name === 'Beetle Coin' ? { ...m, qty: m.qty + coins } : m));
+  }
   if (arcGroup) {
     const missing = arcGroup.items.map((m) => m.name).filter((n) => !imgs.has(n));
     const more = await Promise.all(missing.map((n) => (materialIconUrl(n) ? loadImage(materialIconUrl(n)) : null)));
@@ -400,19 +403,20 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   // In-game tags (Main DPS, Instant Cycle...) on their own row.
   if (c.tags?.length) ly = drawTagPills(ctx, c.tags, tagMarks, tx0, ly + 16, TW, { size: 14, color: K.fg }) - 6;
 
-  // What the totals cover (Instagram: two columns, under the name)
+  // What the totals cover, in two columns.
   const lines = [
-    'Level cap 20 → 80 (6 ascensions)',
-    '4 combat skills Lv 1 → 10',
+    'Level 20 → 80',
+    '4 skills → Lv 10',
     'Both passives',
-    'Life skill Lv 1 → 5',
+    'Life skill → Lv 5',
     // (Instagram: the Arc row's own title says it.)
-    ...(arcGroup && !ig ? [`Best Arc Lv 20 → ${ARC_MAX_LEVEL}`] : []),
+    ...(arcGroup && !ig ? [`Best Arc → Lv ${ARC_MAX_LEVEL}`] : []),
   ];
-  const boxH = ig ? 104 : 38 + lines.length * 28;
+  const boxH = 50 + Math.ceil(lines.length / 2) * 26;
   ly += 44;
   if (ig) ly = py + LW - boxH + 26;
   ctx.fillStyle = K.panel;
+  const totalsBottom = ly - 26 + boxH;
   roundRect(ctx, tx0, ly - 26, TW, boxH, 14);
   ctx.fill();
   ctx.strokeStyle = K.line;
@@ -424,8 +428,8 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   ctx.fillStyle = K.fg;
   ctx.font = `600 16px ${BODY}`;
   lines.forEach((t, i) => {
-    const lx = ig ? tx0 + 18 + (i % 2) * (TW / 2) : px + 18;
-    const lyy = ig ? ly + 26 + Math.floor(i / 2) * 28 : ly + 22 + i * 28;
+    const lx = tx0 + 18 + (i % 2) * ((TW - 18) / 2);
+    const lyy = ly + 26 + Math.floor(i / 2) * 26;
     ctx.fillStyle = K.pink;
     ctx.fillRect(lx, lyy - 6, 6, 6);
     ctx.fillStyle = K.fg;
@@ -469,17 +473,29 @@ export async function renderFarmCard(character, { base = '/', scale = 2, format 
   const half = (RW - GAP) / 2;
   group(ctx, RX, TOP + ROW + GAP, half, ROW, by.family, imgs);
   group(ctx, RX + half + GAP, TOP + ROW + GAP, half, ROW, by.books, imgs);
-  // Row 3: currency + console gear; row 4: the best Arc.
+  // Row 3: console gear beside the best Arc (wide: currency moves under the
+  // totals in the left column); Instagram: currency + console, then the Arc.
   const r3 = TOP + 2 * (ROW + GAP);
   const ARC_ROW = arcGroup ? (ig ? 184 : ROW) : 0;
   const ROW3 = ig ? H - 96 - r3 - (arcGroup ? ARC_ROW + GAP : 0) : 250;
-  if (build?.cartridge) {
-    group(ctx, RX, r3, half, ROW3, by.money, imgs);
-    consolePanel(ctx, RX + half + GAP, r3, half, ROW3, build, cartImg);
+  if (!ig && arcGroup) {
+    const my = totalsBottom + GAP;
+    group(ctx, PAD, my, LW, H - 64 - my, { ...by.money, where: 'Coin: EXP zone · Seeds: Mall' }, imgs);
+    if (build?.cartridge) {
+      consolePanel(ctx, RX, r3, half, ROW3, build, cartImg);
+      group(ctx, RX + half + GAP, r3, half, ROW3, arcGroup, imgs);
+    } else {
+      group(ctx, RX, r3, RW, ROW3, arcGroup, imgs);
+    }
   } else {
-    group(ctx, RX, r3, RW, ROW3, by.money, imgs);
+    if (build?.cartridge) {
+      group(ctx, RX, r3, half, ROW3, by.money, imgs);
+      consolePanel(ctx, RX + half + GAP, r3, half, ROW3, build, cartImg);
+    } else {
+      group(ctx, RX, r3, RW, ROW3, by.money, imgs);
+    }
+    if (arcGroup) group(ctx, RX, r3 + ROW3 + GAP, RW, ARC_ROW, arcGroup, imgs);
   }
-  if (arcGroup) group(ctx, RX, r3 + ROW3 + GAP, RW, ARC_ROW, arcGroup, imgs);
 
   // ---- Footer ----
   footer(ctx, W, H, PAD, ig);
