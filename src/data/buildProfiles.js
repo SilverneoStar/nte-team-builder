@@ -52,7 +52,7 @@ export const BUILD_PROFILES = {
   },
   // Pre-release (1.5 preview stream tags): an early pick until the kit is out.
   exe: {
-    note: 'An early pick from the 1.5 preview: his hits build Frames that his skills spend on Digital Echoes, and his Rating rises as he keeps attacking. Revisit once his full kit is out.',
+    note: 'The in-game Character Guide recommends Diabolos ×4 with Chaos DMG, CRIT Rate, CRIT DMG, ATK% and DMG%. His hits build Frames that his skills spend on Digital Echoes, and his Rating rises as he keeps attacking.',
   },
 };
 

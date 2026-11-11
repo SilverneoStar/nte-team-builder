@@ -74,10 +74,10 @@ export const CHARACTER_CONSOLE = {
   chiz: c('D', 3, 'Cosmos DMG', 10),
   daffodill: c('C', 3, 'Chaos DMG', 10),
   edgar: c('A', 3, 'HP', 10),
-  // Elyms: grid and bonus from the global game (Nov 2026). Exe: pre-release
-  // guess modelled on Lacrimosa.
+  // Elyms: grid and bonus from the global game (Nov 2026). Exe: grid from
+  // the in-game Character Guide; his module bonus is still a guess.
   elyms: c('C', 3, 'CRIT Rate', 8),
-  exe: c('A', 3, 'Chaos DMG', 10),
+  exe: c('B', 3, 'Chaos DMG', 10),
   fadia: c('C', 2, 'HP', 6),
   haniel: c('B', 3, 'ATK', 10),
   hathor: c('C', 3, 'ATK', 10),
