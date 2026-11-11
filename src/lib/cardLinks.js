@@ -12,11 +12,11 @@ const FB_PATH =
 // A plain chat bubble, not the Discord logo (brand kit rule).
 const BUBBLE_PATH = 'M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12Z';
 
+// The site plus one pointer: the socials and news live in the site's footer,
+// so cards don't need every handle (they changed and cluttered the cards).
 export const LINKS = [
   { icon: 'web', text: SITE, main: true },
-  { icon: 'x', text: '@SilverStarneo' },
-  { icon: 'fb', text: 'SSN-Cortado' },
-  { icon: 'chat', text: 'discord.gg/YnC439yB3' },
+  { icon: 'chat', text: 'Socials & updates: see the site’s footer' },
 ];
 
 /** Draws a 24-unit icon scaled to `size`, top-left at (x, y). */

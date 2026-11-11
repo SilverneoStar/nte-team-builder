@@ -24,6 +24,7 @@ import { skillIconUrl } from './skillIcons.js';
 import { encodeConsoleCode } from './consoleCode.js';
 import { fillStatText } from './statText.js';
 import { drawLinksBlock } from './cardLinks.js';
+import { drawSkillPriority, loadSkillPriorityIcons, skillPriorityFor } from './skillPriorityDraw.js';
 import { drawTagPills, loadTagMarks } from './cardTags.js';
 import { loadoutOf } from './teamsReducer.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
@@ -189,7 +190,7 @@ function moduleTile(ctx, x, y, size, shape, level) {
   const gh = h * cell + (h - 1) * gap;
   goldCells(ctx, x + (size - gw) / 2, y + (size - gh) / 2 + 4, cells, cell, gap);
   if (level != null) {
-    ctx.font = `700 13px ${MONO}`;
+    ctx.font = `700 15px ${MONO}`;
     const t = String(level);
     const bw = ctx.measureText(t).width + 10;
     ctx.fillStyle = K.pink;
@@ -221,7 +222,7 @@ export function cartTile(ctx, x, y, size, img) {
  * Items that don't fit before `right` are dropped; the last kept name is shortened.
  */
 function altLine(ctx, x, y, right, label, items) {
-  ctx.font = `700 12px ${MONO}`;
+  ctx.font = `700 14px ${MONO}`;
   ctx.fillStyle = K.muted;
   ctx.fillText(label, x, y);
   let cx = x + ctx.measureText(label).width + 14;
@@ -236,13 +237,13 @@ function altLine(ctx, x, y, right, label, items) {
       ctx.restore();
       cx += ICON + 7;
     }
-    ctx.font = `600 16px ${BODY}`;
+    ctx.font = `600 18px ${BODY}`;
     ctx.fillStyle = K.fg;
     const name = fitLine(ctx, it.name, right - cx, 11);
     ctx.fillText(name, cx, y);
     cx += ctx.measureText(name).width;
     if (it.note) {
-      ctx.font = `600 14px ${BODY}`;
+      ctx.font = `600 16px ${BODY}`;
       ctx.fillStyle = K.muted;
       const note = `  ·  ${it.note}`;
       if (cx + ctx.measureText(note).width <= right) {
@@ -256,14 +257,14 @@ function altLine(ctx, x, y, right, label, items) {
 
 function moduleRow(ctx, x, y, w, label, cartId, pieces, cartImg) {
   ctx.fillStyle = K.muted;
-  ctx.font = `600 16px ${BODY}`;
+  ctx.font = `600 18px ${BODY}`;
   ctx.fillText(label, x, y + 16);
   if (cartId) {
     const prog = setProgress(cartId, pieces);
     const name = `${CARTRIDGE_BY_ID[cartId].name} ×${Math.min(prog.count, 4)}`;
     ctx.textAlign = 'right';
     ctx.fillStyle = prog.four ? K.gold : K.fg;
-    ctx.font = `700 16px ${BODY}`;
+    ctx.font = `700 18px ${BODY}`;
     ctx.fillText(name, x + w, y + 16);
     ctx.textAlign = 'left';
   }
@@ -278,7 +279,7 @@ function moduleRow(ctx, x, y, w, label, cartId, pieces, cartImg) {
   const perRow = Math.max(1, Math.floor((w - 106 + gap) / (tile + gap)));
   if (!pieces.length) {
     ctx.fillStyle = K.muted;
-    ctx.font = `600 15px ${BODY}`;
+    ctx.font = `600 17px ${BODY}`;
     ctx.fillText('No modules placed', startX, top + 42);
     return 34 + 72;
   }
@@ -619,6 +620,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   await ensureFonts(base);
   const c = build.character;
   const el = ELEMENT_BY_ID[c.element];
+  const sp = skillPriorityFor(c.id);
+  const spIcons = sp ? await loadSkillPriorityIcons(c.id) : {};
   const info = CHARACTER_CONSOLE[c.id];
   const elColor = EL[c.element] ?? K.pink;
   const alt = build.alternatives ?? { arc: null, cartridges: [] };
@@ -705,7 +708,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   if (c.tags?.length) ly = drawTagPills(ctx, c.tags, tagMarks, tx0, ly + 16, TW, { size: 14, color: K.fg }) - 6;
 
   ly += 36;
-  ctx.font = `600 16px ${BODY}`;
+  ctx.font = `600 18px ${BODY}`;
   ctx.fillStyle = K.muted;
   const factionText = c.faction
     ? `${c.faction}${c.unit ? ` · ${c.unit}` : ''}`
@@ -722,7 +725,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   }
   if (c.ability) {
     ctx.fillStyle = K.fg;
-    ctx.font = `italic 500 16px ${BODY}`;
+    ctx.font = `italic 500 18px ${BODY}`;
     for (const line of wrap(ctx, `Esper ability: ${c.ability}`, TW, lines)) {
       ctx.fillText(line, tx0, ly + 4);
       ly += 22;
@@ -732,6 +735,17 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   // Site and socials at the foot of the left column, under the character info.
   // (Instagram: under the Cartridge stats panel, drawn further down.)
   const linksBottom = H - 74 - 4;
+  // Which skills to level first, between the character info and the links.
+  const spRoom = linksBottom - 48 - 20 - (ly + 10);
+  if (!ig && sp && spRoom >= 84) {
+    const sy = ly + 10;
+    ctx.fillStyle = K.muted;
+    ctx.font = `600 17px ${BODY}`;
+    ctx.fillText('Level skills first', tx0, sy + 16);
+    drawSkillPriority(ctx, sp.tiers, spIcons, tx0, sy + 28, TW, {
+      d: Math.min(60, spRoom - 52), labelPx: 15, font: BODY, color: K.fg, muted: K.muted, disc: K.inset, accent: elColor,
+    });
+  }
   if (!ig && linksBottom - 48 - 16 > ly) {
     drawLinksBlock(ctx, px, linksBottom, { font: `600 15px ${BODY}`, color: K.muted, accent: K.fg });
   }
@@ -850,7 +864,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   panel(ctx, LCX, top, LCW, statsH, 'Key attributes');
   ctx.textAlign = 'right';
   ctx.fillStyle = K.muted;
-  ctx.font = `600 14px ${BODY}`;
+  ctx.font = `600 16px ${BODY}`;
   ctx.fillText(
     `${ms ? `Lv ${MAX_STATS_LEVEL} base${ms.estimated ? ' (est.)' : ''} + build` : 'from this build'}${eg ? ' / endgame target' : ''}`,
     LCX + LCW - 18,
@@ -859,7 +873,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ctx.textAlign = 'left';
   if (!stats.length) {
     ctx.fillStyle = K.muted;
-    ctx.font = `600 16px ${BODY}`;
+    ctx.font = `600 18px ${BODY}`;
     ctx.fillText('No stat values entered yet.', LCX + 18, top + 70);
   } else {
     // One row per stat: name, value, endgame target (gold).
@@ -875,7 +889,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
         ctx.fill();
       }
       const base = sy + rowH / 2 + 5;
-      ctx.font = `600 16px ${BODY}`;
+      ctx.font = `600 18px ${BODY}`;
       ctx.fillStyle = K.label;
       ctx.fillText(wrap(ctx, statLabel(st.stat), valueX - LCX - 130, 1)[0], LCX + 24, base);
       ctx.textAlign = 'right';
@@ -895,7 +909,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
       ctx.fillText(v, valueX, base);
       const t = target(st.stat);
       if (t) {
-        ctx.font = `500 15px ${MONO}`;
+        ctx.font = `500 17px ${MONO}`;
         ctx.fillStyle = K.label;
         ctx.fillText(`\u2192 ${short(t)}`, LCX + LCW - 24, base);
       }
@@ -932,14 +946,14 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     ctx.fillText(nm, tx, arcY + 66);
     const tag =
       arcTag(a, c) === 'sig' ? 'Signature' : build.source === 'Recommended build' ? 'Recommended' : build.arcState;
-    ctx.font = `700 13px ${MONO}`;
+    ctx.font = `700 15px ${MONO}`;
     const tw = ctx.measureText(tag.toUpperCase()).width + 16;
     ctx.fillStyle = tag === 'Signature' ? K.gold : K.pinkSoft;
     roundRect(ctx, LCX + LCW - tw - 18, arcY + 14, tw, 24, 12);
     ctx.fill();
     ctx.fillStyle = tag === 'Signature' ? '#1b1405' : K.pink;
     ctx.fillText(tag.toUpperCase(), LCX + LCW - tw - 10, arcY + 31);
-    ctx.font = `600 16px ${BODY}`;
+    ctx.font = `600 18px ${BODY}`;
     ctx.fillStyle = K.muted;
     const dupes = build.arcDupes ? ` · +${build.arcDupes}` : '';
     if (arcImg) ctx.drawImage(arcImg, tx, arcY + 76, 18, 18);
@@ -978,7 +992,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     }
   } else {
     ctx.fillStyle = K.muted;
-    ctx.font = `600 16px ${BODY}`;
+    ctx.font = `600 18px ${BODY}`;
     ctx.fillText('No Arc chosen.', LCX + 18, arcY + 74);
   }
 
@@ -998,7 +1012,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   if (!rows.length) {
     ctx.textAlign = 'right';
     ctx.fillStyle = K.muted;
-    ctx.font = `600 14px ${BODY}`;
+    ctx.font = `600 16px ${BODY}`;
     ctx.fillText('suggested priorities', LCX + LCW - 18, cY + 30);
     ctx.textAlign = 'left';
   }
@@ -1017,10 +1031,10 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     ctx.fillStyle = i === 0 ? 'rgba(242, 193, 78, 0.12)' : K.inset;
     roundRect(ctx, LCX + 18, ry, LCW - 36, rowH - 5, 6);
     ctx.fill();
-    ctx.font = `700 12px ${MONO}`;
+    ctx.font = `700 14px ${MONO}`;
     ctx.fillStyle = i === 0 ? K.gold : K.muted;
     ctx.fillText(r.k.toUpperCase(), LCX + 30, ry + rowH / 2 + 2);
-    ctx.font = `600 16px ${BODY}`;
+    ctx.font = `600 18px ${BODY}`;
     ctx.fillStyle = r.value ? K.label : K.key;
     ctx.fillText(statLabel(r.stat), LCX + 82, ry + rowH / 2 + 3);
     if (r.value) {
@@ -1087,7 +1101,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   const gridSize = cell * 5 + 20;
   const gx = RCX + RCW - 18 - gridSize;
   ctx.fillStyle = K.muted;
-  ctx.font = `600 16px ${BODY}`;
+  ctx.font = `600 18px ${BODY}`;
   ctx.fillText(ownBuild ? 'Attributes & template' : 'Recommended attributes & template', innerX, y + 16);
   if (info) consoleGrid(ctx, gx, y + 30, cell, info.layout, gridPieces);
   const recList = [build.recStats.main.stat, ...build.recStats.subs.map((s) => s.stat)];
@@ -1107,10 +1121,10 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     ctx.fillStyle = K.inset;
     roundRect(ctx, innerX, ry, lw, lh - 6, 8);
     ctx.fill();
-    ctx.font = `700 11px ${MONO}`;
+    ctx.font = `700 13px ${MONO}`;
     ctx.fillStyle = i === 0 ? K.gold : K.muted;
     ctx.fillText(i === 0 ? 'MAIN' : `SUB ${i}`, innerX + 10, ry + (lh - 6) / 2 + 4);
-    ctx.font = `600 ${ig ? 15 : 16}px ${BODY}`;
+    ctx.font = `600 ${ig ? 16 : 18}px ${BODY}`;
     ctx.fillStyle = i === 0 ? K.num : K.key;
     ctx.fillText(wrap(ctx, statLabel(stat), lw - (ig ? 62 : 70), 1)[0], innerX + (ig ? 56 : 62), ry + (lh - 6) / 2 + 5);
   });
@@ -1120,14 +1134,14 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   const orbTop = Math.max(y + 30 + recList.length * lh + 8, y + 30 + gridSize) + 18;
   if (ao && bottom - 14 - orbTop >= 78) {
     ctx.fillStyle = K.muted;
-    ctx.font = `600 16px ${BODY}`;
+    ctx.font = `600 18px ${BODY}`;
     ctx.fillText('Awakening order', innerX, orbTop + 14);
     const tw = ctx.measureText('Awakening order  ').width;
-    ctx.font = `600 13px ${BODY}`;
+    ctx.font = `600 15px ${BODY}`;
     ctx.fillText('one per duplicate', innerX + tw, orbTop + 14);
     const n = ao.order.length;
     const space = bottom - 14 - (orbTop + 28);
-    const d = Math.min(50, space - 4);
+    const d = Math.min(56, space - 4);
     const gap = Math.min(40, (innerW - n * d) / Math.max(1, n - 1));
     const cy = orbTop + 28 + d / 2;
     ao.order.forEach((id, i) => {

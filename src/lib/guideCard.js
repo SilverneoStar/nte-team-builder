@@ -20,6 +20,7 @@ import { teamsFor } from './characterCard.js';
 import { fillStatText } from './statText.js';
 import { drawLinksLine, measureLinksLine } from './cardLinks.js';
 import { materialIconUrl } from './icons.js';
+import { drawSkillPriority, loadSkillPriorityIcons, skillPriorityFor } from './skillPriorityDraw.js';
 import { ARC_MAX_LEVEL, arcAscensionCost } from '../data/arcMaterials.js';
 import { drawPortraitBackdrop, setPortraitShadow } from './arcPattern.js';
 import {
@@ -155,7 +156,7 @@ function panel(ctx, x, y, w, h, title, accent = K.pink) {
 }
 
 function label(ctx, text, x, y, color = K.muted) {
-  ctx.font = `700 13px ${MONO}`;
+  ctx.font = `700 15px ${MONO}`;
   ctx.fillStyle = color;
   ctx.fillText(text, x, y);
   return ctx.measureText(text).width;
@@ -271,6 +272,8 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const moreImgs = rest.slice(0, arcs.more.length);
   const mateImg = Object.fromEntries(mates.map((id, i) => [id, rest[arcs.more.length + i]]));
   // The best Arc's Lv 20 → 80 ascension materials, shown under it.
+  const sp = skillPriorityFor(character.id);
+  const spIcons = sp ? await loadSkillPriorityIcons(character.id) : {};
   const arcMats = (arcs.best && arcAscensionCost(arcs.best)) ?? [];
   const arcMatImgs = await Promise.all(
     arcMats.map((m) => (materialIconUrl(m.name) ? loadImage(materialIconUrl(m.name)) : null)),
@@ -296,8 +299,8 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   const RX = PAD + COL + GAP;
 
   // ---- Header: portrait on the left, then name and facts, then Cortado ----
-  const PW = 300;
-  const PH = 300;
+  const PW = 260;
+  const PH = 260;
   const PX = PAD;
   const PY = 36;
   await drawPortraitBackdrop(ctx, { x: PX, y: PY, w: PW, h: PH, r: 24, arcType: c.arcType, base });
@@ -369,9 +372,22 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
 
   const GY = PY + PH + 26;
   const BOTTOM = H - 104;
-  const ROW1 = 470;
+  const ROW1 = 530;
   const R2Y = GY + ROW1 + GAP;
   const ROW2 = BOTTOM - R2Y;
+
+  // Awakening order: under the Cartridges when there's room, else in Stats.
+  const drawAwakening = (ix, iw, y, end) => {
+    label(ctx, 'AWAKENING ORDER', ix, y);
+    const n = ao.order.length;
+    const d = Math.min(60, (iw - (n - 1) * 8) / n, end - (y + 12));
+    const gap = (iw - n * d) / Math.max(1, n - 1);
+    const cy = y + 12 + d / 2;
+    ao.order.forEach((id, i) => {
+      drawAwakenStep(ctx, ix + d / 2 + i * (d + gap), cy, d, elColor, i === 0, id, awakenIcons[id]);
+    });
+  };
+  let awakeningDone = !ao?.order?.length;
 
   // ---- Cartridges ----
   panel(ctx, LX, GY, COL, ROW1, 'CARTRIDGES', K.gold);
@@ -380,9 +396,9 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     const iw = COL - 44;
     let y = GY + 88;
     const LBL = 52;
-    const LH = 23;
+    const LH = 26;
     const bonusLines = (text) => {
-      ctx.font = `700 17px ${BODY}`;
+      ctx.font = `700 19px ${BODY}`;
       return wrap(ctx, text, iw - LBL, 9).length;
     };
     const block = (id, img, kind, tileSize, maxBonusLines) => {
@@ -395,17 +411,23 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       ctx.fillText(fitLine(ctx, cart.name, iw - tileSize - 16, 15), ix + tileSize + 16, y + tileSize / 2 + 9);
       y += tileSize + 26;
       label(ctx, '2PC', ix, y, K.gold);
-      statLines(ctx, cart.two, ix + LBL, y, iw - LBL, 1, LH);
+      statLines(ctx, cart.two, ix + LBL, y, iw - LBL, 1, LH, 19);
       y += 26;
       label(ctx, '4PC', ix, y, K.gold);
-      const n = statLines(ctx, cart.four, ix + LBL, y, iw - LBL, maxBonusLines, LH);
+      const n = statLines(ctx, cart.four, ix + LBL, y, iw - LBL, maxBonusLines, LH, 19);
       y += (n - 1) * LH + 36;
     };
     if (bestCart) block(bestCart, cartImg, 'BEST', 62, 3);
     // The alternative goes in only when its whole 4-piece text fits.
     if (altCart) {
       const need = 12 + 48 + 26 + 26 + (bonusLines(CARTRIDGE_BY_ID[altCart].four) - 1) * LH;
-      if (y + need <= GY + ROW1 - 16) block(altCart, altCartImg, 'ALTERNATIVE', 48, 4);
+      // Leaves room at the bottom for the Awakening order.
+      if (y + need <= GY + ROW1 - 16 - (awakeningDone ? 0 : 122)) block(altCart, altCartImg, 'ALTERNATIVE', 48, 4);
+    }
+    // Pinned to the panel's foot.
+    if (!awakeningDone && GY + ROW1 - 16 - (y - 22) >= 76) {
+      drawAwakening(ix, iw, GY + ROW1 - 16 - 76, GY + ROW1 - 16);
+      awakeningDone = true;
     }
   }
 
@@ -414,52 +436,46 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   {
     const ix = RX + 22;
     const iw = COL - 44;
-    let y = GY + 92;
+    let y = GY + 88;
+    const end = GY + ROW1 - 18;
     if (prio.main.length) {
       label(ctx, 'CARTRIDGE MAIN STAT', ix, y);
-      y += 28;
-      const n = drawPriority(ctx, prio.main, ix, y, iw, 2, 26, 19);
-      y += (n - 1) * 26 + 40;
+      y += 29;
+      const n = drawPriority(ctx, prio.main, ix, y, iw, 2, 28, 21);
+      y += (n - 1) * 28 + 38;
     }
     if (prio.subs.length) {
       label(ctx, 'SUB STATS', ix, y);
-      y += 28;
-      const n = drawPriority(ctx, prio.subs, ix, y, iw, 2, 26, 19);
-      y += (n - 1) * 26 + 40;
+      y += 29;
+      const n = drawPriority(ctx, prio.subs, ix, y, iw, 2, 28, 21);
+      y += (n - 1) * 28 + 38;
     }
     if (spec) {
+      // One line: a small module shape, then the bonus.
       label(ctx, 'CONSOLE BONUS', ix, y);
-      y += 14;
-      ctx.fillStyle = K.inset;
-      roundRect(ctx, ix, y, iw, 62, 12);
-      ctx.fill();
-      // A corner piece for Type 3, otherwise the first shape of that Type.
+      y += 12;
       const shape = spec.type === 3 ? SHAPES.ZhiJiao1 : Object.values(SHAPES).find((sh) => sh.type === spec.type);
-      const cell = 13;
-      const sw = (Math.max(...shape.cells.map(([, cc]) => cc)) + 1) * (cell + 2);
+      const cell = 12;
       const sh = (Math.max(...shape.cells.map(([r]) => r)) + 1) * (cell + 2);
-      goldCells(ctx, ix + 14 + (44 - sw) / 2, y + (62 - sh) / 2, shape.cells, cell, 2);
+      goldCells(ctx, ix, y + (34 - sh) / 2, shape.cells, cell, 2);
       const text = `${spec.stat} +${spec.value}% per Type ${spec.type} module`;
-      let fs = 18;
-      for (; fs > 13; fs -= 1) {
+      let fs = 21;
+      for (; fs > 14; fs -= 1) {
         ctx.font = `700 ${fs}px ${BODY}`;
-        if (ctx.measureText(text).width <= iw - 84) break;
+        if (ctx.measureText(text).width <= iw - 48) break;
       }
-      statLines(ctx, text, ix + 70, y + 38, iw - 84, 1, 24, fs);
-      y += 62 + 40;
+      statLines(ctx, text, ix + 46, y + 25, iw - 48, 1, 26, fs);
+      y += 34 + 32;
     }
-    if (ao?.order?.length && y < GY + ROW1 - 70) {
-      label(ctx, 'AWAKENING ORDER', ix, y);
-      const n = ao.order.length;
-      // Orbs fill the panel's width, as large as the space allows.
-      const d = Math.min(58, (iw - (n - 1) * 8) / n, GY + ROW1 - 16 - (y + 14));
-      const gap = (iw - n * d) / Math.max(1, n - 1);
-      const cy = y + 14 + d / 2;
-      ao.order.forEach((id, i) => {
-        const cx = ix + d / 2 + i * (d + gap);
-        drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id]);
-      });
+    // Which skills to level first.
+    if (sp && end - y >= 110) {
+      label(ctx, 'LEVEL SKILLS FIRST', ix, y);
+      y += 14;
+      y += drawSkillPriority(ctx, sp.tiers, spIcons, ix, y, iw, {
+        d: 60, font: BODY, color: K.fg, muted: K.muted, disc: K.inset, accent: elColor, labelPx: 16,
+      }) + 26;
     }
+    if (!awakeningDone && end - y >= 52) drawAwakening(ix, iw, y, end);
   }
 
   // ---- Arcs ----
@@ -468,7 +484,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     const ix = LX + 22;
     const iw = COL - 44;
     let y = R2Y + 76;
-    const A = 100;
+    const A = 88;
     art(ctx, bestArcImg, ix, y, A, 14, K.gold);
     const tx = ix + A + 18;
     tag(ctx, arcs.bestTag, tx, y + 18, TAG_STYLE[arcs.bestTag]);
@@ -491,43 +507,47 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       22,
       16,
     );
-    y += A + 16;
+    y += A + 14;
     if (arcMats.length) {
-      ctx.font = `600 12px ${MONO}`;
+      ctx.font = `700 15px ${MONO}`;
       ctx.fillStyle = K.muted;
-      ctx.fillText(`ASCEND LV 20 → ${ARC_MAX_LEVEL}`, ix, y + 2);
+      ctx.fillText(`ASCEND LV 20 → ${ARC_MAX_LEVEL}`, ix, y + 4);
       const cw = iw / arcMats.length;
-      const S = 30;
+      const S = 40;
       arcMats.forEach((m, i) => {
         const mx = ix + i * cw;
         if (arcMatImgs[i]) ctx.drawImage(arcMatImgs[i], mx + (cw - S) / 2, y + 10, S, S);
-        ctx.font = `700 14px ${MONO}`;
+        ctx.font = `700 17px ${MONO}`;
         ctx.fillStyle = K.fg;
         ctx.textAlign = 'center';
         const q = m.qty >= 1e4 ? `${+(m.qty / 1e3).toFixed(0)}K` : `×${m.qty}`;
-        ctx.fillText(q, mx + cw / 2, y + 58);
+        ctx.fillText(q, mx + cw / 2, y + 72);
         ctx.textAlign = 'left';
       });
-      y += 72;
+      y += 80;
     }
-    const room = R2Y + ROW2 - 14 - y;
-    const rowH = Math.min(78, room / Math.max(1, arcs.more.length));
-    const S = Math.min(62, rowH - 12);
-    // Tag on top, name underneath: keep at least 42px between them.
-    const nameY = Math.max(42, S - 6);
-    arcs.more.forEach((m, i) => {
+    // Alternatives: one line each (art, name, rank, access tag), as many as fit.
+    const room = R2Y + ROW2 - 16 - y;
+    const rowH = 50;
+    const S = 40;
+    arcs.more.slice(0, Math.max(0, Math.floor(room / rowH))).forEach((m, i) => {
       const ry = y + i * rowH;
-      art(ctx, moreImgs[i], ix, ry + (nameY + 6 - S) / 2, S, 10);
-      const mx = ix + S + 16;
-      tag(ctx, m.tag, mx, ry + 16, TAG_STYLE[m.tag] ?? TAG_STYLE.STANDARD);
-      ctx.font = `600 19px ${BODY}`;
+      art(ctx, moreImgs[i], ix, ry, S, 8);
+      const mx = ix + S + 14;
+      ctx.font = `700 12px ${MONO}`;
+      const tagW = ctx.measureText(m.tag).width + 14;
+      ctx.font = `600 13px ${MONO}`;
+      const rk = `${m.arc.rarity}-RANK`;
+      const rkW = ctx.measureText(rk).width;
+      ctx.font = `600 20px ${BODY}`;
       ctx.fillStyle = K.fg;
-      const t = fitLine(ctx, m.arc.name, iw - S - 16 - 64, 13);
-      ctx.fillText(t, mx, ry + nameY);
+      const t = fitLine(ctx, m.arc.name, iw - S - 14 - rkW - tagW - 24, 14);
+      ctx.fillText(t, mx, ry + 27);
       const tw = ctx.measureText(t).width;
-      ctx.font = `600 14px ${MONO}`;
+      ctx.font = `600 13px ${MONO}`;
       ctx.fillStyle = K.muted;
-      ctx.fillText(`${m.arc.rarity}-RANK`, mx + tw + 10, ry + nameY);
+      ctx.fillText(rk, mx + tw + 10, ry + 27);
+      tag(ctx, m.tag, ix + iw - tagW, ry + 26, TAG_STYLE[m.tag] ?? TAG_STYLE.STANDARD);
     });
   }
 
@@ -538,8 +558,10 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     const iw = COL - 44;
     const top = R2Y + 78;
     const avail = R2Y + ROW2 - 18 - top;
-    const rowH = Math.min(116, avail / Math.max(1, teams.length));
-    teams.forEach((p, i) => {
+    // Keep portraits a readable size: show as many teams as fit at 104px a row.
+    const shown = teams.slice(0, Math.max(1, Math.floor(avail / 92)));
+    const rowH = Math.min(122, avail / Math.max(1, shown.length));
+    shown.forEach((p, i) => {
       const y = top + i * rowH;
       if (i > 0) {
         ctx.strokeStyle = K.line;
@@ -549,12 +571,12 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
         ctx.lineTo(ix + iw, y - 8);
         ctx.stroke();
       }
-      ctx.font = `700 19px ${BODY}`;
+      ctx.font = `700 21px ${BODY}`;
       ctx.fillStyle = K.fg;
       const name = fitLine(ctx, p.name, iw - (p.idea ? 96 : 0), 13);
       ctx.fillText(name, ix, y + 16);
       if (p.idea) tag(ctx, 'KIT IDEA', ix + ctx.measureText(name).width + 10, y + 15, TAG_STYLE['BATTLE PASS']);
-      const R = Math.min(28, (rowH - 40) / 2);
+      const R = Math.min(31, (rowH - 42) / 2);
       const step = R * 2 + 10;
       p.members.forEach((id, j) => {
         const m = CHARACTER_BY_ID[id];
@@ -576,7 +598,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       const a = analyzeTeam(p.members);
       const names = [...a.trios.map((t) => `${t.name} Trio`), ...a.reactions.map((r) => r.name)];
       const rx = ix + 4 * step + 8;
-      ctx.font = `600 15px ${BODY}`;
+      ctx.font = `600 17px ${BODY}`;
       ctx.fillStyle = K.label;
       wrap(ctx, names.join(' · '), ix + iw - rx, 2).forEach((ln, k) => ctx.fillText(ln, rx, y + 28 + R - 4 + k * 20));
     });
