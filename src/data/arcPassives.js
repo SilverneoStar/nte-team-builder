@@ -7,17 +7,16 @@
 // Far Side of the Moon.
 
 export const ARC_PASSIVES = {
-  // Version 1.5 Arcs: passive text from a translated pre-release source
-  // (provided by the project owner, Nov 2026). Likely real but not yet
-  // confirmed, so the site marks it `unconfirmed`. Dotted Horizon's main stat
-  // (Crit DMG 48%) and materials: NTE Updates on X, Nov 2026.
+  // Version 1.5 Arcs. Dotted Horizon: name, stats and max-mix text from the
+  // global game (Nov 11 2026); M1 values are half the M5 ones, as for other
+  // S-rank Arcs. Materials: NTE Updates on X, Nov 2026.
   'dotted-horizon': {
-    unconfirmed: true,
-    name: 'A fleeting moment of holding hands and walking together',
+    name: 'Ethereal Bond',
     text: [
-      'The wearer’s summons deal 28% more DMG. Each time the wearer deals Chaos DMG, all their summons on the field gain another +2% DMG (up to 10 stacks, 20s; repeat hits refresh the duration).',
+      'CRIT DMG +32%.',
+      'The wearer’s summons deal 28% more DMG. Each time the wearer deals Chaos DMG, all summons on the field gain another +2% DMG for 20s (up to 10 stacks; triggering again resets the duration).',
     ],
-    max: 'Summon DMG +56%, +4% per stack.',
+    max: 'CRIT DMG +64%; summon DMG +56%, +4% per stack.',
   },
   // Echoes on Hold: confirmed by the CN 1.5 release (translated in-game
   // text shared by NTE Updates on X, Nov 5 2026).

@@ -40,5 +40,5 @@ export const BETA = {
   nitsa: { leaks: true },
   ellie: { leaks: true },
 };
-export const BETA_ARCS = new Set(['dotted-horizon']);
+export const BETA_ARCS = new Set([]);
 export const isBeta = (id, part) => !!BETA[id]?.[part];
