@@ -21,7 +21,8 @@ import { MAX_STATS, MAX_STATS_LEVEL } from './maxStats.js';
 import { CARTRIDGE_BY_ID, CARTRIDGE_MAIN_STATS, MODULE_SUB_STATS } from './gear.js';
 import { ENDGAME, parsePriority } from './endgame.js';
 
-// focus: 'break' | 'atk-scaling'
+// focus: 'break' | 'atk-scaling' | 'own-damage-buffer' (team buff that scales off
+//   Base ATK, so gear goes into the buffer's own damage)
 // instantCycle: the kit triggers the Esper Cycle instantly (redirect skill),
 //   so Cycle Intensity does nothing for reactions.
 // main / subs: fixed priorities from a guide, used as given.
@@ -44,11 +45,12 @@ export const BUILD_PROFILES = {
     instantCycle: true,
     note: 'Her redirect skill triggers the Cycle instantly, so Cycle Intensity isn’t needed.',
   },
-  // Pre-release (1.5 preview stream tags): early picks until the kits are out.
   elyms: {
     instantCycle: true,
-    note: 'Instant Cycle, so Cycle Intensity isn’t needed. Her Ultimate gives the team ATK based on her own Base ATK, so ATK% stays high. An early pick until her full kit is out.',
+    focus: 'own-damage-buffer',
+    note: 'Instant Cycle, so Cycle Intensity isn’t needed. Her team ATK buff scales off her Base ATK (character + Arc), which gear ATK% doesn’t raise, so build her own hits: Cosmos DMG and CRIT. Speedy Hedgehog’s 4-piece adds another team ATK +15%.',
   },
+  // Pre-release (1.5 preview stream tags): an early pick until the kit is out.
   exe: {
     note: 'An early pick from the 1.5 preview: his hits build Frames that his skills spend on Digital Echoes, and his Rating rises as he keeps attacking. Revisit once his full kit is out.',
   },
@@ -103,6 +105,14 @@ export function recommendStats(characterOrId, cartridgeId = null) {
     add('CRIT Rate', -4);
     add('CRIT DMG', -4);
     add('EL', -3);
+  }
+  if (profile.focus === 'own-damage-buffer') {
+    add('CRIT DMG', 11);
+    add('CRIT Rate', 6);
+    add('EL', 9);
+    add('DMG%', 4);
+    add('ATK%', -3);
+    add('HP%', -4);
   }
   if (profile.focus === 'atk-scaling') {
     add('ATK%', 9);
