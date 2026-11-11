@@ -483,7 +483,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
   if (arcs.best) {
     const ix = LX + 22;
     const iw = COL - 44;
-    let y = R2Y + 76;
+    let y = R2Y + 80;
     const A = 88;
     art(ctx, bestArcImg, ix, y, A, 14, K.gold);
     const tx = ix + A + 18;
@@ -507,7 +507,7 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       22,
       16,
     );
-    y += A + 14;
+    y += A + 24;
     if (arcMats.length) {
       ctx.font = `700 15px ${MONO}`;
       ctx.fillStyle = K.muted;
@@ -524,12 +524,12 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
         ctx.fillText(q, mx + cw / 2, y + 72);
         ctx.textAlign = 'left';
       });
-      y += 80;
+      y += 94;
     }
     // Alternatives: one line each (art, name, rank, access tag), as many as fit.
     const room = R2Y + ROW2 - 16 - y;
-    const rowH = 50;
-    const S = 40;
+    const rowH = 54;
+    const S = 42;
     arcs.more.slice(0, Math.max(0, Math.floor(room / rowH))).forEach((m, i) => {
       const ry = y + i * rowH;
       art(ctx, moreImgs[i], ix, ry, S, 8);
@@ -558,31 +558,27 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
     const iw = COL - 44;
     const top = R2Y + 78;
     const avail = R2Y + ROW2 - 18 - top;
-    // Keep portraits a readable size: show as many teams as fit at 104px a row.
-    const shown = teams.slice(0, Math.max(1, Math.floor(avail / 92)));
-    const rowH = Math.min(122, avail / Math.max(1, shown.length));
+    // No team names: bigger portraits, with the team's reactions beside them.
+    const shown = teams.slice(0, Math.max(1, Math.floor(avail / 86)));
+    const rowH = avail / Math.max(1, shown.length);
+    // Portraits take the left ~62%, reactions the rest.
+    const R = Math.min(36, (rowH - 16) / 2, (iw * 0.62 - 6 - 3 * 10) / 8);
+    const step = R * 2 + 10;
     shown.forEach((p, i) => {
-      const y = top + i * rowH;
+      const y = top - 6 + i * rowH;
       if (i > 0) {
         ctx.strokeStyle = K.line;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(ix, y - 8);
-        ctx.lineTo(ix + iw, y - 8);
+        ctx.moveTo(ix, y);
+        ctx.lineTo(ix + iw, y);
         ctx.stroke();
       }
-      ctx.font = `700 21px ${BODY}`;
-      ctx.fillStyle = K.fg;
-      const name = fitLine(ctx, p.name, iw - (p.idea ? 96 : 0), 13);
-      ctx.fillText(name, ix, y + 16);
-      if (p.idea) tag(ctx, 'KIT IDEA', ix + ctx.measureText(name).width + 10, y + 15, TAG_STYLE['BATTLE PASS']);
-      const R = Math.min(31, (rowH - 42) / 2);
-      const step = R * 2 + 10;
+      const cy = y + rowH / 2;
       p.members.forEach((id, j) => {
         const m = CHARACTER_BY_ID[id];
         if (!m) return;
-        const cx = ix + R + j * step;
-        const cy = y + 28 + R;
+        const cx = ix + 6 + R + j * step;
         if (id === c.id) {
           // The featured character sits in a soft gold frame; the ring keeps its element colour.
           ctx.fillStyle = 'rgba(242, 193, 78, 0.14)';
@@ -594,13 +590,21 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
         }
         circle(ctx, mateImg[id], cx, cy, R, EL[m.element] ?? K.line, 2.5);
       });
-      // Reactions beside the portraits
+      // Reactions beside the portraits (a KIT IDEA tag above them for untested teams).
       const a = analyzeTeam(p.members);
       const names = [...a.trios.map((t) => `${t.name} Trio`), ...a.reactions.map((r) => r.name)];
-      const rx = ix + 4 * step + 8;
-      ctx.font = `600 17px ${BODY}`;
+      const rx = ix + 6 + 4 * step + 8;
+      ctx.font = `600 16px ${BODY}`;
+      const lines = wrap(ctx, names.join(' · '), ix + iw - rx, 4);
+      const blockH = lines.length * 21 + (p.idea ? 26 : 0);
+      let ty = cy - blockH / 2 + 15;
+      if (p.idea) {
+        tag(ctx, 'KIT IDEA', rx, ty + 1, TAG_STYLE['BATTLE PASS']);
+        ty += 26;
+      }
+      ctx.font = `600 16px ${BODY}`;
       ctx.fillStyle = K.label;
-      wrap(ctx, names.join(' · '), ix + iw - rx, 2).forEach((ln, k) => ctx.fillText(ln, rx, y + 28 + R - 4 + k * 20));
+      lines.forEach((ln, k) => ctx.fillText(ln, rx, ty + k * 21));
     });
     if (!teams.length) {
       ctx.font = `600 18px ${BODY}`;

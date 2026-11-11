@@ -23,7 +23,8 @@ import { AWAKENING_ORDER } from '../data/awakeningOrder.js';
 import { skillIconUrl } from './skillIcons.js';
 import { encodeConsoleCode } from './consoleCode.js';
 import { fillStatText } from './statText.js';
-import { drawLinksBlock } from './cardLinks.js';
+import { drawLinksBlock, drawLinksLine, measureLinksLine } from './cardLinks.js';
+import { COMMUNITY_BUILDS } from '../data/communityBuilds.js';
 import { drawSkillPriority, loadSkillPriorityIcons, skillPriorityFor } from './skillPriorityDraw.js';
 import { drawTagPills, loadTagMarks } from './cardTags.js';
 import { loadoutOf } from './teamsReducer.js';
@@ -622,6 +623,8 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   const el = ELEMENT_BY_ID[c.element];
   const sp = skillPriorityFor(c.id);
   const spIcons = sp ? await loadSkillPriorityIcons(c.id) : {};
+  const ao = build.awakeningOrder?.length ? { order: build.awakeningOrder } : AWAKENING_ORDER[c.id];
+  const awakenIcons = await loadAwakeningIcons(c.id);
   const info = CHARACTER_CONSOLE[c.id];
   const elColor = EL[c.element] ?? K.pink;
   const alt = build.alternatives ?? { arc: null, cartridges: [] };
@@ -725,8 +728,15 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   }
   if (c.ability) {
     ctx.fillStyle = K.fg;
-    ctx.font = `italic 500 18px ${BODY}`;
-    for (const line of wrap(ctx, `Esper ability: ${c.ability}`, TW, lines)) {
+    // Wide: one line, shrinking a little to fit, so the column below has room.
+    const txt = `Esper ability: ${c.ability}`;
+    let fs = 18;
+    for (; !ig && fs > 14; fs -= 1) {
+      ctx.font = `italic 500 ${fs}px ${BODY}`;
+      if (ctx.measureText(txt).width <= TW) break;
+    }
+    ctx.font = `italic 500 ${fs}px ${BODY}`;
+    for (const line of wrap(ctx, txt, TW, ig ? lines : 2)) {
       ctx.fillText(line, tx0, ly + 4);
       ly += 22;
     }
@@ -735,19 +745,42 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   // Site and socials at the foot of the left column, under the character info.
   // (Instagram: under the Cartridge stats panel, drawn further down.)
   const linksBottom = H - 74 - 4;
-  // Which skills to level first, between the character info and the links.
-  const spRoom = linksBottom - 48 - 20 - (ly + 10);
-  if (!ig && sp && spRoom >= 84) {
-    const sy = ly + 10;
-    ctx.fillStyle = K.muted;
-    ctx.font = `600 17px ${BODY}`;
-    ctx.fillText('Level skills first', tx0, sy + 16);
-    drawSkillPriority(ctx, sp.tiers, spIcons, tx0, sy + 28, TW, {
-      d: Math.min(60, spRoom - 52), labelPx: 15, font: BODY, color: K.fg, muted: K.muted, disc: K.inset, accent: elColor,
-    });
-  }
-  if (!ig && linksBottom - 48 - 16 > ly) {
-    drawLinksBlock(ctx, px, linksBottom, { font: `600 15px ${BODY}`, color: K.muted, accent: K.fg });
+  // Wide: skill priority, then the Awakening order as a 2 × 3 grid, under the
+  // character info (the site links move to the footer line).
+  if (!ig) {
+    const colBottom = H - 50;
+    const aoH = ao ? 26 + 2 * 52 : 0;
+    const spRoom = colBottom - aoH - (ly + 6);
+    if (sp && spRoom >= 84) {
+      const sy = ly + 6;
+      ctx.fillStyle = K.muted;
+      ctx.font = `600 17px ${BODY}`;
+      ctx.fillText('Level skills first', tx0, sy + 16);
+      ly = sy + 26 + drawSkillPriority(ctx, sp.tiers, spIcons, tx0, sy + 26, TW, {
+        d: Math.min(56, spRoom - 50), labelPx: 15, font: BODY, color: K.fg, muted: K.muted, disc: K.inset, accent: elColor,
+      });
+    }
+    if (ao && colBottom - (ly + 4) >= 26 + 2 * 46) {
+      const ay = Math.max(ly + 4, colBottom - aoH);
+      ctx.fillStyle = K.muted;
+      ctx.font = `600 17px ${BODY}`;
+      ctx.fillText('Awakening order', tx0, ay + 16);
+      ctx.font = `600 14px ${BODY}`;
+      ctx.fillText('one per duplicate', tx0 + ctx.measureText('Awakening order  ').width + 22, ay + 16);
+      const rowH = Math.min(52, (colBottom - ay - 26) / 2);
+      const d = rowH - 12;
+      const cw = TW / 3;
+      ao.order.forEach((id, i) => {
+        const cx = tx0 + cw * (i % 3) + cw / 2;
+        const cy = ay + 26 + rowH * Math.floor(i / 3) + d / 2;
+        drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id]);
+        ctx.fillStyle = K.muted;
+        ctx.font = `700 14px ${MONO}`;
+        ctx.textAlign = 'center';
+        if (i % 3 < 2 && i < ao.order.length - 1) ctx.fillText('›', cx + cw / 2, cy + 5);
+        ctx.textAlign = 'left';
+      });
+    }
   }
 
   // ---- Header strip ---- (wide: top right; Instagram: beside the portrait's foot)
@@ -1075,7 +1108,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
         recCartImg,
       ) + 14;
   }
-  if (alt.cartridges.length) {
+  if (ig && alt.cartridges.length) {
     // Other sets the build guides rank for this character.
     altLine(
       ctx,
@@ -1094,9 +1127,12 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   // Attribute priorities + grid template.
   const gridPieces = hasCurrent || ownBuild ? build.pieces : (build.recommended?.pieces ?? []);
   // Leave room under the grid for the Awakening order orbs.
-  const ao = build.awakeningOrder?.length ? { order: build.awakeningOrder } : AWAKENING_ORDER[c.id];
-  const awakenIcons = await loadAwakeningIcons(c.id);
-  const avail = bottom - 18 - y - (ao ? 96 : 0);
+  // Wide: the bottom of this panel holds the alternative Cartridge and stats;
+  // Instagram: the Awakening order orbs.
+  const altCart = alt.cartridges[0];
+  const altStats = COMMUNITY_BUILDS[c.id];
+  const footH = ig ? (ao ? 96 : 0) : altCart || altStats ? 150 : 0;
+  const avail = bottom - 18 - y - footH;
   const cell = Math.max(22, Math.min(ig ? 48 : 46, Math.floor((avail - 30 - 20) / 5)));
   const gridSize = cell * 5 + 20;
   const gx = RCX + RCW - 18 - gridSize;
@@ -1132,7 +1168,45 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   // Awakening unlock order in the space under the attributes and grid:
   // element-coloured orbs, A6 → A4 → A1 …, one per duplicate.
   const orbTop = Math.max(y + 30 + recList.length * lh + 8, y + 30 + gridSize) + 18;
-  if (ao && bottom - 14 - orbTop >= 78) {
+  if (!ig && (altCart || altStats)) {
+    // Alternative Cartridge (the next one the guides rank) and alternative stats.
+    let ay = orbTop;
+    const half = altCart && altStats ? (innerW - 20) / 2 : innerW;
+    if (altCart) {
+      const cart = CARTRIDGE_BY_ID[altCart];
+      ctx.fillStyle = K.muted;
+      ctx.font = `600 17px ${BODY}`;
+      ctx.fillText('Alternative Cartridge', innerX, ay + 14);
+      cartTile(ctx, innerX, ay + 28, 48, altCartImgs[0]);
+      ctx.fillStyle = K.fg;
+      ctx.font = `700 18px ${BODY}`;
+      ctx.fillText(wrap(ctx, cart.name, half - 62, 1)[0], innerX + 60, ay + 46);
+      ctx.fillStyle = K.muted;
+      ctx.font = `600 14px ${BODY}`;
+      wrap(ctx, `4PC: ${cart.four}`, half - 62, 3).forEach((l, i) => ctx.fillText(l, innerX + 60, ay + 68 + i * 19));
+      if (alt.cartridges[1]) {
+        ctx.font = `600 14px ${BODY}`;
+        ctx.fillText(`Also: ${CARTRIDGE_BY_ID[alt.cartridges[1]].name}`, innerX, ay + 136);
+      }
+    }
+    if (altStats) {
+      const sx = altCart ? innerX + half + 20 : innerX;
+      ctx.fillStyle = K.muted;
+      ctx.font = `600 17px ${BODY}`;
+      ctx.fillText('Alternative stats', sx, ay + 14);
+      ctx.font = `600 13px ${BODY}`;
+      ctx.fillText('community sheet', sx + 150, ay + 14);
+      ctx.font = `700 13px ${MONO}`;
+      ctx.fillStyle = K.pink;
+      ctx.fillText('MAIN', sx, ay + 44);
+      ctx.fillText('SUB', sx, ay + 96);
+      ctx.fillStyle = K.fg;
+      ctx.font = `600 16px ${BODY}`;
+      wrap(ctx, altStats.main, half - 52, 2).forEach((l, i) => ctx.fillText(l, sx + 48, ay + 44 + i * 21));
+      wrap(ctx, altStats.sub, half - 52, 2).forEach((l, i) => ctx.fillText(l, sx + 48, ay + 96 + i * 21));
+    }
+  }
+  if (ig && ao && bottom - 14 - orbTop >= 78) {
     ctx.fillStyle = K.muted;
     ctx.font = `600 18px ${BODY}`;
     ctx.fillText('Awakening order', innerX, orbTop + 14);
@@ -1174,6 +1248,11 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     PAD,
     H - 30,
   );
+  if (!ig) {
+    // The site links sit on the footer line, between the legal note and the code.
+    const legalW = ctx.measureText('Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games').width;
+    drawLinksLine(ctx, PAD + legalW + 30, H - 30, { font: `600 14px ${BODY}`, color: K.muted, accent: K.fg, iconSize: 14, gap: 20 });
+  }
   if (code) {
     ctx.textAlign = 'right';
     ctx.font = `700 20px ${MONO}`;
