@@ -289,13 +289,13 @@ export const SKILLS = {
   },
   // Version 1.5, from the preview stream's skill showcase (as written up by
   // community guides, Oct 29, 2026). Pre-release: may change at launch.
-  // Version 1.5, from the CN release (translated kit by NTE Official CC,
-  // Nov 2026), with the preview stream's names.
+  // Version 1.5: effects from the CN release (translated kit by NTE Official
+  // CC); main skill names from the global release (Nov 2026).
   elyms: {
     combat: [
       s(B, 'Instant Glitch', 'At Weak Connection, the Dreamworn Terminal makes up to 5 Cosmos attacks. Hold the button for Interference (Cosmos DMG). At any Connection she can aim (G on keyboard) to shoot; also a plunge (up to +100% DMG from height) and a counter after a perfect dodge.'),
       s('Basic Attack (Enhanced)', 'Crosstalk', 'At Medium or Strong Connection, up to 3 attacks in a row for Cosmos DMG. Finishing all 3 unlocks Goodbye to You for a short time.'),
-      s(R, 'The Ones Who Left', 'The Dreamworn Terminal deals area Cosmos DMG. At Weak Connection it unlocks Intermittent Existence for a short time.'),
+      s(R, 'Counting Electric Sheep', 'The Dreamworn Terminal deals area Cosmos DMG. At Weak Connection it unlocks Intermittent Existence for a short time.'),
       s('Redirect Skill (Follow-up)', 'Intermittent Existence', 'Raises Connection from Weak to Medium, gives 1 Optical Illusion (15s), and scans nearby enemies to set her Ultimate to single-target or area.'),
       s('Redirect Skill (Enhanced)', 'Goodbye to You', 'After a full Crosstalk combo: area Cosmos DMG that spends all Optical Illusion stacks, +100% DMG multiplier per stack. Raises Connection from Medium to Strong and rescans.'),
       s(U, 'Do You Get Deja Vu', 'Single-target or area form (area at Weak Connection, otherwise set by her scans); stronger Connection means a higher multiplier, then Connection resets to Weak. The team gains ATK based on Elyms’s Base ATK and deals more DMG for a while, and she gains On the Line: while off the field she adds Remembrance follow-up attacks in the same form.'),

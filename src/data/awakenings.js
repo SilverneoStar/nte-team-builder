@@ -204,15 +204,15 @@ export const AWAKENINGS = {
     ['Theopneustos', 'ATK +10% for 20s after a Support Skill.'],
     ['Deceptive Liberation', 'Appraise and Engrave extra DMG becomes 300% ATK.'],
   ),
-  // Elyms: CN release (translated by NTE Official CC, Nov 2026). English
-  // awakening names aren't out yet.
+  // Elyms: effects from the CN release (translated by NTE Official CC); names
+  // from the global release (Nov 2026).
   elyms: a(
-    ['Awakening 1', 'Team Crit DMG +10% for 20s per Optical Illusion stack spent by Do You Get Deja Vu (recasting refreshes it and resets the stacks).'],
-    ['Awakening 2', 'Do You Get Deja Vu multiplier +30%; Goodbye to You ignores 5% DEF per Optical Illusion stack spent.'],
-    ['Awakening 3', 'Gains 3 Optical Illusion when Connection goes from Medium to Strong; Optical Illusion caps at 4 stacks.'],
-    ['Awakening 4', 'Team Crit DMG +20% while Elyms is on the team and alive.'],
-    ['Awakening 5', 'The Ones Who Left multiplier +100%; starts battle with 100 Cycle value (once per battle, 30s cooldown).'],
-    ['Awakening 6', 'Remembrance DMG +25% per Optical Illusion stack spent before casting Do You Get Deja Vu.'],
+    ['404: Island Out of Reach', 'Team Crit DMG +10% for 20s per Optical Illusion stack spent by Do You Get Deja Vu (recasting refreshes it and resets the stacks).'],
+    ['200: Nodes Connected', 'Do You Get Deja Vu multiplier +30%; Goodbye to You ignores 5% DEF per Optical Illusion stack spent.'],
+    ['504: Gateway Timeout', 'Gains 3 Optical Illusion when Connection goes from Medium to Strong; Optical Illusion caps at 4 stacks.'],
+    ['302: Wish Redirected', 'Team Crit DMG +20% while Elyms is on the team and alive.'],
+    ['304: Nothing Has Changed', 'Counting Electric Sheep multiplier +100%; starts battle with 100 Cycle value (once per battle, 30s cooldown).'],
+    ['301: Moved Permanently', 'Remembrance DMG +25% per Optical Illusion stack spent before casting Do You Get Deja Vu.'],
   ),
   // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).
   // Skill names follow the 1.5 stream: Data Exfiltration, Shader Compile, Digital Echoes.
