@@ -27,7 +27,7 @@ export const WEEKLY_ITEMS = {
   'good-boy-stamp': { name: 'Good Boy Stamp', source: 'Pilgrimage: Morphix' },
   'dress-hem': { name: 'Dress Hem of Vanity', source: 'Pilgrimage: The Never-ending Arachne' },
   // New in 1.5 (official preview stream, Oct 28, 2026).
-  'hollow-flowerseed': { name: 'Hollow Flowerseed', source: 'Pilgrimage: Amber Broodmother' },
+  'hollow-flowerseed': { name: 'Hollowflower Seed', source: 'Pilgrimage: Amber Broodmother' },
 };
 
 // Cost to raise ONE active skill to each level (the same for every character).

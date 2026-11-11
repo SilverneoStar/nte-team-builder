@@ -127,7 +127,7 @@ export const CHARACTERS = [
   {
     id: 'elyms', name: 'Elyms', rarity: 'S', version: '1.5', element: 'cosmos', roles: ['Buff'],
     arcType: 'Solid', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
-    tags: ['Instant Cycle', 'DMG Boost', 'Burst DPS'], stats: null, upcoming: true,
+    tags: ['Instant Cycle', 'DMG Boost', 'Burst DPS'], stats: null,
     banner: { name: 'Android Dreams', from: 'Nov 11 (after update)', to: 'Dec 2, 05:59' },
   },
   {
