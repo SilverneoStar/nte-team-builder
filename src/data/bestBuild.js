@@ -16,8 +16,10 @@ import { CART_MAIN_MAX, CART_SUB_S } from './cartValues.js';
 
 export { CART_MAIN_MAX, CART_SUB_S };
 
-// Module main stats (flat ATK and HP) at +20, by module Type.
-export const MODULE_MAIN_MAX = { 2: { atk: 25, hp: 336 }, 3: { atk: 38, hp: 504 }, 4: { atk: 50, hp: 672 } };
+// Module main stats (flat ATK and HP) at Lv 20, by module Type (= its cells).
+// Type IV is 84 ATK / 1,120 HP in game (checked by the project owner, Nov 2026):
+// 21 ATK and 280 HP per cell, so Type II and III are scaled to match.
+export const MODULE_MAIN_MAX = { 2: { atk: 42, hp: 560 }, 3: { atk: 63, hp: 840 }, 4: { atk: 84, hp: 1120 } };
 // Module sub stats, S-rank, by module Type.
 export const MODULE_SUB_S = {
   2: { HP: 200, 'HP%': 2.5, ATK: 16, 'ATK%': 2.5, DEF: 16, 'DEF%': 3.5, 'CRIT Rate': 2, 'CRIT DMG': 4, 'DMG%': 2, 'Break Intensity': 12, 'Cycle Intensity': 12 },
