@@ -1,6 +1,7 @@
 // Editor for a Cartridge's main and sub attributes.
 import { CARTRIDGE_MAIN_STATS, MODULE_SUB_STATS, isPercentStat } from '../data/gear.js';
 import { favouredStats } from '../data/buildProfiles.js';
+import { cartHasEmptyValues, fillChosenCartValues } from '../data/cartValues.js';
 
 // Editor for a Cartridge's 1 main + 4 sub attributes.
 // With a character: their favoured stats are listed first and marked Rec., and
@@ -11,10 +12,24 @@ export default function CartStatsEditor({ value, onChange, idPrefix = 'cs', char
     map ? [...opts].sort((a, b) => (map.has(a) ? map.get(a) : 99) - (map.has(b) ? map.get(b) : 99)) : opts;
   return (
     <div className="cstats">
-      {fav && (
-        <p className="cstats__fav small muted">
-          Favoured sub stats: <b>{fav.text}</b>
-        </p>
+      {(fav || cartHasEmptyValues(value)) && (
+        <div className="cstats__top">
+          {fav && (
+            <p className="cstats__fav small muted">
+              Favoured sub stats: <b>{fav.text}</b>
+            </p>
+          )}
+          {cartHasEmptyValues(value) && (
+            <button
+              type="button"
+              className="btn btn--quiet cstats__fill"
+              onClick={() => onChange(fillChosenCartValues(value))}
+              title="Gives each stat you picked that has no value yet its S-rank value. Edit any of them after."
+            >
+              Fill values
+            </button>
+          )}
+        </div>
       )}
       <StatRow
         id={`${idPrefix}-main`}

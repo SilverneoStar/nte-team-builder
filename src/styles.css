@@ -7768,7 +7768,6 @@ th[aria-sort='descending'] .th-btn {
 }
 
 .cstats__fav {
-  grid-column: 1 / -1;
   margin: 0 0 4px;
 }
 .cstat.is-off select {
@@ -7799,3 +7798,8 @@ th[aria-sort='descending'] .th-btn {
 /* Read a code from an image (team builder, Console page). */
 .imgcode { margin-top: 10px; display: grid; gap: 4px; justify-items: start; }
 .imgcode__hint { margin: 0; }
+
+/* Fill values buttons (Cartridge stats, modules). */
+.cstats__top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.cstats__top .cstats__fav { margin: 0; }
+.console-fill { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 8px 0; }

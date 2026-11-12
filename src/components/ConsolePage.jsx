@@ -1,5 +1,6 @@
 // The Console page: lay out modules and Cartridges for a character, with codes and a build image.
 import { fillCartValues } from '../data/cartValues.js';
+import { fillModuleValues, moduleHasEmptyValues } from '../data/bestBuild.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { decodeConsoleCode, encodeConsoleCode } from '../lib/consoleCode.js';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
@@ -341,6 +342,24 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           <p className="muted small">
             Tap a shape, then tap a cell to place it. Tap a placed module to enter its stats or remove it.
           </p>
+          {pieces.some(moduleHasEmptyValues) && (
+            <p className="console-fill">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setPieces(pieces.map(fillModuleValues));
+                  setStatus('Filled the empty module values with S-rank values. Edit any module to change them.');
+                }}
+              >
+                Fill all module values
+              </button>
+              <span className="muted small">
+                Pick each module’s level and sub stats, and this fills the numbers: S-rank sub values, and main ATK
+                and HP for Lv 20 modules. Values you’ve entered stay.
+              </span>
+            </p>
+          )}
           <p className="console-status" role="status" aria-live="polite">
             {status}
           </p>
@@ -721,6 +740,16 @@ function ModuleEditor({ piece, index, onChange, onRemove, onClose }) {
       <div className="module-editor__head">
         <ShapeGlyph shape={piece.shape} size={9} />
         <b>{typeName} module</b>
+        {moduleHasEmptyValues(piece) && (
+          <button
+            type="button"
+            className="btn btn--quiet"
+            onClick={() => onChange(fillModuleValues(piece))}
+            title="Gives each stat you picked that has no value yet its S-rank value (main ATK and HP at Lv 20). Edit any of them after."
+          >
+            Fill values
+          </button>
+        )}
         <button type="button" className="btn btn--quiet" onClick={onRemove}>
           Remove
         </button>

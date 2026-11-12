@@ -6,7 +6,7 @@
 // stats; S-rank module main and sub stats per module Type, from published
 // community module stat guides.
 import { ARCS, ARC_BY_ID, RECOMMENDED } from './arcs.js';
-import { bonusStats, cartridgesFor } from './gear.js';
+import { MODULE_MAX_LEVEL, bonusStats, cartridgesFor, moduleLevel, unlockedSubs } from './gear.js';
 import { SHAPES, consoleStats } from './console.js';
 import { MAX_STATS } from './maxStats.js';
 import { suggestedBuild } from './consoleBuilds.js';
@@ -109,4 +109,38 @@ export function withBestModuleStats(character, pieces, cartridgeId) {
       },
     };
   });
+}
+
+/**
+ * One placed module with its empty values filled: the S-rank value for each
+ * unlocked sub stat the player picked, and the Lv 20 main ATK and HP when the
+ * module is Lv 20 (lower levels have lower mains, so those stay for the
+ * player). Values already entered stay as they are.
+ */
+export function fillModuleValues(piece) {
+  const type = SHAPES[piece.shape]?.type;
+  const st = piece.stats ?? { hp: 0, atk: 0, subs: [null, null, null, null] };
+  const level = moduleLevel(st);
+  const open = unlockedSubs(level);
+  const mains = level === MODULE_MAX_LEVEL ? MODULE_MAIN_MAX[type] ?? {} : {};
+  return {
+    ...piece,
+    stats: {
+      ...st,
+      level,
+      atk: st.atk || mains.atk || 0,
+      hp: st.hp || mains.hp || 0,
+      subs: (st.subs ?? []).map((x, i) =>
+        x?.stat && !x.value && i < open ? { ...x, value: MODULE_SUB_S[type]?.[x.stat] ?? 0 } : x,
+      ),
+    },
+  };
+}
+/** True when a module has a picked, unlocked sub stat (or a Lv 20 main) without a value. */
+export function moduleHasEmptyValues(piece) {
+  const st = piece.stats;
+  if (!st) return moduleLevel(st) === MODULE_MAX_LEVEL;
+  const level = moduleLevel(st);
+  if (level === MODULE_MAX_LEVEL && (!st.atk || !st.hp)) return true;
+  return (st.subs ?? []).some((x, i) => x?.stat && !x.value && i < unlockedSubs(level));
 }

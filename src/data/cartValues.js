@@ -30,3 +30,17 @@ export function fillCartValues(prev, next) {
     x && { ...x, value: x.value || old[kind].find((o) => o.stat === x.stat)?.value || cartStatMax(kind, x.stat) };
   return { main: fill(next.main, 'main'), subs: next.subs.map((x) => fill(x, 'sub')) };
 }
+
+/**
+ * The player's own Cartridge stats with values filled in: every stat they
+ * picked that has no value yet gets the S-rank value. Values already entered
+ * stay as they are.
+ */
+export function fillChosenCartValues(cs) {
+  if (!cs) return cs;
+  const fill = (x, kind) => (x?.stat && !x.value ? { ...x, value: cartStatMax(kind, x.stat) } : x);
+  return { main: fill(cs.main, 'main'), subs: (cs.subs ?? []).map((x) => fill(x, 'sub')) };
+}
+/** True when some picked Cartridge stat has no value yet. */
+export const cartHasEmptyValues = (cs) =>
+  [cs?.main, ...(cs?.subs ?? [])].some((x) => x?.stat && !x.value);
