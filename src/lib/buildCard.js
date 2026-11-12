@@ -24,6 +24,7 @@ import { skillIconUrl } from './skillIcons.js';
 import { encodeConsoleCode } from './consoleCode.js';
 import { fillStatText } from './statText.js';
 import { drawLinksBlock, drawLinksLine, measureLinksLine } from './cardLinks.js';
+import { drawQR, qrText } from './qr.js';
 import { COMMUNITY_BUILDS } from '../data/communityBuilds.js';
 import { drawSkillPriority, loadSkillPriorityIcons, skillPriorityFor } from './skillPriorityDraw.js';
 import { drawTagPills, loadTagMarks } from './cardTags.js';
@@ -783,6 +784,15 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     }
   }
 
+  // The console code, also carried by a QR code and inside the PNG file.
+  const consoleCode =
+    info && (build.pieces.length || build.cartridge)
+      ? encodeConsoleCode({ layout: info.layout, cartridge: build.cartridge, cartStats: build.cartStats, pieces: build.pieces })
+      : '';
+  const qrCode = consoleCode ? qrText('console', consoleCode) : '';
+  if (qrCode && ctx.canvas.dataset) ctx.canvas.dataset.code = qrCode;
+  const QS = 72;
+
   // ---- Header strip ---- (wide: top right; Instagram: beside the portrait's foot)
   const RX = PAD + LW + 28;
   const RW = W - RX - PAD;
@@ -803,14 +813,21 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ctx.font = `italic 800 30px ${DISPLAY}`;
   ctx.fillText('CONSOLE DEVELOPMENT', RX + 98, HY + 38);
   const specPx = ig ? 17 : 19;
-  const spec = info ? (ig ? specShort(info.spec) : specText(info.spec)) : 'Console data not published yet.';
+  ctx.font = `600 ${specPx}px ${BODY}`;
+  const specRoom = RW - 98 - (ig ? 24 : 380);
+  // The short form when the full sentence won't fit beside the QR code.
+  const spec = info
+    ? ig || ctx.measureText(specText(info.spec)).width > specRoom
+      ? specShort(info.spec)
+      : specText(info.spec)
+    : 'Console data not published yet.';
   fillStatText(ctx, spec, RX + 98, HY + 67, {
     font: `600 ${specPx}px ${BODY}`,
     numFont: `700 ${specPx}px ${BODY}`,
     color: K.muted,
     keyColor: K.key,
     numColor: K.num,
-    maxWidth: RW - 98 - (ig ? 24 : 300),
+    maxWidth: specRoom,
   });
   const mascotX = ig ? W - PAD - MS + 6 : RX + RW - MS - 6;
   drawMascot(ctx, await loadImage(`${base}mascot.svg`), mascotX, PAD - 8, MS);
@@ -818,7 +835,14 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   ctx.font = `700 14px ${MONO}`;
   ctx.fillStyle = K.pink;
   if (ig) ctx.fillText(build.source.toUpperCase(), RX + RW - 18, HY + 36 - 42 - 12);
-  else ctx.fillText(build.source.toUpperCase(), RX + RW - MS - 14, PAD + 36);
+  else ctx.fillText(build.source.toUpperCase(), RX + RW - MS - 14 - (qrCode ? QS + 14 : 0), PAD + 36);
+  if (qrCode && !ig) {
+    // QR code with the console code (lib/qr.js), between the label and Cortado.
+    drawQR(ctx, qrCode, RX + RW - MS - 14 - QS, HY + (84 - QS) / 2, QS);
+    ctx.font = `600 11px ${MONO}`;
+    ctx.fillStyle = K.muted;
+    ctx.fillText('SCAN OR UPLOAD', RX + RW - MS - 28 - QS, PAD + 58);
+  }
   ctx.textAlign = 'left';
 
   const top = ig ? PAD + LW + 16 : PAD + 84 + 16;
@@ -1231,16 +1255,22 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     });
   }
 
+  if (qrCode && ig) {
+    // Instagram: the QR code sits at the foot of the right column.
+    const Q = 116;
+    const qx = RCX + RCW - 20 - Q;
+    const qy = bottom - 20 - Q;
+    drawQR(ctx, qrCode, qx, qy, Q);
+    ctx.textAlign = 'right';
+    ctx.font = `600 12px ${MONO}`;
+    ctx.fillStyle = K.muted;
+    ctx.fillText('SCAN, OR UPLOAD THIS', qx - 14, qy + Q - 22);
+    ctx.fillText('IMAGE ON THE SITE', qx - 14, qy + Q - 4);
+    ctx.textAlign = 'left';
+  }
+
   // ---- Footer: console code + legal line ----
-  const code =
-    info && (build.pieces.length || build.cartridge)
-      ? encodeConsoleCode({
-          layout: info.layout,
-          cartridge: build.cartridge,
-          cartStats: build.cartStats,
-          pieces: build.pieces,
-        })
-      : '';
+  const code = consoleCode;
   ctx.font = `600 13px ${BODY}`;
   ctx.fillStyle = K.muted;
   ctx.fillText(
@@ -1249,9 +1279,15 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     H - 30,
   );
   if (!ig) {
-    // The site links sit on the footer line, between the legal note and the code.
+    // The site links sit on the footer line, between the legal note and the code
+    // (one size smaller when they'd run into it).
     const legalW = ctx.measureText('Unofficial fan project · Neverness to Everness © Hotta Studio / Perfect World Games').width;
-    drawLinksLine(ctx, PAD + legalW + 30, H - 30, { font: `600 14px ${BODY}`, color: K.muted, accent: K.fg, iconSize: 14, gap: 20 });
+    ctx.font = `700 20px ${MONO}`;
+    const codeW = code ? ctx.measureText(code).width + 14 + 100 : 0;
+    const room = W - PAD - codeW - (PAD + legalW + 30) - 16;
+    let lf = 14;
+    while (lf > 11 && measureLinksLine(ctx, { font: `600 ${lf}px ${BODY}`, iconSize: lf, gap: 20 }) > room) lf -= 1;
+    drawLinksLine(ctx, PAD + legalW + 30, H - 30, { font: `600 ${lf}px ${BODY}`, color: K.muted, accent: K.fg, iconSize: lf, gap: lf + 4 });
   }
   if (code) {
     ctx.textAlign = 'right';

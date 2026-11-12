@@ -4,6 +4,7 @@ import { PRESETS } from '../data/presets.js';
 import { encodeTeam, decodeTeam } from '../lib/share.js';
 import { decodeCardCode, encodeCardCode } from '../lib/cardCode.js';
 import { loadoutOf } from '../lib/teamsReducer.js';
+import ImageCodeReader from './ImageCodeReader.jsx';
 
 export default function SharePanel({ team, dispatch }) {
   const code = encodeTeam(team);
@@ -131,6 +132,15 @@ export default function SharePanel({ team, dispatch }) {
         </div>
         {error && <p className="field__error">{error}</p>}
       </form>
+      <ImageCodeReader
+        kind="team"
+        onCode={(c) => {
+          const card = decodeCardCode(c);
+          if (!card) return false;
+          dispatch({ type: 'import', ...card, name: card.name || 'Imported team' });
+          return true;
+        }}
+      />
     </section>
   );
 }

@@ -30,6 +30,12 @@ The `hd/` versions of character and Arc images are 2× copies of the same offici
 - [React](https://react.dev): MIT License
 - [Vite](https://vitejs.dev): MIT License
 - Fonts via [Google Fonts](https://fonts.google.com): Big Shoulders Display, IBM Plex Sans and IBM Plex Mono, under the SIL Open Font License 1.1
+- QR Code encoder by Kazuhiko Arase (MIT License), from qrcode-terminal (Apache License 2.0), bundled in `src/lib/vendor/qrcode.js`: draws the QR codes on team and build images
+- [jsQR](https://github.com/cozmo/jsQR) (Apache License 2.0): reads QR codes from uploaded images when the browser has no built-in reader; loaded from cdn.jsdelivr.net only when needed
+
+## Reading codes from images
+
+Team and build images saved from the site carry their code inside the PNG file and in a QR code (`NTE:` + a team code, `NTEC:` + a console code; the text a phone camera gives can be pasted into the site). "Read a code from an image" reads the file's note first, then the QR code, on the device: pictures aren't uploaded or saved.
 
 ## Contact
 

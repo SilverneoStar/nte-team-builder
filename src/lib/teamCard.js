@@ -18,6 +18,7 @@ import { analyzeTeam } from './analyze.js';
 import { activeResonance } from '../data/awakenings.js';
 import { skillIconUrl } from './skillIcons.js';
 import { encodeCardCode, splitCardCode } from './cardCode.js';
+import { drawQR, qrText } from './qr.js';
 import { consoleStats } from '../data/console.js';
 import { SYNERGY_MOODS, SYNERGY_RANK_STOPS, synergyScore } from './synergy.js';
 
@@ -1462,6 +1463,13 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   // Long codes (full gear) move the legal line up and wrap onto two lines.
   const LEGAL = 'Unofficial fan project. Neverness to Everness \u00a9 Hotta Studio / Perfect World Games.';
   const code = encodeCardCode(team, loadoutOf);
+  // QR code in the bottom-right corner (lib/qr.js); the PNG file carries the same text.
+  const Q = grid && !side ? 116 : side ? 112 : 92;
+  const qx = W - PAD - Q;
+  const qy = H - 18 - Q;
+  drawQR(ctx, qrText('team', code), qx, qy, Q);
+  if (ctx.canvas.dataset) ctx.canvas.dataset.code = qrText('team', code);
+  const RX = qx - 18; // right edge for the links and the printed code
   ctx.font = `500 12px ${BODY}`;
   const legalW = ctx.measureText(LEGAL).width;
   const labelW = 46;
@@ -1469,10 +1477,10 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
     ctx.font = `600 ${size}px ${MONO}`;
     return ctx.measureText(text).width;
   };
-  const maxW = W - PAD * 2 - labelW;
+  const maxW = RX - PAD - labelW;
   let codeSize = 20;
   let codeLines = [code];
-  const sideBySide = PAD + legalW + 32 + labelW + fits(code, 20) <= W - PAD;
+  const sideBySide = PAD + legalW + 32 + labelW + fits(code, 20) <= RX;
   if (!sideBySide) {
     codeSize = Math.max(15, Math.min(20, Math.floor((20 * maxW) / fits(code, 20))));
     if (fits(code, codeSize) > maxW) {
@@ -1494,11 +1502,11 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   const linksY = codeTop - codeSize - 10;
   const linksW = measureLinksLine(ctx, { font: linksFont, iconSize: 13, gap: 18 });
   let legalY = sideBySide ? H - 24 : linksY;
-  if (!sideBySide && PAD + legalW + 24 > W - PAD - linksW) legalY = linksY - 18;
+  if (!sideBySide && PAD + legalW + 24 > RX - linksW) legalY = linksY - 18;
   ctx.fillStyle = C.muted;
   ctx.font = `500 12px ${BODY}`;
   ctx.fillText(LEGAL, PAD, legalY);
-  drawLinksLine(ctx, W - PAD, linksY, {
+  drawLinksLine(ctx, RX, linksY, {
     font: linksFont,
     color: C.muted,
     accent: C.fg,
@@ -1510,11 +1518,11 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   ctx.textAlign = 'right';
   ctx.font = `600 ${codeSize}px ${MONO}`;
   ctx.fillStyle = C.fg;
-  codeLines.forEach((ln, i) => ctx.fillText(ln, W - PAD, codeTop + i * lineGap));
+  codeLines.forEach((ln, i) => ctx.fillText(ln, RX, codeTop + i * lineGap));
   const firstW = ctx.measureText(codeLines[0]).width;
   ctx.font = `500 11px ${MONO}`;
   ctx.fillStyle = C.muted;
-  ctx.fillText('CODE', W - PAD - firstW - 12, codeTop - 2);
+  ctx.fillText('CODE', RX - firstW - 12, codeTop - 2);
   ctx.textAlign = 'left';
 
   drawSilverFrame(ctx, W, H);

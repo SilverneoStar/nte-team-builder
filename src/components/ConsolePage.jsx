@@ -25,6 +25,7 @@ import { navigate } from '../lib/route.js';
 import { loadoutOf } from '../lib/teamsReducer.js';
 import CartridgeIcon from './CartridgeIcon.jsx';
 import CartStatsEditor from './CartStatsEditor.jsx';
+import ImageCodeReader from './ImageCodeReader.jsx';
 import StatAdvice from './StatAdvice.jsx';
 import { suggestedBuild } from '../data/consoleBuilds.js';
 import { loadSavedConsoles, storeSavedConsoles } from '../lib/consoles.js';
@@ -130,12 +131,13 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
   }
   function importCode(e) {
     e.preventDefault();
-    const d = decodeConsoleCode(codeInput);
-    if (!d) {
-      setStatus('That console code isn’t valid.');
-      return;
-    }
-    setCodeInput('');
+    if (loadConsoleCode(codeInput) === false) setStatus('That console code isn’t valid.');
+    else setCodeInput('');
+  }
+  // Loads a console code (typed, or read from a build image). False if it isn't valid.
+  function loadConsoleCode(input) {
+    const d = decodeConsoleCode(input);
+    if (!d) return false;
     if (d.layout === layout) {
       setActive(null);
       setPieces(d.pieces);
@@ -435,7 +437,7 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
             <h3 id="console-cstats" className="mini-title">
               Cartridge stats <span>1 main · {CARTRIDGE_SUB_SLOTS} sub</span>
             </h3>
-            <CartStatsEditor value={cartStats} onChange={setCartStats} idPrefix="ccs" />
+            <CartStatsEditor value={cartStats} onChange={setCartStats} character={character} cartridge={cartridge} idPrefix="ccs" />
             <StatAdvice character={character} cartridge={cartridge} />
             <p className="muted small">
               Enter the values shown on your Cartridge. They’re added to the Arc’s stats under Bonus stats on the team
@@ -513,6 +515,7 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
                 Load
               </button>
             </form>
+            <ImageCodeReader kind="console" onCode={loadConsoleCode} />
             <button type="button" className="btn btn--primary console-share" onClick={() => setSharing(true)}>
               <ExportIcon />
               Share build image

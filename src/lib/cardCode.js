@@ -392,7 +392,7 @@ function decodeV5(clean) {
 
 /** Cleans a typed code: case, spaces, dashes and look-alike letters. */
 export const cleanCode = (input) =>
-  (input ?? '').toUpperCase().replace(/[\s-]/g, '').replace(/[IL]/g, '1').replace(/O/g, '0');
+  (input ?? '').toUpperCase().replace(/^\s*NTEC?:/, '').replace(/[\s-]/g, '').replace(/[IL]/g, '1').replace(/O/g, '0');
 
 // ---- Team name, packed after the 4 team segments ----
 // One code character per letter or space (5 bits each). Capitals at the start

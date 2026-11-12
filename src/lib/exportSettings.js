@@ -1,3 +1,4 @@
+import { withCode } from './pngText.js';
 // Options shared by every exported image (team images and the character,
 // build, farming and Arc cards). Kept apart from the drawing code so the
 // export dialog can show its choices straight away, while the heavier canvas
@@ -39,6 +40,8 @@ export const EXPORT_SIZES = [
 ];
 
 /** A finished canvas as a PNG file, for saving, copying or sharing. */
-export function canvasToBlob(canvas) {
-  return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+export async function canvasToBlob(canvas) {
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+  // Team and build images carry their code inside the file (lib/pngText.js).
+  return canvas.dataset?.code ? withCode(blob, canvas.dataset.code) : blob;
 }
