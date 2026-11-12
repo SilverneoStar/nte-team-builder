@@ -525,7 +525,7 @@ function luminance(hex) {
   return 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
 }
 
-export function drawAwakenStep(ctx, cx, cy, d, color, first, id, icon) {
+export function drawAwakenStep(ctx, cx, cy, d, color, first, id, icon, tagScale = 0.25) {
   drawOrb(ctx, cx, cy, d / 2, color, first);
   ctx.save();
   ctx.textAlign = 'center';
@@ -538,7 +538,7 @@ export function drawAwakenStep(ctx, cx, cy, d, color, first, id, icon) {
   }
   const s = d * 0.7;
   ctx.drawImage(icon, cx - s / 2, cy - s / 2 - d * 0.06, s, s);
-  const fs = Math.max(10, Math.round(d * 0.25));
+  const fs = Math.max(10, Math.round(d * tagScale));
   ctx.font = `800 ${fs}px ${MONO}`;
   const w = ctx.measureText(id).width + fs * 0.7;
   const h = fs * 1.25;
@@ -664,10 +664,13 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   // Name and details: under the portrait (wide) or beside it (Instagram).
   const tx0 = ig ? PAD + LW + 28 : px;
   const TW = ig ? W - PAD - MS - 12 - tx0 : LW;
-  await drawPortraitBackdrop(ctx, { x: px, y: py, w: LW, h: LW, r: 22, arcType: c.arcType, base });
+  // Wide: the portrait frame is a little shorter than it is wide (cropped at
+  // the foot) to leave room for the Awakening order below.
+  const PH = ig || !ao ? LW : LW - 44;
+  await drawPortraitBackdrop(ctx, { x: px, y: py, w: LW, h: PH, r: 22, arcType: c.arcType, base });
   if (portrait) {
     ctx.save();
-    roundRect(ctx, px, py, LW, LW, 22);
+    roundRect(ctx, px, py, LW, PH, 22);
     ctx.clip();
     setPortraitShadow(ctx, LW);
     ctx.drawImage(portrait, px, py, LW, LW);
@@ -675,10 +678,10 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   }
   ctx.strokeStyle = elColor;
   ctx.lineWidth = 3;
-  roundRect(ctx, px, py, LW, LW, 22);
+  roundRect(ctx, px, py, LW, PH, 22);
   ctx.stroke();
 
-  let ly = ig ? py + 58 : py + LW + 58;
+  let ly = ig ? py + 58 : py + PH + 58;
   ctx.fillStyle = K.fg;
   ctx.font = `italic 700 24px ${DISPLAY}`;
   const lvW = ctx.measureText(`LV. ${MAX_STATS_LEVEL}`).width + 14;
@@ -750,7 +753,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
   // character info (the site links move to the footer line).
   if (!ig) {
     const colBottom = H - 50;
-    const aoH = ao ? 26 + 2 * 52 : 0;
+    const aoH = ao ? 26 + 2 * 76 : 0;
     const spRoom = colBottom - aoH - (ly + 6);
     if (sp && spRoom >= 84) {
       const sy = ly + 6;
@@ -758,27 +761,28 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
       ctx.font = `600 17px ${BODY}`;
       ctx.fillText('Level skills first', tx0, sy + 16);
       ly = sy + 26 + drawSkillPriority(ctx, sp.tiers, spIcons, tx0, sy + 26, TW, {
-        d: Math.min(56, spRoom - 50), labelPx: 15, font: BODY, color: K.fg, muted: K.muted, disc: K.inset, accent: elColor,
+        d: Math.min(ao ? 42 : 56, spRoom - 50), labelPx: 15, font: BODY, color: K.fg, muted: K.muted, disc: K.inset, accent: elColor,
       });
     }
-    if (ao && colBottom - (ly + 4) >= 26 + 2 * 46) {
+    if (ao && colBottom - (ly + 4) >= 26 + 2 * 50) {
       const ay = Math.max(ly + 4, colBottom - aoH);
       ctx.fillStyle = K.muted;
       ctx.font = `600 17px ${BODY}`;
       ctx.fillText('Awakening order', tx0, ay + 16);
       ctx.font = `600 14px ${BODY}`;
       ctx.fillText('one per duplicate', tx0 + ctx.measureText('Awakening order  ').width + 22, ay + 16);
-      const rowH = Math.min(52, (colBottom - ay - 26) / 2);
-      const d = rowH - 12;
+      // Each row leaves room for the orb's A-tag hanging below it.
+      const rowH = Math.min(76, (colBottom - 8 - ay - 26) / 2);
+      const d = rowH - 19;
       const cw = TW / 3;
       ao.order.forEach((id, i) => {
         const cx = tx0 + cw * (i % 3) + cw / 2;
         const cy = ay + 26 + rowH * Math.floor(i / 3) + d / 2;
-        drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id]);
+        drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id], 0.3);
         ctx.fillStyle = K.muted;
-        ctx.font = `700 14px ${MONO}`;
+        ctx.font = `700 ${Math.round(d * 0.5)}px ${BODY}`;
         ctx.textAlign = 'center';
-        if (i % 3 < 2 && i < ao.order.length - 1) ctx.fillText('›', cx + cw / 2, cy + 5);
+        if (i % 3 < 2 && i < ao.order.length - 1) ctx.fillText('›', cx + cw / 2, cy + d * 0.17);
         ctx.textAlign = 'left';
       });
     }
@@ -1237,19 +1241,25 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     const tw = ctx.measureText('Awakening order  ').width;
     ctx.font = `600 15px ${BODY}`;
     ctx.fillText('one per duplicate', innerX + tw, orbTop + 14);
+    // Two rows of three, as big as the space allows (the QR code takes the
+    // bottom-right corner under them).
     const n = ao.order.length;
-    const space = bottom - 14 - (orbTop + 28);
-    const d = Math.min(56, space - 4);
-    const gap = Math.min(40, (innerW - n * d) / Math.max(1, n - 1));
-    const cy = orbTop + 28 + d / 2;
+    const cols = 3;
+    const rows = Math.ceil(n / cols);
+    const top0 = orbTop + 30;
+    const space = bottom - 14 - (qrCode ? 112 : 0) - top0;
+    const cw = innerW / cols;
+    const d = Math.max(44, Math.min(80, Math.floor(space / rows) - 16, cw - 56));
+    const rowH = d + 16;
     ao.order.forEach((id, i) => {
-      const cx = innerX + d / 2 + i * (d + gap);
-      drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id]);
+      const cx = innerX + cw * (i % cols) + cw / 2;
+      const cy = top0 + rowH * Math.floor(i / cols) + d / 2;
+      drawAwakenStep(ctx, cx, cy, d, elColor, i === 0, id, awakenIcons[id], 0.3);
       ctx.textAlign = 'center';
-      if (i < n - 1) {
-        ctx.font = `600 ${Math.round(d * 0.36)}px ${BODY}`;
+      if (i % cols < cols - 1 && i < n - 1) {
+        ctx.font = `600 ${Math.round(d * 0.4)}px ${BODY}`;
         ctx.fillStyle = K.muted;
-        ctx.fillText('→', cx + d / 2 + gap / 2, cy + d * 0.12);
+        ctx.fillText('→', cx + cw / 2, cy + d * 0.14);
       }
       ctx.textAlign = 'left';
     });
@@ -1257,9 +1267,9 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
 
   if (qrCode && ig) {
     // Instagram: the QR code sits at the foot of the right column.
-    const Q = 116;
+    const Q = 100;
     const qx = RCX + RCW - 20 - Q;
-    const qy = bottom - 20 - Q;
+    const qy = bottom - 14 - Q;
     drawQR(ctx, qrCode, qx, qy, Q);
     ctx.textAlign = 'right';
     ctx.font = `600 12px ${MONO}`;
