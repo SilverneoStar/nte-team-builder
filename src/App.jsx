@@ -207,6 +207,7 @@ export default function App() {
                 key={selectedChar.id}
                 character={selectedChar}
                 loadout={loadoutOf(active, selectedChar.id)}
+                teamLoadouts={loadouts}
                 onChange={(patch) => dispatch({ type: 'setLoadout', charId: selectedChar.id, patch })}
                 dispatch={dispatch}
                 onClose={() => setSelectedSlot(null)}

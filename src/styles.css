@@ -7762,3 +7762,7 @@ th[aria-sort='descending'] .th-btn {
   width: 1.4em;
   height: 1.4em;
 }
+
+.gear-chip .chip-tag--warn {
+  color: var(--warn);
+}

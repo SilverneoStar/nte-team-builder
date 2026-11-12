@@ -13,13 +13,23 @@ export const CARTRIDGES = [
   { id: 'lost-radiance', name: 'Lost Radiance', two: 'Cosmos DMG +10%', four: 'Ignores 25% enemy DEF for 20s after the wearer casts Ultimate.' },
   { id: 'quiet-manor', name: 'Quiet Manor', two: 'Mental DMG +10%', four: 'Mental DMG +12% per Basic Attack, up to 3 stacks (6s).' },
   { id: 'shadow-creed', name: 'Shadow Creed', two: 'ATK +10%', four: 'ATK +25% for 20s after casting a Skill.' },
-  { id: 'speedy-hedgehog', name: 'Speedy Hedgehog', two: 'Charge Efficiency +12%', four: 'All allies’ ATK +15% for 20s after the wearer casts Ultimate.' },
+  { id: 'speedy-hedgehog', name: 'Speedy Hedgehog', two: 'Charge Efficiency +12%', four: 'All allies’ ATK +15% for 20s after the wearer casts Ultimate. Doesn’t stack: only one Speedy Hedgehog per team counts.', onePerTeam: true },
   { id: 'street-boxer', name: 'Street Boxer', two: 'Lakshana DMG +10%', four: 'Crit Rate up; the bonus increases for 20s after the team triggers Remora or Stain.' },
   { id: 'theas-night-tavern', name: "Thea's Night Tavern", two: 'HP +10%', four: 'Healing Bonus +20%.' },
   { id: 'tiny-big-adventure', name: 'Tiny Big Adventure', two: 'HP +10%', four: 'Max HP +4% when taking damage, up to 10 stacks (10s); Ultimate grants all 10.' },
 ];
 
 export const CARTRIDGE_BY_ID = Object.fromEntries(CARTRIDGES.map((c) => [c.id, c]));
+
+// Team-wide buffs that don't stack (like ZZZ's Astral Voice): a second wearer
+// adds nothing. Returns the teammate ids already wearing the same one-per-team
+// set as charId, given { id: loadout } for the team.
+export function sharedSetWearers(loadouts, charId, setId) {
+  if (!setId || !CARTRIDGE_BY_ID[setId]?.onePerTeam) return [];
+  return Object.entries(loadouts)
+    .filter(([id, lo]) => id !== charId && lo?.cartridge === setId)
+    .map(([id]) => id);
+}
 
 // Recommended Cartridge sets, worked out from each character's element and
 // roles (no guide publishes a full per-character list yet):

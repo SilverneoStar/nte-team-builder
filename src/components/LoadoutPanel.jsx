@@ -4,7 +4,8 @@ import CartridgeIcon from './CartridgeIcon.jsx';
 import ArcTypeIcon from './ArcTypeIcon.jsx';
 import { MiniBoard } from './ConsolePage.jsx';
 import { CHARACTER_CONSOLE, FREE_CELLS, setProgress, specBonus, usedCells } from '../data/console.js';
-import { CARTRIDGES, CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
+import { CARTRIDGES, CARTRIDGE_BY_ID, cartridgesFor, sharedSetWearers } from '../data/gear.js';
+import { CHARACTER_BY_ID } from '../data/characters.js';
 import { fillCartValues } from '../data/cartValues.js';
 import { suggestedBuild, suggestedCartStats } from '../data/consoleBuilds.js';
 import StatAdvice from './StatAdvice.jsx';
@@ -19,7 +20,7 @@ import StatText from './StatText.jsx';
 import GearStats from './GearStats.jsx';
 
 // Gear editor for one team member: Arc, Cartridge set and Console build.
-export default function LoadoutPanel({ character: c, loadout, onChange, onClose, dispatch }) {
+export default function LoadoutPanel({ character: c, loadout, teamLoadouts = {}, onChange, onClose, dispatch }) {
   const awakenings = AWAKENINGS[c.id];
   const arcs = arcsFor(c);
   const arc = loadout.arc && ARC_BY_ID[loadout.arc];
@@ -38,7 +39,13 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
     );
   };
   const arcTagNow = arc ? arcTag(arc, c) : null;
-  const recSets = cartridgesFor(c);
+  // A one-per-team set a teammate already wears drops out of this member's picks.
+  const takenBy = (id) => sharedSetWearers(teamLoadouts, c.id, id);
+  const names = (ids) => ids.map((id) => CHARACTER_BY_ID[id]?.name ?? id).join(' and ');
+  const recAll = cartridgesFor(c);
+  const recSets = recAll.filter((id) => !takenBy(id).length || id === loadout.cartridge);
+  const recTaken = recAll.filter((id) => !recSets.includes(id));
+  const cartClash = cart ? takenBy(cart.id) : [];
   const otherSets = CARTRIDGES.filter((s) => !recSets.includes(s.id));
   const cartIsRec = cart && recSets.includes(cart.id);
 
@@ -240,6 +247,12 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
                 <b>{cart.name}</b>
                 {cartIsRec && <span className="arc-tag arc-tag--rec">Recommended</span>}
               </div>
+              {cartClash.length > 0 && (
+                <p className="note note--warn small">
+                  {names(cartClash)} already wears {cart.name}. Its team ATK buff doesn’t stack, so only one wearer
+                  counts; give {c.name} {recAll.find((id) => id !== cart.id) ? CARTRIDGE_BY_ID[recAll.find((id) => id !== cart.id)].name : 'another set'} instead.
+                </p>
+              )}
               <dl className="gear-bonus">
                 <div>
                   <dt>2-piece</dt>
@@ -268,6 +281,13 @@ export default function LoadoutPanel({ character: c, loadout, onChange, onClose,
               </div>
               <p className="muted small">
                 Recommended for {c.name}’s element and roles. Bonuses activate with 2 and 4 matching pieces.
+                {recTaken.map((id) => (
+                  <span key={id}>
+                    {' '}
+                    {CARTRIDGE_BY_ID[id].name} is left out: {names(takenBy(id))} already wears it, and only one per team
+                    counts.
+                  </span>
+                ))}
               </p>
             </>
           )}

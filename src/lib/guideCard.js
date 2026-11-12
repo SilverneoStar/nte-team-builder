@@ -507,7 +507,10 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
       22,
       16,
     );
-    y += A + 24;
+    // A two-line Arc name pushes its rank line below the art, so start the
+    // ascension row under whichever ends lower.
+    const pushed = Math.max(0, sy + 26 - (y + A + 24));
+    y += A + 24 + pushed;
     if (arcMats.length) {
       ctx.font = `700 15px ${MONO}`;
       ctx.fillStyle = K.muted;
@@ -524,13 +527,13 @@ export async function renderGuideCard(character, { base = '/', scale = 2 } = {})
         ctx.fillText(q, mx + cw / 2, y + 72);
         ctx.textAlign = 'left';
       });
-      y += 94;
+      y += 94 - Math.min(pushed, 12);
     }
     // Alternatives: one line each (art, name, rank, access tag), as many as fit.
     const room = R2Y + ROW2 - 16 - y;
     const rowH = 54;
     const S = 42;
-    arcs.more.slice(0, Math.max(0, Math.floor(room / rowH))).forEach((m, i) => {
+    arcs.more.slice(0, Math.max(0, Math.floor((room + rowH - S) / rowH))).forEach((m, i) => {
       const ry = y + i * rowH;
       art(ctx, moreImgs[i], ix, ry, S, 8);
       const mx = ix + S + 14;

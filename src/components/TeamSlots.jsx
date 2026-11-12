@@ -1,7 +1,7 @@
 // The four team slots on the builder.
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { ARC_BY_ID, arcTag } from '../data/arcs.js';
-import { CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
+import { CARTRIDGE_BY_ID, cartridgesFor, sharedSetWearers } from '../data/gear.js';
 import CartridgeIcon from './CartridgeIcon.jsx';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { loadoutOf } from '../lib/teamsReducer.js';
@@ -35,6 +35,13 @@ export default function TeamSlots({ team, selected, onSelect, onAdd, dispatch })
         const gear = loadoutOf(team, c.id);
         const arc = gear.arc && ARC_BY_ID[gear.arc];
         const cart = gear.cartridge && CARTRIDGE_BY_ID[gear.cartridge];
+        const clash =
+          cart &&
+          sharedSetWearers(
+            Object.fromEntries(team.members.filter(Boolean).map((id) => [id, loadoutOf(team, id)])),
+            c.id,
+            cart.id,
+          ).length > 0;
         const isSelected = selected === index;
         return (
           <li
@@ -64,7 +71,11 @@ export default function TeamSlots({ team, selected, onSelect, onAdd, dispatch })
                   <span className={cart ? 'gear-chip gear-chip--on' : 'gear-chip'} title={cart?.name ?? 'No Cartridge'}>
                     {cart && <CartridgeIcon id={cart.id} size={14} />}
                     <span className="gear-chip__name">{cart ? cart.name.split(':')[0] : 'No set'}</span>
-                    {cart && cartridgesFor(c).includes(cart.id) && <span className="chip-tag">· Rec</span>}
+                    {cart && clash ? (
+                      <span className="chip-tag chip-tag--warn">· 1 per team</span>
+                    ) : (
+                      cart && cartridgesFor(c).includes(cart.id) && <span className="chip-tag">· Rec</span>
+                    )}
                   </span>
                 </span>
                 {/* Awakenings on their own line; the ones turned on glow */}

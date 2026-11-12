@@ -38,7 +38,7 @@ import { ELEMENTS, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { PASSIVES } from '../data/passives.js';
 import { PRESETS } from '../data/presets.js';
 import { ARC_BY_ID, RECOMMENDED } from '../data/arcs.js';
-import { bonusStats, cartridgesFor } from '../data/gear.js';
+import { CARTRIDGE_BY_ID, bonusStats, cartridgesFor } from '../data/gear.js';
 import { consoleStats } from '../data/console.js';
 import { RESONANCES } from '../data/awakenings.js';
 import { areNeighbours } from './analyze.js';
@@ -314,6 +314,7 @@ export function synergyScore(memberIds, loadouts = {}) {
     const bits = [];
     let arcFits = 0;
     let cartFits = 0;
+    const oncePerTeam = new Set();
     team.forEach((c) => {
       const lo = loadouts[c.id] ?? {};
       const arc = lo.arc && ARC_BY_ID[lo.arc];
@@ -321,7 +322,17 @@ export function synergyScore(memberIds, loadouts = {}) {
         arcFits += 1;
         if (arc.signature === c.id) bits.push(`${short(c)} has their signature Arc`);
       }
-      if (lo.cartridge && cartridgesFor(c).includes(lo.cartridge)) cartFits += 1;
+      if (lo.cartridge && cartridgesFor(c).includes(lo.cartridge)) {
+        // A second Speedy Hedgehog adds nothing, so it doesn't count as a fit.
+        if (CARTRIDGE_BY_ID[lo.cartridge]?.onePerTeam) {
+          if (oncePerTeam.has(lo.cartridge)) {
+            bits.push(`${short(c)}’s ${CARTRIDGE_BY_ID[lo.cartridge].name} doesn’t stack with a teammate’s`);
+            return;
+          }
+          oncePerTeam.add(lo.cartridge);
+        }
+        cartFits += 1;
+      }
     });
     bits.unshift(`${arcFits} of ${team.length} recommended Arcs`, `${cartFits} of ${team.length} recommended Cartridge sets`);
     parts.push({
