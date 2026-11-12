@@ -7766,3 +7766,36 @@ th[aria-sort='descending'] .th-btn {
 .gear-chip .chip-tag--warn {
   color: var(--warn);
 }
+
+.cstats__fav {
+  grid-column: 1 / -1;
+  margin: 0 0 4px;
+}
+.cstat.is-off select {
+  border-color: var(--warn);
+}
+.cstat.is-off .cstat__label {
+  color: var(--warn);
+}
+
+/* Cortado's build review (My build) and the sub stat guide (build guide). Ported from the ZZZ site. */
+.review { margin: 14px 0; }
+.review__notes { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 6px; }
+.review__note { position: relative; padding-left: 18px; font-size: 0.92rem; line-height: 1.35; }
+.review__note::before { content: ''; position: absolute; left: 2px; top: 0.45em; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+.review__note--good::before { background: #3fbf7a; }
+.review__note--warn::before { background: #ffb547; }
+.review__note--bad::before { background: #e0623a; }
+.review__note--info { color: var(--muted); }
+.subguide { margin: 12px 0 4px; }
+.subguide__tiers { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 6px 0 10px; }
+.subguide__tier { display: inline-flex; align-items: center; gap: 6px; }
+.subguide__gt { color: var(--muted); }
+.subguide__chip { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 0.85rem; font-weight: 600; }
+.subguide table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-bottom: 8px; }
+.subguide th, .subguide td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.subguide ul { margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--muted); display: grid; gap: 4px; }
+
+/* Read a code from an image (team builder, Console page). */
+.imgcode { margin-top: 10px; display: grid; gap: 4px; justify-items: start; }
+.imgcode__hint { margin: 0; }

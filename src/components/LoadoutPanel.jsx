@@ -392,6 +392,8 @@ export default function LoadoutPanel({ character: c, loadout, teamLoadouts = {},
                 <CartStatsEditor
                   value={loadout.cartStats}
                   onChange={(v) => onChange({ cartStats: v })}
+                  character={c}
+                  cartridge={loadout.cartridge}
                   idPrefix="lcs"
                 />
                 <StatAdvice character={c} cartridge={loadout.cartridge} />

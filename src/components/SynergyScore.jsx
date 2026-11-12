@@ -13,7 +13,7 @@ const BASE = import.meta.env.BASE_URL;
 
 
 /** Cortado with the rank letter on its face screen. */
-function RankCortado({ rank }) {
+export function RankCortado({ rank }) {
   const stops = RANK_STOPS[rank];
   const mood = MOODS[rank];
   const gid = `syn-grad-${rank === 'S+' ? 'sp' : rank}`;

@@ -3,12 +3,13 @@
 // teams, each loadable into the team builder with everyone's recommended kit).
 import { useState } from 'react';
 import { ARCS, ARC_BY_ID, RECOMMENDED, arcAccess, freeArcs } from '../data/arcs.js';
-import { CARTRIDGE_BY_ID, cartridgesFor } from '../data/gear.js';
+import { CARTRIDGE_BY_ID, cartridgesFor, isPercentStat } from '../data/gear.js';
 import { CHARACTER_CONSOLE, SHAPES } from '../data/console.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { PRESETS, presetLoadouts } from '../data/presets.js';
 import { AWAKENING_ORDER } from '../data/awakeningOrder.js';
-import { bestBuild } from '../data/bestBuild.js';
+import { CART_SUB_S, MODULE_SUB_S, bestBuild } from '../data/bestBuild.js';
+import { favouredStats } from '../data/buildProfiles.js';
 import { analyzeTeam } from '../lib/analyze.js';
 import ArcPlayer from './ArcPlayer.jsx';
 import CartridgeIcon from './CartridgeIcon.jsx';
@@ -29,6 +30,50 @@ export function arcPicks(c) {
   const sig = ARCS.find((a) => a.signature === c.id);
   const ids = [...new Set([sig?.id, ...(RECOMMENDED[c.id] ?? [])])].filter(Boolean);
   return ids.map((id) => ARC_BY_ID[id]).filter(Boolean);
+}
+
+/** How sub stats work for this Esper: what they favour and what a sub stat is worth. */
+function SubstatGuide({ character, cartridge }) {
+  const fav = favouredStats(character, cartridge);
+  const stats = [...fav.subs.keys()];
+  if (!stats.length) return null;
+  const fmt = (st, v) => (v == null ? '—' : isPercentStat(st) ? `${v}%` : `${v}`);
+  return (
+    <details className="subguide">
+      <summary className="micro-title">Sub stats explained</summary>
+      <div className="subguide__tiers" aria-label="Favoured sub stats, most wanted first">
+        {stats.map((st, i) => (
+          <span key={st} className="subguide__tier">
+            {i > 0 && <span className="subguide__gt">›</span>}
+            <span className="subguide__chip">{st}</span>
+          </span>
+        ))}
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Sub stat</th>
+            <th>Cartridge (S-rank)</th>
+            <th>Module Type IV (S-rank)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stats.map((st) => (
+            <tr key={st}>
+              <td>{st}</td>
+              <td>{fmt(st, CART_SUB_S[st])}</td>
+              <td>{fmt(st, MODULE_SUB_S[4][st])}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ul>
+        <li>A Cartridge has 1 main stat and 4 sub stats. Each Console module has its own sub stats, which unlock as it levels.</li>
+        <li>Sub stats on stats {character.name} doesn’t use (like flat DEF on a damage dealer) are wasted; the team builder and My build mark them.</li>
+        <li>Rate your own build in My build: Cortado reviews the Cartridge and module stats.</li>
+      </ul>
+    </details>
+  );
 }
 
 export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
@@ -128,6 +173,7 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
               {n}
             </p>
           ))}
+          <SubstatGuide character={c} cartridge={best.cartridge} />
         </>
       )}
 

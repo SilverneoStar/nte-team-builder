@@ -38,6 +38,7 @@ import { ELEMENTS, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { PASSIVES } from '../data/passives.js';
 import { PRESETS } from '../data/presets.js';
 import { ARC_BY_ID, RECOMMENDED } from '../data/arcs.js';
+import { favouredStats } from '../data/buildProfiles.js';
 import { CARTRIDGE_BY_ID, bonusStats, cartridgesFor } from '../data/gear.js';
 import { consoleStats } from '../data/console.js';
 import { RESONANCES } from '../data/awakenings.js';
@@ -334,11 +335,23 @@ export function synergyScore(memberIds, loadouts = {}) {
         cartFits += 1;
       }
     });
+    // Cartridge sub stats the Esper doesn't favour are wasted: −1 for every 2 (at most −3).
+    let offSubs = 0;
+    team.forEach((c) => {
+      const lo = loadouts[c.id] ?? {};
+      const fav = favouredStats(c, lo.cartridge);
+      const off = (lo.cartStats?.subs ?? []).filter((x) => x?.stat && !fav.subs.has(x.stat)).map((x) => x.stat);
+      if (off.length) {
+        offSubs += off.length;
+        bits.push(`${short(c)}: ${off.join(', ')} ${off.length > 1 ? 'aren’t sub stats they favour' : 'isn’t a sub stat they favour'}`);
+      }
+    });
+    const subCost = Math.min(3, Math.floor(offSubs / 2));
     bits.unshift(`${arcFits} of ${team.length} recommended Arcs`, `${cartFits} of ${team.length} recommended Cartridge sets`);
     parts.push({
       id: 'gear',
       label: 'Gear',
-      points: round(6 * (arcFits / team.length) + 6 * (cartFits / team.length)),
+      points: Math.max(0, round(6 * (arcFits / team.length) + 6 * (cartFits / team.length)) - subCost),
       max: 12,
       detail: bits.join('; '),
     });

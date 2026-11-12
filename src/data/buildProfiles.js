@@ -189,3 +189,21 @@ export function recommendStats(characterOrId, cartridgeId = null) {
   if (!reasons.length) reasons.push(`Follows ${c.name}’s ${c.roles.join(' / ')} role${c.roles.length > 1 ? 's' : ''}.`);
   return { main, subs, reasons, mainOrder, subOrder };
 }
+
+// Stats an Esper favours on a Cartridge (from recommendStats), for the editors'
+// "Rec." marks: { main: Map stat → rank, subs: Map stat → rank, text } (rank 0 = best).
+const favCache = new Map();
+export function favouredStats(characterOrId, cartridgeId = null) {
+  const c = typeof characterOrId === 'string' ? CHARACTER_BY_ID[characterOrId] : characterOrId;
+  if (!c) return null;
+  const key = `${c.id}|${cartridgeId ?? ''}`;
+  if (favCache.has(key)) return favCache.get(key);
+  const r = recommendStats(c, cartridgeId);
+  const out = {
+    main: new Map(r.mainOrder.slice(0, 2).map((s, i) => [s, i])),
+    subs: new Map(r.subs.map((s, i) => [s, i])),
+    text: r.subs.join(' > '),
+  };
+  favCache.set(key, out);
+  return out;
+}

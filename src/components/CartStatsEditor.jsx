@@ -1,14 +1,26 @@
 // Editor for a Cartridge's main and sub attributes.
 import { CARTRIDGE_MAIN_STATS, MODULE_SUB_STATS, isPercentStat } from '../data/gear.js';
+import { favouredStats } from '../data/buildProfiles.js';
 
 // Editor for a Cartridge's 1 main + 4 sub attributes.
-export default function CartStatsEditor({ value, onChange, idPrefix = 'cs' }) {
+// With a character: their favoured stats are listed first and marked Rec., and
+// sub stats they don't use are dimmed.
+export default function CartStatsEditor({ value, onChange, idPrefix = 'cs', character = null, cartridge = null }) {
+  const fav = character ? favouredStats(character, cartridge) : null;
+  const order = (opts, map) =>
+    map ? [...opts].sort((a, b) => (map.has(a) ? map.get(a) : 99) - (map.has(b) ? map.get(b) : 99)) : opts;
   return (
     <div className="cstats">
+      {fav && (
+        <p className="cstats__fav small muted">
+          Favoured sub stats: <b>{fav.text}</b>
+        </p>
+      )}
       <StatRow
         id={`${idPrefix}-main`}
         label="Main"
-        options={CARTRIDGE_MAIN_STATS}
+        rec={fav?.main}
+        options={order(CARTRIDGE_MAIN_STATS, fav?.main)}
         value={value.main}
         onChange={(v) => onChange({ ...value, main: v })}
       />
@@ -18,7 +30,9 @@ export default function CartStatsEditor({ value, onChange, idPrefix = 'cs' }) {
           key={i}
           id={`${idPrefix}-sub-${i}`}
           label={`Sub ${i + 1}`}
-          options={MODULE_SUB_STATS}
+          rec={fav?.subs}
+          off={!!(fav && sub && !fav.subs.has(sub.stat))}
+          options={order(MODULE_SUB_STATS, fav?.subs)}
           value={sub}
           onChange={(v) => onChange({ ...value, subs: value.subs.map((x, j) => (j === i ? v : x)) })}
         />
@@ -28,10 +42,10 @@ export default function CartStatsEditor({ value, onChange, idPrefix = 'cs' }) {
 }
 
 // One attribute: stat picker + value. Empty stat clears the row.
-function StatRow({ id, label, options, value, onChange }) {
+function StatRow({ id, label, options, value, onChange, rec = null, off = false }) {
   const pct = value && isPercentStat(value.stat);
   return (
-    <div className={value ? 'cstat cstat--on' : 'cstat'}>
+    <div className={`${value ? 'cstat cstat--on' : 'cstat'}${off ? ' is-off' : ''}`} title={off ? 'Not one of this character’s favoured stats' : undefined}>
       <label className="cstat__label" htmlFor={id}>
         {label}
       </label>
@@ -44,6 +58,7 @@ function StatRow({ id, label, options, value, onChange }) {
         {options.map((o) => (
           <option key={o} value={o}>
             {o}
+            {rec?.has(o) ? ' · Rec.' : ''}
           </option>
         ))}
       </select>
