@@ -10,7 +10,9 @@ import { AWAKENINGS, MAX_ARC_DUPES } from '../data/awakenings.js';
 import { loadSavedConsoles } from '../lib/consoles.js';
 import { loadMyBuilds, saveMyBuild } from '../lib/myBuilds.js';
 import { loadoutOf } from '../lib/teamsReducer.js';
-import CartStatsEditor from './CartStatsEditor.jsx';
+import CartStatsEditor, { FillValuesButton } from './CartStatsEditor.jsx';
+import { fillCartValues } from '../data/cartValues.js';
+import { suggestedCartStats } from '../data/consoleBuilds.js';
 import CartridgeIcon from './CartridgeIcon.jsx';
 import { MiniBoard } from './ConsolePage.jsx';
 import ExportIcon from './ExportIcon.jsx';
@@ -239,10 +241,27 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
         </div>
       )}
 
-      <p className="mini-title mybuild__sub">
-        Cartridge stats <span>1 main · 4 sub</span>
-      </p>
-      <CartStatsEditor value={build.cartStats} onChange={(v) => set({ cartStats: v })} character={c} cartridge={build.cartridge} idPrefix="mb" />
+      <div className="cstats-head mybuild__sub">
+        <p className="mini-title">
+          Cartridge stats <span>1 main · 4 sub</span>
+        </p>
+        <button
+          type="button"
+          className="btn btn--quiet"
+          onClick={() => set({ cartStats: fillCartValues(build.cartStats, suggestedCartStats(c, build.cartridge)) })}
+        >
+          Use suggested stats
+        </button>
+        <FillValuesButton value={build.cartStats} onChange={(v) => set({ cartStats: v })} />
+      </div>
+      <CartStatsEditor
+        fillButton={false}
+        value={build.cartStats}
+        onChange={(v) => set({ cartStats: v })}
+        character={c}
+        cartridge={build.cartridge}
+        idPrefix="mb"
+      />
 
       <GearStats
         character={c}

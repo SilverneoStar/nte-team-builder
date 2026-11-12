@@ -7803,3 +7803,5 @@ th[aria-sort='descending'] .th-btn {
 .cstats__top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
 .cstats__top .cstats__fav { margin: 0; }
 .console-fill { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 8px 0; }
+.cstats-head { flex-wrap: wrap; }
+.cstats-head > .mini-title { margin-right: auto; }

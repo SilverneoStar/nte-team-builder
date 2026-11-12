@@ -10,7 +10,7 @@ import { fillCartValues } from '../data/cartValues.js';
 import { suggestedBuild, suggestedCartStats } from '../data/consoleBuilds.js';
 import StatAdvice from './StatAdvice.jsx';
 import { loadSavedConsoles } from '../lib/consoles.js';
-import CartStatsEditor from './CartStatsEditor.jsx';
+import CartStatsEditor, { FillValuesButton } from './CartStatsEditor.jsx';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import Portrait from './Portrait.jsx';
 import RankBadge from './RankBadge.jsx';
@@ -388,8 +388,10 @@ export default function LoadoutPanel({ character: c, loadout, teamLoadouts = {},
                   >
                     Use suggested stats
                   </button>
+                  <FillValuesButton value={loadout.cartStats} onChange={(v) => onChange({ cartStats: v })} />
                 </div>
                 <CartStatsEditor
+                  fillButton={false}
                   value={loadout.cartStats}
                   onChange={(v) => onChange({ cartStats: v })}
                   character={c}
