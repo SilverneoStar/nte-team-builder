@@ -29,7 +29,7 @@ const fl = (n) => Math.floor(n + 1e-6);
  * LEVEL_STEPS ('80', '70+', …). Returns null without level data, else
  * { rows: [{ stat, base, total, pct }], other: [{ stat, value }] }.
  */
-export function computeStats(character, gear = {}, level = '80') {
+export function computeStats(character, gear = {}, level = '80', { abilityBonus = false } = {}) {
   const table = levelStats(character.id);
   if (!table) return null;
   const at = table.rows.find((r) => r.level === level) ?? table.rows.at(-1);
@@ -40,8 +40,10 @@ export function computeStats(character, gear = {}, level = '80') {
       b.value,
     ]),
   );
-  // The character's own bonuses (data/maxStats.js ABILITY_BONUS).
-  for (const [stat, v] of Object.entries(ABILITY_BONUS[character.id] ?? {})) bonus.set(stat, (bonus.get(stat) ?? 0) + v);
+  // The character's own bonuses (data/maxStats.js ABILITY_BONUS): they come
+  // with progress (not every player has them), so only when asked.
+  if (abilityBonus)
+    for (const [stat, v] of Object.entries(ABILITY_BONUS[character.id] ?? {})) bonus.set(stat, (bonus.get(stat) ?? 0) + v);
   if (arc) {
     // Arc secondary stat (its base ATK is handled below).
     for (const b of bonusStats(arc, null)) if (b.stat !== 'ATK') bonus.set(b.stat, (bonus.get(b.stat) ?? 0) + b.value);

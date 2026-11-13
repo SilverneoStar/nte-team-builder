@@ -4,14 +4,17 @@ import { computeStats } from '../lib/statCalc.js';
 import { LEVEL_STEPS } from '../data/levelStats.js';
 import { formatStat } from '../data/gear.js';
 import { fmt } from '../lib/format.js';
+import { ABILITY_BONUS } from '../data/maxStats.js';
 
 const NAMES = { 'DMG%': 'DMG Bonus' };
 const show = (row, v) => (row.pct ? `${Number.isInteger(v) ? v : v.toFixed(1)}%` : fmt(v));
 
 export default function GearStats({ character: c, gear, title = 'Stats with this gear' }) {
   const [level, setLevel] = useState('80');
+  const [withAbility, setWithAbility] = useState(false);
   if (c.upcoming) return null;
-  const s = computeStats(c, gear, level);
+  const ab = ABILITY_BONUS[c.id];
+  const s = computeStats(c, gear, level, { abilityBonus: withAbility });
   if (!s)
     return (
       <section className="gear-totals" aria-label={title}>
@@ -39,6 +42,15 @@ export default function GearStats({ character: c, gear, title = 'Stats with this
           </select>
         </label>
       </div>
+      {ab && (
+        <label className="gear-totals__ability">
+          <input type="checkbox" checked={withAbility} onChange={(e) => setWithAbility(e.target.checked)} />
+          <span>
+            Count {c.name}’s own bonuses ({Object.entries(ab).map(([st, v]) => formatStat(st, v)).join(', ')})
+            <span className="muted small"> · they come with progress, so tick this if your bare in-game stats show them</span>
+          </span>
+        </label>
+      )}
       <table className="gear-totals__table">
         <thead>
           <tr>

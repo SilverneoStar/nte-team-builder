@@ -55,10 +55,12 @@ const MEASURED = {
   elyms: s(15392, 666, 921, { critRate: 5, critDmg: 64, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
 };
 
-// Bonuses a character has with nothing equipped, on top of the level tables
-// (the game shows them as the green "+" on bare stats; most likely Esper
-// Ability nodes). Counted as flat until a screen with an Arc shows whether
-// the ATK and DEF parts are percentages.
+// Bonuses a character can have with nothing equipped, on top of the level
+// tables (the game shows them as the green "+" on bare stats). They come with
+// progress, most likely Esper Ability nodes: a player without them sees 14%
+// less CRIT DMG on Elyms (Nov 2026). So the stat totals add them only when
+// the player ticks the box. Counted as flat until a screen with an Arc shows
+// whether the ATK and DEF parts are percentages.
 export const ABILITY_BONUS = {
   elyms: { ATK: 6, DEF: 12, 'CRIT DMG': 14 },
 };
