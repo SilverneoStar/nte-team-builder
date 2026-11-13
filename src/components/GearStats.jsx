@@ -12,7 +12,16 @@ export default function GearStats({ character: c, gear, title = 'Stats with this
   const [level, setLevel] = useState('80');
   if (c.upcoming) return null;
   const s = computeStats(c, gear, level);
-  if (!s) return null;
+  if (!s)
+    return (
+      <section className="gear-totals" aria-label={title}>
+        <p className="mini-title">{title}</p>
+        <p className="muted small">
+          {c.name}’s base HP, ATK and DEF aren’t on the site yet, so the totals can’t be worked out. They’ll show
+          here once they’re added.
+        </p>
+      </section>
+    );
   return (
     <section className="gear-totals" aria-label={title}>
       <div className="gear-totals__head">

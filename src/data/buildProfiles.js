@@ -49,6 +49,9 @@ export const BUILD_PROFILES = {
     instantCycle: true,
     focus: 'own-damage-buffer',
     note: 'Instant Cycle, so Cycle Intensity isn’t needed. Her team ATK buff scales off her Base ATK (character + Arc), which gear ATK% doesn’t raise, so build her own hits: Cosmos DMG and CRIT. Speedy Hedgehog’s 4-piece adds another team ATK +15%.',
+    // Player feedback (Nov 2026): with her signature or another CRIT Rate Arc
+    // her CRIT Rate gets near 90% without a CRIT Rate main stat.
+    altMain: ['CRIT DMG', 'With her signature Arc (or another CRIT Rate Arc) her CRIT Rate can reach about 90% without a CRIT Rate main stat, so a CRIT DMG main stat works well too.'],
   },
   // Pre-release (1.5 preview stream tags): an early pick until the kit is out.
   exe: {
@@ -187,7 +190,8 @@ export function recommendStats(characterOrId, cartridgeId = null) {
   if (useGuide) reasons.splice(0, reasons.length, ...reasons.filter((r) => r === profile.note || r.startsWith('Recommended priority')));
   for (const [stat, text] of useGuide ? [] : tied) if (main === stat || subs.includes(stat)) reasons.push(text);
   if (!reasons.length) reasons.push(`Follows ${c.name}’s ${c.roles.join(' / ')} role${c.roles.length > 1 ? 's' : ''}.`);
-  return { main, subs, reasons, mainOrder, subOrder };
+  if (profile.altMain) reasons.push(profile.altMain[1]);
+  return { main, subs, reasons, mainOrder, subOrder, altMain: profile.altMain?.[0] ?? null };
 }
 
 // Stats an Esper favours on a Cartridge (from recommendStats), for the editors'
@@ -200,7 +204,8 @@ export function favouredStats(characterOrId, cartridgeId = null) {
   if (favCache.has(key)) return favCache.get(key);
   const r = recommendStats(c, cartridgeId);
   const out = {
-    main: new Map(r.mainOrder.slice(0, 2).map((s, i) => [s, i])),
+    // The top two main stats, plus a profile's alternative (rank 1: as good as the second).
+    main: new Map([...r.mainOrder.slice(0, 2).map((s, i) => [s, i]), ...(r.altMain && !r.mainOrder.slice(0, 2).includes(r.altMain) ? [[r.altMain, 1]] : [])]),
     subs: new Map(r.subs.map((s, i) => [s, i])),
     text: r.subs.join(' > '),
   };

@@ -18,6 +18,10 @@ import { levelStats } from '../data/levelStats.js';
 
 const BASE_CRIT = { 'CRIT Rate': 5, 'CRIT DMG': 50 };
 const r2 = (n) => Math.round(n * 100) / 100;
+// The game drops the fraction on HP, ATK and DEF (player-checked: rounding
+// came out 1 above the game). The tiny nudge keeps float error from flooring
+// a whole number down.
+const fl = (n) => Math.floor(n + 1e-6);
 
 /**
  * gear: { arc (id), cartStats, pieces, cartridge }. level: a step from
@@ -47,14 +51,14 @@ export function computeStats(character, gear = {}, level = '80') {
   const el = `${ELEMENT_BY_ID[character.element]?.name} DMG%`;
 
   const rows = [
-    { stat: 'HP', base: at.hp, total: Math.round(at.hp * (1 + take('HP%') / 100) + take('HP')) },
+    { stat: 'HP', base: at.hp, total: fl(at.hp * (1 + take('HP%') / 100) + take('HP')) },
     {
       // Like the game's Attributes screen: base ATK includes the Arc's ATK.
       stat: 'ATK',
       base: at.atk + (arc?.atk ?? 0),
-      total: Math.round((at.atk + (arc?.atk ?? 0)) * (1 + take('ATK%') / 100) + take('ATK')),
+      total: fl((at.atk + (arc?.atk ?? 0)) * (1 + take('ATK%') / 100) + take('ATK')),
     },
-    { stat: 'DEF', base: at.def, total: Math.round(at.def * (1 + take('DEF%') / 100) + take('DEF')) },
+    { stat: 'DEF', base: at.def, total: fl(at.def * (1 + take('DEF%') / 100) + take('DEF')) },
     ...['CRIT Rate', 'CRIT DMG'].map((s) => ({ stat: s, base: BASE_CRIT[s], total: r2(BASE_CRIT[s] + take(s)), pct: true })),
     { stat: el, base: 0, total: r2(take(el)), pct: true },
     { stat: 'DMG%', base: 0, total: r2(take('DMG%') + take('Universal DMG%')), pct: true },
