@@ -15,6 +15,7 @@ import { bonusStats } from '../data/gear.js';
 import { consoleStats } from '../data/console.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { levelStats } from '../data/levelStats.js';
+import { ABILITY_BONUS } from '../data/maxStats.js';
 
 const BASE_CRIT = { 'CRIT Rate': 5, 'CRIT DMG': 50 };
 const r2 = (n) => Math.round(n * 100) / 100;
@@ -39,6 +40,8 @@ export function computeStats(character, gear = {}, level = '80') {
       b.value,
     ]),
   );
+  // The character's own bonuses (data/maxStats.js ABILITY_BONUS).
+  for (const [stat, v] of Object.entries(ABILITY_BONUS[character.id] ?? {})) bonus.set(stat, (bonus.get(stat) ?? 0) + v);
   if (arc) {
     // Arc secondary stat (its base ATK is handled below).
     for (const b of bonusStats(arc, null)) if (b.stat !== 'ATK') bonus.set(b.stat, (bonus.get(b.stat) ?? 0) + b.value);

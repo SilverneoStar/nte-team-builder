@@ -50,6 +50,17 @@ const MEASURED = {
   iroi: s(17210, 596, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   zankou: s(15514, 660, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
   jiuyuan: s(15635, 652, 909, { critRate: 5, critDmg: 50, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
+  // Bare Level 80 Attributes screen (project owner, Nov 2026): 15,392 HP,
+  // 660 + 6 ATK, 909 + 12 DEF, CRIT DMG 64% (the + parts: ABILITY_BONUS).
+  elyms: s(15392, 666, 921, { critRate: 5, critDmg: 64, charge: 100, cycle: 0, breakInt: 0, universal: 0 }),
+};
+
+// Bonuses a character has with nothing equipped, on top of the level tables
+// (the game shows them as the green "+" on bare stats; most likely Esper
+// Ability nodes). Counted as flat until a screen with an Arc shows whether
+// the ATK and DEF parts are percentages.
+export const ABILITY_BONUS = {
+  elyms: { ATK: 6, DEF: 12, 'CRIT DMG': 14 },
 };
 
 // Estimated Level 80 HP, ATK and DEF for characters without in-game values yet,
