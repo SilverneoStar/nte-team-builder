@@ -177,7 +177,7 @@ export function metalStrip(ctx, x, y, w, h, color, vertical = false) {
  * The art fills the frame width and is cropped from the top.
  */
 // Portraits painted on their own background (no transparency): always fill the frame.
-const OPAQUE_PORTRAITS = new Set(['blackbird', 'ellie', 'nitsa']);
+const OPAQUE_PORTRAITS = new Set(['blackbird', 'ellie']);
 const faded = new WeakMap();
 /** The portrait with its left and right edges faded out (cached per image). */
 function fadedSides(img) {

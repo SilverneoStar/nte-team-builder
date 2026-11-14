@@ -52,7 +52,7 @@ const UPDATED = {
   'zero-female': 2,
   elyms: 2,
   exe: 2,
-  nitsa: 2, // official drip-marketing art (Nov 14, 2026)
+  nitsa: 3, // official drip-marketing art, cut out (Nov 14, 2026)
 };
 /** File name and version of a character's portrait, e.g. "shinku.webp?v=2". */
 export const portraitPath = (id) => {
