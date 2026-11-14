@@ -32,6 +32,27 @@ const LINKS = [
     ),
   },
   {
+    id: 'instagram',
+    label: 'Instagram',
+    handle: '@ssn_cortado',
+    href: 'https://www.instagram.com/ssn_cortado/',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <path d="M17.5 6.5h.01" />
+      </svg>
+    ),
+  },
+  {
     // A plain chat bubble rather than the Discord logo, as in the rest of the brand.
     id: 'discord',
     label: 'Discord',
