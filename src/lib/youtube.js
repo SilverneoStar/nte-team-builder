@@ -99,10 +99,11 @@ export function usePlaylistPlayer(hostRef, ids) {
           host: 'https://www.youtube-nocookie.com',
           width: '100%',
           height: '100%',
-          videoId: ids[0],
-          playerVars: { playlist: ids.slice(1).join(','), playsinline: 1, rel: 0, modestbranding: 1 },
+          playerVars: { playsinline: 1, rel: 0, modestbranding: 1 },
           events: {
-            onReady: () => {
+            onReady: (e) => {
+              // The whole list, starting at song 1.
+              e.target.cuePlaylist(ids, 0);
               sync({ ready: true });
               // Catch track changes YouTube doesn't announce (ads, its own buttons).
               poll = setInterval(() => sync(), 1500);

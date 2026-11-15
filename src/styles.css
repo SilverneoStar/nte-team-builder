@@ -8034,7 +8034,7 @@ th[aria-sort='descending'] .th-btn {
 }
 /* YouTube's own player stays visible (its rules ask for at least 200 x 200). */
 .music__screen {
-  width: min(100%, 480px);
+  width: min(100%, 356px);
   aspect-ratio: 16 / 9;
   min-height: 200px;
   border-radius: 10px;
