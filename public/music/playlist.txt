@@ -7,10 +7,8 @@
 # - Lines starting with # are notes and are skipped.
 # - Some labels block their songs on other sites; the room skips those and
 #   shows them with a link to play on YouTube instead.
-# - YouTube plays at most 200 songs in one list, so keep it to 200.
 #
 # Songs from the official NTE10AM channel on YouTube.
-
 
 [Timetrial]
 Timetrial (feat. DUJU) | https://youtu.be/BYqZZx0lN3U
@@ -35,6 +33,31 @@ Whatever It Says (Instrumental) | https://youtu.be/wIT2FUrxKuA
 [BEAST!]
 BEAST! (feat. Mia Wang) | https://youtu.be/Tn2bF7dnhvg
 BEAST! (Instrumental) | https://youtu.be/5jO4v5nQQaM
+
+[Chains of the Dark]
+Chains of the Dark (feat. Josh Paulino) | https://youtu.be/0on4bsSoQu0
+Chains of the Dark (Instrumental) | https://youtu.be/j0y69Mo1Rtg
+
+[Out Of Sync]
+Out Of Sync (feat. 李天姿) | https://youtu.be/7r7B_29TGHM
+Out Of Sync (Chinese Ver.) (feat. 李天姿) | https://youtu.be/aeW0j2hjTyg
+Out Of Sync (Instrumental) | https://youtu.be/5UPsTsVNJNY
+
+[Afterglow]
+Afterglow (feat. saewool) | https://youtu.be/ez9Pyv4Zxj0
+Afterglow (Instrumental) | https://youtu.be/D3a_bgOsVoE
+
+[Magical Lights]
+Magical Lights (feat. ELLY.K) | https://youtu.be/hcH_-DxnAaA
+Magical Lights (Instrumental) | https://youtu.be/3FcJCWlAf5M
+
+[Champion!]
+Champion! (feat. Shabel Tonya) | https://youtu.be/oBQ9TTiPflQ
+Champion! (Instrumental) | https://youtu.be/XAyWSk8D3O8
+
+[Round and Round]
+Round and Round (feat. Shabel Tonya) | https://youtu.be/y_dvRXn3Cv0
+Round and Round (Instrumental) | https://youtu.be/pBV05qeo--c
 
 [Here we are again]
 Here we are again (feat. CielA) | https://youtu.be/fHhCFHeU71o

@@ -268,8 +268,7 @@ export default function MusicRoom() {
       dead = true;
     };
   }, []);
-  const ids = useMemo(() => (songs ?? []).map((x) => x.id), [songs]);
-  const yt = usePlaylistPlayer(host, ids);
+  const yt = usePlaylistPlayer(host, songs ?? []);
   const song = songs?.[yt.index] ?? null;
   const current = song?.id ?? null;
   const title = song?.name || yt.title;
