@@ -1,11 +1,51 @@
 # Matcha's listening room: the playlist (Neverness to Everness)
 #
 # One song per line:   Song name | YouTube link
-# - Songs play in this order. Copy a link from YouTube's Share button.
+# - Songs play in this order. A link from YouTube's Share button works, or just the video id.
 # - The name is optional: with only a link, the room shows YouTube's title.
+# - [Album name] on its own line starts a new album heading.
 # - Lines starting with # are notes and are skipped.
 # - Some labels block their songs on other sites; the room skips those and
 #   shows them with a link to play on YouTube instead.
+# - YouTube plays at most 200 songs in one list, so keep it to 200.
 #
-# Example (remove the # to use it):
-# Main Theme | https://youtu.be/XXXXXXXXXXX
+# Songs from the official NTE10AM channel on YouTube.
+
+
+[Here we are again]
+Here we are again (feat. CielA) | https://youtu.be/fHhCFHeU71o
+Here we are again (Instrumental) | https://youtu.be/Myxs4F1X9gQ
+
+[Tonight's Special FM88.6]
+Tide Gravity | https://youtu.be/N2GerygrjQs
+Day Dream | https://youtu.be/EeG5ROp1sls
+Drowning | https://youtu.be/wJa2QucBJlA
+Wandering In The Night | https://youtu.be/QCvyLPrK-Fo
+Mission Eleven | https://youtu.be/yMhiSJg17d8
+Ride (feat. 澄海伯伯) | https://youtu.be/B9CP66K1PTY
+Dream Land (feat. 路有依) | https://youtu.be/fGp6ldHXEHc
+NightRun | https://youtu.be/mNVKAbfcsec
+The Song Of Nightingale (feat. Kiva) | https://youtu.be/rUD2nIvq1pM
+Elysium | https://youtu.be/oEERAB_pvr0
+Chandelier | https://youtu.be/6HwJ08bHcJE
+
+[100% Crimson Solver]
+100% Crimson Solver (feat. Mood & Feel) | https://youtu.be/K8OOJ8gpXTA
+100% Crimson Solver (Instrumental) | https://youtu.be/RDXH8kusoKc
+Crimson Lullaby (feat. Azuki Shu) | https://youtu.be/hlUSjxVcRfE
+Crimson Lullaby (Instrumental) | https://youtu.be/Lla7fLRnA24
+
+[Play On!]
+Play on! (English Ver.) (feat. mill) | https://youtu.be/O9w-xR3Dp58
+Play on! (Chinese Ver.) (feat. R.E.D) | https://youtu.be/JVmnbFGSWM8
+Play on! (Japanese Ver.) (feat. Reol) | https://youtu.be/qif6Y9Bm4O0
+Play on! (Korean Ver.) (feat. Raon) | https://youtu.be/gzxCPSePO2E
+Play on! (Instrumental) | https://youtu.be/EykWRfj1pyM
+
+[Letters to me]
+Letters to me (feat. 长谷川育美) | https://youtu.be/l_ZvYmY9Ybo
+Letters to me (Instrumental) | https://youtu.be/S5cbM9UarBw
+
+[Morning Star and the Sea]
+Morning Star and the Sea (feat. 长谷川育美) | https://youtu.be/zzmrOcERn-g
+Morning Star and the Sea (Instrumental) | https://youtu.be/AfPHu-tPyW4

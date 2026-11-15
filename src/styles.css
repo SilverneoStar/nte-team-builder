@@ -8103,6 +8103,16 @@ th[aria-sort='descending'] .th-btn {
   color: var(--muted);
   text-align: right;
 }
+.music__album {
+  margin: 14px 0 6px;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.music__list .music__h + .muted {
+  margin: -6px 0 6px;
+}
 .music__name {
   display: grid;
   font-weight: 600;

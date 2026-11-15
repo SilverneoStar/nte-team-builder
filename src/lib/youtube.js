@@ -38,20 +38,27 @@ export function videoId(link) {
 
 /**
  * The songs in a playlist text file: one per line, "Song name | link" (the
- * name can be left out). Blank lines and lines starting with # are skipped.
+ * name can be left out). "[Album]" on its own line heads the songs after it.
+ * Blank lines and lines starting with # are skipped.
  */
 export function parsePlaylist(text) {
-  return (text ?? '')
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith('#'))
-    .map((line) => {
-      const bar = line.lastIndexOf('|');
-      const name = bar >= 0 ? line.slice(0, bar).trim() : '';
-      const id = videoId(bar >= 0 ? line.slice(bar + 1) : line);
-      return id ? { id, name } : null;
-    })
-    .filter(Boolean);
+  let album = '';
+  const songs = [];
+  for (const raw of (text ?? '').split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const head = line.match(/^\[(.+)\]$/);
+    if (head) {
+      album = head[1].trim();
+      continue;
+    }
+    const bar = line.lastIndexOf('|');
+    const name = bar >= 0 ? line.slice(0, bar).trim() : '';
+    const id = videoId(bar >= 0 ? line.slice(bar + 1) : line);
+    if (id) songs.push({ id, name, album });
+  }
+  // YouTube's player takes at most 200 videos in one list.
+  return songs.slice(0, 200);
 }
 
 /**

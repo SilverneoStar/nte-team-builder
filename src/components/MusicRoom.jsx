@@ -129,7 +129,11 @@ export default function MusicRoom() {
             'Loading the player…'
           )}
         </p>
-        {yt.author && <p className="muted small music__artist">{yt.author.replace(/ - Topic$/, '')}</p>}
+        {(song?.album || yt.author) && (
+          <p className="muted small music__artist">
+            {[song?.album, yt.author.replace(/ - Topic$/, '')].filter(Boolean).join(' · ')}
+          </p>
+        )}
         <div className="music__controls">
           <button
             type="button"
@@ -164,11 +168,14 @@ export default function MusicRoom() {
       {songs?.length > 0 && (
         <section className="music__list" aria-label="Playlist">
           <h3 className="music__h">Playlist</h3>
+          <p className="muted small">{songs.length} songs</p>
           <ol className="music__tracks">
             {songs.map((x, i) => {
               const blocked = yt.blocked.includes(x.id);
+              const heading = x.album && x.album !== songs[i - 1]?.album;
               return (
                 <li key={`${x.id}-${i}`}>
+                  {heading && <h4 className="music__album">{x.album}</h4>}
                   {blocked ? (
                     <a
                       className="music__track is-blocked"
