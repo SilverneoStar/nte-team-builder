@@ -1,0 +1,11 @@
+# Matcha's listening room: the playlist (Neverness to Everness)
+#
+# One song per line:   Song name | YouTube link
+# - Songs play in this order. Copy a link from YouTube's Share button.
+# - The name is optional: with only a link, the room shows YouTube's title.
+# - Lines starting with # are notes and are skipped.
+# - Some labels block their songs on other sites; the room skips those and
+#   shows them with a link to play on YouTube instead.
+#
+# Example (remove the # to use it):
+# Main Theme | https://youtu.be/XXXXXXXXXXX

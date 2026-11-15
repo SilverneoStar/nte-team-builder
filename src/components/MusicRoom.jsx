@@ -1,22 +1,21 @@
 // The hidden listening room: Matcha peeks out on the Arcs page, and tapping
 // her opens this page. The game's official soundtrack plays through YouTube's
-// own embedded player (the NTE10AM channel's uploads), the track's cover sits
+// own embedded player (the songs listed in public/music/playlist.txt), the track's cover sits
 // in an Arc player whose disc spins, and Cortado and Matcha bop along.
 //
 // The beat bar can't hear the music (a page can't read sound from YouTube's
 // player), so it pulses at a steady tempo while a track plays.
-import { useRef, useState } from 'react';
-import { thumb, usePlaylistPlayer } from '../lib/youtube.js';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { parsePlaylist, thumb, usePlaylistPlayer } from '../lib/youtube.js';
 import { navigate } from '../lib/route.js';
 
 const BASE = import.meta.env.BASE_URL;
-// NTE10AM - Topic: the official Neverness to Everness soundtrack channel. UU… is its uploads.
-const PLAYLIST = 'UUSCFh5RDT1SI2Ko7t6o9Nrg';
+// The songs: public/music/playlist.txt, one per line as "Song name | YouTube link".
+const LIST_FILE = `${BASE}music/playlist.txt`;
 const CHANNEL = 'https://www.youtube.com/channel/UCSCFh5RDT1SI2Ko7t6o9Nrg';
 // The Arc's disc changes colour from track to track.
 const TYPES = ['liquid', 'plasma', 'condensate', 'solid', 'gas'];
 const BARS = 28;
-const PAGE = 24;
 
 /** A track's cover: the square in the middle of its thumbnail. */
 function Cover({ id, className = '' }) {
@@ -68,9 +67,22 @@ const SHUFFLE =
 
 export default function MusicRoom() {
   const host = useRef(null);
-  const yt = usePlaylistPlayer(host, PLAYLIST);
-  const [shown, setShown] = useState(PAGE);
-  const current = yt.ids[yt.index] ?? null;
+  const [songs, setSongs] = useState(null);
+  useEffect(() => {
+    let dead = false;
+    fetch(LIST_FILE, { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.text() : ''))
+      .catch(() => '')
+      .then((t) => !dead && setSongs(parsePlaylist(t)));
+    return () => {
+      dead = true;
+    };
+  }, []);
+  const ids = useMemo(() => (songs ?? []).map((x) => x.id), [songs]);
+  const yt = usePlaylistPlayer(host, ids);
+  const song = songs?.[yt.index] ?? null;
+  const current = song?.id ?? null;
+  const title = song?.name || yt.title;
 
   return (
     <div className={`page music${yt.playing ? ' is-playing' : ''}`}>
@@ -107,8 +119,10 @@ export default function MusicRoom() {
         <p className="music__title" aria-live="polite">
           {yt.error ? (
             <span className="field__error">{yt.error}</span>
-          ) : yt.title ? (
-            yt.title
+          ) : songs && !songs.length ? (
+            'No songs in the playlist yet'
+          ) : title ? (
+            title
           ) : yt.ready ? (
             'Press play to start'
           ) : (
@@ -147,32 +161,45 @@ export default function MusicRoom() {
         <div className="music__screen" ref={host} />
       </section>
 
-      {yt.ids.length > 0 && (
-        <section className="music__list" aria-label="Tracks">
-          <h3 className="music__h">Tracks</h3>
-          <ul className="music__tracks">
-            {yt.ids.slice(0, shown).map((id, i) => (
-              <li key={id}>
-                <button
-                  type="button"
-                  className={`music__track${i === yt.index ? ' is-on' : ''}`}
-                  onClick={() => yt.playAt(i)}
-                  aria-label={`Play track ${i + 1}${i === yt.index ? ' (playing)' : ''}`}
-                  aria-current={i === yt.index ? 'true' : undefined}
-                >
-                  <span className="music-cover">
-                    <img src={thumb(id, 'mq')} alt="" loading="lazy" decoding="async" />
-                  </span>
-                  <span className="music__num">{i + 1}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          {shown < yt.ids.length && (
-            <button type="button" className="btn" onClick={() => setShown((n) => n + PAGE)}>
-              Show more ({yt.ids.length - shown} left)
-            </button>
-          )}
+      {songs?.length > 0 && (
+        <section className="music__list" aria-label="Playlist">
+          <h3 className="music__h">Playlist</h3>
+          <ol className="music__tracks">
+            {songs.map((x, i) => {
+              const blocked = yt.blocked.includes(x.id);
+              return (
+                <li key={`${x.id}-${i}`}>
+                  {blocked ? (
+                    <a
+                      className="music__track is-blocked"
+                      href={`https://www.youtube.com/watch?v=${x.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="music__num">{i + 1}</span>
+                      <Cover id={x.id} className="music__thumb" />
+                      <span className="music__name">
+                        {x.name || `Song ${i + 1}`}
+                        <span className="muted small">Only plays on YouTube: open it there</span>
+                      </span>
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      className={`music__track${i === yt.index ? ' is-on' : ''}`}
+                      onClick={() => yt.playAt(i)}
+                      disabled={!yt.ready}
+                      aria-current={i === yt.index ? 'true' : undefined}
+                    >
+                      <span className="music__num">{i + 1}</span>
+                      <Cover id={x.id} className="music__thumb" />
+                      <span className="music__name">{x.name || (i === yt.index && yt.title) || `Song ${i + 1}`}</span>
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
         </section>
       )}
     </div>
