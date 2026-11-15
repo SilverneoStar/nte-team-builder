@@ -65,6 +65,147 @@ const PREV = 'M18 6l-8.5 6L18 18zM6 6h2v12H6z';
 const SHUFFLE =
   'M16 3h5v5l-1.8-1.8-4.4 4.4-1.4-1.4 4.4-4.4zM3 5.4 4.4 4l15.6 15.6V16h1v5h-5v-1h3.6zM9.6 13l1.4 1.4-6.6 6.6L3 19.6z';
 
+/** The songs grouped by album, in file order: [{ name, start, songs }]. */
+function albumsOf(songs) {
+  const out = [];
+  songs.forEach((x, i) => {
+    const last = out[out.length - 1];
+    if (last && last.name === x.album) last.songs.push(x);
+    else out.push({ name: x.album || 'Songs', start: i, songs: [x] });
+  });
+  return out;
+}
+
+/**
+ * Albums in a swipeable carousel; the chosen album's songs below it, which can
+ * be folded away. Follows the album that's playing until the reader picks one.
+ */
+function Playlist({ songs, yt }) {
+  const albums = useMemo(() => albumsOf(songs), [songs]);
+  const playingAlbum = albums.findIndex((a) => yt.index >= a.start && yt.index < a.start + a.songs.length);
+  const [picked, setPicked] = useState(null);
+  const [open, setOpen] = useState(true);
+  const shown = picked ?? Math.max(0, playingAlbum);
+  const album = albums[shown];
+  const rail = useRef(null);
+  const slide = (dir) => {
+    const r = rail.current;
+    if (r) r.scrollBy({ left: dir * r.clientWidth * 0.8, behavior: 'smooth' });
+  };
+  // Keep the playing album in view in the carousel.
+  useEffect(() => {
+    if (picked != null || playingAlbum < 0) return;
+    const el = rail.current?.children[playingAlbum];
+    const r = rail.current;
+    if (el && r) r.scrollTo({ left: el.offsetLeft - r.offsetLeft - 8, behavior: 'smooth' });
+  }, [playingAlbum, picked]);
+
+  return (
+    <section className="music__list" aria-label="Playlist">
+      <div className="music__listhead">
+        <h3 className="music__h">Playlist</h3>
+        <span className="muted small">
+          {albums.length} album{albums.length > 1 ? 's' : ''} · {songs.length} songs
+        </span>
+      </div>
+
+      {albums.length > 1 && (
+        <div className="music__carousel">
+          <button type="button" className="music__arrow" onClick={() => slide(-1)} aria-label="Previous albums">
+            ‹
+          </button>
+          <ul className="music__albums" ref={rail}>
+            {albums.map((a, k) => (
+              <li key={`${a.name}-${a.start}`}>
+                <button
+                  type="button"
+                  className={`music__albumcard${k === shown ? ' is-on' : ''}${k === playingAlbum ? ' is-playing' : ''}`}
+                  onClick={() => {
+                    setPicked(k);
+                    setOpen(true);
+                  }}
+                  aria-pressed={k === shown}
+                >
+                  <Cover id={a.songs[0].id} className="music__albumart" />
+                  <span className="music__albumname">{a.name}</span>
+                  <span className="muted small">
+                    {k === playingAlbum ? '♪ Playing · ' : ''}
+                    {a.songs.length} song{a.songs.length > 1 ? 's' : ''}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button type="button" className="music__arrow" onClick={() => slide(1)} aria-label="More albums">
+            ›
+          </button>
+        </div>
+      )}
+
+      {album && (
+        <div className="music__album-songs">
+          <div className="music__albumbar">
+            <strong>{album.name}</strong>
+            <span className="music__albumbtns">
+              <button
+                type="button"
+                className="btn btn--quiet"
+                onClick={() => yt.playAt(album.start)}
+                disabled={!yt.ready}
+              >
+                Play album
+              </button>
+              <button type="button" className="btn btn--quiet" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+                {open ? 'Hide songs' : `Show ${album.songs.length} songs`}
+              </button>
+            </span>
+          </div>
+          {open && (
+            <ol className="music__tracks">
+              {album.songs.map((x, j) => {
+                const i = album.start + j;
+                const blocked = yt.blocked.includes(x.id);
+                const label = x.name || (i === yt.index && yt.title) || `Song ${j + 1}`;
+                return (
+                  <li key={`${x.id}-${i}`}>
+                    {blocked ? (
+                      <a
+                        className="music__track is-blocked"
+                        href={`https://www.youtube.com/watch?v=${x.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span className="music__num">{j + 1}</span>
+                        <Cover id={x.id} className="music__thumb" />
+                        <span className="music__name">
+                          {label}
+                          <span className="muted small">Only plays on YouTube: open it there</span>
+                        </span>
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className={`music__track${i === yt.index ? ' is-on' : ''}`}
+                        onClick={() => yt.playAt(i)}
+                        disabled={!yt.ready}
+                        aria-current={i === yt.index ? 'true' : undefined}
+                      >
+                        <span className="music__num">{i === yt.index && yt.playing ? '♪' : j + 1}</span>
+                        <Cover id={x.id} className="music__thumb" />
+                        <span className="music__name">{label}</span>
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function MusicRoom() {
   const host = useRef(null);
   const [songs, setSongs] = useState(null);
@@ -165,50 +306,7 @@ export default function MusicRoom() {
         <div className="music__screen" ref={host} />
       </section>
 
-      {songs?.length > 0 && (
-        <section className="music__list" aria-label="Playlist">
-          <h3 className="music__h">Playlist</h3>
-          <p className="muted small">{songs.length} songs</p>
-          <ol className="music__tracks">
-            {songs.map((x, i) => {
-              const blocked = yt.blocked.includes(x.id);
-              const heading = x.album && x.album !== songs[i - 1]?.album;
-              return (
-                <li key={`${x.id}-${i}`}>
-                  {heading && <h4 className="music__album">{x.album}</h4>}
-                  {blocked ? (
-                    <a
-                      className="music__track is-blocked"
-                      href={`https://www.youtube.com/watch?v=${x.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <span className="music__num">{i + 1}</span>
-                      <Cover id={x.id} className="music__thumb" />
-                      <span className="music__name">
-                        {x.name || `Song ${i + 1}`}
-                        <span className="muted small">Only plays on YouTube: open it there</span>
-                      </span>
-                    </a>
-                  ) : (
-                    <button
-                      type="button"
-                      className={`music__track${i === yt.index ? ' is-on' : ''}`}
-                      onClick={() => yt.playAt(i)}
-                      disabled={!yt.ready}
-                      aria-current={i === yt.index ? 'true' : undefined}
-                    >
-                      <span className="music__num">{i + 1}</span>
-                      <Cover id={x.id} className="music__thumb" />
-                      <span className="music__name">{x.name || (i === yt.index && yt.title) || `Song ${i + 1}`}</span>
-                    </button>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        </section>
-      )}
+      {songs?.length > 0 && <Playlist songs={songs} yt={yt} />}
     </div>
   );
 }
