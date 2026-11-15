@@ -40,3 +40,15 @@ Team and build images saved from the site carry their code inside the PNG file a
 ## Contact
 
 Rights holders may request changes or removal of any content by [opening an issue](https://github.com/SilverneoStar/nte-team-builder/issues).
+
+## Music (the hidden listening room)
+
+The listening room plays the games' official soundtracks from their official
+YouTube channels in YouTube's own embedded player, using YouTube API Services.
+No audio is copied or hosted here; covers are YouTube's thumbnails of those
+videos. Songs and artwork belong to their owners. Playing music there means
+agreeing to YouTube's Terms of Service (https://www.youtube.com/t/terms);
+YouTube's data use is covered by the Google Privacy Policy
+(https://policies.google.com/privacy), and YouTube may serve ads in its player.
+The site itself stores nothing about what is played.
+

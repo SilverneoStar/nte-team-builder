@@ -352,6 +352,18 @@ export default function MusicRoom() {
           </button>
         </div>
         <div className="music__screen" ref={host} />
+        <p className="muted small music__legal">
+          Music plays in YouTube’s own player through YouTube API Services, and YouTube may show its ads. By playing
+          music here you agree to{' '}
+          <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">
+            YouTube’s Terms of Service
+          </a>
+          , and YouTube handles what it collects under the{' '}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+            Google Privacy Policy
+          </a>
+          . This site keeps nothing about what you play. Songs and covers belong to their owners.
+        </p>
       </section>
 
       {songs?.length > 0 && <Playlist songs={songs} yt={yt} />}

@@ -8314,3 +8314,9 @@ th[aria-sort='descending'] .th-btn {
     animation: none !important;
   }
 }
+
+.music__legal {
+  max-width: 480px;
+  margin: 2px 0 0;
+  line-height: 1.45;
+}
