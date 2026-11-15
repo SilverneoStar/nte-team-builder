@@ -53,6 +53,7 @@ const UPDATED = {
   elyms: 2,
   exe: 2,
   nitsa: 3, // official drip-marketing art, cut out (Nov 14, 2026)
+  ellie: 2, // official drip-marketing art, cut out (Nov 15, 2026)
 };
 /** File name and version of a character's portrait, e.g. "shinku.webp?v=2". */
 export const portraitPath = (id) => {
@@ -65,7 +66,7 @@ export const portraitPath = (id) => {
 // square portrait (the Tall team image) centre on this, so faces aren't cut.
 const FACE_Y = {
   adler: 0.47, akane: 0.42, aurelia: 0.47, baicang: 0.43, blackbird: 0.5, chaos: 0.47, chiz: 0.47,
-  daffodill: 0.43, edgar: 0.52, ellie: 0.55, elyms: 0.64, exe: 0.6, fadia: 0.55, haniel: 0.5,
+  daffodill: 0.43, edgar: 0.52, ellie: 0.6, elyms: 0.64, exe: 0.6, fadia: 0.55, haniel: 0.5,
   hathor: 0.47, hotori: 0.46, iroi: 0.52, jiuyuan: 0.46, lacrimosa: 0.46, linko: 0.5, mint: 0.54,
   nanally: 0.56, nitsa: 0.6, sakiri: 0.55, shinku: 0.5, skia: 0.55, zankou: 0.45,
   'zero-female': 0.52, 'zero-male': 0.5, zero: 0.52,
