@@ -77,12 +77,18 @@ export function usePlaylistPlayer(hostRef, ids) {
     if (!ids.length) return undefined;
     let dead = false;
     let skips = 0;
+    let poll;
     const sync = (patch = {}) => {
       const p = player.current;
       if (!p || dead) return;
-      const index = p.getPlaylistIndex?.() ?? -1;
+      // Go by the video that's actually on: the playlist position can lag behind (after an ad, say).
       const data = p.getVideoData?.() ?? {};
-      setSt((s) => ({ ...s, index, title: data.title || '', author: data.author || '', ...patch }));
+      const at = data.video_id ? ids.indexOf(data.video_id) : -1;
+      const index = at >= 0 ? at : (p.getPlaylistIndex?.() ?? -1);
+      setSt((s) => {
+        const n = { ...s, index, title: data.title || '', author: data.author || '', ...patch };
+        return Object.keys(n).every((k) => n[k] === s[k]) ? s : n;
+      });
     };
     loadYouTubeApi()
       .then((YT) => {
@@ -96,7 +102,11 @@ export function usePlaylistPlayer(hostRef, ids) {
           videoId: ids[0],
           playerVars: { playlist: ids.slice(1).join(','), playsinline: 1, rel: 0, modestbranding: 1 },
           events: {
-            onReady: () => sync({ ready: true }),
+            onReady: () => {
+              sync({ ready: true });
+              // Catch track changes YouTube doesn't announce (ads, its own buttons).
+              poll = setInterval(() => sync(), 1500);
+            },
             onStateChange: (e) => {
               if (e.data === YT.PlayerState.PLAYING) skips = 0;
               sync({ playing: e.data === YT.PlayerState.PLAYING || e.data === YT.PlayerState.BUFFERING });
@@ -104,7 +114,7 @@ export function usePlaylistPlayer(hostRef, ids) {
             // A song its label won't let play outside YouTube: note it and skip it.
             onError: () => {
               const p = player.current;
-              const id = (p?.getPlaylist?.() ?? ids)[p?.getPlaylistIndex?.() ?? 0];
+              const id = p?.getVideoData?.()?.video_id || (p?.getPlaylist?.() ?? ids)[p?.getPlaylistIndex?.() ?? 0];
               setSt((s) => ({ ...s, blocked: s.blocked.includes(id) ? s.blocked : [...s.blocked, id] }));
               if (++skips < ids.length) p?.nextVideo?.();
               else sync({ playing: false, error: 'None of these songs can be played here. They can still be played on YouTube.' });
@@ -115,6 +125,7 @@ export function usePlaylistPlayer(hostRef, ids) {
       .catch((e) => !dead && setSt((s) => ({ ...s, error: e.message })));
     return () => {
       dead = true;
+      clearInterval(poll);
       player.current?.destroy?.();
       player.current = null;
     };
