@@ -8222,13 +8222,13 @@ th[aria-sort='descending'] .th-btn {
     padding: 16px 4px 0;
   }
   .music-arc {
-    width: min(80vw, 330px);
-    margin-bottom: 70px;
+    width: min(74vw, 300px);
+    margin-bottom: 92px;
   }
-  .music__pal {
+  .music__stage .music__pal {
     position: absolute;
     bottom: 50px;
-    width: 92px;
+    width: 84px;
     margin: 0;
   }
   .music__pal--cortado {
