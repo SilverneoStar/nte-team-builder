@@ -8,6 +8,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { parsePlaylist, thumb, usePlaylistPlayer } from '../lib/youtube.js';
 import { navigate } from '../lib/route.js';
+import { Tail } from './Mascot.jsx';
 
 const BASE = import.meta.env.BASE_URL;
 // The songs: public/music/playlist.txt, one per line as "Song name | YouTube link".
@@ -206,6 +207,54 @@ function Playlist({ songs, yt }) {
   );
 }
 
+/**
+ * Cortado in the room. While music plays he's in his chill look: shades on,
+ * tail out and swaying, a hand up and notes drifting. Same 64 x 64 grid as mascot.svg.
+ */
+function Cortado({ chill }) {
+  return (
+    <span className={`music__pal music__pal--cortado music-cortado${chill ? ' is-chill' : ''}`}>
+      {chill && (
+        <svg className="music-cortado__layer" viewBox="0 0 64 64" aria-hidden="true">
+          <g className="music-cortado__tail">
+            <Tail d="M42 50 Q54 52 57 42 Q59.4 34 56 27.6" />
+          </g>
+        </svg>
+      )}
+      <img src={`${BASE}mascot.svg`} alt={chill ? 'Cortado, chilling to the music' : 'Cortado'} />
+      {chill && (
+        <svg className="music-cortado__layer" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="cortado-shades" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#5B3FA8" />
+              <stop offset="0.55" stopColor="#B24FA0" />
+              <stop offset="1" stopColor="#F08A5D" />
+            </linearGradient>
+          </defs>
+          {/* Shades over the eyes */}
+          <g stroke="#1A120D" strokeWidth="0.9" strokeLinejoin="round">
+            <path d="M20.6 30.2 H31 V34 Q31 37.4 27 37.4 H24.4 Q20.6 37.4 20.6 34 Z" fill="url(#cortado-shades)" />
+            <path d="M33 30.2 H43.4 V34 Q43.4 37.4 39.6 37.4 H37 Q33 37.4 33 34 Z" fill="url(#cortado-shades)" />
+            <path d="M31 31.2 Q32 30.4 33 31.2" fill="none" />
+          </g>
+          <path d="M22 31.4 L24.6 31.4 M34.4 31.4 L37 31.4" stroke="#fff" strokeWidth="0.7" strokeLinecap="round" opacity="0.7" />
+          {/* Notes drifting up */}
+          <g className="music-cortado__notes" fill="#2B1D16">
+            <g className="music-cortado__note">
+              <ellipse cx="7" cy="16" rx="1.9" ry="1.4" />
+              <path d="M8.6 16 V8.6 L12 7.6" stroke="#2B1D16" strokeWidth="0.8" fill="none" />
+            </g>
+            <g className="music-cortado__note music-cortado__note--2">
+              <ellipse cx="4" cy="26" rx="1.6" ry="1.2" />
+              <path d="M5.4 26 V20" stroke="#2B1D16" strokeWidth="0.8" fill="none" />
+            </g>
+          </g>
+        </svg>
+      )}
+    </span>
+  );
+}
+
 export default function MusicRoom() {
   const host = useRef(null);
   const [songs, setSongs] = useState(null);
@@ -242,7 +291,7 @@ export default function MusicRoom() {
       </header>
 
       <section className="music__stage" aria-label="Now playing">
-        <img className="music__pal music__pal--cortado" src={`${BASE}mascot.svg`} alt="Cortado" />
+        <Cortado chill={yt.playing} />
         <Disc id={current} playing={yt.playing} index={yt.index} />
         <img
           className="music__pal music__pal--matcha"
