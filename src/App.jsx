@@ -27,6 +27,7 @@ import { lazyPage } from './lib/lazyPage.js';
 // fetched only when it's opened, so the first visit downloads much less.
 const AchievementsPage = lazyPage(() => import('./components/AchievementsPage.jsx'));
 const ArcsPage = lazyPage(() => import('./components/ArcsPage.jsx'));
+const MusicRoom = lazyPage(() => import('./components/MusicRoom.jsx'));
 const CharactersPage = lazyPage(() => import('./components/CharactersPage.jsx'));
 const ConsolePage = lazyPage(() => import('./components/ConsolePage.jsx'));
 const ExportDialog = lazyPage(() => import('./components/ExportDialog.jsx'));
@@ -163,6 +164,7 @@ export default function App() {
         )}
 
         {route.view === 'arcs' && <ArcsPage arcType={route.arcType} arcId={route.arcId} />}
+        {route.view === 'music' && <MusicRoom />}
 
         {route.view === 'achievements' && <AchievementsPage category={route.category} />}
 

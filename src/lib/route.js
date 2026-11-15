@@ -16,6 +16,8 @@ export const VIEWS = [
 
 export function parseHash(hash) {
   const h = (hash || '').replace(/^#/, '');
+  // The hidden listening room (not in the menu: Matcha leads there).
+  if (h === 'music') return { view: 'music' };
   if (h.startsWith('character-')) return { view: 'characters', characterId: h.slice(10) };
   if (h.startsWith('arc-')) return { view: 'arcs', arcId: h.slice(4) };
   if (h.startsWith('arcs-')) return { view: 'arcs', arcType: h.slice(5) };

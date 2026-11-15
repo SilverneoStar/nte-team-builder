@@ -1,4 +1,5 @@
 // The Arcs page: filters, the Arc cards list and the selected Arc's details.
+import MatchaPeek from './MatchaPeek.jsx';
 import { useMemo, useState } from 'react';
 import { ARCS, ARC_BY_ID, FIELD_EFFECTS, RECOMMENDED } from '../data/arcs.js';
 import { ARC_PASSIVES } from '../data/arcPassives.js';
@@ -53,7 +54,8 @@ export default function ArcsPage({ arcType, arcId }) {
 
   return (
     <div className="page">
-      <header className="page__head">
+      <header className="page__head page__head--peek">
+        <MatchaPeek />
         <h2 className="page__title">Arcs</h2>
         <p className="muted">
           {ARCS.length} Arcs. A character can equip any Arc of their Arc type. Select an Arc for its materials and who
