@@ -26,9 +26,10 @@ function inSideScroller(el, stop) {
   return false;
 }
 
-export default function SwipeTabs({ slides, label }) {
+// initial: the id of the slide to open on (e.g. 'mine' from My Espers).
+export default function SwipeTabs({ slides, label, initial }) {
   const uid = useId();
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(() => Math.max(0, slides.findIndex((s) => s.id === initial)));
   const [dir, setDir] = useState(0); // -1 came from the left, 1 from the right
   const rootRef = useRef(null);
   const tabsRef = useRef(null);

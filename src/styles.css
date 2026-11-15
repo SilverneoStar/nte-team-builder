@@ -8320,3 +8320,243 @@ th[aria-sort='descending'] .th-btn {
   margin: 2px 0 0;
   line-height: 1.45;
 }
+
+/* My Espers: saved builds as desktop shortcuts, each rated by Cortado. Ported from the ZZZ site's My Agents. */
+
+/* ---------- My Agents: saved builds as desktop shortcuts ---------- */
+.myagents {
+  display: grid;
+  gap: 18px;
+}
+.myagents__desk {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 1px 1px, var(--band-line) 1px, transparent 1.5px) 0 0 / 18px 18px,
+    var(--surface);
+}
+.myagents__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 32px;
+  margin-bottom: 10px;
+}
+.myagents__sort {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.myagents__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 6px 4px;
+}
+.myagents__icon {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+}
+.myagents__icon:hover,
+.myagents__icon:focus-visible {
+  background: color-mix(in srgb, var(--el) 14%, transparent);
+  border-color: color-mix(in srgb, var(--el) 55%, transparent);
+  outline: none;
+}
+.myagents__icon:active .myagents__art {
+  transform: scale(0.94);
+}
+.myagents__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--el) 30%, var(--surface-2)), var(--surface-2));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--el) 50%, transparent),
+    0 4px 10px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: transform 0.1s ease;
+}
+.myagents__art .portrait {
+  width: 72px;
+  height: 72px;
+  border-radius: 0;
+}
+.myagents__m {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font: 700 0.68rem/1.4 var(--font-mono);
+}
+.myagents__label {
+  display: grid;
+  max-width: 100%;
+  line-height: 1.2;
+}
+.myagents__name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.myagents__build {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.myagents__empty {
+  margin: 8px 0;
+}
+.myagents__add {
+  margin-top: 0;
+}
+.myagents__h {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+}
+.myagents__ways {
+  display: grid;
+  gap: 12px;
+}
+@media (min-width: 720px) {
+  .myagents__ways {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+.myagents__notice {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--good) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--good) 45%, transparent);
+}
+.myagents__found {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+.myagents__found p {
+  margin: 0;
+}
+.myagents__found-row {
+  display: flex;
+  gap: 6px;
+}
+.myagents__found-row .portrait {
+  width: 48px;
+  height: 48px;
+}
+.myagents__pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.myagents__pick-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.myagents__pick-item.is-on {
+  border-color: var(--fg);
+}
+.myagents__pick-item input {
+  margin: 0;
+}
+.qrscan {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.qrscan__view {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+.qrscan__view video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.qrscan__frame {
+  position: absolute;
+  inset: 18%;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.35);
+}
+.qrscan p {
+  margin: 0;
+}
+.myagents__art .portrait {
+  background: none;
+  box-shadow: none;
+}
+.shots { display: grid; gap: 6px; justify-items: start; margin: 10px 0; }
+.shots__hint { margin: 0; }
+.mybuild__starts { display: flex; flex-wrap: wrap; gap: 8px; }
+.mybuild__paste { margin: 0; }
+/* Cortado's rank on each build icon (gradient = the Synergy rank colours). */
+.myespers__rank {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  min-width: 26px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--r1), var(--r2));
+  color: #14151a;
+  font: italic 900 0.82rem/1.35 var(--font-display);
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  border: 1.5px solid rgba(20, 21, 26, 0.75);
+}
+.myespers__ranks { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 10px; vertical-align: middle; }
+.myespers__rankchip {
+  padding: 0 7px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--r1), var(--r2));
+  color: #14151a;
+  font: 700 0.72rem/1.5 var(--font-mono);
+}
+.myespers__how { margin: 10px 0 0; }

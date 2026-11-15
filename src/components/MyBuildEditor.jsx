@@ -74,6 +74,9 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
         pieces: sug.pieces,
         cartridge: sug.cartridge,
       });
+    // A Console brought in from a build image or code (My Espers).
+    if (build.consoleFrom === 'imported')
+      out.push({ id: 'imported', label: 'Imported from a code or image', pieces: build.pieces });
     if (activeTeam?.members.includes(c.id)) {
       const lo = loadoutOf(activeTeam, c.id);
       if (lo.console?.length)
@@ -95,7 +98,7 @@ export default function MyBuildEditor({ character: c, activeTeam, onShare }) {
       });
     }
     return out;
-  }, [c.id, build.cartridge, activeTeam, layout]);
+  }, [c.id, build.cartridge, build.consoleFrom, build.pieces, activeTeam, layout]);
 
   function pickConsole(id) {
     if (id === 'none') return set({ consoleFrom: 'none', pieces: [] });

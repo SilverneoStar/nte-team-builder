@@ -28,6 +28,7 @@ import { lazyPage } from './lib/lazyPage.js';
 const AchievementsPage = lazyPage(() => import('./components/AchievementsPage.jsx'));
 const ArcsPage = lazyPage(() => import('./components/ArcsPage.jsx'));
 const MusicRoom = lazyPage(() => import('./components/MusicRoom.jsx'));
+const MyEspersPage = lazyPage(() => import('./components/MyEspersPage.jsx'));
 const CharactersPage = lazyPage(() => import('./components/CharactersPage.jsx'));
 const ConsolePage = lazyPage(() => import('./components/ConsolePage.jsx'));
 const ExportDialog = lazyPage(() => import('./components/ExportDialog.jsx'));
@@ -150,9 +151,18 @@ export default function App() {
 
       <ErrorBoundary resetKey={route.view}>
       <Suspense fallback={<PageLoading />}>
+        {route.view === 'my-espers' && (
+          <MyEspersPage
+            onLoadTeam={(team) => {
+              dispatch({ type: 'import', ...team });
+              navigate('builder');
+            }}
+          />
+        )}
         {route.view === 'characters' && (
           <CharactersPage
             characterId={route.characterId}
+            tab={route.tab}
             activeTeam={active}
             onAdd={addFromIndex}
             onApplyBuild={(charId, patch) => dispatch({ type: 'setLoadout', charId, patch })}

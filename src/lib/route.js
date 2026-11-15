@@ -1,12 +1,13 @@
 // The hash router: which page and item the address points to.
 import { useEffect, useState } from 'react';
 
-// Tiny hash router: #builder, #characters, #character-<id>, #arcs,
+// Tiny hash router: #builder, #my-espers, #characters, #character-<id>[~tab], #arcs,
 // #arcs-<type>, #arc-<id>, #console, #console-<id>, #achievements,
 // #achievements-<category>, #glossary.
 // Hashes stay plain tokens so links work everywhere the app is hosted.
 export const VIEWS = [
   { id: 'builder', label: 'Team Builder' },
+  { id: 'my-espers', label: 'My Espers' },
   { id: 'characters', label: 'Espers' },
   { id: 'arcs', label: 'Arcs' },
   { id: 'console', label: 'Console' },
@@ -18,7 +19,11 @@ export function parseHash(hash) {
   const h = (hash || '').replace(/^#/, '');
   // The hidden listening room (not in the menu: Matcha leads there).
   if (h === 'music') return { view: 'music' };
-  if (h.startsWith('character-')) return { view: 'characters', characterId: h.slice(10) };
+  // #character-<id>~mine opens straight on a tab (My build).
+  if (h.startsWith('character-')) {
+    const [characterId, tab] = h.slice(10).split('~');
+    return { view: 'characters', characterId, tab };
+  }
   if (h.startsWith('arc-')) return { view: 'arcs', arcId: h.slice(4) };
   if (h.startsWith('arcs-')) return { view: 'arcs', arcType: h.slice(5) };
   if (h.startsWith('achievements-')) return { view: 'achievements', category: h.slice(13) };

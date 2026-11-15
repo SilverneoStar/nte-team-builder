@@ -7,14 +7,18 @@
 import QRCode, { QRErrorCorrectLevel } from './vendor/qrcode.js';
 
 export const QR_PREFIX = { team: 'NTE:', console: 'NTEC:' };
-export const qrText = (kind, code) => `${QR_PREFIX[kind]}${code.replace(/-/g, '')}`;
+// Build images add their Esper after a slash: NTEC:<code>/<ESPER ID>, so a
+// scanned build image can be saved as that Esper's My build.
+export const qrText = (kind, code, characterId = null) =>
+  `${QR_PREFIX[kind]}${code.replace(/-/g, '')}${kind === 'console' && characterId ? `/${characterId.toUpperCase()}` : ''}`;
 
-/** { kind: 'team'|'console', code } from a QR's (or a PNG note's) text, or null. */
+/** { kind: 'team'|'console', code, characterId? } from a QR's (or a PNG note's) text, or null. */
 export function parseQrText(text) {
   const t = (text ?? '').trim();
-  const m = t.match(/^(NTEC?):\s*([0-9A-Za-z-]+)$/i);
+  const m = t.match(/^(NTEC?):\s*([0-9A-Za-z-]+)(?:\/([A-Za-z0-9-]+))?$/i);
   if (!m) return null;
-  return { kind: m[1].toUpperCase() === 'NTEC' ? 'console' : 'team', code: m[2].toUpperCase() };
+  const kind = m[1].toUpperCase() === 'NTEC' ? 'console' : 'team';
+  return { kind, code: m[2].toUpperCase(), ...(kind === 'console' && m[3] ? { characterId: m[3].toLowerCase() } : {}) };
 }
 
 /** A QR code for `text` in a white rounded box of `size` (quiet zone included), top-left at x, y. */

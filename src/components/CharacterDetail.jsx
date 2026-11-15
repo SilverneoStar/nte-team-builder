@@ -51,6 +51,7 @@ export default function CharacterDetail({
   onClose,
   onApplyBuild,
   onLoadTeam,
+  tab,
 }) {
   const [sharing, setSharing] = useState(false);
   const element = ELEMENT_BY_ID[c.element];
@@ -352,6 +353,7 @@ export default function CharacterDetail({
       )}
       <SwipeTabs
         key={c.id}
+        initial={tab}
         label={`${c.name} details`}
         slides={[
           { id: 'overview', label: 'Overview', content: overview },

@@ -793,7 +793,7 @@ export async function renderBuildCard(build, { base = '/', scale = 2, format = '
     info && (build.pieces.length || build.cartridge)
       ? encodeConsoleCode({ layout: info.layout, cartridge: build.cartridge, cartStats: build.cartStats, pieces: build.pieces })
       : '';
-  const qrCode = consoleCode ? qrText('console', consoleCode) : '';
+  const qrCode = consoleCode ? qrText('console', consoleCode, c.id) : '';
   if (qrCode && ctx.canvas.dataset) ctx.canvas.dataset.code = qrCode;
   const QS = 72;
 

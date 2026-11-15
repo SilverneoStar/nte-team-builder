@@ -75,7 +75,7 @@ function compare(a, b, col, dir) {
   return result ? result * dir : a.name.localeCompare(b.name);
 }
 
-export default function CharactersPage({ characterId, activeTeam, onAdd, onApplyBuild, onLoadTeam }) {
+export default function CharactersPage({ characterId, tab, activeTeam, onAdd, onApplyBuild, onLoadTeam }) {
   useZeroLook();
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useCharacterFilters();
@@ -117,6 +117,8 @@ export default function CharactersPage({ characterId, activeTeam, onAdd, onApply
 
       {selected && (
         <CharacterDetail
+          key={`${selected.id}~${tab ?? ''}`}
+          tab={tab}
           character={selected}
           activeTeam={activeTeam}
           inActiveTeam={activeTeam.members.includes(selected.id)}
