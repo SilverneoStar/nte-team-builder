@@ -17,8 +17,7 @@
 // Stages marked tallyOnly (pink in game) give no score rewards of their own;
 // their points only count toward the overall Score Reward total (and title).
 // Their condition points are 7x the usual (e.g. 90s target time: 3,500), and
-// they show no weakness. Mammon's stage has several enemies ("other surviving
-// units").
+// they show no weakness. Twisted Fairy Tales is a double boss fight.
 
 export const CRUCIBLE = {
   // Score Reward bar across all stages.
@@ -189,7 +188,10 @@ export const CRUCIBLE = {
       id: 'twisted-fairy-tales',
       name: 'Twisted Fairy Tales',
       tallyOnly: true,
-      boss: 'Mammon',
+      // Two bosses at once: Mammon and the sand castle Anomaly (the stage text
+      // calls the place Cardboard Castle).
+      boss: 'Mammon & Sand Castle',
+      icon: 'mammon',
       levels: { easy: 47 },
       weakness: null,
       resists: ['cosmos', 'anima', 'lakshana'],

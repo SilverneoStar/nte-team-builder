@@ -15,11 +15,11 @@ const orList = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(',
 // Boss icons cropped from the in-game Crucible screens (public/bosses/).
 const BASE = import.meta.env.BASE_URL;
 const bossSlug = (boss) => boss.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-function BossIcon({ boss, size }) {
+function BossIcon({ stage, size }) {
   return (
     <img
       className="crux-boss-icon"
-      src={`${BASE}bosses/${bossSlug(boss)}.webp?v=2`}
+      src={`${BASE}bosses/${stage.icon ?? bossSlug(stage.boss)}.webp?v=2`}
       width={size}
       height={size}
       alt=""
@@ -98,7 +98,7 @@ export default function EndgamePage({ stageId, activeTeam }) {
             aria-pressed={s.id === stage.id}
             onClick={() => navigate(`endgame-${s.id}`)}
           >
-            <BossIcon boss={s.boss} size={26} />
+            <BossIcon stage={s} size={26} />
             {s.boss}
             {s.weakness && <ElementGlyph element={s.weakness} size={14} title={`Weak to ${ELEMENT_BY_ID[s.weakness].name}`} />}
           </button>
@@ -107,7 +107,7 @@ export default function EndgamePage({ stageId, activeTeam }) {
 
       <section className="crux">
         <div className="crux__head">
-          <BossIcon boss={stage.boss} size={96} />
+          <BossIcon stage={stage} size={96} />
           <div className="crux__title">
             <p className="crux__stage">
               {stage.name}
