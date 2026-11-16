@@ -218,3 +218,27 @@ export const CRUCIBLE = {
     },
   ],
 };
+
+export const CRUCIBLE_STAGE_BY_ID = Object.fromEntries(CRUCIBLE.stages.map((s) => [s.id, s]));
+
+// Points of one condition pick on a stage (tally-only stages pay 7x).
+export const conditionPoints = (stage, points) => points * (stage.tallyOnly ? CRUCIBLE.tallyMultiplier : 1);
+
+/**
+ * Score of a clear with these picks.
+ * picks: { difficulty, objectives: number[], time, hp, atk: option index or -1,
+ *          res: { [element]: option index } }
+ */
+export function crucibleScore(stage, picks) {
+  const diff = CRUCIBLE.difficulties.find((d) => d.id === picks.difficulty) ?? CRUCIBLE.difficulties[0];
+  const C = CRUCIBLE.conditions;
+  const opt = (list, i) => (i >= 0 && list[i] ? conditionPoints(stage, list[i].points) : 0);
+  const objectives = (picks.objectives ?? []).reduce((a, i) => a + (stage.bonusObjectives?.[i]?.points ?? 0), 0);
+  const conditions =
+    objectives +
+    opt(C.targetTime, picks.time) +
+    opt(C.enemyHp, picks.hp) +
+    opt(C.enemyAtk, picks.atk) +
+    (stage.resists ?? []).reduce((a, el) => a + opt(C.resistance, picks.res?.[el] ?? -1), 0);
+  return { basic: diff.basicScore, conditions, multiplier: diff.multiplier, total: (diff.basicScore + conditions) * diff.multiplier };
+}

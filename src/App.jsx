@@ -32,6 +32,7 @@ const MyEspersPage = lazyPage(() => import('./components/MyEspersPage.jsx'));
 const CharactersPage = lazyPage(() => import('./components/CharactersPage.jsx'));
 const ConsolePage = lazyPage(() => import('./components/ConsolePage.jsx'));
 const ExportDialog = lazyPage(() => import('./components/ExportDialog.jsx'));
+const EndgamePage = lazyPage(() => import('./components/EndgamePage.jsx'));
 const GlossaryPage = lazyPage(() => import('./components/GlossaryPage.jsx'));
 
 /**
@@ -185,6 +186,8 @@ export default function App() {
             onEquip={(charId, patch) => dispatch({ type: 'setLoadout', charId, patch })}
           />
         )}
+
+        {route.view === 'endgame' && <EndgamePage stageId={route.stageId} activeTeam={active} />}
 
         {route.view === 'glossary' && <GlossaryPage />}
       </Suspense>

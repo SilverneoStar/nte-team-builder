@@ -8560,3 +8560,205 @@ th[aria-sort='descending'] .th-btn {
   font: 700 0.72rem/1.5 var(--font-mono);
 }
 .myespers__how { margin: 10px 0 0; }
+
+/* ---------- Endgame: Hunter's Crucible ---------- */
+.crux-stages {
+  margin-bottom: 12px;
+}
+.crux-stage--tally {
+  border-color: #d6457f;
+}
+.crux {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.crux__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+.crux__stage {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 0.75rem var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.crux__boss {
+  margin: 2px 0 0;
+  font: 700 1.9rem/1.1 var(--font-display);
+}
+.crux__levels {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+}
+.crux-tag {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #d6457f;
+  color: #fff;
+  font-size: 0.68rem;
+}
+.crux__facts {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+.crux__facts dt {
+  font: 500 0.68rem var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.crux__facts dd {
+  margin: 2px 0 0;
+}
+.crux__els {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.crux-el {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+.crux__about {
+  margin: 0;
+  font-style: italic;
+  color: var(--muted);
+}
+.crux__h {
+  margin: 8px 0 0;
+  font: 700 1.15rem var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.crux-row {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 6px 12px;
+  align-items: center;
+}
+.crux-row--stack {
+  align-items: start;
+}
+.crux-row__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+@media (max-width: 640px) {
+  .crux {
+    padding: 12px;
+  }
+  .crux-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.crux-pts {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.crux-objs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.crux-obj {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: start;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.86rem;
+  cursor: pointer;
+}
+.crux-obj:has(input:checked) {
+  border-color: var(--fg);
+}
+.crux-free {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--good);
+}
+.crux-total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.crux-total strong {
+  font: 700 1.8rem var(--font-display);
+  color: var(--fg);
+}
+.crux-espers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.crux-esper {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: 64px;
+  font-size: 0.75rem;
+  text-align: center;
+  color: inherit;
+  text-decoration: none;
+}
+.crux-rewards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.crux-rewards li {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.crux-rewards li.is-reached {
+  border-color: var(--good);
+  box-shadow: inset 3px 0 0 var(--good);
+}
+.crux-rewards__score {
+  font: 600 0.9rem var(--font-mono);
+}
+.crux-rewards__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.crux-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+}
