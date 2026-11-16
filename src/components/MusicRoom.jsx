@@ -66,6 +66,65 @@ const PREV = 'M18 6l-8.5 6L18 18zM6 6h2v12H6z';
 const SHUFFLE =
   'M16 3h5v5l-1.8-1.8-4.4 4.4-1.4-1.4 4.4-4.4zM3 5.4 4.4 4l15.6 15.6V16h1v5h-5v-1h3.6zM9.6 13l1.4 1.4-6.6 6.6L3 19.6z';
 
+// The reader's own room: their list of songs, filters and looks. Kept in this
+// browser only (it's just for them).
+const ROOM_KEY = 'nte-team-builder:musicRoom';
+const ROOM_DEFAULTS = { source: 'all', kind: 'all', moving: true, bars: 'classic', mine: [] };
+function useRoomSettings() {
+  const [room, setRoom] = useState(() => {
+    try {
+      const v = JSON.parse(localStorage.getItem(ROOM_KEY) || '{}');
+      return { ...ROOM_DEFAULTS, ...v, mine: Array.isArray(v.mine) ? v.mine : [] };
+    } catch {
+      return ROOM_DEFAULTS;
+    }
+  });
+  const update = (patch) =>
+    setRoom((r) => {
+      const n = { ...r, ...patch };
+      try {
+        localStorage.setItem(ROOM_KEY, JSON.stringify(n));
+      } catch {
+        /* not kept: fine */
+      }
+      return n;
+    });
+  return [room, update];
+}
+
+/** Instrumental versions of songs, going by the name ("(Instrumental)", 伴奏). */
+const isInstrumental = (x) => /instrumental|伴奏|karaoke|off vocal/i.test(x.name);
+
+const BAR_STYLES = [
+  { id: 'classic', label: 'Classic' },
+  { id: 'neon', label: 'Neon' },
+  { id: 'pixel', label: 'Pixel' },
+  { id: 'dots', label: 'LED dots' },
+  { id: 'rainbow', label: 'Rainbow' },
+];
+
+/** A row of buttons where one is picked. */
+function Choice({ label, value, options, onChange }) {
+  return (
+    <div className="music__choice" role="group" aria-label={label}>
+      <span className="music__choice-label">{label}</span>
+      <div className="music__seg">
+        {options.map((o) => (
+          <button
+            key={o.id}
+            type="button"
+            className={value === o.id ? 'is-on' : ''}
+            aria-pressed={value === o.id}
+            onClick={() => onChange(o.id)}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /** The songs grouped by album, in file order: [{ name, start, songs }]. */
 function albumsOf(songs) {
   const out = [];
@@ -81,11 +140,16 @@ function albumsOf(songs) {
  * Albums in a swipeable carousel; the chosen album's songs below it, which can
  * be folded away. Follows the album that's playing until the reader picks one.
  */
-function Playlist({ songs, yt }) {
+function Playlist({ songs, yt, room, setRoom, total, mineCount }) {
+  const mine = new Set(room.mine);
+  const toggleMine = (id) =>
+    setRoom({ mine: mine.has(id) ? room.mine.filter((x) => x !== id) : [...room.mine, id] });
   const albums = useMemo(() => albumsOf(songs), [songs]);
   const playingAlbum = albums.findIndex((a) => yt.index >= a.start && yt.index < a.start + a.songs.length);
   const [picked, setPicked] = useState(null);
   const [open, setOpen] = useState(true);
+  // A new filter or list: follow the playing album again.
+  useEffect(() => setPicked(null), [songs]);
   const shown = picked ?? Math.max(0, playingAlbum);
   const album = albums[shown];
   const rail = useRef(null);
@@ -106,9 +170,37 @@ function Playlist({ songs, yt }) {
       <div className="music__listhead">
         <h3 className="music__h">Playlist</h3>
         <span className="muted small">
-          {albums.length} album{albums.length > 1 ? 's' : ''} · {songs.length} songs
+          {songs.length === total ? `${songs.length} songs` : `${songs.length} of ${total} songs`}
         </span>
       </div>
+      <div className="music__filters">
+        <Choice
+          label="Play"
+          value={room.source}
+          onChange={(v) => setRoom({ source: v })}
+          options={[
+            { id: 'all', label: 'All songs' },
+            { id: 'mine', label: `My list (${mineCount})` },
+          ]}
+        />
+        <Choice
+          label="Songs"
+          value={room.kind}
+          onChange={(v) => setRoom({ kind: v })}
+          options={[
+            { id: 'all', label: 'All' },
+            { id: 'vocal', label: 'Main versions' },
+            { id: 'inst', label: 'Instrumental versions' },
+          ]}
+        />
+      </div>
+      {!songs.length && (
+        <p className="music__empty muted">
+          {room.source === 'mine' && !mineCount
+            ? 'Your list is empty. Switch to All songs and tap ♡ next to the songs you want here.'
+            : 'No songs match. Try another filter.'}
+        </p>
+      )}
 
       {albums.length > 1 && (
         <div className="music__carousel">
@@ -168,7 +260,7 @@ function Playlist({ songs, yt }) {
                 const blocked = yt.blocked.includes(x.id);
                 const label = x.name || (i === yt.index && yt.title) || `Song ${j + 1}`;
                 return (
-                  <li key={`${x.id}-${i}`}>
+                  <li key={`${x.id}-${i}`} className="music__row">
                     {blocked ? (
                       <a
                         className="music__track is-blocked"
@@ -196,6 +288,16 @@ function Playlist({ songs, yt }) {
                         <span className="music__name">{label}</span>
                       </button>
                     )}
+                    <button
+                      type="button"
+                      className={`music__heart${mine.has(x.id) ? ' is-on' : ''}`}
+                      onClick={() => toggleMine(x.id)}
+                      aria-pressed={mine.has(x.id)}
+                      aria-label={mine.has(x.id) ? `Remove ${label} from my list` : `Add ${label} to my list`}
+                      title={mine.has(x.id) ? 'In my list' : 'Add to my list'}
+                    >
+                      {mine.has(x.id) ? '♥' : '♡'}
+                    </button>
                   </li>
                 );
               })}
@@ -268,13 +370,24 @@ export default function MusicRoom() {
       dead = true;
     };
   }, []);
-  const yt = usePlaylistPlayer(host, songs ?? []);
-  const song = songs?.[yt.index] ?? null;
+  const [room, setRoom] = useRoomSettings();
+  const playable = useMemo(() => {
+    let list = songs ?? [];
+    if (room.source === 'mine') {
+      const byId = new Map(list.map((x) => [x.id, x]));
+      list = room.mine.map((id) => byId.get(id)).filter(Boolean);
+    }
+    if (room.kind === 'vocal') list = list.filter((x) => !isInstrumental(x));
+    if (room.kind === 'inst') list = list.filter(isInstrumental);
+    return list;
+  }, [songs, room.source, room.kind, room.mine]);
+  const yt = usePlaylistPlayer(host, playable);
+  const song = playable[yt.index] ?? null;
   const current = song?.id ?? null;
   const title = song?.name || yt.title;
 
   return (
-    <div className={`page music${yt.playing ? ' is-playing' : ''}`}>
+    <div className={`page music${yt.playing ? ' is-playing' : ''}${room.moving ? '' : ' is-still'}`}>
       <header className="page__head music__head">
         <button type="button" className="btn btn--quiet music__back" onClick={() => navigate('arcs')}>
           ← Arcs
@@ -297,7 +410,7 @@ export default function MusicRoom() {
           src={`${BASE}matcha/${yt.playing ? 'starry' : 'neutral'}.webp`}
           alt="Matcha"
         />
-        <div className="music__beat" aria-hidden="true">
+        <div className="music__beat" data-bars={room.bars} aria-hidden="true">
           {Array.from({ length: BARS }, (_, i) => (
             <span key={i} style={{ '--i': i, '--k': 1 + (i % 3), '--h': `${30 + ((i * 37) % 60)}%` }} />
           ))}
@@ -351,6 +464,21 @@ export default function MusicRoom() {
             <Icon d={NEXT} />
           </button>
         </div>
+        <details className="music__settings">
+          <summary>Room settings</summary>
+          <div className="music__settings-body">
+            <Choice
+              label="Matcha & Cortado"
+              value={room.moving ? 'move' : 'still'}
+              onChange={(v) => setRoom({ moving: v === 'move' })}
+              options={[
+                { id: 'move', label: 'Dance' },
+                { id: 'still', label: 'Stay still' },
+              ]}
+            />
+            <Choice label="Beat bar" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
+          </div>
+        </details>
         <div className="music__screen" ref={host} />
         <p className="muted small music__legal">
           Music plays in YouTube’s own player through YouTube API Services, and YouTube may show its ads. By playing
@@ -362,11 +490,20 @@ export default function MusicRoom() {
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
             Google Privacy Policy
           </a>
-          . This site keeps nothing about what you play. Songs and covers belong to their owners.
+          . This site sends nothing about what you play anywhere; your list and settings stay in this browser. Songs and covers belong to their owners.
         </p>
       </section>
 
-      {songs?.length > 0 && <Playlist songs={songs} yt={yt} />}
+      {songs?.length > 0 && (
+        <Playlist
+          songs={playable}
+          yt={yt}
+          room={room}
+          setRoom={setRoom}
+          total={songs.length}
+          mineCount={room.mine.filter((id) => songs.some((x) => x.id === id)).length}
+        />
+      )}
     </div>
   );
 }

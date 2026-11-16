@@ -8807,3 +8807,135 @@ th[aria-sort='descending'] .th-btn {
     0 0 0 1.5px color-mix(in srgb, var(--el) 60%, transparent),
     0 1px 4px rgba(0, 0, 0, 0.45);
 }
+/* ---------- Listening room: the reader's own settings ---------- */
+.music__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-bottom: 10px;
+}
+.music__choice {
+  display: grid;
+  gap: 4px;
+}
+.music__choice-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.music__seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.music__seg button {
+  padding: 6px 12px;
+  border: 0;
+  background: none;
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.music__seg button + button {
+  border-left: 1px solid var(--line);
+}
+.music__seg button.is-on {
+  background: #4f9e3a;
+  color: #fff;
+}
+.music__seg button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.music__empty {
+  margin: 8px 0;
+}
+.music__settings {
+  width: min(100%, 480px);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  text-align: left;
+}
+.music__settings summary {
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.music__settings-body {
+  display: grid;
+  gap: 12px;
+  padding: 4px 12px 12px;
+}
+.music__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px;
+}
+.music__heart {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.music__heart.is-on {
+  color: #e0527a;
+  border-color: #e0527a;
+}
+.music__heart:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Matcha and Cortado can stay still. */
+.music.is-still .music__pal,
+.music.is-still .music-cortado__tail,
+.music.is-still .music-cortado__note {
+  animation: none !important;
+}
+
+/* Beat bar styles */
+.music__beat[data-bars='neon'] span {
+  background: #7dffb0;
+  border-radius: 4px;
+  box-shadow:
+    0 0 6px #3dff8a,
+    0 0 14px rgb(61 255 138 / 0.55);
+}
+.music__beat[data-bars='pixel'] span {
+  border-radius: 0;
+  background: repeating-linear-gradient(to top, #6cc24a 0 6px, transparent 6px 9px) 0 100% / 100% 100%;
+}
+.music__beat[data-bars='dots'] span {
+  border-radius: 0;
+  background: radial-gradient(circle at 50% 50%, #b6e07a 0 4px, transparent 4.6px) 50% 100% / 100% 11px repeat-y;
+}
+/* Blocks and dots keep their size: these grow taller instead of stretching. */
+.music.is-playing .music__beat[data-bars='pixel'] span,
+.music.is-playing .music__beat[data-bars='dots'] span {
+  transform: none;
+  animation-name: music-bar-grow;
+}
+@keyframes music-bar-grow {
+  from {
+    height: calc(var(--h) * 0.25);
+  }
+  to {
+    height: var(--h);
+  }
+}
+.music__beat[data-bars='rainbow'] span {
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(to top, hsl(calc(var(--i) * 13) 75% 50%), hsl(calc(var(--i) * 13 + 30) 85% 68%));
+}
