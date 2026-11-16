@@ -12,6 +12,22 @@ import Portrait from './Portrait.jsx';
 
 // "A, B or C"
 const orList = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} or ${xs.at(-1)}`);
+// Boss icons cropped from the in-game Crucible screens (public/bosses/).
+const BASE = import.meta.env.BASE_URL;
+const bossSlug = (boss) => boss.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+function BossIcon({ boss, size }) {
+  return (
+    <img
+      className="crux-boss-icon"
+      src={`${BASE}bosses/${bossSlug(boss)}.webp`}
+      width={size}
+      height={size}
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
 const fmt = (n) => n.toLocaleString('en-US');
 const STAGES = CRUCIBLE.stages;
 const blankPicks = () => ({ difficulty: 'easy', objectives: [], time: -1, hp: -1, atk: -1, res: {} });
@@ -82,15 +98,17 @@ export default function EndgamePage({ stageId, activeTeam }) {
             aria-pressed={s.id === stage.id}
             onClick={() => navigate(`endgame-${s.id}`)}
           >
-            {s.weakness && <ElementGlyph element={s.weakness} size={16} />}
+            <BossIcon boss={s.boss} size={26} />
             {s.boss}
+            {s.weakness && <ElementGlyph element={s.weakness} size={14} title={`Weak to ${ELEMENT_BY_ID[s.weakness].name}`} />}
           </button>
         ))}
       </div>
 
       <section className="crux">
         <div className="crux__head">
-          <div>
+          <BossIcon boss={stage.boss} size={96} />
+          <div className="crux__title">
             <p className="crux__stage">
               {stage.name}
               {stage.tallyOnly && <span className="crux-tag">Tally only</span>}

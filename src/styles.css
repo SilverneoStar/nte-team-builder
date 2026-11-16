@@ -8762,3 +8762,19 @@ th[aria-sort='descending'] .th-btn {
   gap: 6px;
   font-size: 0.82rem;
 }
+.crux-boss-icon {
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--station-bg);
+}
+.crux-stages .chip {
+  padding-left: 4px;
+}
+.crux__head > .crux-boss-icon {
+  border: 2px solid var(--line);
+}
+.crux__title {
+  flex: 1 1 12rem;
+  align-self: center;
+}
