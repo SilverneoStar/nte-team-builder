@@ -2,7 +2,7 @@
 // conditions, bonus objectives, rewards) with a score calculator.
 // Special Route will join it later.
 import { useMemo, useState } from 'react';
-import { CRUCIBLE, CRUCIBLE_STAGE_BY_ID, conditionPoints, crucibleScore } from '../data/crucible.js';
+import { CRUCIBLE, CRUCIBLE_STAGE_BY_ID, bossLevel, conditionPoints, crucibleScore } from '../data/crucible.js';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { navigate } from '../lib/route.js';
@@ -78,7 +78,6 @@ export default function EndgamePage({ stageId, activeTeam }) {
   const hitters = stage.weakness
     ? CHARACTERS.filter((c) => c.element === stage.weakness && !c.upcoming)
     : [];
-  const levels = Object.entries(stage.levels ?? {}).filter(([, v]) => v);
 
   return (
     <div className="page">
@@ -114,13 +113,14 @@ export default function EndgamePage({ stageId, activeTeam }) {
               {stage.tallyOnly && <span className="crux-tag">Tally only</span>}
             </p>
             <h3 className="crux__boss">{stage.boss}</h3>
-            {levels.length > 0 && (
-              <p className="muted crux__levels">
-                {levels
-                  .map(([d, lv]) => `Lv ${lv} on ${CRUCIBLE.difficulties.find((x) => x.id === d)?.label ?? d}`)
-                  .join(' · ')}
-              </p>
-            )}
+            <p className="muted crux__levels">
+              {CRUCIBLE.difficulties.map((d, k) => (
+                <span key={d.id} className={picks.difficulty === d.id ? 'is-on' : undefined}>
+                  {k > 0 && ' · '}
+                  {d.label} Lv {bossLevel(stage, d.id)}
+                </span>
+              ))}
+            </p>
           </div>
           <dl className="crux__facts">
             <div>
@@ -157,7 +157,7 @@ export default function EndgamePage({ stageId, activeTeam }) {
                 aria-pressed={picks.difficulty === d.id}
                 onClick={() => setPicks({ difficulty: d.id })}
               >
-                {d.label} <span className="crux-pts">×{d.multiplier}</span>
+                {d.label} <span className="crux-pts">Lv {bossLevel(stage, d.id)} · ×{d.multiplier}</span>
               </button>
             ))}
           </div>

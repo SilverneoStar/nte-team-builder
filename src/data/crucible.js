@@ -7,7 +7,9 @@
 // (x1 Easy, x2 Normal, x3 Hard, x5 Ultra). Checked against the game's totals:
 // Taygedo on Ultra (500 + 600) x 5 = 5,500; Black Tome on Hard (500 + 600) x 3
 // = 3,300; Debt Collector on Hard (500 + 680) x 3 = 3,180 and on Ultra
-// (500 + 875) x 5 = 6,875. Basic score is 500 on every difficulty. Bosses get stronger with difficulty (Taygedo Lv 42 Easy, 72 Ultra).
+// (500 + 875) x 5 = 6,875. Basic score is 500 on every difficulty.
+// Boss levels go up 10 per difficulty (4x, 5x, 6x, 7x): baseLevel is the
+// Easy level (Taygedo 42 to 72; the rest 47 to 77).
 //
 // Conditions: up to 3 bonus objectives, a target time, Enemy HP Up, Enemy
 // ATK Up and Enemy <element> Resistance Up for 3 elements (never the boss's
@@ -73,7 +75,7 @@ export const CRUCIBLE = {
       id: 'no-changing-channels',
       name: 'No Changing Channels',
       boss: 'Taygedo',
-      levels: { easy: 42, hard: null, ultra: 72 },
+      baseLevel: 42,
       weakness: 'lakshana',
       resists: ['anima', 'incantation', 'chaos'],
       about:
@@ -91,7 +93,7 @@ export const CRUCIBLE = {
       id: 'whats-your-name',
       name: 'What’s Your Name?',
       boss: 'Black Tome',
-      levels: { hard: 67 },
+      baseLevel: 47,
       weakness: 'chaos',
       resists: ['cosmos', 'anima', 'lakshana'],
       about: 'A book that wants your name. “To become my master, you need only write down... your name.”',
@@ -109,7 +111,7 @@ export const CRUCIBLE = {
       name: 'Heart and Feather',
       tallyOnly: true,
       boss: 'The Arbiter',
-      levels: { easy: 47 },
+      baseLevel: 47,
       weakness: null,
       resists: ['incantation', 'chaos', 'psyche'],
       about:
@@ -127,7 +129,7 @@ export const CRUCIBLE = {
       id: 'the-endless-blue-flame',
       name: 'The Endless Blue Flame',
       boss: 'Headless Rider',
-      levels: { hard: 67 },
+      baseLevel: 47,
       weakness: 'psyche',
       resists: ['cosmos', 'anima', 'incantation'],
       about:
@@ -151,7 +153,7 @@ export const CRUCIBLE = {
       id: 'imaginary-friends',
       name: 'Imaginary Friends',
       boss: 'Teehee Bear',
-      levels: { hard: 67 },
+      baseLevel: 47,
       weakness: 'incantation',
       resists: ['cosmos', 'psyche', 'lakshana'],
       about:
@@ -173,7 +175,7 @@ export const CRUCIBLE = {
       id: 'curtain-call-courtesy',
       name: 'Curtain Call Courtesy',
       boss: 'Swallowtail',
-      levels: { hard: 67 },
+      baseLevel: 47,
       weakness: 'anima',
       resists: ['chaos', 'psyche', 'lakshana'],
       about:
@@ -192,7 +194,7 @@ export const CRUCIBLE = {
       // calls the place Cardboard Castle).
       boss: 'Mammon & Sand Castle',
       icon: 'mammon',
-      levels: { easy: 47 },
+      baseLevel: 47,
       weakness: null,
       resists: ['cosmos', 'anima', 'lakshana'],
       about:
@@ -207,7 +209,7 @@ export const CRUCIBLE = {
       id: 'settle-your-tab',
       name: 'Settle Your Tab',
       boss: 'Debt Collector',
-      levels: { hard: 67, ultra: 77 },
+      baseLevel: 47,
       weakness: 'cosmos',
       resists: ['incantation', 'chaos', 'psyche'],
       about:
@@ -224,6 +226,10 @@ export const CRUCIBLE = {
 export const CRUCIBLE_STAGE_BY_ID = Object.fromEntries(CRUCIBLE.stages.map((s) => [s.id, s]));
 
 // Points of one condition pick on a stage (tally-only stages pay 7x).
+// Boss level on a difficulty: +10 per step up from Easy.
+export const bossLevel = (stage, difficultyId) =>
+  stage.baseLevel + 10 * Math.max(0, CRUCIBLE.difficulties.findIndex((d) => d.id === difficultyId));
+
 export const conditionPoints = (stage, points) => points * (stage.tallyOnly ? CRUCIBLE.tallyMultiplier : 1);
 
 /**
