@@ -70,7 +70,7 @@ const SHUFFLE =
 // The reader's own room: their list of songs, filters and looks. Kept in this
 // browser only (it's just for them).
 const ROOM_KEY = 'nte-team-builder:musicRoom';
-const ROOM_DEFAULTS = { source: 'all', kind: 'all', moving: true, viz: 'bars', bars: 'classic', mine: [], tempo: {}, moods: {} };
+const ROOM_DEFAULTS = { source: 'all', kind: 'all', albums: [], moving: true, viz: 'bars', bars: 'classic', mine: [], tempo: {}, moods: {} };
 function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
@@ -81,6 +81,7 @@ function useRoomSettings() {
         ...v,
         bars: bars ?? ROOM_DEFAULTS.bars,
         mine: Array.isArray(v.mine) ? v.mine : [],
+        albums: Array.isArray(v.albums) ? v.albums : [],
         tempo: v.tempo && typeof v.tempo === 'object' ? v.tempo : {},
         moods: v.moods && typeof v.moods === 'object' ? v.moods : {},
       };
@@ -134,6 +135,42 @@ function Choice({ label, value, options, onChange }) {
   );
 }
 
+/**
+ * Which albums play: all of them, or the ones the reader ticks (they play one
+ * after another, in playlist order). Kept with the room's other settings.
+ */
+function AlbumPicker({ names, room, setRoom }) {
+  const on = new Set(room.albums.filter((a) => names.includes(a)));
+  const toggle = (a) => {
+    const next = new Set(on);
+    if (next.has(a)) next.delete(a);
+    else next.add(a);
+    setRoom({ albums: names.filter((n) => next.has(n)) });
+  };
+  return (
+    <details className="music__pick">
+      <summary>
+        <span className="music__choice-label">Albums</span>
+        <span>{on.size ? `${on.size} of ${names.length} picked` : `All ${names.length}`}</span>
+        <span className="muted small">Pick several to play them back to back</span>
+      </summary>
+      <div className="music__pick-list" role="group" aria-label="Albums to play">
+        {names.map((a) => (
+          <label key={a} className={`music__pick-item${on.has(a) ? ' is-on' : ''}`}>
+            <input type="checkbox" checked={on.has(a)} onChange={() => toggle(a)} />
+            {a}
+          </label>
+        ))}
+      </div>
+      {on.size > 0 && (
+        <button type="button" className="btn btn--quiet btn--small" onClick={() => setRoom({ albums: [] })}>
+          Play every album again
+        </button>
+      )}
+    </details>
+  );
+}
+
 /** The songs grouped by album, in file order: [{ name, start, songs }]. */
 function albumsOf(songs) {
   const out = [];
@@ -149,7 +186,7 @@ function albumsOf(songs) {
  * Albums in a swipeable carousel; the chosen album's songs below it, which can
  * be folded away. Follows the album that's playing until the reader picks one.
  */
-function Playlist({ songs, yt, room, setRoom, total, mineCount }) {
+function Playlist({ songs, yt, room, setRoom, total, mineCount, albumNames }) {
   const mine = new Set(room.mine);
   const toggleMine = (id) =>
     setRoom({ mine: mine.has(id) ? room.mine.filter((x) => x !== id) : [...room.mine, id] });
@@ -189,6 +226,7 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount }) {
           onChange={(v) => setRoom({ source: v })}
           options={[
             { id: 'all', label: 'All songs' },
+            { id: 'official', label: 'Official only' },
             { id: 'mine', label: `My list (${mineCount})` },
           ]}
         />
@@ -203,11 +241,12 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount }) {
           ]}
         />
       </div>
+      <AlbumPicker names={albumNames} room={room} setRoom={setRoom} />
       {!songs.length && (
         <p className="music__empty muted">
           {room.source === 'mine' && !mineCount
             ? 'Your list is empty. Switch to All songs and tap ♡ next to the songs you want here.'
-            : 'No songs match. Try another filter.'}
+            : 'No songs match. Try another filter or pick other albums.'}
         </p>
       )}
 
@@ -386,10 +425,21 @@ export default function MusicRoom() {
       const byId = new Map(list.map((x) => [x.id, x]));
       list = room.mine.map((id) => byId.get(id)).filter(Boolean);
     }
+    if (room.source === 'official') list = list.filter((x) => !x.fan);
     if (room.kind === 'vocal') list = list.filter((x) => !isInstrumental(x));
     if (room.kind === 'inst') list = list.filter(isInstrumental);
+    // Picked albums only (none picked: every album), played one after another.
+    const on = new Set(room.albums);
+    if (list.some((x) => on.has(x.album))) list = list.filter((x) => on.has(x.album));
     return list;
-  }, [songs, room.source, room.kind, room.mine]);
+  }, [songs, room.source, room.kind, room.mine, room.albums]);
+  // The albums the picker offers: those with songs under the Play choice.
+  const albumNames = useMemo(() => {
+    let list = songs ?? [];
+    if (room.source === 'official') list = list.filter((x) => !x.fan);
+    if (room.source === 'mine') list = list.filter((x) => room.mine.includes(x.id));
+    return [...new Set(list.map((x) => x.album).filter(Boolean))];
+  }, [songs, room.source, room.mine]);
   const yt = usePlaylistPlayer(host, playable);
   const song = playable[yt.index] ?? null;
   const current = song?.id ?? null;
@@ -481,12 +531,19 @@ export default function MusicRoom() {
             'No songs in the playlist yet'
           ) : title ? (
             title
+          ) : yt.waiting ? (
+            'Starting…'
           ) : yt.ready ? (
             'Press play to start'
           ) : (
             'Loading the player…'
           )}
         </p>
+        {yt.waiting && (
+          <p className="music__wait small" role="status">
+            YouTube is playing an ad or still loading. Your song starts right after; the room can’t skip ads.
+          </p>
+        )}
         {(song?.album || yt.author) && (
           <p className="muted small music__artist">
             {[song?.album, yt.author.replace(/ - Topic$/, '')].filter(Boolean).join(' · ')}
@@ -596,6 +653,7 @@ export default function MusicRoom() {
           setRoom={setRoom}
           total={songs.length}
           mineCount={room.mine.filter((id) => songs.some((x) => x.id === id)).length}
+          albumNames={albumNames}
         />
       )}
     </div>

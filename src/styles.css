@@ -9360,3 +9360,39 @@ th[aria-sort='descending'] .th-btn {
 .music-import__list .is-off {
   opacity: 0.55;
 }
+
+/* Tea Room: album picker and the ad notice */
+.music__pick {
+  margin: 8px 0 4px;
+}
+.music__pick summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  cursor: pointer;
+}
+.music__pick-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+.music__pick-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.music__pick-item.is-on {
+  border-color: var(--fg);
+  background: var(--surface-2);
+}
+.music__wait {
+  margin: 4px 0 0;
+  color: var(--muted);
+}

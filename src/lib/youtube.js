@@ -38,18 +38,23 @@ export function videoId(link) {
 
 /**
  * The songs in a playlist text file: one per line, "Song name | link", with an
- * optional tempo after it ("| 128", beats per minute); the name can be left out. "[Album]" on its own line heads the songs after it.
+ * optional tempo after it ("| 128", beats per minute); the name can be left out. "[Album]" on its own line heads the songs after it
+ * ("[Album | fan upload]" marks them as fan uploads).
  * Blank lines and lines starting with # are skipped.
  */
 export function parsePlaylist(text) {
   let album = '';
+  let fan = false;
   const songs = [];
   for (const raw of (text ?? '').split(/\r?\n/)) {
     const line = raw.trim();
     if (!line || line.startsWith('#')) continue;
     const head = line.match(/^\[(.+)\]$/);
     if (head) {
-      album = head[1].trim();
+      // "[Album | fan upload]": songs uploaded by fans, not the game's own channels.
+      const [name, ...tags] = head[1].split('|').map((x) => x.trim());
+      album = name;
+      fan = tags.some((t) => /^fan/i.test(t));
       continue;
     }
     // "Name | link", "Name | link | 128" (its tempo in beats per minute) or just a link.
@@ -58,7 +63,7 @@ export function parsePlaylist(text) {
     const link = parts.pop();
     const name = parts.join(' | ');
     const id = videoId(link);
-    if (id) songs.push({ id, name, album, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
+    if (id) songs.push({ id, name, album, fan, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
   }
   return songs;
 }
@@ -67,7 +72,7 @@ export function parsePlaylist(text) {
  * Plays a list of songs ({ id, album }) in YouTube's player in the element
  * `hostRef` points at. YouTube takes at most 200 videos in one list, so only
  * the album being played is loaded; moving past its end loads the next album.
- * Returns { ready, error, playing, index, title, author, blocked, play, pause,
+ * Returns { ready, error, playing, waiting (an ad or loading), index, title, author, blocked, play, pause,
  * toggle, next, prev, playAt, shuffle, setShuffle }. `blocked` holds the ids
  * of songs YouTube won't play outside its own site (they're skipped).
  */
@@ -87,7 +92,16 @@ export function usePlaylistPlayer(hostRef, songs) {
   ref.current.groups = groups;
   const loaded = useRef(-1);
   const shuffleRef = useRef(false);
-  const [st, setSt] = useState({ ready: false, error: '', playing: false, index: -1, title: '', author: '', blocked: [] });
+  const [st, setSt] = useState({
+    ready: false,
+    error: '',
+    playing: false,
+    waiting: false,
+    index: -1,
+    title: '',
+    author: '',
+    blocked: [],
+  });
   const stRef = useRef(st);
   stRef.current = st;
   const [shuffle, setShuffleState] = useState(false);
@@ -132,6 +146,8 @@ export function usePlaylistPlayer(hostRef, songs) {
     let dead = false;
     let skips = 0;
     let poll;
+    let lastT = -1;
+    let stillFor = 0;
     loaded.current = -1;
     const sync = (patch = {}) => {
       const p = player.current;
@@ -146,8 +162,15 @@ export function usePlaylistPlayer(hostRef, songs) {
       } else if (data.video_id) {
         index = ref.current.ids.indexOf(data.video_id);
       }
+      // Playing but the song's clock isn't moving: YouTube is showing an ad
+      // (or still loading). The page can't see or touch the ad itself.
+      const t = p.getCurrentTime?.() ?? 0;
+      const on = p.getPlayerState?.();
+      const still = (on === 1 || on === 3) && Math.abs(t - lastT) < 0.05;
+      stillFor = still ? stillFor + 1 : 0;
+      lastT = t;
       setSt((s) => {
-        const n = { ...s, index, title: data.title || '', author: data.author || '', ...patch };
+        const n = { ...s, index, title: data.title || '', author: data.author || '', waiting: stillFor >= 2, ...patch };
         return Object.keys(n).every((k) => n[k] === s[k]) ? s : n;
       });
     };
@@ -166,7 +189,7 @@ export function usePlaylistPlayer(hostRef, songs) {
               load(0, false);
               sync({ ready: true });
               // Catch track changes YouTube doesn't announce (ads, its own buttons).
-              poll = setInterval(() => sync(), 1500);
+              poll = setInterval(() => sync(), 1000);
             },
             onStateChange: (e) => {
               if (e.data === YT.PlayerState.PLAYING) skips = 0;
