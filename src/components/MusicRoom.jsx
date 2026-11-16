@@ -1,4 +1,4 @@
-// The hidden listening room: Matcha peeks out on the Arcs page, and tapping
+// The hidden Tea Room: Matcha peeks out on the Arcs page, and tapping
 // her opens this page. The game's official soundtrack plays through YouTube's
 // own embedded player (the songs listed in public/music/playlist.txt), the track's cover sits
 // in an Arc player whose disc spins, and Cortado and Matcha bop along.
@@ -393,7 +393,7 @@ export default function MusicRoom() {
         <button type="button" className="btn btn--quiet music__back" onClick={() => navigate('arcs')}>
           ← Arcs
         </button>
-        <h2 className="page__title">Matcha’s listening room</h2>
+        <h2 className="page__title">Matcha’s Tea Room</h2>
         <p className="muted">
           You found Matcha’s hiding spot. Pick a track: it’s the game’s official soundtrack from{' '}
           <a href={CHANNEL} target="_blank" rel="noopener noreferrer">

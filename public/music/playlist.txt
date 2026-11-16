@@ -1,4 +1,4 @@
-# Matcha's listening room: the playlist (Neverness to Everness)
+# Matcha's Tea Room: the playlist (Neverness to Everness)
 #
 # One song per line:   Song name | YouTube link
 # - Songs play in this order. A link from YouTube's Share button works, or just the video id.
