@@ -69,7 +69,7 @@ const SHUFFLE =
 // The reader's own room: their list of songs, filters and looks. Kept in this
 // browser only (it's just for them).
 const ROOM_KEY = 'nte-team-builder:musicRoom';
-const ROOM_DEFAULTS = { source: 'all', kind: 'all', moving: true, bars: 'classic', mine: [] };
+const ROOM_DEFAULTS = { source: 'all', kind: 'all', moving: true, viz: 'bars', bars: 'classic', mine: [] };
 function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
@@ -358,6 +358,35 @@ function Cortado({ chill }) {
   );
 }
 
+// One heartbeat every 50 units, four to a strip; the strip is drawn twice side
+// by side and slides left by one strip width, so the line never runs out.
+const BEAT = 'L18 30 L21 25 L24 30 L27 30 L30 5 L33 38 L36 30 L41 30 L44 24 L48 30 L50 30';
+const STRIP = Array.from({ length: 4 }, (_, k) =>
+  BEAT.replace(/L(\d+) /g, (_, x) => `L${+x + k * 50} `),
+).join(' ');
+const PULSE_D = `M0 30 ${STRIP} M200 30 ${STRIP.replace(/L(\d+) /g, (_, x) => `L${+x + 200} `)}`;
+
+/** The pulse line: a heartbeat trace scrolling past while music plays. */
+function PulseLine() {
+  return (
+    <svg className="music__pulse" viewBox="0 0 200 40" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="pulse-rainbow" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#ff5a5a" />
+          <stop offset="0.25" stopColor="#ffd34f" />
+          <stop offset="0.5" stopColor="#4fe08a" />
+          <stop offset="0.75" stopColor="#4fb8ff" />
+          <stop offset="1" stopColor="#c46bff" />
+        </linearGradient>
+      </defs>
+      <g className="music__pulse-run">
+        <path className="music__pulse-glow" d={PULSE_D} />
+        <path className="music__pulse-line" d={PULSE_D} />
+      </g>
+    </svg>
+  );
+}
+
 export default function MusicRoom() {
   const host = useRef(null);
   const [songs, setSongs] = useState(null);
@@ -415,10 +444,14 @@ export default function MusicRoom() {
           src={`${BASE}matcha/${yt.playing ? 'starry' : 'neutral'}.webp`}
           alt="Matcha"
         />
-        <div className="music__beat" data-bars={room.bars} aria-hidden="true">
-          {Array.from({ length: BARS }, (_, i) => (
-            <span key={i} style={{ '--i': i, '--k': 1 + (i % 3), '--h': `${30 + ((i * 37) % 60)}%` }} />
-          ))}
+        <div className="music__beat" data-bars={room.bars} data-viz={room.viz} aria-hidden="true">
+          {room.viz === 'pulse' ? (
+            <PulseLine />
+          ) : (
+            Array.from({ length: BARS }, (_, i) => (
+              <span key={i} style={{ '--i': i, '--k': 1 + (i % 3), '--h': `${30 + ((i * 37) % 60)}%` }} />
+            ))
+          )}
         </div>
       </section>
 
@@ -481,7 +514,16 @@ export default function MusicRoom() {
                 { id: 'still', label: 'Stay still' },
               ]}
             />
-            <Choice label="Beat bar" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
+            <Choice
+              label="Beat"
+              value={room.viz}
+              onChange={(v) => setRoom({ viz: v })}
+              options={[
+                { id: 'bars', label: 'Bars' },
+                { id: 'pulse', label: 'Pulse line' },
+              ]}
+            />
+            <Choice label="Style" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
           </div>
         </details>
         <div className="music__screen" ref={host} />

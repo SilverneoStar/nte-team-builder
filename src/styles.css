@@ -9244,3 +9244,62 @@ th[aria-sort='descending'] .th-btn {
     opacity: 0.6;
   }
 }
+
+/* ---------- Tea Room: the pulse line (a heartbeat trace instead of bars) ---------- */
+.music__pulse {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.music__pulse path {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.music__pulse-line {
+  stroke: var(--pulse, #7fd35a);
+  stroke-width: 2.5;
+}
+.music__pulse-glow {
+  stroke: var(--pulse, #7fd35a);
+  stroke-width: 9;
+  opacity: 0.22;
+}
+.music__pulse-run {
+  animation: pulse-run calc(var(--beat) * 4) linear infinite;
+  animation-play-state: paused;
+}
+.music.is-playing .music__pulse-run {
+  animation-play-state: running;
+}
+.music:not(.is-playing) .music__pulse {
+  opacity: 0.45;
+}
+@keyframes pulse-run {
+  to {
+    transform: translateX(-200px);
+  }
+}
+.music__beat[data-bars='neon'] .music__pulse {
+  --pulse: #7dffb0;
+  filter: drop-shadow(0 0 4px #3dff8a);
+}
+.music__beat[data-bars='digital'] .music__pulse {
+  --pulse: #ff5fd8;
+  filter: drop-shadow(0 0 4px #c13dff);
+}
+.music__beat[data-bars='y2k'] .music__pulse {
+  --pulse: #3ee6ff;
+  filter: drop-shadow(0 0 4px #2a7bff);
+}
+.music__beat[data-bars='rainbow'] .music__pulse {
+  --pulse: url(#pulse-rainbow);
+}
+@media (prefers-reduced-motion: reduce) {
+  .music__pulse-run {
+    animation: none;
+  }
+}
