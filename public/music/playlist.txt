@@ -3,6 +3,8 @@
 # One song per line:   Song name | YouTube link
 # - Songs play in this order. A link from YouTube's Share button works, or just the video id.
 # - The name is optional: with only a link, the room shows YouTube's title.
+# - A tempo can follow the link (beats per minute) for the beat bar and pulse:
+#   Song name | YouTube link | 128
 # - [Album name] on its own line starts a new album heading.
 # - Lines starting with # are notes and are skipped.
 # - Some labels block their songs on other sites; the room skips those and

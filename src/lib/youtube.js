@@ -37,8 +37,8 @@ export function videoId(link) {
 }
 
 /**
- * The songs in a playlist text file: one per line, "Song name | link" (the
- * name can be left out). "[Album]" on its own line heads the songs after it.
+ * The songs in a playlist text file: one per line, "Song name | link", with an
+ * optional tempo after it ("| 128", beats per minute); the name can be left out. "[Album]" on its own line heads the songs after it.
  * Blank lines and lines starting with # are skipped.
  */
 export function parsePlaylist(text) {
@@ -52,10 +52,13 @@ export function parsePlaylist(text) {
       album = head[1].trim();
       continue;
     }
-    const bar = line.lastIndexOf('|');
-    const name = bar >= 0 ? line.slice(0, bar).trim() : '';
-    const id = videoId(bar >= 0 ? line.slice(bar + 1) : line);
-    if (id) songs.push({ id, name, album });
+    // "Name | link", "Name | link | 128" (its tempo in beats per minute) or just a link.
+    const parts = line.split('|').map((x) => x.trim());
+    const bpm = parts.length > 1 && /^\d{2,3}$/.test(parts[parts.length - 1]) ? +parts.pop() : null;
+    const link = parts.pop();
+    const name = parts.join(' | ');
+    const id = videoId(link);
+    if (id) songs.push({ id, name, album, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
   }
   return songs;
 }

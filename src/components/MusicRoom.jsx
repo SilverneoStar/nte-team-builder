@@ -69,13 +69,19 @@ const SHUFFLE =
 // The reader's own room: their list of songs, filters and looks. Kept in this
 // browser only (it's just for them).
 const ROOM_KEY = 'nte-team-builder:musicRoom';
-const ROOM_DEFAULTS = { source: 'all', kind: 'all', moving: true, viz: 'bars', bars: 'classic', mine: [] };
+const ROOM_DEFAULTS = { source: 'all', kind: 'all', moving: true, viz: 'bars', bars: 'classic', mine: [], tempo: {} };
 function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
       const v = JSON.parse(localStorage.getItem(ROOM_KEY) || '{}');
       const bars = { pixel: 'digital', dots: 'y2k' }[v.bars] ?? v.bars;
-      return { ...ROOM_DEFAULTS, ...v, bars: bars ?? ROOM_DEFAULTS.bars, mine: Array.isArray(v.mine) ? v.mine : [] };
+      return {
+        ...ROOM_DEFAULTS,
+        ...v,
+        bars: bars ?? ROOM_DEFAULTS.bars,
+        mine: Array.isArray(v.mine) ? v.mine : [],
+        tempo: v.tempo && typeof v.tempo === 'object' ? v.tempo : {},
+      };
     } catch {
       return ROOM_DEFAULTS;
     }
@@ -358,13 +364,43 @@ function Cortado({ chill }) {
   );
 }
 
-// One heartbeat every 50 units, four to a strip; the strip is drawn twice side
-// by side and slides left by one strip width, so the line never runs out.
-const BEAT = 'L18 30 L21 25 L24 30 L27 30 L30 5 L33 38 L36 30 L41 30 L44 24 L48 30 L50 30';
-const STRIP = Array.from({ length: 4 }, (_, k) =>
-  BEAT.replace(/L(\d+) /g, (_, x) => `L${+x + k * 50} `),
-).join(' ');
-const PULSE_D = `M0 30 ${STRIP} M200 30 ${STRIP.replace(/L(\d+) /g, (_, x) => `L${+x + 200} `)}`;
+// Six heartbeats to a 200-unit strip, each a little different: uneven gaps,
+// spikes of different heights, small bumps that come and go. The strip is drawn
+// twice side by side and slides left by one strip width, so it never runs out.
+const HEARTS = [
+  { w: 30, spike: 1, dip: 1, bump: 1 },
+  { w: 36, spike: 0.62, dip: 0.5, bump: 0.4 },
+  { w: 31, spike: 0.85, dip: 0.8, bump: 1.2 },
+  { w: 38, spike: 0.45, dip: 0.35, bump: 0.7 },
+  { w: 30, spike: 0.95, dip: 1.1, bump: 0.5 },
+  { w: 35, spike: 0.7, dip: 0.6, bump: 1 },
+];
+const heartbeat = (x0, { w, spike, dip, bump }) => {
+  const at = (f) => (x0 + w * f).toFixed(1);
+  const y = (dy) => (30 + dy).toFixed(1);
+  return [
+    `L${at(0.34)} 30`,
+    `L${at(0.4)} ${y(-5 * bump)}`,
+    `L${at(0.46)} 30`,
+    `L${at(0.52)} 30`,
+    `L${at(0.58)} ${y(-25 * spike)}`,
+    `L${at(0.64)} ${y(8 * dip)}`,
+    `L${at(0.7)} 30`,
+    `L${at(0.8)} 30`,
+    `L${at(0.87)} ${y(-6 * bump)}`,
+    `L${at(0.94)} 30`,
+    `L${at(1)} 30`,
+  ].join(' ');
+};
+const strip = (offset) => {
+  let x = offset;
+  return HEARTS.map((h) => {
+    const part = heartbeat(x, h);
+    x += h.w;
+    return part;
+  }).join(' ');
+};
+const PULSE_D = `M0 30 ${strip(0)} M200 30 ${strip(200)}`;
 
 /** The pulse line: a heartbeat trace scrolling past while music plays. */
 function PulseLine() {
@@ -379,9 +415,11 @@ function PulseLine() {
           <stop offset="1" stopColor="#c46bff" />
         </linearGradient>
       </defs>
-      <g className="music__pulse-run">
-        <path className="music__pulse-glow" d={PULSE_D} />
-        <path className="music__pulse-line" d={PULSE_D} />
+      <g className="music__pulse-breathe">
+        <g className="music__pulse-run">
+          <path className="music__pulse-glow" d={PULSE_D} />
+          <path className="music__pulse-line" d={PULSE_D} />
+        </g>
       </g>
     </svg>
   );
@@ -415,9 +453,33 @@ export default function MusicRoom() {
   const song = playable[yt.index] ?? null;
   const current = song?.id ?? null;
   const title = song?.name || yt.title;
+  // The beat: what the reader tapped for this song, else the playlist's tempo, else 100.
+  const tapped = song ? room.tempo[song.id] : null;
+  const bpm = tapped || song?.bpm || 100;
+  const taps = useRef([]);
+  const tap = () => {
+    if (!song) return;
+    const now = performance.now();
+    const t = taps.current.filter((x) => now - x < 2500);
+    t.push(now);
+    taps.current = t;
+    if (t.length < 4) return;
+    const gaps = t.slice(1).map((x, i) => x - t[i]);
+    const avg = gaps.reduce((a, b) => a + b, 0) / gaps.length;
+    const v = Math.round(60000 / avg);
+    if (v >= 40 && v <= 240) setRoom({ tempo: { ...room.tempo, [song.id]: v } });
+  };
+  const clearTempo = () => {
+    if (!song) return;
+    const { [song.id]: _, ...rest } = room.tempo;
+    setRoom({ tempo: rest });
+  };
 
   return (
-    <div className={`page music${yt.playing ? ' is-playing' : ''}${room.moving ? '' : ' is-still'}`}>
+    <div
+      className={`page music${yt.playing ? ' is-playing' : ''}${room.moving ? '' : ' is-still'}`}
+      style={{ '--beat': `${(60 / bpm).toFixed(3)}s` }}
+    >
       <header className="page__head music__head">
         <button type="button" className="btn btn--quiet music__back" onClick={() => navigate('arcs')}>
           ← Arcs
@@ -472,6 +534,26 @@ export default function MusicRoom() {
         {(song?.album || yt.author) && (
           <p className="muted small music__artist">
             {[song?.album, yt.author.replace(/ - Topic$/, '')].filter(Boolean).join(' · ')}
+          </p>
+        )}
+        {song && (
+          <p className="music__tempo small">
+            <span className="muted">
+              ♩ {bpm} BPM{tapped ? ' (tapped)' : song.bpm ? '' : ' (default)'}
+            </span>
+            <button
+              type="button"
+              className="music__tap"
+              onClick={tap}
+              title="Tap 4 or more times in time with the music to set this song's beat"
+            >
+              Tap the beat
+            </button>
+            {tapped && (
+              <button type="button" className="music__tap music__tap--reset" onClick={clearTempo}>
+                Reset
+              </button>
+            )}
           </p>
         )}
         <div className="music__controls">
