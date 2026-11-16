@@ -9,8 +9,8 @@
 // = 3,300. Bosses get stronger with difficulty (Taygedo Lv 42 Easy, 72 Ultra).
 //
 // Conditions: up to 3 bonus objectives, a target time, Enemy HP Up, Enemy
-// ATK Up and Enemy <element> Resistance Up for the 3 elements the boss isn't
-// weak to. weakness: the element shown by the boss's level with a red down
+// ATK Up and Enemy <element> Resistance Up for 3 elements (never the boss's
+// weakness). weakness: the element shown by the boss's level with a red down
 // arrow.
 //
 // Stages marked tallyOnly (pink in game) give no score rewards of their own;
@@ -119,6 +119,7 @@ export const CRUCIBLE = {
       boss: 'Headless Rider',
       levels: { hard: 67 },
       weakness: 'psyche',
+      resists: ['cosmos', 'anima', 'incantation'],
       about:
         'A headless rider who roams the city streets at night on a black motorcycle, challenging street racers and taking their psyches with a scythe. “Bone-chilling blue flames will burn away all passion.”',
       bonusObjectives: [
@@ -136,8 +137,45 @@ export const CRUCIBLE = {
         },
       ],
     },
-    { id: 'imaginary-friends', name: 'Imaginary Friends' },
-    { id: 'curtain-call-courtesy', name: 'Curtain Call Courtesy' },
+    {
+      id: 'imaginary-friends',
+      name: 'Imaginary Friends',
+      boss: 'Teehee Bear',
+      levels: { hard: 67 },
+      weakness: 'incantation',
+      resists: ['cosmos', 'psyche', 'lakshana'],
+      about:
+        'An Object Anomaly from the Anomaly known as “Cuddly Bear”, which can’t accept that the child it cared for has grown up and forgotten it. Looks like a plush toy that changes to suit the child it targets. “Revenge, all revenge... heh heh heh!!!”',
+      bonusObjectives: [
+        {
+          text: 'Increases Teehee Bear’s ATK by 2% every 3s, up to a total increase of 20%. Increases its DEF by 50% upon reaching that cap.',
+          points: 25,
+        },
+        {
+          text: 'Increases enemy HP by 25%. Reduces the enemy’s HP by an additional 3% whenever the active character uses Parry Attack.',
+          points: 25,
+        },
+        { text: 'Applies Disarray to the active character for 5s whenever an enemy attack hits, reversing movement controls.', points: 25 },
+      ],
+    },
+    {
+      // Which stage is the Swallowtail's still to confirm (movie ticket stubs
+      // suggest Curtain Call Courtesy).
+      id: 'curtain-call-courtesy',
+      name: 'Curtain Call Courtesy',
+      stageUnconfirmed: true,
+      boss: 'Swallowtail',
+      levels: { hard: 67 },
+      weakness: 'anima',
+      resists: ['chaos', 'psyche', 'lakshana'],
+      about:
+        'A massive, lumbering butterfly that drags a trail of movie ticket stubs, forever yearning for the sky. “Run away... but is escape even possible?”',
+      bonusObjectives: [
+        { text: 'Grants Swallowtail a Shield equal to 30% of its Max HP and increases its DEF by 50% at the start of battle.', points: 25 },
+        { text: 'Reduces the active character’s Stamina by 30 each time they’re hit by an enemy attack, to a minimum of 0.', points: 25 },
+        { text: 'Reduces the active character’s Ultimate Energy by 20 whenever they’re hit by an enemy, but not below 0.', points: 25 },
+      ],
+    },
     { id: 'twisted-fairy-tales', name: 'Twisted Fairy Tales', tallyOnly: true },
     { id: 'settle-your-tab', name: 'Settle Your Tab' },
   ],
