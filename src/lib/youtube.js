@@ -111,7 +111,8 @@ export function usePlaylistPlayer(hostRef, songs) {
   const step = (dir) => {
     const n = ref.current.ids.length;
     if (!n) return;
-    const at = Math.max(0, stRef.current.index);
+    const cur = stRef.current.index;
+    const at = cur < 0 || cur >= n ? (dir > 0 ? -1 : 0) : cur;
     if (shuffleRef.current && n > 1) {
       let r = at;
       while (r === at) r = Math.floor(Math.random() * n);
@@ -119,8 +120,15 @@ export function usePlaylistPlayer(hostRef, songs) {
     } else load((at + dir + n) % n);
   };
 
+  // The list changed (a filter, the reader's own list): the album in the player
+  // may no longer match, so the next song picked loads afresh.
   useEffect(() => {
-    if (!ids.length) return undefined;
+    loaded.current = -1;
+  }, [key]);
+
+  const hasSongs = ids.length > 0;
+  useEffect(() => {
+    if (!hasSongs) return undefined;
     let dead = false;
     let skips = 0;
     let poll;
@@ -135,6 +143,8 @@ export function usePlaylistPlayer(hostRef, songs) {
       if (g) {
         const at = data.video_id ? ref.current.ids.slice(g.start, g.end).indexOf(data.video_id) : -1;
         index = at >= 0 ? g.start + at : g.start + Math.max(0, p.getPlaylistIndex?.() ?? 0);
+      } else if (data.video_id) {
+        index = ref.current.ids.indexOf(data.video_id);
       }
       setSt((s) => {
         const n = { ...s, index, title: data.title || '', author: data.author || '', ...patch };
@@ -165,7 +175,7 @@ export function usePlaylistPlayer(hostRef, songs) {
               // song (or on shuffle), pick the next song here.
               if (e.data === YT.PlayerState.ENDED) {
                 const g = ref.current.groups[loaded.current];
-                if (shuffleRef.current || !g || stRef.current.index >= g.end - 1) step(1);
+                if (shuffleRef.current || loaded.current < 0 || !g || stRef.current.index >= g.end - 1) step(1);
               }
             },
             // A song its label won't let play outside YouTube: note it and skip it.
@@ -186,7 +196,7 @@ export function usePlaylistPlayer(hostRef, songs) {
       player.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hostRef, key]);
+  }, [hostRef, hasSongs]);
 
   const call = (fn, ...args) => player.current?.[fn]?.(...args);
   return {
@@ -198,6 +208,12 @@ export function usePlaylistPlayer(hostRef, songs) {
     next: () => step(1),
     prev: () => step(-1),
     playAt: (i) => load(i),
+    // How far into the song (0..1), or null when YouTube hasn't said yet.
+    progress: () => {
+      const d = player.current?.getDuration?.();
+      const t = player.current?.getCurrentTime?.();
+      return d > 0 && t >= 0 ? Math.min(1, t / d) : null;
+    },
     setShuffle: (on) => {
       shuffleRef.current = on;
       setShuffleState(on);
