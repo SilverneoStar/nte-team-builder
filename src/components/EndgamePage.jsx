@@ -19,7 +19,7 @@ function BossIcon({ boss, size }) {
   return (
     <img
       className="crux-boss-icon"
-      src={`${BASE}bosses/${bossSlug(boss)}.webp`}
+      src={`${BASE}bosses/${bossSlug(boss)}.webp?v=2`}
       width={size}
       height={size}
       alt=""
