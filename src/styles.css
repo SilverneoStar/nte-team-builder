@@ -7953,18 +7953,22 @@ th[aria-sort='descending'] .th-btn {
   align-items: flex-end;
   gap: 3px;
 }
-.music__beat span {
+.music__bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+/* Each bar is full height; the beat engine scales it every frame. */
+.music__beat .music__bars span {
   flex: 1;
-  height: 12%;
+  height: 100%;
   border-radius: 3px 3px 0 0;
   background: linear-gradient(to top, #4f9e3a, #b6e07a);
   transform-origin: bottom;
-  transition: height 0.3s;
-}
-.music.is-playing .music__beat span {
-  height: var(--h);
-  animation: music-bar calc(var(--beat) * var(--k)) ease-in-out infinite alternate;
-  animation-delay: calc(var(--beat) * var(--i) * -0.37);
+  transform: scaleY(0.1);
+  will-change: transform;
 }
 @keyframes music-bar {
   from {
@@ -9245,91 +9249,32 @@ th[aria-sort='descending'] .th-btn {
   }
 }
 
-/* ---------- Tea Room: the pulse line (a heartbeat trace instead of bars) ---------- */
+/* ---------- Tea Room: the pulse line (drawn each frame by the beat engine) ---------- */
 .music__pulse {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-}
-.music__pulse path {
-  fill: none;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-.music__pulse-line {
-  stroke: var(--pulse, #7fd35a);
-  stroke-width: 2.5;
-}
-.music__pulse-glow {
-  stroke: var(--pulse, #7fd35a);
-  stroke-width: 9;
-  opacity: 0.22;
-}
-.music__pulse-run {
-  animation: pulse-run calc(var(--beat) * 4) linear infinite;
-  animation-play-state: paused;
-}
-.music.is-playing .music__pulse-run {
-  animation-play-state: running;
+  --pulse-color: #7fd35a;
+  --pulse-glow: ;
 }
 .music:not(.is-playing) .music__pulse {
-  opacity: 0.45;
-}
-@keyframes pulse-run {
-  to {
-    transform: translateX(-200px);
-  }
+  opacity: 0.5;
 }
 .music__beat[data-bars='neon'] .music__pulse {
-  --pulse: #7dffb0;
-  filter: drop-shadow(0 0 4px #3dff8a);
+  --pulse-color: #7dffb0;
+  --pulse-glow: #3dff8a;
 }
 .music__beat[data-bars='digital'] .music__pulse {
-  --pulse: #ff5fd8;
-  filter: drop-shadow(0 0 4px #c13dff);
+  --pulse-color: #ff5fd8;
+  --pulse-glow: #c13dff;
 }
 .music__beat[data-bars='y2k'] .music__pulse {
-  --pulse: #3ee6ff;
-  filter: drop-shadow(0 0 4px #2a7bff);
+  --pulse-color: #3ee6ff;
+  --pulse-glow: #2a7bff;
 }
 .music__beat[data-bars='rainbow'] .music__pulse {
-  --pulse: url(#pulse-rainbow);
-}
-@media (prefers-reduced-motion: reduce) {
-  .music__pulse-run {
-    animation: none;
-  }
-}
-
-/* Pulse line: a slow, uneven swell on top of the scroll, so the trace never
-   looks mechanical. The strip holds six beats, so it scrolls a bit slower. */
-.music__pulse-run {
-  animation-duration: calc(var(--beat) * 6);
-}
-.music__pulse-breathe {
-  transform-box: view-box;
-  transform-origin: 50% 75%;
-}
-.music.is-playing .music__pulse-breathe {
-  animation: pulse-breathe calc(var(--beat) * 7) ease-in-out infinite;
-}
-@keyframes pulse-breathe {
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-  30% {
-    transform: scaleY(0.78);
-  }
-  55% {
-    transform: scaleY(1.12);
-  }
-  80% {
-    transform: scaleY(0.9);
-  }
+  --pulse-color: rainbow;
 }
 .music__tempo {
   display: flex;

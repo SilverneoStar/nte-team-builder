@@ -7,6 +7,7 @@
 // player), so it pulses at a steady tempo while a track plays.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { parsePlaylist, thumb, usePlaylistPlayer } from '../lib/youtube.js';
+import { useBeatEngine } from '../lib/beatEngine.js';
 import { navigate } from '../lib/route.js';
 import { Tail } from './Mascot.jsx';
 
@@ -364,67 +365,6 @@ function Cortado({ chill }) {
   );
 }
 
-// Six heartbeats to a 200-unit strip, each a little different: uneven gaps,
-// spikes of different heights, small bumps that come and go. The strip is drawn
-// twice side by side and slides left by one strip width, so it never runs out.
-const HEARTS = [
-  { w: 30, spike: 1, dip: 1, bump: 1 },
-  { w: 36, spike: 0.62, dip: 0.5, bump: 0.4 },
-  { w: 31, spike: 0.85, dip: 0.8, bump: 1.2 },
-  { w: 38, spike: 0.45, dip: 0.35, bump: 0.7 },
-  { w: 30, spike: 0.95, dip: 1.1, bump: 0.5 },
-  { w: 35, spike: 0.7, dip: 0.6, bump: 1 },
-];
-const heartbeat = (x0, { w, spike, dip, bump }) => {
-  const at = (f) => (x0 + w * f).toFixed(1);
-  const y = (dy) => (30 + dy).toFixed(1);
-  return [
-    `L${at(0.34)} 30`,
-    `L${at(0.4)} ${y(-5 * bump)}`,
-    `L${at(0.46)} 30`,
-    `L${at(0.52)} 30`,
-    `L${at(0.58)} ${y(-25 * spike)}`,
-    `L${at(0.64)} ${y(8 * dip)}`,
-    `L${at(0.7)} 30`,
-    `L${at(0.8)} 30`,
-    `L${at(0.87)} ${y(-6 * bump)}`,
-    `L${at(0.94)} 30`,
-    `L${at(1)} 30`,
-  ].join(' ');
-};
-const strip = (offset) => {
-  let x = offset;
-  return HEARTS.map((h) => {
-    const part = heartbeat(x, h);
-    x += h.w;
-    return part;
-  }).join(' ');
-};
-const PULSE_D = `M0 30 ${strip(0)} M200 30 ${strip(200)}`;
-
-/** The pulse line: a heartbeat trace scrolling past while music plays. */
-function PulseLine() {
-  return (
-    <svg className="music__pulse" viewBox="0 0 200 40" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="pulse-rainbow" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stopColor="#ff5a5a" />
-          <stop offset="0.25" stopColor="#ffd34f" />
-          <stop offset="0.5" stopColor="#4fe08a" />
-          <stop offset="0.75" stopColor="#4fb8ff" />
-          <stop offset="1" stopColor="#c46bff" />
-        </linearGradient>
-      </defs>
-      <g className="music__pulse-breathe">
-        <g className="music__pulse-run">
-          <path className="music__pulse-glow" d={PULSE_D} />
-          <path className="music__pulse-line" d={PULSE_D} />
-        </g>
-      </g>
-    </svg>
-  );
-}
-
 export default function MusicRoom() {
   const host = useRef(null);
   const [songs, setSongs] = useState(null);
@@ -457,6 +397,9 @@ export default function MusicRoom() {
   const tapped = song ? room.tempo[song.id] : null;
   const bpm = tapped || song?.bpm || 100;
   const taps = useRef([]);
+  const barsRef = useRef(null);
+  const pulseRef = useRef(null);
+  useBeatEngine({ barsRef, canvasRef: pulseRef, viz: room.viz, bpm, playing: yt.playing });
   const tap = () => {
     if (!song) return;
     const now = performance.now();
@@ -508,11 +451,13 @@ export default function MusicRoom() {
         />
         <div className="music__beat" data-bars={room.bars} data-viz={room.viz} aria-hidden="true">
           {room.viz === 'pulse' ? (
-            <PulseLine />
+            <canvas className="music__pulse" ref={pulseRef} />
           ) : (
-            Array.from({ length: BARS }, (_, i) => (
-              <span key={i} style={{ '--i': i, '--k': 1 + (i % 3), '--h': `${30 + ((i * 37) % 60)}%` }} />
-            ))
+            <div className="music__bars" ref={barsRef}>
+              {Array.from({ length: BARS }, (_, i) => (
+                <span key={i} style={{ '--i': i }} />
+              ))}
+            </div>
           )}
         </div>
       </section>
