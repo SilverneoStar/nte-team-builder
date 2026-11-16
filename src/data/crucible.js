@@ -190,9 +190,9 @@ export const CRUCIBLE = {
       id: 'twisted-fairy-tales',
       name: 'Twisted Fairy Tales',
       tallyOnly: true,
-      // Two bosses at once: Mammon and the sand castle Anomaly (the stage text
-      // calls the place Cardboard Castle).
-      boss: 'Mammon & Sand Castle',
+      // Two bosses at once: Mammon (C-4103, Class V) and the castle Anomaly
+      // Expired Invitation (C-1704, Class II), from the in-game Anomaly files.
+      boss: 'Mammon & Expired Invitation',
       icon: 'mammon',
       baseLevel: 47,
       weakness: null,
