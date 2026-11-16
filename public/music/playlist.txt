@@ -8,7 +8,13 @@
 # - Some labels block their songs on other sites; the room skips those and
 #   shows them with a link to play on YouTube instead.
 #
-# Songs from the official NTE10AM channel on YouTube.
+# Songs from the official NTE10AM channel on YouTube, plus music posted
+# only on the official NTE Global channel (Covers & specials).
+
+[Covers & specials]
+God Knows... (NTE Cover Ver.) | https://youtu.be/2UqN7dDMCok
+Mayoiuta (covered by NTE) | https://youtu.be/tVOjvngUElM
+City No Pop (Closed Beta trailer) | https://youtu.be/zIHH5oVg5TM
 
 [Timetrial]
 Timetrial (feat. DUJU) | https://youtu.be/BYqZZx0lN3U

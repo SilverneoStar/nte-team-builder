@@ -397,9 +397,13 @@ export default function MusicRoom() {
         <p className="muted">
           You found Matcha’s hiding spot. Pick a track: it’s the game’s official soundtrack from{' '}
           <a href={CHANNEL} target="_blank" rel="noopener noreferrer">
-            NTE10AM on YouTube
-          </a>
-          .
+            NTE10AM
+          </a>{' '}
+          and{' '}
+          <a href="https://www.youtube.com/@NTE_Official" target="_blank" rel="noopener noreferrer">
+            NTE Global
+          </a>{' '}
+          on YouTube.
         </p>
       </header>
 
