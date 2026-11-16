@@ -74,7 +74,8 @@ function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
       const v = JSON.parse(localStorage.getItem(ROOM_KEY) || '{}');
-      return { ...ROOM_DEFAULTS, ...v, mine: Array.isArray(v.mine) ? v.mine : [] };
+      const bars = { pixel: 'digital', dots: 'y2k' }[v.bars] ?? v.bars;
+      return { ...ROOM_DEFAULTS, ...v, bars: bars ?? ROOM_DEFAULTS.bars, mine: Array.isArray(v.mine) ? v.mine : [] };
     } catch {
       return ROOM_DEFAULTS;
     }
@@ -98,8 +99,8 @@ const isInstrumental = (x) => /instrumental|伴奏|karaoke|off vocal/i.test(x.na
 const BAR_STYLES = [
   { id: 'classic', label: 'Classic' },
   { id: 'neon', label: 'Neon' },
-  { id: 'pixel', label: 'Pixel' },
-  { id: 'dots', label: 'LED dots' },
+  { id: 'digital', label: 'Digital' },
+  { id: 'y2k', label: 'Y2K' },
   { id: 'rainbow', label: 'Rainbow' },
 ];
 
