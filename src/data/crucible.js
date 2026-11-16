@@ -58,8 +58,16 @@ export const CRUCIBLE = {
   // Tally-only stages: every condition is worth 7x.
   tallyMultiplier: 7,
 
-  // Score milestones per stage (rewards by score; item names to confirm).
-  milestones: [500, 1000, 2000, 3000, 5000],
+  // Rewards per stage by its best score (each paid once). Seen on No Changing
+  // Channels and Imaginary Friends; tallyOnly stages give none. Item names
+  // match the glossary (icons in public/icons/materials).
+  milestones: [
+    { score: 500, rewards: [['Fabricated Dice', 1], ['Fons', 30000], ['Beetle Coin', 100000]] },
+    { score: 1000, rewards: [['Annulith', 40], ['Elite Hunter Guide', 8], ['Chaotic Dye', 8]] },
+    { score: 2000, rewards: [['Beetle Coin', 50000], ['Senior Hunter Guide', 8], ['Colorless Dye', 8]] },
+    { score: 3000, rewards: [['Expansion Core', 5], ['Heterogeneous Unit', 20]] },
+    { score: 5000, rewards: [['Expansion Core', 2], ['Heterogeneous Unit', 10]] },
+  ],
 
   stages: [
     {
