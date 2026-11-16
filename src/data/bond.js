@@ -3,8 +3,9 @@
 // Affinity values and shops, Bond level rewards), GameWith "Best Gifts for
 // Each Character" (gift lists, best-value gift), Icy Veins item database
 // (which characters prefer each gift), ntebuild (Zankou).
-// A favourite gift gives double its normal Affinity; the values below are the
-// favourite values. null = value not published.
+// Every gift gives some Affinity to anyone and more to the characters who
+// favour it (how much more varies: Glimmering Ice gives Fadia +400, Elyms
+// +200). The values below are each character's favourite values. null = value not published.
 
 export const BOND_MAX = 10;
 export const BOND_TOTAL = 56000; // Affinity from Lv 1 to Lv 10, per community charts
@@ -161,7 +162,7 @@ export const BOND = {
     gifts: [
       g('Solitude', 400, `${OOPS} (Illusion Town), 10,000 Fons`),
       g('Glimmering Ice', 200, `${BLOOMS} (Bridge Crossings), 5,400 Fons`),
-      g('Good Friend Sticker', 200),
+      g('Good Friend Sticker', 200, 'From Elyms herself, once a day when you stay idle with her on screen'),
       g('Blink! Wink Battle!', 100, 'Bamboo Pharmacy (Bridge Crossings), 600 Fons'),
     ],
     partial: true,

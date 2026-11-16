@@ -134,7 +134,7 @@ export default function BondSection({ character: c }) {
             ))}
           </ol>
           <p className="muted small">
-            Favourite gifts give double Affinity. You can give up to {GIFT_LIMITS.perCharacter} gifts to each character
+            Favourite gifts give that character extra Affinity on top of what any gift gives. You can give up to {GIFT_LIMITS.perCharacter} gifts to each character
             and {GIFT_LIMITS.perDay} gifts in total per day.
           </p>
         </>
