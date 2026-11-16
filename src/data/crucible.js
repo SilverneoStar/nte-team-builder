@@ -6,7 +6,8 @@
 //   (Basic Difficulty Score 500 + points of the conditions picked) x multiplier
 // (x1 Easy, x2 Normal, x3 Hard, x5 Ultra). Checked against the game's totals:
 // Taygedo on Ultra (500 + 600) x 5 = 5,500; Black Tome on Hard (500 + 600) x 3
-// = 3,300. Bosses get stronger with difficulty (Taygedo Lv 42 Easy, 72 Ultra).
+// = 3,300; Debt Collector on Hard (500 + 680) x 3 = 3,180 and on Ultra
+// (500 + 875) x 5 = 6,875. Basic score is 500 on every difficulty. Bosses get stronger with difficulty (Taygedo Lv 42 Easy, 72 Ultra).
 //
 // Conditions: up to 3 bonus objectives, a target time, Enemy HP Up, Enemy
 // ATK Up and Enemy <element> Resistance Up for 3 elements (never the boss's
@@ -15,7 +16,9 @@
 //
 // Stages marked tallyOnly (pink in game) give no score rewards of their own;
 // their points only count toward the overall Score Reward total (and title).
-// Their condition points are 7x the usual (e.g. 90s target time: 3,500).
+// Their condition points are 7x the usual (e.g. 90s target time: 3,500), and
+// they show no weakness. Mammon's stage has several enemies ("other surviving
+// units").
 
 export const CRUCIBLE = {
   // Score Reward bar across all stages.
@@ -23,9 +26,9 @@ export const CRUCIBLE = {
 
   difficulties: [
     { id: 'easy', label: 'Easy', multiplier: 1, basicScore: 500 },
-    { id: 'normal', label: 'Normal', multiplier: 2, basicScore: null },
-    { id: 'hard', label: 'Hard', multiplier: 3, basicScore: null },
-    { id: 'ultra', label: 'Ultra', multiplier: 5, basicScore: null },
+    { id: 'normal', label: 'Normal', multiplier: 2, basicScore: 500 },
+    { id: 'hard', label: 'Hard', multiplier: 3, basicScore: 500 },
+    { id: 'ultra', label: 'Ultra', multiplier: 5, basicScore: 500 },
   ],
 
   // Conditions shared by stages (seen on No Changing Channels; points per pick).
@@ -159,11 +162,9 @@ export const CRUCIBLE = {
       ],
     },
     {
-      // Which stage is the Swallowtail's still to confirm (movie ticket stubs
-      // suggest Curtain Call Courtesy).
+      // Matched by elimination (8 stages, 8 bosses) and the movie ticket stubs.
       id: 'curtain-call-courtesy',
       name: 'Curtain Call Courtesy',
-      stageUnconfirmed: true,
       boss: 'Swallowtail',
       levels: { hard: 67 },
       weakness: 'anima',
@@ -176,7 +177,36 @@ export const CRUCIBLE = {
         { text: 'Reduces the active character’s Ultimate Energy by 20 whenever they’re hit by an enemy, but not below 0.', points: 25 },
       ],
     },
-    { id: 'twisted-fairy-tales', name: 'Twisted Fairy Tales', tallyOnly: true },
-    { id: 'settle-your-tab', name: 'Settle Your Tab' },
+    {
+      id: 'twisted-fairy-tales',
+      name: 'Twisted Fairy Tales',
+      tallyOnly: true,
+      boss: 'Mammon',
+      levels: { easy: 47 },
+      weakness: null,
+      resists: ['cosmos', 'anima', 'lakshana'],
+      about:
+        'Sometimes, Anomalies work together for mutual gain. Just like now: Mammon, the wealth-devouring Anomaly, lurks in Cardboard Castle, waiting for the next hero foolish enough to walk right into its trap. “The next challenger to come knocking... Who will it be?”',
+      bonusObjectives: [
+        { text: 'Increases enemies’ HP by 25%. Causes all other surviving units to enter the Broken state whenever an enemy enters it.', points: 175 },
+        { text: 'Increases all other surviving units’ ATK by 50% and DEF by 50% whenever an enemy is defeated.', points: 175 },
+        { text: 'Enables enemies to land critical hits. Increases their Crit Rate by 50% and Crit DMG by 50%.', points: 175 },
+      ],
+    },
+    {
+      id: 'settle-your-tab',
+      name: 'Settle Your Tab',
+      boss: 'Debt Collector',
+      levels: { hard: 67, ultra: 77 },
+      weakness: 'cosmos',
+      resists: ['incantation', 'chaos', 'psyche'],
+      about:
+        'An Anomaly born from the theft of time. It erases the effects of stolen time and reclaims what was gained through deception. Even the once-mighty Constantine family was ultimately brought to ruin by its relentless pursuit. “Ashes to ashes, dust to dust.”',
+      bonusObjectives: [
+        { text: 'Increases the Debt Collector’s ATK by 50% and DEF by 50% while its HP is below 50%.', points: 25 },
+        { text: 'Causes all allies to lose 2% HP every 10s, but cannot reduce their HP below 20% of Max HP.', points: 25 },
+        { text: 'Prevents enemies from entering the Broken state.', points: 25 },
+      ],
+    },
   ],
 };
