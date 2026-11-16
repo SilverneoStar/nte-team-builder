@@ -155,6 +155,18 @@ export const BOND = {
     ],
     cosmetics: { sticker: 'Explore the Unknown', avatar: 'ragdE', frame: 'The Omniscience Paradox', namecard: 'Formal Application, Reading Report' },
   },
+  // From CN server gift cards shared by the project owner (Nov 16, 2026).
+  elyms: {
+    best: 'Blink! Wink Battle!',
+    gifts: [
+      g('Solitude', 400, `${OOPS} (Illusion Town), 10,000 Fons`),
+      g('Glimmering Ice', 200, `${BLOOMS} (Bridge Crossings), 5,400 Fons`),
+      g('Good Friend Sticker', 200),
+      g('Blink! Wink Battle!', 100, 'Bamboo Pharmacy (Bridge Crossings), 600 Fons'),
+    ],
+    partial: true,
+    cnOnly: true,
+  },
   fadia: {
     best: 'Glimmering Ice',
     gifts: [

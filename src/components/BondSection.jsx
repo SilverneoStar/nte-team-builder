@@ -120,6 +120,9 @@ export default function BondSection({ character: c }) {
                 ))}
               </ol>
               {bond.partial && <p className="muted small">Only some of {first}’s favourites are published so far.</p>}
+              {bond.cnOnly && (
+                <p className="muted small">Gift values come from the Chinese servers.</p>
+              )}
             </>
           ) : (
             <p className="muted small">{first}’s favourite gifts will be added once they’re published.</p>
