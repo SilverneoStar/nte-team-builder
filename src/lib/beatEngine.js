@@ -12,14 +12,25 @@ const hash = (n) => {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
 };
-const gauss = (p, at, w) => Math.exp(-(((p - at) / w) ** 2));
-// One heartbeat over a beat (p from 0 to 1): small bump, dip, tall spike, dip, slow wave.
-const heart = (p) =>
-  0.1 * gauss(p, 0.1, 0.035) -
-  0.12 * gauss(p, 0.27, 0.014) +
-  gauss(p, 0.31, 0.016) -
-  0.28 * gauss(p, 0.35, 0.016) +
-  0.2 * gauss(p, 0.56, 0.06);
+// The pulse line at beat b: flat at the edges of each beat, a smooth swell of
+// waves in the middle. Each beat has its own number of waves and height, and
+// some stretches of four beats stay quiet, so it rests flat, then rolls.
+const smooth = (x) => x * x * (3 - 2 * x);
+const wave = (b) => {
+  const k = Math.floor(b);
+  const p = b - k;
+  const phrase = Math.floor(k / 4);
+  // About one stretch in five rests, never two in a row.
+  const rests = (n) => hash(n + 900) < 0.22;
+  const quiet = rests(phrase) && !rests(phrase - 1);
+  const height = (quiet ? 0.12 : 0.55 + 0.45 * hash(k + 300)) * (k % 4 === 0 ? 1 : 0.8);
+  const waves = 1.5 + Math.floor(hash(k + 500) * 3);
+  // Rest flat for the first and last part of the beat; swell in between.
+  const a = 0.12 + 0.1 * hash(k + 700);
+  const e = p < a || p > 1 - a ? 0 : Math.sin((Math.PI * (p - a)) / (1 - 2 * a));
+  return height * smooth(e) * Math.sin(TAU * waves * p + hash(k) * 2);
+};
+
 // How strong beat k is: downbeats strong, the rest varied.
 const strength = (k) => (k % 4 === 0 ? 0.9 + 0.1 * hash(k) : 0.45 + 0.4 * hash(k));
 
@@ -98,16 +109,14 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing }) {
       const glow = cs.getPropertyValue('--pulse-glow').trim();
       // Six beats across the width; the newest point is on the right.
       const span = 6;
-      const base = h * 0.7;
-      const amp = h * 0.62;
+      // The line rests in the middle so the waves can go both up and down.
+      const base = h * 0.55;
+      const amp = h * 0.42;
       const now = beatAt(st.clock);
       ctx.beginPath();
       for (let x = 0; x <= w; x += 2 * dpr) {
         const b = now - ((w - x) / w) * span;
-        const k = Math.floor(b);
-        const p = b - k;
-        const wobble = 0.025 * Math.sin(b * TAU * 1.7) + 0.015 * Math.sin(b * TAU * 4.3 + 1);
-        const y = base - amp * (heart(p) * strength(k) + wobble);
+        const y = base - amp * wave(b);
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
@@ -132,7 +141,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing }) {
       ctx.stroke();
       ctx.shadowBlur = 0;
       // A bright dot where the line is being drawn.
-      const yEnd = base - amp * (heart(now - Math.floor(now)) * strength(Math.floor(now)));
+      const yEnd = base - amp * wave(now);
       ctx.fillStyle = color === 'rainbow' ? '#c46bff' : color;
       ctx.beginPath();
       ctx.arc(w - 3 * dpr, yEnd, 3 * dpr, 0, TAU);
