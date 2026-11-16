@@ -236,9 +236,9 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount, albumNames }) {
           onChange={(v) => setRoom({ kind: v })}
           options={[
             { id: 'all', label: 'All' },
-            { id: 'vocal', label: 'Main versions' },
-            { id: 'inst', label: 'Instrumental versions' },
-            { id: 'game', label: 'Game OST' },
+            { id: 'vocal', label: 'Lyrical' },
+            { id: 'inst', label: 'Instrumental' },
+            { id: 'game', label: 'OST' },
           ]}
         />
       </div>
@@ -428,7 +428,7 @@ export default function MusicRoom() {
       list = room.mine.map((id) => byId.get(id)).filter(Boolean);
     }
     if (room.source === 'official') list = list.filter((x) => !x.fan);
-    // Main / instrumental versions of the songs; Game OST: the music from inside the game.
+    // Lyrical / instrumental versions of the songs; OST: the music from inside the game.
     if (room.kind === 'vocal') list = list.filter((x) => !x.game && !isInstrumental(x));
     if (room.kind === 'inst') list = list.filter((x) => !x.game && isInstrumental(x));
     if (room.kind === 'game') list = list.filter((x) => x.game);
