@@ -15,6 +15,7 @@ import { reviewBuild } from '../lib/buildReview.js';
 import { SYNERGY_RANKS, SYNERGY_RANK_STOPS } from '../lib/synergy.js';
 import { navigate } from '../lib/route.js';
 import { startingBuild } from './MyBuildEditor.jsx';
+import ElementGlyph from './ElementGlyph.jsx';
 import Portrait from './Portrait.jsx';
 
 const SORT_KEY = 'nte-team-builder:myEspersSort';
@@ -351,13 +352,20 @@ export default function MyEspersPage({ onLoadTeam }) {
                     title={`${c.name} · ${verdict}`}
                     aria-label={`${c.name}, ${verdict}`}
                   >
-                    <span className="myagents__art">
-                      <Portrait character={c} size="lg" backdrop />
+                    {/* The art is clipped to its rounded square; the rank and element
+                        badges sit on the frame around it, half outside the corners. */}
+                    <span className="myespers__frame">
+                      <span className="myagents__art">
+                        <Portrait character={c} size="lg" backdrop />
+                      </span>
                       {r?.rank && (
                         <span className="myespers__rank" style={rankStyle(r.rank)} aria-hidden="true">
                           {r.rank}
                         </span>
                       )}
+                      <span className="myespers__el" aria-hidden="true">
+                        <ElementGlyph element={c.element} size={18} />
+                      </span>
                     </span>
                     <span className="myagents__label">
                       <span className="myagents__name">{c.name}</span>

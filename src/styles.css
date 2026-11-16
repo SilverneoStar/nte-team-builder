@@ -8539,8 +8539,9 @@ th[aria-sort='descending'] .th-btn {
 /* Cortado's rank on each build icon (gradient = the Synergy rank colours). */
 .myespers__rank {
   position: absolute;
-  right: -4px;
-  top: -4px;
+  right: -12px;
+  top: -10px;
+  z-index: 1;
   min-width: 26px;
   padding: 1px 6px;
   border-radius: 999px;
@@ -8781,4 +8782,28 @@ th[aria-sort='descending'] .th-btn {
 .crux__levels .is-on {
   color: var(--fg);
   font-weight: 600;
+}
+
+/* My Espers icon: badges hang off the corners of the clipped art. */
+.myespers__frame {
+  position: relative;
+  display: block;
+  margin: 4px 0 4px;
+}
+.myespers__frame .portrait__glyph {
+  display: none;
+}
+.myespers__el {
+  position: absolute;
+  right: -10px;
+  bottom: -8px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--el) 60%, transparent),
+    0 1px 4px rgba(0, 0, 0, 0.45);
 }
