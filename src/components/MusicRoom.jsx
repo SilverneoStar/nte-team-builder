@@ -238,6 +238,7 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount, albumNames }) {
             { id: 'all', label: 'All' },
             { id: 'vocal', label: 'Main versions' },
             { id: 'inst', label: 'Instrumental versions' },
+            { id: 'game', label: 'Game OST' },
           ]}
         />
       </div>
@@ -419,27 +420,27 @@ export default function MusicRoom() {
     };
   }, []);
   const [room, setRoom] = useRoomSettings();
-  const playable = useMemo(() => {
+  // The songs under the Play and Songs choices.
+  const filtered = useMemo(() => {
     let list = songs ?? [];
     if (room.source === 'mine') {
       const byId = new Map(list.map((x) => [x.id, x]));
       list = room.mine.map((id) => byId.get(id)).filter(Boolean);
     }
     if (room.source === 'official') list = list.filter((x) => !x.fan);
-    if (room.kind === 'vocal') list = list.filter((x) => !isInstrumental(x));
-    if (room.kind === 'inst') list = list.filter(isInstrumental);
-    // Picked albums only (none picked: every album), played one after another.
-    const on = new Set(room.albums);
-    if (list.some((x) => on.has(x.album))) list = list.filter((x) => on.has(x.album));
+    // Main / instrumental versions of the songs; Game OST: the music from inside the game.
+    if (room.kind === 'vocal') list = list.filter((x) => !x.game && !isInstrumental(x));
+    if (room.kind === 'inst') list = list.filter((x) => !x.game && isInstrumental(x));
+    if (room.kind === 'game') list = list.filter((x) => x.game);
     return list;
-  }, [songs, room.source, room.kind, room.mine, room.albums]);
-  // The albums the picker offers: those with songs under the Play choice.
-  const albumNames = useMemo(() => {
-    let list = songs ?? [];
-    if (room.source === 'official') list = list.filter((x) => !x.fan);
-    if (room.source === 'mine') list = list.filter((x) => room.mine.includes(x.id));
-    return [...new Set(list.map((x) => x.album).filter(Boolean))];
-  }, [songs, room.source, room.mine]);
+  }, [songs, room.source, room.kind, room.mine]);
+  // The albums the picker offers: those with songs under those choices.
+  const albumNames = useMemo(() => [...new Set(filtered.map((x) => x.album).filter(Boolean))], [filtered]);
+  // Picked albums only (none picked, or none of them here: every album), played one after another.
+  const playable = useMemo(() => {
+    const on = new Set(room.albums);
+    return filtered.some((x) => on.has(x.album)) ? filtered.filter((x) => on.has(x.album)) : filtered;
+  }, [filtered, room.albums]);
   const yt = usePlaylistPlayer(host, playable);
   const song = playable[yt.index] ?? null;
   const current = song?.id ?? null;

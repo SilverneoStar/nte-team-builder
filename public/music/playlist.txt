@@ -6,7 +6,9 @@
 # - A tempo can follow the link (beats per minute) for the beat bar and pulse:
 #   Song name | YouTube link | 128
 # - [Album name] on its own line starts a new album heading;
-#   [Album name | fan upload] marks its songs as fan uploads (left out by "Official only").
+#   [Album name | fan upload] marks its songs as fan uploads (left out by "Official only"),
+#   and "| game OST" marks in-game music (the "Game OST" filter).
+# Songs without a name show YouTube's title (the four Styxr uploads in In-game 1.5).
 # - Lines starting with # are notes and are skipped.
 # - Some labels block their songs on other sites; the room skips those and
 #   shows them with a link to play on YouTube instead.
@@ -106,22 +108,18 @@ Letters to me (Instrumental) | https://youtu.be/S5cbM9UarBw
 Morning Star and the Sea (feat. 长谷川育美) | https://youtu.be/zzmrOcERn-g
 Morning Star and the Sea (Instrumental) | https://youtu.be/AfPHu-tPyW4
 
-# From the Styxr channel (shared Nov 16, 2026); names come from YouTube
-# until they are filled in here.
-[More OSTs | fan upload]
+# In-game music from the "Neverness to Everness OST" playlist by Finding Purposes
+# (fan uploads of the game's own tracks), newest version first.
+
+[In-game 1.5 | fan upload | game OST]
 https://youtu.be/21uLvqFEZ-0
 https://youtu.be/cNYpMt0IYhM
 https://youtu.be/Y2W7nghJAq8
 https://youtu.be/IIetFPLQhIU
-
-# In-game music from the "Neverness to Everness OST" playlist by Finding Purposes
-# (fan uploads of the game's own tracks), newest version first.
-
-[In-game 1.5 | fan upload]
 Exe Boss Theme | https://youtu.be/JFLXdC8Kfq0
 Imaginary Old Friend Boss Theme | https://youtu.be/GZPAMjx7sPM
 
-[In-game 1.4 | fan upload]
+[In-game 1.4 | fan upload | game OST]
 Akane Rin's Past - Classroom Theme | https://youtu.be/v-BUrKFtHto
 Clement Academy Night Theme | https://youtu.be/cpnL9w2aonI
 Band Rehearsal - RhythmGame Theme (Akane Story) | https://youtu.be/e59yav8cRuQ
@@ -131,7 +129,7 @@ Inquisitor Boss Theme (First Battle Extended Ver.) | https://youtu.be/gsN62idjxq
 Inquisitor Boss Theme (Final Fight) | https://youtu.be/XiMIspZamgQ
 Inquisitor Boss Theme | https://youtu.be/ifi1yS6JMvw
 
-[In-game 1.3 | fan upload]
+[In-game 1.3 | fan upload | game OST]
 Volley Star Theme (Beach Volleyball) | https://youtu.be/yMWnNd8NcUk
 Summer Time Theme | https://youtu.be/IZ7UUrBcsWw
 Radio Mix Version 1.3 | https://youtu.be/tIV3D3_nQ28
@@ -145,7 +143,7 @@ Taygedo Song - Tayge Tayge Rhythm | https://youtu.be/uGa6PgNkOcg
 Zankou Gacha Theme | https://youtu.be/96KG9ykjo2A
 Zankou Boss Theme (Fogden Game) | https://youtu.be/xMvUao28cWY
 
-[In-game 1.2 | fan upload]
+[In-game 1.2 | fan upload | game OST]
 Iroi Gacha Theme | https://youtu.be/M1IRBqc0C5w
 Shinku Gacha Theme | https://youtu.be/VmSQVQab-UA
 Crimson Castle Theme (Dragon Tower) | https://youtu.be/E6kSx100rrc
@@ -156,7 +154,7 @@ Frostspike Dragon Boss Theme | https://youtu.be/TRg-PL1w_8o
 Molten Dragon Boss Theme | https://youtu.be/iuk_11KSfM8
 Shinku Theme - Whatever It Says (VS Crimson Dragon) | https://youtu.be/pYxQSsn3C50
 
-[In-game 1.1 | fan upload]
+[In-game 1.1 | fan upload | game OST]
 Little Nanally Theme | https://youtu.be/Er2xyVwBakA
 Tornado Boss Theme | https://youtu.be/E-aa7qfZ5lQ
 Daffodill's Memory Theme | https://youtu.be/e7lNwQ1GSV8
@@ -168,7 +166,7 @@ Thyme Boss Theme | https://youtu.be/S1Z-y-r-HlM
 Teehee Bear Boss Theme | https://youtu.be/Y_Wv4_Q4RD0
 Dreamwalk Corridor Intro Vocal Theme | https://youtu.be/yj9CnMTcjJE
 
-[In-game: launch & more | fan upload]
+[In-game: launch & more | fan upload | game OST]
 Racing Theme 3 | https://youtu.be/tlHePpIXZt0
 Racing Theme 2 | https://youtu.be/tvQe1q_kb2k
 Racing Theme 1 | https://youtu.be/ePkzD77-SaQ

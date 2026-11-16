@@ -3,7 +3,7 @@
 // title comes from noembed.com, and the songs the room doesn't have yet come out
 // as lines ready for public/music/playlist.txt.
 import { useEffect, useRef, useState } from 'react';
-import { loadYouTubeApi, parsePlaylist } from '../lib/youtube.js';
+import { loadYouTubeApi, parsePlaylist, videoId } from '../lib/youtube.js';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -56,11 +56,13 @@ export default function MusicImport() {
 
   async function run() {
     const list = listId(link);
-    if (!list) return setStatus('That doesn’t look like a playlist link (it needs list=…).');
+    // Or plain video links (any number, one per line): just look up their titles.
+    const links = [...new Set(link.split(/\s+/).map(videoId).filter(Boolean))];
+    if (!list && !links.length) return setStatus('Paste a playlist link (with list=…) or some video links.');
     setRows(null);
-    setStatus('Asking YouTube for the playlist…');
-    let ids = [];
-    try {
+    setStatus(list ? 'Asking YouTube for the playlist…' : 'Looking up the videos…');
+    let ids = list ? [] : links;
+    if (list) try {
       const YT = await loadYouTubeApi();
       player.current?.destroy?.();
       const el = document.createElement('div');
@@ -106,15 +108,15 @@ export default function MusicImport() {
     for (const r of out) {
       const same = byId.get(r.id);
       const like = !same && r.title ? lookLike(r.title) : null;
-      r.state = same ? 'in' : !isGameOst(r.title) ? 'off' : like ? 'like' : 'new';
+      r.state = same ? (same.name ? 'in' : 'unnamed') : !isGameOst(r.title) ? 'off' : like ? 'like' : 'new';
       r.match = (same ?? like)?.name || '';
     }
     setRows([...out]);
-    setStatus(`${ids.length} videos: ${out.filter((r) => r.state === 'new').length} not in the room yet.`);
+    setStatus(`${ids.length} videos: ${out.filter((r) => r.state === 'new' || r.state === 'unnamed').length} not in the room yet.`);
   }
 
   const lines = (rows ?? [])
-    .filter((r) => r.state === 'new')
+    .filter((r) => r.state === 'new' || r.state === 'unnamed')
     .map((r) => `${r.title || '?'} | https://youtu.be/${r.id}`)
     .join('\n');
 
@@ -123,7 +125,7 @@ export default function MusicImport() {
       <header className="page__head">
         <h2 className="page__title">Tea Room import</h2>
         <p className="muted">
-          Paste a YouTube playlist link. The songs the Tea Room doesn’t have come out as lines for its playlist file.
+          Paste a YouTube playlist link (or some video links). The songs the Tea Room doesn’t have come out as lines for its playlist file.
           Only videos whose title names the game and says OST (or soundtrack, BGM, theme) count; the rest are
           marked “Not OST”. Check the “maybe” ones by hand: they share a title with a song already in the room.
         </p>
@@ -135,13 +137,12 @@ export default function MusicImport() {
           run();
         }}
       >
-        <input
+        <textarea
+          rows={3}
           className="input"
-          type="text"
-          inputMode="url"
           value={link}
           onChange={(e) => setLink(e.target.value)}
-          placeholder="https://youtube.com/playlist?list=…"
+          placeholder="A playlist link, or video links one per line"
           aria-label="Playlist link"
         />
         <button type="submit" className="btn">
@@ -162,7 +163,7 @@ export default function MusicImport() {
             className="btn"
             onClick={() => navigator.clipboard?.writeText(lines).then(() => setCopied(true))}
           >
-            {copied ? 'Copied' : 'Copy the new songs'}
+            {copied ? 'Copied' : 'Copy the lines'}
           </button>
         </div>
       )}
@@ -171,7 +172,7 @@ export default function MusicImport() {
           {rows.map((r) => (
             <li key={r.id} className={`is-${r.state ?? 'wait'}`}>
               <span className="music-import__tag">
-                {{ in: 'In room', like: 'Maybe', new: 'New', off: 'Not OST' }[r.state] ?? '…'}
+                {{ in: 'In room', unnamed: 'No name', like: 'Maybe', new: 'New', off: 'Not OST' }[r.state] ?? '…'}
               </span>
               <a href={`https://youtu.be/${r.id}`} target="_blank" rel="noopener noreferrer">
                 {r.title || r.id}

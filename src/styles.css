@@ -9352,6 +9352,7 @@ th[aria-sort='descending'] .th-btn {
   background: var(--good);
   color: #10140f;
 }
+.music-import__list .is-unnamed .music-import__tag,
 .music-import__list .is-like .music-import__tag {
   background: #e3b341;
   color: #1b1405;

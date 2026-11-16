@@ -39,12 +39,13 @@ export function videoId(link) {
 /**
  * The songs in a playlist text file: one per line, "Song name | link", with an
  * optional tempo after it ("| 128", beats per minute); the name can be left out. "[Album]" on its own line heads the songs after it
- * ("[Album | fan upload]" marks them as fan uploads).
+ * ("[Album | fan upload | game OST]" marks them as fan uploads and as in-game music).
  * Blank lines and lines starting with # are skipped.
  */
 export function parsePlaylist(text) {
   let album = '';
   let fan = false;
+  let game = false;
   const songs = [];
   for (const raw of (text ?? '').split(/\r?\n/)) {
     const line = raw.trim();
@@ -55,6 +56,7 @@ export function parsePlaylist(text) {
       const [name, ...tags] = head[1].split('|').map((x) => x.trim());
       album = name;
       fan = tags.some((t) => /^fan/i.test(t));
+      game = tags.some((t) => /^game/i.test(t));
       continue;
     }
     // "Name | link", "Name | link | 128" (its tempo in beats per minute) or just a link.
@@ -63,7 +65,7 @@ export function parsePlaylist(text) {
     const link = parts.pop();
     const name = parts.join(' | ');
     const id = videoId(link);
-    if (id) songs.push({ id, name, album, fan, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
+    if (id) songs.push({ id, name, album, fan, game, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
   }
   return songs;
 }
