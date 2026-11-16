@@ -20,7 +20,6 @@ export function parseHash(hash) {
   const h = (hash || '').replace(/^#/, '');
   // The hidden Tea Room (not in the menu: Matcha leads there).
   if (h === 'music') return { view: 'music' };
-  if (h === 'music-import') return { view: 'music-import' };
   // #character-<id>~mine opens straight on a tab (My build).
   if (h.startsWith('character-')) {
     const [characterId, tab] = h.slice(10).split('~');

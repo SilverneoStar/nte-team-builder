@@ -28,7 +28,6 @@ import { lazyPage } from './lib/lazyPage.js';
 const AchievementsPage = lazyPage(() => import('./components/AchievementsPage.jsx'));
 const ArcsPage = lazyPage(() => import('./components/ArcsPage.jsx'));
 const MusicRoom = lazyPage(() => import('./components/MusicRoom.jsx'));
-const MusicImport = lazyPage(() => import('./components/MusicImport.jsx'));
 const MyEspersPage = lazyPage(() => import('./components/MyEspersPage.jsx'));
 const CharactersPage = lazyPage(() => import('./components/CharactersPage.jsx'));
 const ConsolePage = lazyPage(() => import('./components/ConsolePage.jsx'));
@@ -177,7 +176,6 @@ export default function App() {
 
         {route.view === 'arcs' && <ArcsPage arcType={route.arcType} arcId={route.arcId} />}
         {route.view === 'music' && <MusicRoom />}
-        {route.view === 'music-import' && <MusicImport />}
 
         {route.view === 'achievements' && <AchievementsPage category={route.category} />}
 
