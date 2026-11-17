@@ -164,12 +164,21 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
+      // A gradient style lists its colours in --pulse-stops, left to right.
+      const stops = cs
+        .getPropertyValue('--pulse-stops')
+        .split(',')
+        .map((x) => x.trim())
+        .filter(Boolean);
       let stroke = color;
-      if (color === 'rainbow') {
+      let tip = color;
+      if (stops.length > 1) {
         const g = ctx.createLinearGradient(0, 0, w, 0);
-        ['#ff5a5a', '#ffd34f', '#4fe08a', '#4fb8ff', '#c46bff'].forEach((col, i) => g.addColorStop(i / 4, col));
+        stops.forEach((col, i) => g.addColorStop(i / (stops.length - 1), col));
         stroke = g;
+        tip = stops[stops.length - 1];
       }
+      const blur = parseFloat(cs.getPropertyValue('--pulse-blur')) || 8;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
       ctx.strokeStyle = stroke;
@@ -180,13 +189,13 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       ctx.lineWidth = 2.4 * dpr;
       if (glow) {
         ctx.shadowColor = glow;
-        ctx.shadowBlur = 8 * dpr;
+        ctx.shadowBlur = blur * dpr;
       }
       ctx.stroke();
       ctx.shadowBlur = 0;
       // A bright dot where the line is being drawn.
       const yEnd = base - amp * Math.min(1.15, st.energy) * wave(now, st.mood);
-      ctx.fillStyle = color === 'rainbow' ? '#c46bff' : color;
+      ctx.fillStyle = tip;
       ctx.beginPath();
       ctx.arc(w - 3 * dpr, yEnd, 3 * dpr, 0, TAU);
       ctx.fill();

@@ -9347,3 +9347,166 @@ th[aria-sort='descending'] .th-btn {
   margin: 4px 0 0;
   color: var(--muted);
 }
+
+/* ---------- Tea Room: the Elements style (NTE's elements: Incantation, Lakshana, Anima, Psyche, Chaos, Cosmos) ---------- */
+.music__beat[data-bars='elements'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, color-mix(in oklab, var(--c) 70%, #000), var(--c) 70%, color-mix(in oklab, var(--c) 55%, #fff));
+  box-shadow: 0 0 5px color-mix(in srgb, var(--c) 35%, transparent);
+}
+.music__beat[data-bars='elements'] span:nth-child(1) {
+  --c: color-mix(in oklab, var(--el-incantation) 100%, var(--el-lakshana));
+}
+.music__beat[data-bars='elements'] span:nth-child(2) {
+  --c: color-mix(in oklab, var(--el-incantation) 81%, var(--el-lakshana));
+}
+.music__beat[data-bars='elements'] span:nth-child(3) {
+  --c: color-mix(in oklab, var(--el-incantation) 63%, var(--el-lakshana));
+}
+.music__beat[data-bars='elements'] span:nth-child(4) {
+  --c: color-mix(in oklab, var(--el-incantation) 44%, var(--el-lakshana));
+}
+.music__beat[data-bars='elements'] span:nth-child(5) {
+  --c: color-mix(in oklab, var(--el-incantation) 26%, var(--el-lakshana));
+}
+.music__beat[data-bars='elements'] span:nth-child(6) {
+  --c: color-mix(in oklab, var(--el-incantation) 7%, var(--el-lakshana));
+}
+.music__beat[data-bars='elements'] span:nth-child(7) {
+  --c: color-mix(in oklab, var(--el-lakshana) 89%, var(--el-anima));
+}
+.music__beat[data-bars='elements'] span:nth-child(8) {
+  --c: color-mix(in oklab, var(--el-lakshana) 70%, var(--el-anima));
+}
+.music__beat[data-bars='elements'] span:nth-child(9) {
+  --c: color-mix(in oklab, var(--el-lakshana) 52%, var(--el-anima));
+}
+.music__beat[data-bars='elements'] span:nth-child(10) {
+  --c: color-mix(in oklab, var(--el-lakshana) 33%, var(--el-anima));
+}
+.music__beat[data-bars='elements'] span:nth-child(11) {
+  --c: color-mix(in oklab, var(--el-lakshana) 15%, var(--el-anima));
+}
+.music__beat[data-bars='elements'] span:nth-child(12) {
+  --c: color-mix(in oklab, var(--el-anima) 96%, var(--el-psyche));
+}
+.music__beat[data-bars='elements'] span:nth-child(13) {
+  --c: color-mix(in oklab, var(--el-anima) 78%, var(--el-psyche));
+}
+.music__beat[data-bars='elements'] span:nth-child(14) {
+  --c: color-mix(in oklab, var(--el-anima) 59%, var(--el-psyche));
+}
+.music__beat[data-bars='elements'] span:nth-child(15) {
+  --c: color-mix(in oklab, var(--el-anima) 41%, var(--el-psyche));
+}
+.music__beat[data-bars='elements'] span:nth-child(16) {
+  --c: color-mix(in oklab, var(--el-anima) 22%, var(--el-psyche));
+}
+.music__beat[data-bars='elements'] span:nth-child(17) {
+  --c: color-mix(in oklab, var(--el-anima) 4%, var(--el-psyche));
+}
+.music__beat[data-bars='elements'] span:nth-child(18) {
+  --c: color-mix(in oklab, var(--el-psyche) 85%, var(--el-chaos));
+}
+.music__beat[data-bars='elements'] span:nth-child(19) {
+  --c: color-mix(in oklab, var(--el-psyche) 67%, var(--el-chaos));
+}
+.music__beat[data-bars='elements'] span:nth-child(20) {
+  --c: color-mix(in oklab, var(--el-psyche) 48%, var(--el-chaos));
+}
+.music__beat[data-bars='elements'] span:nth-child(21) {
+  --c: color-mix(in oklab, var(--el-psyche) 30%, var(--el-chaos));
+}
+.music__beat[data-bars='elements'] span:nth-child(22) {
+  --c: color-mix(in oklab, var(--el-psyche) 11%, var(--el-chaos));
+}
+.music__beat[data-bars='elements'] span:nth-child(23) {
+  --c: color-mix(in oklab, var(--el-chaos) 93%, var(--el-cosmos));
+}
+.music__beat[data-bars='elements'] span:nth-child(24) {
+  --c: color-mix(in oklab, var(--el-chaos) 74%, var(--el-cosmos));
+}
+.music__beat[data-bars='elements'] span:nth-child(25) {
+  --c: color-mix(in oklab, var(--el-chaos) 56%, var(--el-cosmos));
+}
+.music__beat[data-bars='elements'] span:nth-child(26) {
+  --c: color-mix(in oklab, var(--el-chaos) 37%, var(--el-cosmos));
+}
+.music__beat[data-bars='elements'] span:nth-child(27) {
+  --c: color-mix(in oklab, var(--el-chaos) 19%, var(--el-cosmos));
+}
+.music__beat[data-bars='elements'] span:nth-child(28) {
+  --c: var(--el-cosmos);
+}
+.music__beat[data-bars='elements'] .music__pulse {
+  --pulse-color: var(--el-incantation);
+  --pulse-stops: var(--el-incantation), var(--el-lakshana), var(--el-anima), var(--el-psyche), var(--el-chaos), var(--el-cosmos);
+  --pulse-glow: rgb(255 255 255 / 0.25);
+  --pulse-blur: 4;
+}
+.music__beat[data-bars='elements']::before,
+.music__beat[data-bars='elements']::after {
+  content: '';
+  position: absolute;
+  inset: -34px 0 25% 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.music__beat[data-bars='elements']::before {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23f0576b' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23f3d03e' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%233fd3ad' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%234fbcf3' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23ad93f7' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23dfe4ee' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23f0576b' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23f3d03e' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E");
+  background-position: 3.7% 55%, 17.5% 13%, 32.8% 16%, 43.2% 70%, 56.6% 56%, 70.2% 84%, 81.0% 57%, 96.1% 57%;
+  background-size: 9px 9px, 10px 10px, 12px 12px, 13px 13px, 12px 12px, 11px 11px, 12px 12px, 12px 12px;
+  background-repeat: no-repeat;
+}
+.music__beat[data-bars='elements']::after {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%233fd3ad' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23dfe4ee' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%233fd3ad' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23dfe4ee' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%233fd3ad' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L20 12 L12 22 L4 12Z' fill='%23dfe4ee' stroke='%23fff' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E");
+  background-position: 1.1% 42%, 22.6% 52%, 38.2% 47%, 57.3% 29%, 76.1% 58%, 93.2% 57%;
+  background-size: 11px 11px, 9px 9px, 13px 13px, 8px 8px, 11px 11px, 11px 11px;
+  background-repeat: no-repeat;
+}
+.music.is-playing .music__beat[data-bars='elements']::before {
+  animation: room-candy calc(var(--beat) * 6) ease-in-out infinite;
+}
+.music.is-playing .music__beat[data-bars='elements']::after {
+  animation: room-candy calc(var(--beat) * 6) ease-in-out calc(var(--beat) * -3) infinite;
+}
+
+/* Neon: a softer glow, and a mint to aqua to lilac gradient across the bars. */
+.music__beat[data-bars='neon'] .music__bars span {
+  background: linear-gradient(
+    to top,
+    hsl(calc(150 + var(--i) * 4.6) 75% 45%),
+    hsl(calc(150 + var(--i) * 4.6) 95% 75%)
+  );
+  border-radius: 4px;
+  box-shadow: 0 0 4px hsl(calc(150 + var(--i) * 4.6) 90% 60% / 0.35);
+}
+.music__beat[data-bars='neon'] .music__pulse {
+  --pulse-color: #7dffb0;
+  --pulse-stops: #7dffb0, #5be7ff, #b18cff;
+  --pulse-glow: rgb(91 231 255 / 0.5);
+  --pulse-blur: 4;
+}
+.music__beat[data-bars='neon']::before,
+.music__beat[data-bars='neon']::after {
+  filter: drop-shadow(0 0 1.5px rgb(61 255 138 / 0.6));
+}
+.music__beat[data-bars='rainbow'] .music__pulse {
+  --pulse-color: #ff5a5a;
+  --pulse-stops: #ff5a5a, #ffd34f, #4fe08a, #4fb8ff, #c46bff;
+}
