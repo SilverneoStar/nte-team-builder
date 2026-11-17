@@ -135,70 +135,202 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       return st.playing || moving;
     };
 
-    const drawPulse = () => {
+    // Colours for the canvas styles come from the page: --pulse-color, a
+    // left-to-right gradient in --pulse-stops, and a glow.
+    const paint = (c, ctx, w) => {
+      const cs = getComputedStyle(c);
+      const color = cs.getPropertyValue('--pulse-color').trim() || '#7fd35a';
+      const stops = cs
+        .getPropertyValue('--pulse-stops')
+        .split(',')
+        .map((x) => x.trim())
+        .filter(Boolean);
+      let fill = color;
+      let tip = color;
+      if (stops.length > 1) {
+        const g = ctx.createLinearGradient(0, 0, w, 0);
+        stops.forEach((col, i) => g.addColorStop(i / (stops.length - 1), col));
+        fill = g;
+        tip = stops[stops.length - 1];
+      }
+      return {
+        fill,
+        tip,
+        glow: cs.getPropertyValue('--pulse-glow').trim(),
+        blur: parseFloat(cs.getPropertyValue('--pulse-blur')) || 8,
+      };
+    };
+    const canvasOf = () => {
       const c = canvasRef.current;
-      if (!c) return false;
+      if (!c) return null;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       const w = Math.round(c.clientWidth * dpr);
       const h = Math.round(c.clientHeight * dpr);
-      if (!w || !h) return st.playing;
+      if (!w || !h) return null;
       if (c.width !== w || c.height !== h) {
         c.width = w;
         c.height = h;
       }
       const ctx = c.getContext('2d');
       ctx.clearRect(0, 0, w, h);
-      const cs = getComputedStyle(c);
-      const color = cs.getPropertyValue('--pulse-color').trim() || '#7fd35a';
-      const glow = cs.getPropertyValue('--pulse-glow').trim();
-      // Six beats across the width; the newest point is on the right.
-      const span = 6;
-      // The line rests in the middle so the waves can go both up and down.
-      const base = h * 0.55;
-      const amp = h * 0.42;
-      const now = beatAt(st.clock);
-      ctx.beginPath();
-      for (let x = 0; x <= w; x += 2 * dpr) {
-        const b = now - ((w - x) / w) * span;
-        const y = base - amp * Math.min(1.15, st.energy) * wave(b, st.mood);
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      // A gradient style lists its colours in --pulse-stops, left to right.
-      const stops = cs
-        .getPropertyValue('--pulse-stops')
-        .split(',')
-        .map((x) => x.trim())
-        .filter(Boolean);
-      let stroke = color;
-      let tip = color;
-      if (stops.length > 1) {
-        const g = ctx.createLinearGradient(0, 0, w, 0);
-        stops.forEach((col, i) => g.addColorStop(i / (stops.length - 1), col));
-        stroke = g;
-        tip = stops[stops.length - 1];
-      }
-      const blur = parseFloat(cs.getPropertyValue('--pulse-blur')) || 8;
+      return { c, ctx, w, h, dpr };
+    };
+    const glowStroke = (ctx, p, width, dpr) => {
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
-      ctx.strokeStyle = stroke;
+      ctx.strokeStyle = p.fill;
       ctx.globalAlpha = 0.22;
-      ctx.lineWidth = 8 * dpr;
+      ctx.lineWidth = width * 3.3 * dpr;
       ctx.stroke();
       ctx.globalAlpha = 1;
-      ctx.lineWidth = 2.4 * dpr;
-      if (glow) {
-        ctx.shadowColor = glow;
-        ctx.shadowBlur = blur * dpr;
+      ctx.lineWidth = width * dpr;
+      if (p.glow) {
+        ctx.shadowColor = p.glow;
+        ctx.shadowBlur = p.blur * dpr;
       }
       ctx.stroke();
       ctx.shadowBlur = 0;
-      // A bright dot where the line is being drawn.
-      const yEnd = base - amp * Math.min(1.15, st.energy) * wave(now, st.mood);
-      ctx.fillStyle = tip;
+    };
+    const lift = () => Math.min(1.15, st.energy);
+
+    // Pulse line: each wave lasts a beat and a half, five across the width.
+    // Points sit at fixed places along the song, not the screen, so the line
+    // slides smoothly instead of shimmering at the peaks.
+    const drawPulse = () => {
+      const k = canvasOf();
+      if (!k) return st.playing;
+      const { c, ctx, w, h, dpr } = k;
+      const unit = 1.5;
+      const span = 5;
+      const base = h * 0.55;
+      const amp = h * 0.42 * lift();
+      const u = beatAt(st.clock) / unit;
+      const du = span / (w / (3 * dpr));
       ctx.beginPath();
-      ctx.arc(w - 3 * dpr, yEnd, 3 * dpr, 0, TAU);
+      let first = true;
+      for (let v = Math.floor((u - span) / du) * du; v <= u + du; v += du) {
+        const x = w - ((u - v) / span) * w;
+        const y = base - amp * wave(v, st.mood);
+        if (first) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+        first = false;
+      }
+      const p = paint(c, ctx, w);
+      glowStroke(ctx, p, 2.4, dpr);
+      ctx.fillStyle = p.tip;
+      ctx.beginPath();
+      ctx.arc(w - 3 * dpr, base - amp * wave(u, st.mood), 3 * dpr, 0, TAU);
       ctx.fill();
+      return st.playing;
+    };
+
+    // Wave: a filled sound wave, mirrored around the middle, swelling in
+    // place. The middle takes the beat; the edges ripple.
+    const drawWave = (dt) => {
+      const k = canvasOf();
+      if (!k) return st.playing;
+      const { c, ctx, w, h, dpr } = k;
+      const n = 64;
+      const b = beatAt(st.clock);
+      const kb = Math.floor(b);
+      const since = (b - kb) * (60 / st.bpm);
+      const kick = st.playing ? strength(kb) * Math.exp(-since / ((60 / st.bpm) * 0.4)) * lift() : 0;
+      st.wave = st.wave ?? [];
+      let moving = false;
+      const lv = [];
+      for (let i = 0; i < n; i++) {
+        const f = i / (n - 1);
+        const mid = Math.sin(Math.PI * f);
+        const t = st.clock;
+        // Ripples at several sizes, so the edge looks like sound rather than a smooth hump.
+        const ripple =
+          0.5 +
+          0.5 * (0.45 * Math.sin(t * 2.3 + f * 23) + 0.35 * Math.sin(t * 4.1 - f * 41 + hash(i) * 6) + 0.2 * Math.sin(t * 6.7 + f * 67));
+        const target = st.playing
+          ? mid ** 0.7 * (0.12 + 0.55 * kick * (0.6 + 0.4 * mid) + 0.5 * ripple * (0.45 + 0.55 * lift()))
+          : 0.04 * mid;
+        const cur = st.wave[i] ?? 0.04;
+        const next = cur + (target - cur) * Math.min(1, (target > cur ? 14 : 4) * dt);
+        if (Math.abs(next - target) > 0.002) moving = true;
+        st.wave[i] = next;
+        lv.push(next);
+      }
+      const mid = h / 2;
+      const half = h * 0.48;
+      const xs = (i) => (i / (n - 1)) * w;
+      // A smooth outline through the points, top edge then the mirrored bottom.
+      const edge = (sign) => {
+        ctx.moveTo(xs(0), mid - sign * lv[0] * half);
+        for (let i = 1; i < n; i++) {
+          const xm = (xs(i - 1) + xs(i)) / 2;
+          const ym = mid - sign * ((lv[i - 1] + lv[i]) / 2) * half;
+          ctx.quadraticCurveTo(xs(i - 1), mid - sign * lv[i - 1] * half, xm, ym);
+        }
+        ctx.lineTo(xs(n - 1), mid - sign * lv[n - 1] * half);
+      };
+      const p = paint(c, ctx, w);
+      ctx.beginPath();
+      edge(1);
+      for (let i = n - 1; i >= 0; i--) ctx.lineTo(xs(i), mid + lv[i] * half);
+      ctx.closePath();
+      ctx.fillStyle = p.fill;
+      ctx.globalAlpha = 0.35;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      edge(1);
+      glowStroke(ctx, p, 1.8, dpr);
+      ctx.beginPath();
+      edge(-1);
+      glowStroke(ctx, p, 1.8, dpr);
+      return st.playing || moving;
+    };
+
+    // Ripples: a ring spreads out from the middle on every beat and fades,
+    // stronger beats making brighter, wider rings.
+    const drawRipples = () => {
+      const k = canvasOf();
+      if (!k) return st.playing;
+      const { c, ctx, w, h, dpr } = k;
+      const beatSec = 60 / st.bpm;
+      const b = beatAt(st.clock);
+      const kb = Math.floor(b);
+      st.rings = st.rings ?? [];
+      if (st.playing && kb !== st.lastRing) {
+        st.lastRing = kb;
+        st.rings.push({ born: st.clock - (b - kb) * beatSec, s: strength(kb) * lift() });
+      }
+      const life = beatSec * 3.2;
+      st.rings = st.rings.filter((r) => st.clock - r.born < life);
+      const p = paint(c, ctx, w);
+      const cx = w / 2;
+      const cy = h * 0.62;
+      ctx.lineCap = 'round';
+      for (const r of st.rings) {
+        const a = (st.clock - r.born) / life;
+        const e = 1 - (1 - a) ** 3;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, w * (0.04 + 0.46 * e), h * (0.08 + 0.5 * e), 0, 0, TAU);
+        ctx.strokeStyle = p.fill;
+        ctx.globalAlpha = Math.max(0, (1 - a) ** 1.6 * Math.min(1, r.s));
+        ctx.lineWidth = (0.8 + 2.4 * (1 - a)) * dpr;
+        if (p.glow) {
+          ctx.shadowColor = p.glow;
+          ctx.shadowBlur = p.blur * dpr;
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+      ctx.globalAlpha = 1;
+      // A glowing core that throbs on the beat.
+      const since = (b - kb) * beatSec;
+      const throb = st.playing ? Math.exp(-since / (beatSec * 0.35)) * strength(kb) * lift() : 0;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, (6 + 10 * throb) * dpr, (2.5 + 4 * throb) * dpr, 0, 0, TAU);
+      ctx.fillStyle = p.tip;
+      ctx.globalAlpha = 0.55 + 0.45 * throb;
+      ctx.fill();
+      ctx.globalAlpha = 1;
       return st.playing;
     };
 
@@ -213,7 +345,8 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       st.shape += ((st.target ?? 1) - st.shape) * Math.min(1, 2 * dt);
       st.energy = st.mood.energy * st.shape;
       if (st.playing) st.clock += dt;
-      const keep = viz === 'pulse' ? drawPulse() : drawBars(dt);
+      const keep =
+        viz === 'pulse' ? drawPulse() : viz === 'wave' ? drawWave(dt) : viz === 'ripples' ? drawRipples() : drawBars(dt);
       // Keep going while playing, or until the bars have settled after a pause.
       raf = keep ? requestAnimationFrame(frame) : 0;
     };
@@ -227,7 +360,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
     st.start = start;
     // Draw the still line once when paused, and on resize.
     const ro = new ResizeObserver(() => start());
-    const el = viz === 'pulse' ? canvasRef.current : barsRef.current;
+    const el = viz === 'bars' ? barsRef.current : canvasRef.current;
     if (el) ro.observe(el);
     return () => {
       cancelAnimationFrame(raf);

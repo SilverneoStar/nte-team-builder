@@ -513,7 +513,7 @@ export default function MusicRoom() {
           alt="Matcha"
         />
         <div className="music__beat" data-bars={room.bars} data-viz={room.viz} aria-hidden="true">
-          {room.viz === 'pulse' ? (
+          {room.viz !== 'bars' ? (
             <canvas className="music__pulse" ref={pulseRef} />
           ) : (
             <div className="music__bars" ref={barsRef}>
@@ -627,6 +627,8 @@ export default function MusicRoom() {
               options={[
                 { id: 'bars', label: 'Bars' },
                 { id: 'pulse', label: 'Pulse line' },
+                { id: 'wave', label: 'Wave' },
+                { id: 'ripples', label: 'Ripples' },
               ]}
             />
             <Choice label="Style" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
