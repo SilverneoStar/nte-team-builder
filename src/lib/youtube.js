@@ -230,6 +230,10 @@ export function usePlaylistPlayer(hostRef, songs) {
     play: () => call('playVideo'),
     pause: () => call('pauseVideo'),
     toggle: () => call(st.playing ? 'pauseVideo' : 'playVideo'),
+    // Volume 0..100, and mute; phones may keep these to their own buttons.
+    setVolume: (v) => call('setVolume', v),
+    mute: () => call('mute'),
+    unMute: () => call('unMute'),
     next: () => step(1),
     prev: () => step(-1),
     playAt: (i) => load(i),

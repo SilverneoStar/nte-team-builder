@@ -9510,3 +9510,51 @@ th[aria-sort='descending'] .th-btn {
   --pulse-color: #ff5a5a;
   --pulse-stops: #ff5a5a, #ffd34f, #4fe08a, #4fb8ff, #c46bff;
 }
+
+/* ---------- Tea Room: volume ---------- */
+.music__volume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 320px);
+}
+.music__btn--small {
+  width: 36px;
+  height: 36px;
+  flex: none;
+}
+.music__btn--small svg {
+  width: 18px;
+  height: 18px;
+}
+.music__volume input[type='range'] {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  appearance: none;
+  background: linear-gradient(to right, #4f9e3a var(--v), var(--line) var(--v));
+  cursor: pointer;
+}
+.music__volume input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #4f9e3a;
+}
+.music__volume input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #4f9e3a;
+}
+.music__volume input[type='range']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.music__volnum {
+  min-width: 3.4em;
+  text-align: right;
+}

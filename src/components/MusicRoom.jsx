@@ -64,13 +64,16 @@ const PLAY = 'M8 5v14l11-7z';
 const PAUSE = 'M7 5h4v14H7zM13 5h4v14h-4z';
 const NEXT = 'M6 6l8.5 6L6 18zM16 6h2v12h-2z';
 const PREV = 'M18 6l-8.5 6L18 18zM6 6h2v12H6z';
+const VOL_HIGH = 'M4 9v6h4l5 4V5L8 9zM16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z';
+const VOL_LOW = 'M4 9v6h4l5 4V5L8 9zM16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z';
+const MUTED = 'M4 9v6h4l5 4V5L8 9zM16 9.4 17.4 8l2.1 2.1L21.6 8 23 9.4l-2.1 2.1 2.1 2.1-1.4 1.4-2.1-2.1-2.1 2.1-1.4-1.4 2.1-2.1z';
 const SHUFFLE =
   'M16 3h5v5l-1.8-1.8-4.4 4.4-1.4-1.4 4.4-4.4zM3 5.4 4.4 4l15.6 15.6V16h1v5h-5v-1h3.6zM9.6 13l1.4 1.4-6.6 6.6L3 19.6z';
 
 // The reader's own room: their list of songs, filters and looks. Kept in this
 // browser only (it's just for them).
 const ROOM_KEY = 'nte-team-builder:musicRoom';
-const ROOM_DEFAULTS = { source: 'all', kind: 'all', albums: [], moving: true, viz: 'bars', bars: 'classic', mine: [], tempo: {}, moods: {} };
+const ROOM_DEFAULTS = { source: 'all', kind: 'all', albums: [], moving: true, viz: 'bars', bars: 'classic', mine: [], tempo: {}, moods: {}, volume: 80, muted: false };
 function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
@@ -450,6 +453,14 @@ export default function MusicRoom() {
   const tapped = song ? room.tempo[song.id] : null;
   const bpm = tapped || song?.bpm || 100;
   const taps = useRef([]);
+  // The reader's volume, handed to YouTube's player once it's ready and on every change.
+  useEffect(() => {
+    if (!yt.ready) return;
+    yt.setVolume(room.volume);
+    if (room.muted || room.volume === 0) yt.mute();
+    else yt.unMute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [yt.ready, room.volume, room.muted]);
   const barsRef = useRef(null);
   const pulseRef = useRef(null);
   // The song's type: what the reader picked for it, else a guess from its name.
@@ -607,6 +618,31 @@ export default function MusicRoom() {
           <button type="button" className="music__btn" onClick={yt.next} aria-label="Next track" disabled={!yt.ready}>
             <Icon d={NEXT} />
           </button>
+        </div>
+        <div className="music__volume">
+          <button
+            type="button"
+            className="music__btn music__btn--small"
+            onClick={() => setRoom({ muted: !room.muted })}
+            aria-pressed={room.muted}
+            aria-label={room.muted ? 'Unmute' : 'Mute'}
+            title={room.muted ? 'Unmute' : 'Mute'}
+            disabled={!yt.ready}
+          >
+            <Icon d={room.muted || room.volume === 0 ? MUTED : room.volume < 50 ? VOL_LOW : VOL_HIGH} />
+          </button>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="5"
+            value={room.muted ? 0 : room.volume}
+            onChange={(e) => setRoom({ volume: +e.target.value, muted: false })}
+            aria-label="Volume"
+            disabled={!yt.ready}
+            style={{ '--v': `${room.muted ? 0 : room.volume}%` }}
+          />
+          <span className="muted small music__volnum">{room.muted ? 'Muted' : `${room.volume}%`}</span>
         </div>
         <details className="music__settings">
           <summary>Room settings</summary>

@@ -13,7 +13,8 @@
 #   shows them with a link to play on YouTube instead.
 #
 # Songs from the official NTE10AM channel on YouTube, plus music posted
-# only on the official NTE Global channel (Covers & specials).
+# only on the official NTE Global channel (Covers & specials), and AmaLee's
+# English version of Play On! from her own channel.
 
 [Covers & specials]
 God Knows... (NTE Cover Ver.) | https://youtu.be/2UqN7dDMCok
@@ -97,6 +98,7 @@ Play on! (English Ver.) (feat. mill) | https://youtu.be/O9w-xR3Dp58
 Play on! (Chinese Ver.) (feat. R.E.D) | https://youtu.be/JVmnbFGSWM8
 Play on! (Japanese Ver.) (feat. Reol) | https://youtu.be/qif6Y9Bm4O0
 Play on! (Korean Ver.) (feat. Raon) | https://youtu.be/gzxCPSePO2E
+Play on! (AmaLee Ver.) | https://youtu.be/DgtuTSAkadA
 Play on! (Instrumental) | https://youtu.be/EykWRfj1pyM
 
 [Letters to me]
