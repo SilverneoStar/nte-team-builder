@@ -518,11 +518,16 @@ export default function MusicRoom() {
       <section className="music__stage" aria-label="Now playing">
         <Cortado chill={yt.playing} />
         <Disc id={current} playing={yt.playing} index={yt.index} />
-        <img
-          className="music__pal music__pal--matcha"
-          src={`${BASE}matcha/${yt.playing ? 'starry' : 'neutral'}.webp`}
-          alt="Matcha"
-        />
+        {/* Matcha with her two tails as their own layers, so they can sway. */}
+        <span className="music__pal music__pal--matcha music-matcha">
+          <img className="music-matcha__tail music-matcha__tail--up" src={`${BASE}matcha/tail-upper.webp`} alt="" />
+          <img className="music-matcha__tail music-matcha__tail--low" src={`${BASE}matcha/tail-lower.webp`} alt="" />
+          <img
+            className="music-matcha__body"
+            src={`${BASE}matcha/body-${yt.playing ? 'starry' : 'neutral'}.webp`}
+            alt={yt.playing ? 'Matcha, enjoying the music' : 'Matcha'}
+          />
+        </span>
         <div className="music__beat" data-bars={room.bars} data-viz={room.viz} aria-hidden="true">
           {room.viz !== 'bars' ? (
             <canvas className="music__pulse" ref={pulseRef} />
