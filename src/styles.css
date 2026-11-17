@@ -9617,3 +9617,83 @@ th[aria-sort='descending'] .th-btn {
     animation: none !important;
   }
 }
+
+/* ---------- Tea Room: order, and fitting each screen size ---------- */
+.music__albumdate {
+  color: var(--muted);
+  margin-top: -2px;
+}
+/* Phones: choices scroll sideways rather than squeezing. */
+.music__seg {
+  max-width: 100%;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+}
+.music__seg::-webkit-scrollbar {
+  display: none;
+}
+.music__seg button {
+  white-space: nowrap;
+}
+@media (max-width: 400px) {
+  .music__controls {
+    gap: 6px;
+  }
+  .music__btn {
+    width: 40px;
+    height: 40px;
+  }
+  .music__btn--main {
+    width: 52px;
+    height: 52px;
+  }
+  .music__seg button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+  .music__track {
+    grid-template-columns: 1.8em 40px 1fr;
+    gap: 8px;
+  }
+  .music__thumb {
+    width: 40px;
+    height: 40px;
+  }
+  .music__stage .music__pal {
+    width: 64px;
+  }
+}
+/* Tablets and up: album cards a touch larger, songs in two columns. */
+@media (min-width: 700px) {
+  .music__albums {
+    grid-auto-columns: 140px;
+  }
+  .music__tracks {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+/* Wide screens: the stage on the left, the controls and player beside it,
+   the playlist across the bottom. */
+@media (min-width: 1000px) {
+  .music {
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr);
+    column-gap: 22px;
+    align-items: start;
+  }
+  .music > .music__head,
+  .music > .music__list {
+    grid-column: 1 / -1;
+  }
+  .music > .music__stage {
+    grid-column: 1;
+  }
+  .music > .music__now {
+    grid-column: 2;
+    position: sticky;
+    top: 12px;
+  }
+  .music__albums {
+    grid-auto-columns: 152px;
+  }
+}

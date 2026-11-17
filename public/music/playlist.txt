@@ -5,7 +5,8 @@
 # - The name is optional: with only a link, the room shows YouTube's title.
 # - A tempo can follow the link (beats per minute) for the beat bar and pulse:
 #   Song name | YouTube link | 128
-# - [Album name] on its own line starts a new album heading;
+# - [Album name] on its own line starts a new album heading; a date at the end of it,
+#   [Album name | 2026-10-25], is its release date (for sorting by newest or oldest);
 #   [Album name | fan upload] marks its songs as fan uploads (left out by "Official only"),
 #   and "| game OST" marks in-game music (the "Game OST" filter).
 # - Lines starting with # are notes and are skipped.
@@ -16,65 +17,65 @@
 # only on the official NTE Global channel (Covers & specials), and AmaLee's
 # English version of Play On! from her own channel.
 
-[Covers & specials]
+[Covers & specials | 2026-10-14]
 God Knows... (NTE Cover Ver.) | https://youtu.be/2UqN7dDMCok
 Mayoiuta (covered by NTE) | https://youtu.be/tVOjvngUElM
 City No Pop (Closed Beta trailer) | https://youtu.be/zIHH5oVg5TM
 
-[Timetrial]
+[Timetrial | 2026-09-30]
 Timetrial (feat. DUJU) | https://youtu.be/BYqZZx0lN3U
 Timetrial (Instrumental) | https://youtu.be/06i-hiHttsM
 
-[Frequency☆Finder]
+[Frequency☆Finder | 2026-09-09]
 Frequency☆Finder (feat. Chae-rim) | https://youtu.be/t5nJ4jm7Ljw
 Frequency☆Finder (Instrumental) | https://youtu.be/LimRm9J6d6s
 
-[Seven Shades of Red]
+[Seven Shades of Red | 2026-08-19]
 Seven Shades of Red (feat. sakakosmos) | https://youtu.be/3UHAMiaTEr4
 Seven Shades of Red (Instrumental) | https://youtu.be/ABRtRaqnwog
 
-[Lullaby]
+[Lullaby | 2026-07-29]
 Lullaby (feat. Mood & Feel) | https://youtu.be/PuBj7wz1F-k
 Lullaby (Instrumental) | https://youtu.be/EVIzQC9P1gg
 
-[Whatever It Says]
+[Whatever It Says | 2026-07-08]
 Whatever It Says (feat. Guriri) | https://youtu.be/bE_G8-ZGhDc
 Whatever It Says (Instrumental) | https://youtu.be/wIT2FUrxKuA
 
-[BEAST!]
+[BEAST! | 2026-07-07]
 BEAST! (feat. Mia Wang) | https://youtu.be/Tn2bF7dnhvg
 BEAST! (Instrumental) | https://youtu.be/5jO4v5nQQaM
 
-[Chains of the Dark]
+[Chains of the Dark | 2026-06-24]
 Chains of the Dark (feat. Josh Paulino) | https://youtu.be/0on4bsSoQu0
 Chains of the Dark (Instrumental) | https://youtu.be/j0y69Mo1Rtg
 
-[Out Of Sync]
+[Out Of Sync | 2026-05-26]
 Out Of Sync (feat. 李天姿) | https://youtu.be/7r7B_29TGHM
 Out Of Sync (Chinese Ver.) (feat. 李天姿) | https://youtu.be/aeW0j2hjTyg
 Out Of Sync (Instrumental) | https://youtu.be/5UPsTsVNJNY
 
-[Afterglow]
+[Afterglow | 2026-04-30]
 Afterglow (feat. saewool) | https://youtu.be/ez9Pyv4Zxj0
 Afterglow (Instrumental) | https://youtu.be/D3a_bgOsVoE
 
-[Magical Lights]
+[Magical Lights | 2026-04-24]
 Magical Lights (feat. ELLY.K) | https://youtu.be/hcH_-DxnAaA
 Magical Lights (Instrumental) | https://youtu.be/3FcJCWlAf5M
 
-[Champion!]
+[Champion! | 2026-04-18]
 Champion! (feat. Shabel Tonya) | https://youtu.be/oBQ9TTiPflQ
 Champion! (Instrumental) | https://youtu.be/XAyWSk8D3O8
 
-[Round and Round]
+[Round and Round | 2026-04-15]
 Round and Round (feat. Shabel Tonya) | https://youtu.be/y_dvRXn3Cv0
 Round and Round (Instrumental) | https://youtu.be/pBV05qeo--c
 
-[Here we are again]
+[Here we are again | 2026-11-11]
 Here we are again (feat. CielA) | https://youtu.be/fHhCFHeU71o
 Here we are again (Instrumental) | https://youtu.be/Myxs4F1X9gQ
 
-[Tonight's Special FM88.6]
+[Tonight's Special FM88.6 | 2026-04-30]
 Tide Gravity | https://youtu.be/N2GerygrjQs
 Day Dream | https://youtu.be/EeG5ROp1sls
 Drowning | https://youtu.be/wJa2QucBJlA
@@ -87,13 +88,13 @@ The Song Of Nightingale (feat. Kiva) | https://youtu.be/rUD2nIvq1pM
 Elysium | https://youtu.be/oEERAB_pvr0
 Chandelier | https://youtu.be/6HwJ08bHcJE
 
-[100% Crimson Solver]
+[100% Crimson Solver | 2026-06-03]
 100% Crimson Solver (feat. Mood & Feel) | https://youtu.be/K8OOJ8gpXTA
 100% Crimson Solver (Instrumental) | https://youtu.be/RDXH8kusoKc
 Crimson Lullaby (feat. Azuki Shu) | https://youtu.be/hlUSjxVcRfE
 Crimson Lullaby (Instrumental) | https://youtu.be/Lla7fLRnA24
 
-[Play On!]
+[Play On! | 2026-04-25]
 Play on! (English Ver.) (feat. mill) | https://youtu.be/O9w-xR3Dp58
 Play on! (Chinese Ver.) (feat. R.E.D) | https://youtu.be/JVmnbFGSWM8
 Play on! (Japanese Ver.) (feat. Reol) | https://youtu.be/qif6Y9Bm4O0
@@ -101,25 +102,25 @@ Play on! (Korean Ver.) (feat. Raon) | https://youtu.be/gzxCPSePO2E
 Play on! (AmaLee Ver.) | https://youtu.be/DgtuTSAkadA
 Play on! (Instrumental) | https://youtu.be/EykWRfj1pyM
 
-[Letters to me]
+[Letters to me | 2026-10-21]
 Letters to me (feat. 长谷川育美) | https://youtu.be/l_ZvYmY9Ybo
 Letters to me (Instrumental) | https://youtu.be/S5cbM9UarBw
 
-[Morning Star and the Sea]
+[Morning Star and the Sea | 2026-10-21]
 Morning Star and the Sea (feat. 长谷川育美) | https://youtu.be/zzmrOcERn-g
 Morning Star and the Sea (Instrumental) | https://youtu.be/AfPHu-tPyW4
 
 # In-game music from the "Neverness to Everness OST" playlist by Finding Purposes
 # (fan uploads of the game's own tracks), newest version first.
 
-[In-game 1.5 | fan upload | game OST]
+[In-game 1.5 | fan upload | game OST | 2026-11-11]
 Exe Theme | https://youtu.be/21uLvqFEZ-0
 Boss Fight | https://youtu.be/cNYpMt0IYhM
 Liminal Dive (Anomaly Location) | https://youtu.be/Y2W7nghJAq8
 Exe Boss Theme | https://youtu.be/JFLXdC8Kfq0
 Imaginary Old Friend Boss Theme | https://youtu.be/GZPAMjx7sPM
 
-[In-game 1.4 | fan upload | game OST]
+[In-game 1.4 | fan upload | game OST | 2026-09-30]
 St. Arbor Theme & Ambience | https://youtu.be/IIetFPLQhIU
 Akane Rin's Past - Classroom Theme | https://youtu.be/v-BUrKFtHto
 Clement Academy Night Theme | https://youtu.be/cpnL9w2aonI
@@ -130,7 +131,7 @@ Inquisitor Boss Theme (First Battle Extended Ver.) | https://youtu.be/gsN62idjxq
 Inquisitor Boss Theme (Final Fight) | https://youtu.be/XiMIspZamgQ
 Inquisitor Boss Theme | https://youtu.be/ifi1yS6JMvw
 
-[In-game 1.3 | fan upload | game OST]
+[In-game 1.3 | fan upload | game OST | 2026-08-19]
 Volley Star Theme (Beach Volleyball) | https://youtu.be/yMWnNd8NcUk
 Summer Time Theme | https://youtu.be/IZ7UUrBcsWw
 Radio Mix Version 1.3 | https://youtu.be/tIV3D3_nQ28
@@ -144,7 +145,7 @@ Taygedo Song - Tayge Tayge Rhythm | https://youtu.be/uGa6PgNkOcg
 Zankou Gacha Theme | https://youtu.be/96KG9ykjo2A
 Zankou Boss Theme (Fogden Game) | https://youtu.be/xMvUao28cWY
 
-[In-game 1.2 | fan upload | game OST]
+[In-game 1.2 | fan upload | game OST | 2026-07-08]
 Iroi Gacha Theme | https://youtu.be/M1IRBqc0C5w
 Shinku Gacha Theme | https://youtu.be/VmSQVQab-UA
 Crimson Castle Theme (Dragon Tower) | https://youtu.be/E6kSx100rrc
@@ -155,7 +156,7 @@ Frostspike Dragon Boss Theme | https://youtu.be/TRg-PL1w_8o
 Molten Dragon Boss Theme | https://youtu.be/iuk_11KSfM8
 Shinku Theme - Whatever It Says (VS Crimson Dragon) | https://youtu.be/pYxQSsn3C50
 
-[In-game 1.1 | fan upload | game OST]
+[In-game 1.1 | fan upload | game OST | 2026-06-03]
 Little Nanally Theme | https://youtu.be/Er2xyVwBakA
 Tornado Boss Theme | https://youtu.be/E-aa7qfZ5lQ
 Daffodill's Memory Theme | https://youtu.be/e7lNwQ1GSV8
@@ -167,7 +168,7 @@ Thyme Boss Theme | https://youtu.be/S1Z-y-r-HlM
 Teehee Bear Boss Theme | https://youtu.be/Y_Wv4_Q4RD0
 Dreamwalk Corridor Intro Vocal Theme | https://youtu.be/yj9CnMTcjJE
 
-[In-game: launch & more | fan upload | game OST]
+[In-game: launch & more | fan upload | game OST | 2026-04-28]
 Racing Theme 3 | https://youtu.be/tlHePpIXZt0
 Racing Theme 2 | https://youtu.be/tvQe1q_kb2k
 Racing Theme 1 | https://youtu.be/ePkzD77-SaQ
