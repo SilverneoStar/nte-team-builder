@@ -306,6 +306,9 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount, albumNames }) {
                     setPicked(k);
                     setOpen(true);
                   }}
+                  // Double-click (or double-tap): play the album from its first song.
+                  onDoubleClick={() => yt.ready && yt.playAt(a.start)}
+                  title="Double-click to play this album"
                   aria-pressed={k === shown}
                 >
                   <Cover id={a.songs[0].id} className="music__albumart" />
@@ -719,6 +722,10 @@ export default function MusicRoom() {
             <Choice label="Style" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
           </div>
         </details>
+      </section>
+
+      {/* YouTube's player and its terms: under the stage on wide screens. */}
+      <section className="music__player">
         <div className="music__screen" ref={host} />
         <p className="muted small music__legal">
           Music plays in YouTube’s own player through YouTube API Services, and YouTube may show its ads. By playing

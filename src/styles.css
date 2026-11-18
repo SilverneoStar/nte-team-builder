@@ -9832,3 +9832,31 @@ th[aria-sort='descending'] .th-btn {
   background: #4f9e3a;
   color: #fff;
 }
+
+/* YouTube's player and its terms. Narrow screens: centred under the controls.
+   Wide screens: under the stage beside each other, with the controls and
+   settings filling the column on the right, so neither side runs empty. */
+.music__player {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+@media (min-width: 1000px) {
+  .music > .music__now {
+    grid-row: span 2;
+  }
+  .music > .music__player {
+    grid-column: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+  }
+  .music__player .music__screen {
+    flex: 0 0 min(356px, 50%);
+  }
+  .music__player .music__legal {
+    margin: 0;
+  }
+}
