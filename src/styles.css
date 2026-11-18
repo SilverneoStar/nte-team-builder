@@ -9697,3 +9697,23 @@ th[aria-sort='descending'] .th-btn {
     grid-auto-columns: 152px;
   }
 }
+
+/* Album card tags: fan uploads, and songs likely made with AI. */
+.music__tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.music__tag {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line, rgba(128, 128, 128, 0.35));
+  color: var(--muted);
+  white-space: nowrap;
+}
+.music__tag--ai {
+  border-style: dashed;
+}

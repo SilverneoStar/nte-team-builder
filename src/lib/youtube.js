@@ -39,7 +39,8 @@ export function videoId(link) {
 /**
  * The songs in a playlist text file: one per line, "Song name | link", with an
  * optional tempo after it ("| 128", beats per minute); the name can be left out. "[Album]" on its own line heads the songs after it
- * ("[Album | fan upload | game OST]" marks them as fan uploads and as in-game music;
+ * ("[Album | fan upload | game OST | AI-assisted]" marks them as fan uploads, as in-game music
+ * and as likely made with AI;
  * a date, "[Album | 2026-10-25]", is the album's release date).
  * Blank lines and lines starting with # are skipped.
  */
@@ -47,6 +48,7 @@ export function parsePlaylist(text) {
   let album = '';
   let fan = false;
   let game = false;
+  let ai = false;
   let date = '';
   const songs = [];
   for (const raw of (text ?? '').split(/\r?\n/)) {
@@ -59,6 +61,8 @@ export function parsePlaylist(text) {
       album = name;
       fan = tags.some((t) => /^fan/i.test(t));
       game = tags.some((t) => /^game/i.test(t));
+      // "| AI-assisted": the channel likely used AI to make them (shown as a tag).
+      ai = tags.some((t) => /^ai\b/i.test(t));
       // "[Album | 2026-10-25]": its release date, for sorting newest or oldest first.
       date = tags.find((t) => /^\d{4}-\d{2}-\d{2}$/.test(t)) ?? '';
       continue;
@@ -69,7 +73,7 @@ export function parsePlaylist(text) {
     const link = parts.pop();
     const name = parts.join(' | ');
     const id = videoId(link);
-    if (id) songs.push({ id, name, album, fan, game, date, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
+    if (id) songs.push({ id, name, album, fan, game, ai, date, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
   }
   return songs;
 }

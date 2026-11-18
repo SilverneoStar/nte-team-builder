@@ -8,7 +8,8 @@
 # - [Album name] on its own line starts a new album heading; a date at the end of it,
 #   [Album name | 2026-10-25], is its release date (for sorting by newest or oldest);
 #   [Album name | fan upload] marks its songs as fan uploads (left out by "Official only"),
-#   and "| game OST" marks in-game music (the "Game OST" filter).
+#   "| game OST" marks in-game music (the "Game OST" filter),
+#   and "| AI-assisted" tags songs the channel likely made with AI.
 # - Lines starting with # are notes and are skipped.
 # - Some labels block their songs on other sites; the room skips those and
 #   shows them with a link to play on YouTube instead.
@@ -199,3 +200,16 @@ Select Esper Zero Theme | https://youtu.be/2rgCLmGTgqM
 Login Screen Night Theme | https://youtu.be/Ms9fQz42x_4
 Login Screen Twilight Theme | https://youtu.be/6EB5FeEwNR4
 Login Screen Day Theme | https://youtu.be/9x3VL-Z9L1U
+
+# Fan covers: Shinri Studio's "Neverness to Everness" playlist. The channel likely
+# uses AI, so the album is tagged AI-assisted.
+[Shinri Studio | fan upload | AI-assisted | 2026-09-08]
+Frequency☆Finder (Reimagined) | https://youtu.be/sRnvJTLg2D0
+Out of Sync (Reimagined) | https://youtu.be/5Gac-PHBINs
+Seven Shades of Red (Reimagined) | https://youtu.be/pXhPvk3isRU
+Lullaby (Reimagined) | https://youtu.be/SjxAdsyLcuw
+Whatever it Says (Unplugged) | https://youtu.be/pHOlsqe6ZvU
+Whatever it Says (Reimagined) | https://youtu.be/uovPyklGjoI
+Time Stands Still / 静止 (Original fan song) | https://youtu.be/QezC9R48AjI
+Magical Lights (Unplugged) | https://youtu.be/hi2eGymDE_M
+Afterglow (Reimagined) | https://youtu.be/CfqbPQyDAQc

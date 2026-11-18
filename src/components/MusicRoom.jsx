@@ -215,7 +215,7 @@ function albumsOf(songs) {
   songs.forEach((x, i) => {
     const last = out[out.length - 1];
     if (last && last.name === x.album) last.songs.push(x);
-    else out.push({ name: x.album || 'Songs', date: x.date, start: i, songs: [x] });
+    else out.push({ name: x.album || 'Songs', date: x.date, fan: x.fan, ai: x.ai, start: i, songs: [x] });
   });
   return out;
 }
@@ -310,6 +310,12 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount, albumNames }) {
                   <Cover id={a.songs[0].id} className="music__albumart" />
                   <span className="music__albumname">{a.name}</span>
                   {a.date && <span className="music__albumdate small">{monthYear(a.date)}</span>}
+                  {(a.fan || a.ai) && (
+                    <span className="music__tags">
+                      {a.fan && <span className="music__tag">Fan upload</span>}
+                      {a.ai && <span className="music__tag music__tag--ai">AI-assisted</span>}
+                    </span>
+                  )}
                   <span className="muted small">
                     {k === playingAlbum ? '♪ Playing · ' : ''}
                     {a.songs.length} song{a.songs.length > 1 ? 's' : ''}
@@ -600,7 +606,7 @@ export default function MusicRoom() {
         )}
         {(song?.album || yt.author) && (
           <p className="muted small music__artist">
-            {[song?.album, yt.author.replace(/ - Topic$/, '')].filter(Boolean).join(' · ')}
+            {[song?.album, yt.author.replace(/ - Topic$/, ''), song?.ai && 'AI-assisted'].filter(Boolean).join(' · ')}
           </p>
         )}
         {song && (
