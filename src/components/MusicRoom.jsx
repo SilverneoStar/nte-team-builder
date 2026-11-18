@@ -115,6 +115,7 @@ const BAR_STYLES = [
   { id: 'y2k', label: 'Y2K' },
   { id: 'rainbow', label: 'Rainbow' },
   { id: 'elements', label: 'Elements' },
+  { id: 'illusion', label: 'Illusion' },
 ];
 
 /** A row of buttons where one is picked. */
@@ -712,6 +713,7 @@ export default function MusicRoom() {
                 { id: 'pulse', label: 'Pulse line' },
                 { id: 'wave', label: 'Wave' },
                 { id: 'ripples', label: 'Ripples' },
+                { id: 'bloom', label: 'Bloom' },
               ]}
             />
             <Choice label="Style" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />

@@ -1,5 +1,5 @@
 // The Tea Room's beat: a small engine that runs each frame while music plays
-// and moves the bars and draws the pulse line, so they flow instead of
+// and moves the bars and draws the pulse line (or wave, ripples or bloom), so they flow instead of
 // looping. It can't hear the music (YouTube's player keeps its sound to
 // itself), so it keeps the song's tempo and makes each beat a little
 // different: every fourth beat is stronger, low bars take the kick, high bars
@@ -132,6 +132,9 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         if (Math.abs(next - target) > 0.002) moving = true;
         el.style.transform = `scaleY(${next.toFixed(3)})`;
       });
+      // Styles that flicker (Illusion) pick this up from the page.
+      const fl = st.flicker ? '1' : '';
+      if (barsRef.current.dataset.flicker !== fl) barsRef.current.dataset.flicker = fl;
       return st.playing || moving;
     };
 
@@ -153,6 +156,10 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         fill = g;
         tip = stops[stops.length - 1];
       }
+      // A style can flicker to another colour for a moment now and then
+      // (Illusion: Daffodill's blue breaking through Zankou's reds).
+      const flicker = cs.getPropertyValue('--pulse-flicker').trim();
+      if (flicker && st.flicker) return { fill: flicker, tip: flicker, glow: flicker, blur: 12 };
       return {
         fill,
         tip,
@@ -334,6 +341,113 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       return st.playing;
     };
 
+    // One sakura petal pointing up from (0, 0): rounded sides and a notched tip.
+    const petal = (ctx, L, W) => {
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-W * 0.95, -L * 0.3, -W * 0.8, -L * 0.92, -W * 0.24, -L);
+      ctx.lineTo(0, -L * 0.84);
+      ctx.lineTo(W * 0.24, -L);
+      ctx.bezierCurveTo(W * 0.8, -L * 0.92, W * 0.95, -L * 0.3, 0, 0);
+      ctx.closePath();
+    };
+
+    // Bloom: a five-petal flower outline that turns slowly and swells on each
+    // beat, shedding petals that drift off and fall (more on the downbeat).
+    const drawBloom = (dt) => {
+      const k = canvasOf();
+      if (!k) return st.playing;
+      const { c, ctx, w, h, dpr } = k;
+      const beatSec = 60 / st.bpm;
+      const b = beatAt(st.clock);
+      const kb = Math.floor(b);
+      const since = (b - kb) * beatSec;
+      const throb = st.playing ? Math.exp(-since / (beatSec * 0.4)) * strength(kb) * lift() : 0;
+      if (st.playing) st.spin = (st.spin ?? 0) + dt * 0.22;
+      const spin = st.spin ?? 0;
+      const cx = w / 2;
+      const cy = h * 0.56;
+      const R = Math.min(h * 0.5, w * 0.22) * (0.84 + 0.2 * throb);
+      st.petals = st.petals ?? [];
+      if (st.playing && kb !== st.lastBloom) {
+        st.lastBloom = kb;
+        const n = kb % 4 === 0 ? 4 : 1 + Math.round(hash(kb + 40));
+        for (let i = 0; i < n; i++) {
+          const r = (j) => hash(kb * 13 + i * 7 + j);
+          st.petals.push({
+            born: st.clock,
+            a: spin + (i / n) * TAU + r(1) * 1.2,
+            v: (0.35 + 0.4 * r(2)) * w * 0.5,
+            rot: r(3) * TAU,
+            turn: (r(4) - 0.5) * 5,
+            size: R * (0.22 + 0.14 * r(5)),
+            s: Math.min(1, 0.5 + strength(kb) * lift() * 0.6),
+          });
+        }
+      }
+      const life = beatSec * 4;
+      st.petals = st.petals.filter((q) => st.clock - q.born < life);
+      const p = paint(c, ctx, w);
+
+      // Falling petals, behind the flower.
+      for (const q of st.petals) {
+        const t = st.clock - q.born;
+        const a = t / life;
+        const x = cx + Math.cos(q.a) * q.v * t * (1 - 0.35 * a) + Math.sin(t * 2.4 + q.rot) * 6 * dpr;
+        const y = cy + Math.sin(q.a) * q.v * t * 0.45 + h * 0.5 * a * a;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(q.rot + q.turn * t);
+        ctx.beginPath();
+        petal(ctx, q.size, q.size * 0.62);
+        ctx.fillStyle = p.fill;
+        ctx.globalAlpha = (1 - a) ** 1.4 * q.s * 0.85;
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+
+      // The flower: a soft fill under a glowing outline.
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(spin);
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        ctx.save();
+        ctx.rotate((i * TAU) / 5);
+        petal(ctx, R, R * 0.58);
+        ctx.restore();
+      }
+      ctx.fillStyle = p.fill;
+      ctx.globalAlpha = 0.1 + 0.18 * throb;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      glowStroke(ctx, p, 1.4 + 0.8 * throb, dpr);
+      // Stamens: short strokes out from the middle, ending in dots.
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const an = ((i + 0.5) * TAU) / 5;
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(an) * R * 0.32, Math.sin(an) * R * 0.32);
+      }
+      glowStroke(ctx, p, 0.9, dpr);
+      ctx.fillStyle = p.tip;
+      for (let i = 0; i < 5; i++) {
+        const an = ((i + 0.5) * TAU) / 5;
+        ctx.beginPath();
+        ctx.arc(Math.cos(an) * R * 0.34, Math.sin(an) * R * 0.34, (1.4 + throb) * dpr, 0, TAU);
+        ctx.fill();
+      }
+      ctx.restore();
+      // A glowing heart that throbs on the beat.
+      ctx.beginPath();
+      ctx.arc(cx, cy, (2.5 + 4 * throb) * dpr, 0, TAU);
+      ctx.fillStyle = p.tip;
+      ctx.globalAlpha = 0.6 + 0.4 * throb;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      return st.playing || st.petals.length > 0;
+    };
+
     const frame = (time) => {
       const dt = Math.min(0.05, (time - st.last) / 1000);
       st.last = time;
@@ -345,8 +459,23 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       st.shape += ((st.target ?? 1) - st.shape) * Math.min(1, 2 * dt);
       st.energy = st.mood.energy * st.shape;
       if (st.playing) st.clock += dt;
+      // Flicker: on about one beat in six, a stuttering moment just after the beat.
+      {
+        const b = beatAt(st.clock);
+        const kb = Math.floor(b);
+        const ph = b - kb;
+        st.flicker = st.playing && hash(kb * 3.7 + 11) < 0.17 && ph > 0.08 && ph < 0.42 && Math.sin(st.clock * 70) > -0.2;
+      }
       const keep =
-        viz === 'pulse' ? drawPulse() : viz === 'wave' ? drawWave(dt) : viz === 'ripples' ? drawRipples() : drawBars(dt);
+        viz === 'pulse'
+          ? drawPulse()
+          : viz === 'wave'
+            ? drawWave(dt)
+            : viz === 'ripples'
+              ? drawRipples()
+              : viz === 'bloom'
+                ? drawBloom(dt)
+                : drawBars(dt);
       // Keep going while playing, or until the bars have settled after a pause.
       raf = keep ? requestAnimationFrame(frame) : 0;
     };

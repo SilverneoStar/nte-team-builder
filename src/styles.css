@@ -9717,3 +9717,96 @@ th[aria-sort='descending'] .th-btn {
 .music__tag--ai {
   border-style: dashed;
 }
+
+/* ---------- Tea Room: Illusion (Zankou) ----------
+   Zankou sees only shades of red, so the bars and lines are crimson to
+   rose; now and then Daffodill's blue flickers through (the beat engine
+   sets data-flicker on the bars and --pulse-flicker for the lines).
+   Sakura petals, like her skill's flower, swirl down over the bars. */
+.music__beat[data-bars='illusion'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, #4a0012, #b3002d 45%, #ff3d5e 80%, #ffc2cf);
+  box-shadow: 0 0 8px rgb(255 30 70 / 0.5);
+}
+.music__beat[data-bars='illusion'] span:nth-child(3n) {
+  background: linear-gradient(to top, #2a000a, #8a0024 50%, #e0204a 85%, #ff9fb2);
+}
+.music__beat[data-bars='illusion'] .music__bars[data-flicker='1'] span:nth-child(7n + 3),
+.music__beat[data-bars='illusion'] .music__bars[data-flicker='1'] span:nth-child(11n + 6) {
+  background: linear-gradient(to top, #0a3a8a, #2f8cff 50%, #8fe6ff);
+  box-shadow:
+    0 0 10px #4fd2ff,
+    0 0 18px rgb(79 210 255 / 0.6);
+}
+.music__beat[data-bars='illusion'] .music__pulse {
+  --pulse-color: #ff2d55;
+  --pulse-stops: #8a0024, #ff2d55, #ff9fb2, #ff2d55, #8a0024;
+  --pulse-glow: #ff1744;
+  --pulse-flicker: #4fd2ff;
+}
+.music__beat[data-bars='illusion']::before,
+.music__beat[data-bars='illusion']::after {
+  content: '';
+  position: absolute;
+  inset: -34px 0 25% 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 2px rgb(255 23 68 / 0.7));
+}
+.music__beat[data-bars='illusion']::before {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%2812 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23c8102e' stroke='%23ffd0da' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ffd0da' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-58 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%238a0024' stroke='%23ff8fa8' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ff8fa8' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%2823 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23ff3d5e' stroke='%23fff0f3' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23fff0f3' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-61 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23e0204a' stroke='%23ffc2cf' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ffc2cf' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-9 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23c8102e' stroke='%23ffd0da' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ffd0da' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-39 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%238a0024' stroke='%23ff8fa8' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ff8fa8' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%2831 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23ff3d5e' stroke='%23fff0f3' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23fff0f3' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-36 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23e0204a' stroke='%23ffc2cf' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ffc2cf' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E");
+  background-position: 9.8% 58%, 15.3% 76%, 31.9% 72%, 40.4% 61%, 53.0% 62%, 72.3% 15%, 77.6% 36%, 92.1% 26%;
+  background-size: 14px 14px, 9px 9px, 10px 10px, 9px 9px, 9px 9px, 13px 13px, 9px 9px, 13px 13px;
+}
+.music__beat[data-bars='illusion']::after {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-40 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23c8102e' stroke='%23ffd0da' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ffd0da' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-24 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%238a0024' stroke='%23ff8fa8' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ff8fa8' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-46 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23ff3d5e' stroke='%23fff0f3' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23fff0f3' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%28-55 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%232f8cff' stroke='%23c8f4ff' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23c8f4ff' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%2866 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%23c8102e' stroke='%23ffd0da' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ffd0da' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate%2846 12 12%29'%3E%3Cpath d='M12 22 C3 17 4 6 9 2.5 L12 5 L15 2.5 C20 6 21 17 12 22Z' fill='%238a0024' stroke='%23ff8fa8' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12 20 V8' stroke='%23ff8fa8' stroke-opacity='.5' stroke-width='.8'/%3E%3C/g%3E%3C/svg%3E");
+  background-position: 8.9% 79%, 21.8% 32%, 42.0% 16%, 59.3% 71%, 74.4% 48%, 90.6% 39%;
+  background-size: 15px 15px, 11px 11px, 13px 13px, 14px 14px, 12px 12px, 15px 15px;
+}
+/* Petals swirl down, turning as they fall. */
+.music.is-playing .music__beat[data-bars='illusion']::before {
+  animation: room-petal calc(var(--beat) * 8) linear infinite;
+}
+.music.is-playing .music__beat[data-bars='illusion']::after {
+  animation: room-petal calc(var(--beat) * 8) linear calc(var(--beat) * -4) infinite;
+}
+@keyframes room-petal {
+  0% {
+    transform: translate(-6px, -12px) rotate(-3deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  50% {
+    transform: translate(8px, 3px) rotate(2deg);
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-2px, 18px) rotate(-2deg);
+    opacity: 0;
+  }
+}
+/* Bloom has room above the bars for its flower and petals. */
+.music__beat[data-viz='bloom'] .music__pulse {
+  top: -26px;
+  height: calc(100% + 26px);
+}
