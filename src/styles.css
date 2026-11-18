@@ -9688,10 +9688,9 @@ th[aria-sort='descending'] .th-btn {
   .music > .music__stage {
     grid-column: 1;
   }
+  /* Not sticky: a sticky column slid down over the playlist on short screens. */
   .music > .music__now {
     grid-column: 2;
-    position: sticky;
-    top: 12px;
   }
   .music__albums {
     grid-auto-columns: 152px;
@@ -9809,4 +9808,27 @@ th[aria-sort='descending'] .th-btn {
 .music__beat[data-viz='bloom'] .music__pulse {
   top: -26px;
   height: calc(100% + 26px);
+}
+
+/* Room settings: the options wrap as separate chips, so every style and beat
+   stays in view however narrow the column is. */
+.music__settings .music__seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+.music__settings .music__seg button,
+.music__settings .music__seg button + button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.music__settings .music__seg button.is-on {
+  border-color: transparent;
+  background: #4f9e3a;
+  color: #fff;
 }
