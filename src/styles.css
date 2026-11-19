@@ -9919,3 +9919,65 @@ th[aria-sort='descending'] .th-btn {
     max-width: 460px;
   }
 }
+
+/* Playlist: tick boxes to hide songs, and to show the hidden ones again. */
+.music__ticks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.music__tick {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 12px 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  user-select: none;
+}
+.music__tick:has(input:checked) {
+  border-color: color-mix(in srgb, var(--accent, #7fbf5a) 60%, var(--line));
+}
+.music__tick input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent, #7fbf5a);
+}
+
+/* Each song's eye: hide it so it isn't played. Hidden songs (shown with
+   "Show hidden") are dimmed. */
+.music__row {
+  grid-template-columns: 1fr auto auto;
+}
+.music__hide {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  opacity: 0.55;
+  cursor: pointer;
+}
+.music__hide svg {
+  width: 18px;
+  height: 18px;
+}
+.music__row:hover .music__hide,
+.music__hide:focus-visible,
+.music__hide.is-on {
+  opacity: 1;
+}
+.music__hide:hover {
+  color: var(--text);
+}
+.music__row.is-hidden .music__track {
+  opacity: 0.45;
+}
