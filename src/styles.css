@@ -9860,3 +9860,62 @@ th[aria-sort='descending'] .th-btn {
     margin: 0;
   }
 }
+
+/* ---------- Tea Room: Expand (big screens) ----------
+   A button on the stage widens it to the full page with a bigger player and
+   pals; the song info, YouTube's player and the playlist move down below. */
+.music__expand {
+  display: none;
+}
+@media (min-width: 1000px) {
+  .music__expand {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    padding: 5px 10px 5px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  .music__expand:hover,
+  .music__expand:focus-visible {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--text) 35%, var(--line));
+  }
+  .music__expand svg {
+    width: 16px;
+    height: 16px;
+  }
+  .music.is-wide > .music__stage,
+  .music.is-wide > .music__player {
+    grid-column: 1 / -1;
+  }
+  .music.is-wide > .music__now {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-self: center;
+    width: min(100%, 720px);
+  }
+  .music.is-wide .music-arc {
+    width: min(540px, 38vw);
+  }
+  .music.is-wide .music__pal {
+    width: min(200px, 100%);
+  }
+  /* YouTube's player and its notice, centred under the controls. */
+  .music.is-wide > .music__player {
+    justify-content: center;
+  }
+  .music.is-wide > .music__player .music__legal {
+    max-width: 460px;
+  }
+}

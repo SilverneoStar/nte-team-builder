@@ -67,13 +67,16 @@ const PREV = 'M18 6l-8.5 6L18 18zM6 6h2v12H6z';
 const VOL_HIGH = 'M4 9v6h4l5 4V5L8 9zM16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z';
 const VOL_LOW = 'M4 9v6h4l5 4V5L8 9zM16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z';
 const MUTED = 'M4 9v6h4l5 4V5L8 9zM16 9.4 17.4 8l2.1 2.1L21.6 8 23 9.4l-2.1 2.1 2.1 2.1-1.4 1.4-2.1-2.1-2.1 2.1-1.4-1.4 2.1-2.1z';
+// Expand / shrink the stage (wide view on big screens).
+const EXPAND = 'M4 4h6v2H6v4H4zM14 4h6v6h-2V6h-4zM4 14h2v4h4v2H4zM18 14h2v6h-6v-2h4z';
+const SHRINK = 'M8 4h2v6H4V8h4zM14 4h2v4h4v2h-6zM4 14h6v6H8v-4H4zM14 14h6v2h-4v4h-2z';
 const SHUFFLE =
   'M16 3h5v5l-1.8-1.8-4.4 4.4-1.4-1.4 4.4-4.4zM3 5.4 4.4 4l15.6 15.6V16h1v5h-5v-1h3.6zM9.6 13l1.4 1.4-6.6 6.6L3 19.6z';
 
 // The reader's own room: their list of songs, filters and looks. Kept in this
 // browser only (it's just for them).
 const ROOM_KEY = 'nte-team-builder:musicRoom';
-const ROOM_DEFAULTS = { order: 'file', source: 'all', kind: 'all', albums: [], moving: true, viz: 'bars', bars: 'classic', mine: [], tempo: {}, moods: {}, volume: 80, muted: false };
+const ROOM_DEFAULTS = { order: 'file', wide: false, source: 'all', kind: 'all', albums: [], moving: true, viz: 'bars', bars: 'classic', mine: [], tempo: {}, moods: {}, volume: 80, muted: false };
 function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
@@ -540,7 +543,7 @@ export default function MusicRoom() {
 
   return (
     <div
-      className={`page music${yt.playing ? ' is-playing' : ''}${room.moving ? '' : ' is-still'}`}
+      className={`page music${yt.playing ? ' is-playing' : ''}${room.moving ? '' : ' is-still'}${room.wide ? ' is-wide' : ''}`}
       style={{ '--beat': `${(60 / bpm).toFixed(3)}s` }}
     >
       <header className="page__head music__head">
@@ -562,6 +565,17 @@ export default function MusicRoom() {
       </header>
 
       <section className="music__stage" aria-label="Now playing">
+        {/* Big screens: widen the stage to the full page; the controls and playlist move below. */}
+        <button
+          type="button"
+          className="music__expand"
+          onClick={() => setRoom({ wide: !room.wide })}
+          aria-pressed={room.wide}
+          title={room.wide ? 'Shrink the player' : 'Expand the player'}
+        >
+          <Icon d={room.wide ? SHRINK : EXPAND} />
+          <span>{room.wide ? 'Shrink' : 'Expand'}</span>
+        </button>
         <Cortado chill={yt.playing} />
         <Disc id={current} playing={yt.playing} index={yt.index} />
         {/* Matcha with her two tails as their own layers, so they can sway. */}
