@@ -121,7 +121,7 @@ const BAR_STYLES = [
   { id: 'rainbow', label: 'Rainbow' },
   { id: 'elements', label: 'Elements' },
   { id: 'illusion', label: 'Illusion' },
-  { id: 'sunbringer', label: 'Sunbringer' },
+  { id: 'sunbringer', label: 'Sunchaser' },
 ];
 
 /** A row of buttons where one is picked. */
