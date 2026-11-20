@@ -10057,3 +10057,12 @@ th[aria-sort='descending'] .th-btn {
     opacity: 0.7;
   }
 }
+
+/* Room settings: the "Keep screen on" note. */
+.music__note {
+  margin-top: 4px;
+  max-width: 46ch;
+}
+.music__settings .music__tick {
+  align-self: flex-start;
+}
