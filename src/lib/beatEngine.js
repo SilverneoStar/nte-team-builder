@@ -448,6 +448,110 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       return st.playing || st.petals.length > 0;
     };
 
+    // A four-point sparkle (Sunbringer's star) centred on (0, 0).
+    const sparkle = (ctx, r) => {
+      ctx.moveTo(0, -r);
+      ctx.quadraticCurveTo(r * 0.14, -r * 0.14, r, 0);
+      ctx.quadraticCurveTo(r * 0.14, r * 0.14, 0, r);
+      ctx.quadraticCurveTo(-r * 0.14, r * 0.14, -r, 0);
+      ctx.quadraticCurveTo(-r * 0.14, -r * 0.14, 0, -r);
+      ctx.closePath();
+    };
+
+    // Embers: a row of flames along the bottom that leap on each beat, with
+    // sparks drifting up; every fourth beat they flare (Emberburst) and throw
+    // a burst of sparkles.
+    const drawEmbers = (dt) => {
+      const k = canvasOf();
+      if (!k) return st.playing;
+      const { c, ctx, w, h, dpr } = k;
+      const p = paint(c, ctx, w);
+      const beatSec = 60 / st.bpm;
+      const b = beatAt(st.clock);
+      const kb = Math.floor(b);
+      const since = (b - kb) * beatSec;
+      const kick = st.playing ? Math.exp(-since / (beatSec * 0.38)) * strength(kb) * lift() : 0;
+      const burst = st.playing && kb % 4 === 0 ? Math.exp(-since / (beatSec * 0.7)) : 0;
+      st.sparks = st.sparks ?? [];
+      if (st.playing && kb !== st.lastEmber) {
+        st.lastEmber = kb;
+        const n = kb % 4 === 0 ? 7 : 2 + Math.round(hash(kb + 9) * 2);
+        for (let i = 0; i < n; i++) {
+          const r = (j) => hash(kb * 17 + i * 5 + j);
+          st.sparks.push({
+            born: st.clock,
+            x: (0.08 + 0.84 * r(1)) * w,
+            vy: (0.45 + 0.5 * r(2)) * h,
+            sway: (r(3) - 0.5) * 30 * dpr,
+            size: (kb % 4 === 0 ? 3.5 : 2.2) * dpr * (0.7 + 0.6 * r(4)),
+            star: kb % 4 === 0 || r(5) > 0.6,
+          });
+        }
+      }
+      const life = beatSec * 3;
+      st.sparks = st.sparks.filter((q) => st.clock - q.born < life);
+
+      // Flames: each tongue a soft teardrop that sways and leaps with the kick.
+      const N = 19;
+      const base = h * 0.98;
+      for (let layer = 0; layer < 2; layer++) {
+        ctx.beginPath();
+        for (let i = 0; i < N; i++) {
+          const f = i / (N - 1);
+          const x = (0.04 + 0.92 * f) * w;
+          const t = st.clock;
+          const flick = 0.5 + 0.5 * Math.sin(t * (5 + 3 * hash(i)) + i * 1.7);
+          const centre = 1 - Math.abs(f - 0.5) * 1.1;
+          const tall =
+            h * (0.3 + 0.16 * flick * (st.playing ? 1 : 0.3) + (0.45 * kick + 0.3 * burst) * centre * (0.6 + 0.5 * hash(i + kb)));
+          const hgt = layer ? tall * 0.55 : tall;
+          const half = (w / N) * (layer ? 0.24 : 0.42);
+          const lean = Math.sin(t * 2.3 + i) * half * 0.5;
+          // Round at the bottom, curling to a sharp tip that leans with the sway.
+          ctx.moveTo(x - half, base);
+          ctx.bezierCurveTo(x - half * 1.1, base - hgt * 0.38, x + lean - half * 0.15, base - hgt * 0.62, x + lean * 1.4, base - hgt);
+          ctx.bezierCurveTo(x + lean * 0.4 + half * 0.55, base - hgt * 0.55, x + half * 1.1, base - hgt * 0.35, x + half, base);
+        }
+        ctx.closePath();
+        if (layer === 0) {
+          ctx.fillStyle = p.fill;
+          ctx.globalAlpha = 0.22 + 0.25 * kick + 0.2 * burst;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          glowStroke(ctx, p, 1.1 + 0.6 * kick, dpr);
+        } else {
+          // The hot inner flames.
+          ctx.fillStyle = p.tip;
+          ctx.globalAlpha = 0.35 + 0.35 * kick + 0.3 * burst;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      // Sparks and sparkles rising.
+      for (const q of st.sparks) {
+        const t = st.clock - q.born;
+        const a = t / life;
+        const x = q.x + Math.sin(t * 3 + q.x) * q.sway * a;
+        const y = base - h * 0.15 - q.vy * t * (1 - 0.3 * a);
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.globalAlpha = (1 - a) ** 1.3;
+        ctx.fillStyle = q.star ? p.tip : p.fill;
+        ctx.beginPath();
+        if (q.star) sparkle(ctx, q.size * (1.6 + 0.6 * Math.sin(t * 9)));
+        else ctx.arc(0, 0, q.size * 0.6, 0, TAU);
+        if (p.glow) {
+          ctx.shadowColor = p.glow;
+          ctx.shadowBlur = 8 * dpr;
+        }
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+      return st.playing || st.sparks.length > 0;
+    };
+
     const frame = (time) => {
       const dt = Math.min(0.05, (time - st.last) / 1000);
       st.last = time;
@@ -475,7 +579,9 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
               ? drawRipples()
               : viz === 'bloom'
                 ? drawBloom(dt)
-                : drawBars(dt);
+                : viz === 'embers'
+                  ? drawEmbers(dt)
+                  : drawBars(dt);
       // Keep going while playing, or until the bars have settled after a pause.
       raf = keep ? requestAnimationFrame(frame) : 0;
     };
