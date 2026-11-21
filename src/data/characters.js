@@ -4,7 +4,9 @@
 // Level 1 base stats, kept for reference; role tags checked against in-game character screens, Oct 2026; the app shows Level 80 stats from maxStats.js). Fields set to null are not yet published by those sources.
 //
 // roles: one role per Esper, the one shown in-game (their main job); the role
-// tags under it (Burst DPS, DMG Boost…) go in "tags".
+// tags under it (Burst DPS, DMG Boost…) go in "tags". "summons" names the unit an
+// Esper calls in, for those who summon without the Summoner tag (Nov 2026 leak:
+// Exe's summon boosts reach them too).
 // "unit" is a squad inside the faction (e.g. ETD-6 in the Bureau of Anomaly Control).
 // "formerFaction" is shown with a "Former" tag.
 // "version": the game version the character was released in (launch is 1.0;
@@ -38,11 +40,13 @@ export const CHARACTERS = [
   {
     id: 'blackbird', name: 'Blackbird', rarity: 'S', version: '1.4', element: 'psyche', roles: ['Damage'],
     arcType: 'Gas', faction: 'Yggash Court', ability: 'Naenia Merula',
+    summons: 'Forsaken Bird',
     tags: ['Instant Cycle', 'Main DPS', 'DMG Boost'], stats: stats(1280, 84, 73),
   },
   {
     id: 'chaos', name: 'Chaos', rarity: 'S', version: '1.1', element: 'lakshana', roles: ['Damage'],
     arcType: 'Condensate', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: 'In the beginning, none could tell heaven from earth.',
+    summons: 'Tindalos',
     tags: ['Main DPS'], stats: stats(1300, 80, 76),
   },
   {
@@ -78,6 +82,7 @@ export const CHARACTERS = [
   {
     id: 'iroi', name: 'Iroi', rarity: 'S', version: '1.2', element: 'anima', roles: ['Survival'],
     arcType: 'Liquid', faction: 'Bureau of Anomaly Control', unit: 'CSU-2', ability: 'Infant Dream',
+    summons: 'Lambs',
     tags: ['Healing', 'DMG Boost'], stats: stats(1420, 75, 75),
   },
   {
@@ -98,6 +103,7 @@ export const CHARACTERS = [
   {
     id: 'nanally', name: 'Nanally', rarity: 'S', version: '1.0', element: 'anima', roles: ['Damage'],
     arcType: 'Plasma', faction: 'Eibon Antique Shop', ability: 'Genius Ichi-daime: Earth Flip',
+    summons: 'Underboss',
     tags: ['Main DPS', 'Follow-up Attack'], stats: stats(1320, 80, 75),
   },
   {
@@ -134,6 +140,7 @@ export const CHARACTERS = [
   {
     id: 'exe', name: 'Exe', rarity: 'S', version: '1.5', element: 'chaos', roles: ['Damage'],
     arcType: 'Plasma', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
+    summons: 'Digital Echoes',
     tags: ['Main DPS', 'Summoner'], stats: null, upcoming: true,
     banner: { name: 'Offline Equations', from: 'Dec 2 (after update)', to: 'Dec 23, 05:59' },
   },
@@ -156,6 +163,7 @@ export const CHARACTERS = [
   {
     id: 'adler', name: 'Adler', rarity: 'A', version: '1.0', element: 'incantation', roles: ['Survival'],
     arcType: 'Condensate', faction: 'Eibon Antique Shop', ability: 'Ayatana',
+    summons: 'Sunya',
     tags: ['Shield', 'DoT'], stats: stats(1180, 55, 82),
   },
   {
@@ -171,6 +179,7 @@ export const CHARACTERS = [
   {
     id: 'haniel', name: 'Haniel', rarity: 'A', version: '1.0', element: 'psyche', roles: ['Buff'],
     arcType: 'Solid', faction: 'Sterry Express', ability: 'Amazing Grace',
+    summons: 'Hootie',
     tags: ['DMG Boost'], stats: stats(1130, 62, 70),
   },
   {

@@ -39,6 +39,8 @@ export default function Teammates({ character: c }) {
     ? []
     : byScore(others.filter((x) => x.tags?.includes('Instant Cycle')));
   const faction = c.faction ? byScore(others.filter((x) => x.faction === c.faction)) : [];
+  // Others who summon (Exe's summon boosts may reach them; see the glossary).
+  const summoners = c.summons ? byScore(others.filter((x) => x.summons)) : [];
   const unit = c.unit ? faction.filter((x) => x.unit === c.unit) : [];
 
   return (
@@ -80,6 +82,7 @@ export default function Teammates({ character: c }) {
       />
       {unit.length > 0 && <Group title={`Same squad · ${c.unit}`} list={unit} counts={pairs} />}
       <Group title={`Same faction · ${c.faction}`} list={faction.filter((x) => !unit.includes(x))} counts={pairs} />
+      <Group title={`Also summon · ${c.name} calls ${c.summons}`} list={summoners} counts={pairs} />
       </details>
     </section>
   );

@@ -476,8 +476,11 @@ export const GLOSSARY = [
   // Roles & tags
   {
     term: 'Summoner',
+    also: 'Summon',
     category: 'Roles & tags',
-    text: 'Characters who call extra units onto the field to fight beside the team, such as Exe’s Digital Echoes. Some passives and awakenings boost damage from summons.',
+    text: 'Characters who call extra units onto the field to fight beside the team, such as Exe’s Digital Echoes. Only Exe has the tag so far, but others summon too (like Control, which several Espers have without the tag): Nanally’s Underboss, Iroi’s lambs, Blackbird’s Forsaken Bird, Chaos’s Tindalos, Haniel’s Hootie and Adler’s Sunya. Some Arcs summon as well: Youthful Fantasy (the Black Tome), Camellia Society (from the Serenetti hunt) and Hethereau’s Keeper (Officer Whisker, from the Justice Executioner). So does the Blossom reaction, whose Vita Bud keeps firing on its own. A leak says Exe’s summon boosts will reach these too; not confirmed until his update.',
+    who: ['exe', 'nanally', 'iroi', 'blackbird', 'chaos', 'haniel', 'adler'],
+    related: ['Digital Echo', 'Vita Bud', 'Control'],
   },
   {
     term: 'Damage',
