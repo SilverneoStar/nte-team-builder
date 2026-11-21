@@ -1,4 +1,4 @@
-// Community team archetypes (Game8 Best Team Compositions, Nov 2026; Mobalytics team guide, Nov 2026, and Game Rant's Elyms teams; Icy Veins team pages for Edgar, Mint, Skia and Aurelia),, then kit-based ideas marked `idea: true` (Mobalytics team guide, Sep 2026; Blackbird,
+// Community team archetypes (Game8 Best Team Compositions and per-Esper pages, Nov 2026; Mobalytics team guide, Nov 2026, and Game Rant's Elyms teams; Icy Veins team pages for Edgar, Mint, Skia and Aurelia),, then kit-based ideas marked `idea: true` (Mobalytics team guide, Sep 2026; Blackbird,
 // Aurelia, Mint and Skia teams from Kaiden, Icy Veins, GameWith and other community guides,
 // Oct 2026; Akane Rin teams from Gurugamer, mone.gg and TopUpLive, Oct 2026,
 // pre-release ideas until she is out on global). Loading one copies it into the team you're editing, with each
@@ -22,7 +22,13 @@ export const ALL_PRESETS = [
   { name: 'Hathor Stain Charge', members: ['hathor', 'blackbird', 'iroi', 'elyms'], why: 'Blackbird enables Stain, Elyms helps with Remora and fast Cycles, Iroi brings Blossom and healing. Esper Zero can take Elyms’s place.' },
   { name: 'Mint F2P', members: ['mint', 'zero', 'skia', 'adler'], why: 'Budget Anima team: Zero and Skia set up Blossom, Remora and Charge; Adler shields.' },
   { name: 'Skia F2P Charge', members: ['skia', 'mint', 'zero', 'haniel'], why: 'Mint and Zero produce Blossom and Remora; Haniel boosts ATK and adds Stain.' },
-  { name: 'Chiz F2P Charge', members: ['chiz', 'skia', 'mint', 'haniel'], why: 'Starter Charge team: Skia brings Remora, Mint Blossom and Haniel ATK buffs. Adler can take Haniel’s place for shields.' },
+  { name: 'Chiz F2P Charge', members: ['chiz', 'skia', 'mint', 'adler'], why: 'Starter Charge team: Skia brings Remora and Mint Blossom; Adler shields and adds Hexed. Haniel instead gives more ATK and Stain.' },
+  // Game8's per-Esper pages (Edgar, Chaos, Baicang, Aurelia; PDFs from the
+  // project owner, Nov 21, 2026).
+  { name: 'Edgar Charge Support', members: ['edgar', 'hathor', 'nanally', 'jiuyuan'], why: 'Charge team where Edgar refills the active Esper’s Ultimate Energy. Skia can take Hathor’s place, Mint Nanally’s, and Esper Zero Jiuyuan’s for faster Cycles.' },
+  { name: 'Edgar Blossom Support', members: ['edgar', 'nanally', 'zero', 'jiuyuan'], why: 'Blossom team: Edgar heals, Esper Zero triggers Blossom and Jiuyuan strengthens it. Mint can take Nanally’s place.' },
+  { name: 'Chaos Remora', members: ['chaos', 'hathor', 'zero', 'haniel'], why: 'Chaos’s best team: his explosion grows with Remora’s duration, which Hathor extends. Skia can take Hathor’s place; Fadia Haniel’s for more survival.' },
+  { name: 'Chaos Stain (Haniel)', members: ['chaos', 'zero', 'fadia', 'haniel'], why: 'Stain raises the Lakshana DMG Chaos spends his field time on; Haniel buffs and Fadia protects. Game8’s text also suggests Blackbird for Stain.' },
   { name: 'Esper Zero F2P', members: ['zero', 'mint', 'haniel', 'sakiri'], why: 'Beginner Blossom and Hexed team around Zero’s fast Cycles.' },
   // Version 1.5 teams (Mobalytics team guide, Nov 2026; Game Rant's Elyms
   // teams, Nov 11, 2026).
@@ -40,14 +46,14 @@ export const ALL_PRESETS = [
   { name: 'Mint Charge', members: ['mint', 'sakiri', 'zero', 'skia'], why: 'Charge reactions; Sakiri adds team-wide damage buffs.' },
   { name: 'Mint Blossom', members: ['mint', 'nanally', 'chiz', 'haniel'], why: 'Stacks Blossom Cycle enhancements.' },
   { name: 'Mint Charge (Shinku)', members: ['mint', 'zero', 'shinku', 'skia'], why: 'Zero and Shinku trigger Charge often, so Mint casts her Ultimate more.' },
-  { name: 'Aurelia Discord', members: ['aurelia', 'daffodill', 'haniel', 'sakiri'], why: 'Discord team with Daffodill for Break.' },
+  { name: 'Aurelia Discord', members: ['aurelia', 'daffodill', 'haniel', 'sakiri'], why: 'Daffodill breaks and adds Nova with Aurelia; Haniel buffs and Sakiri adds Scorch for Discord. Fadia can take Haniel’s place, Adler Sakiri’s.' },
   { name: 'Mono Blossom', members: ['nanally', 'jiuyuan', 'zero', 'hotori'] },
   { name: 'Chaos Charge', members: ['chaos', 'jiuyuan', 'zero', 'hathor'] },
   { name: 'Shinku Charge', members: ['shinku', 'iroi', 'zero', 'hathor'] },
   { name: 'Hyper Chiz (F2P)', members: ['chiz', 'jiuyuan', 'hathor', 'zero'], why: 'The free swaps for Hyper Chiz: Jiuyuan for Iroi, Zero for Elyms and Hathor for Akane Rin.' },
   { name: 'Hyper Nanally', members: ['nanally', 'sakiri', 'iroi', 'linko'] },
   { name: 'Lacrimosa Scorch DoT', members: ['lacrimosa', 'sakiri', 'adler', 'fadia'] },
-  { name: 'Mono Scorch', members: ['baicang', 'sakiri', 'adler', 'daffodill'] },
+  { name: 'Mono Scorch', members: ['baicang', 'sakiri', 'adler', 'daffodill'], why: 'Baicang on damage, Daffodill breaks and triggers Scorch. Haniel can take Sakiri’s place to open Discord; Jiuyuan or Fadia Adler’s.' },
   { name: 'Zankou Hexed', members: ['zankou', 'daffodill', 'sakiri', 'linko'] },
   { name: 'Mono Nova', members: ['lacrimosa', 'blackbird', 'hotori', 'fadia'], why: 'Nova-focused; Haniel or Sakiri can take Fadia’s place.' },
   { name: 'Break Discord', members: ['zankou', 'daffodill', 'blackbird', 'sakiri'], why: 'Break-focused Discord team.' },
@@ -75,7 +81,7 @@ export const ALL_PRESETS = [
     why: 'Zankou’s Silent Sunset stacks Scorch; Sakiri and Adler make the target take more DoT, and Adler shields.' },
   { name: 'Zankou Discord', members: ['zankou', 'lacrimosa', 'haniel', 'adler'], idea: true,
     why: 'A Discord trio with Lacrimosa; Haniel’s Nova drain lifts ATK and Adler keeps the team shielded.' },
-  { name: 'Chaos Remora', members: ['chaos', 'hathor', 'zero', 'fadia'], idea: true,
+  { name: 'Chaos Remora (idea)', members: ['chaos', 'hathor', 'zero', 'fadia'], idea: true,
     why: 'Chaos’s usual core: Zero gives Instant Cycle, Hathor buffs Remora and Lakshana DMG, and Fadia adds Stain and survival.' },
   { name: 'Chaos Blackbird', members: ['chaos', 'blackbird', 'hathor', 'zero'], idea: true,
     why: 'Blackbird as second damage: she brings Instant Cycle and Stain, casts her Ultimate to buff the team, then swaps to Chaos so he fights under it. Zero and Hathor keep Remora rolling.' },
