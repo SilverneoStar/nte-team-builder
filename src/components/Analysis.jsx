@@ -6,6 +6,8 @@ import { roleIconUrl } from '../lib/icons.js';
 import StatText from './StatText.jsx';
 import SynergyScore from './SynergyScore.jsx';
 import { SHOW_TEAM_SYNERGY } from '../lib/synergy.js';
+import { teamChecks } from '../lib/checks.js';
+import Checks from './Checks.jsx';
 
 export default function Analysis({ analysis, members = [], loadouts = {} }) {
   const { elementCounts, reactions, trios, roleCounts, notes } = analysis;
@@ -15,7 +17,11 @@ export default function Analysis({ analysis, members = [], loadouts = {} }) {
       <h2 id="analysis-title" className="section-title">
         {SHOW_TEAM_SYNERGY ? 'Synergy' : 'Team overview'}
       </h2>
-      {SHOW_TEAM_SYNERGY && <SynergyScore members={members} loadouts={loadouts} />}
+      {SHOW_TEAM_SYNERGY ? (
+        <SynergyScore members={members} loadouts={loadouts} />
+      ) : (
+        <Checks title="Cortado’s team check" checks={teamChecks(members, loadouts)} />
+      )}
       <div className="analysis__grid">
         <EsperCycle elementCounts={elementCounts} reactions={reactions} trios={trios} />
 

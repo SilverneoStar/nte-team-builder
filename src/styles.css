@@ -10066,3 +10066,82 @@ th[aria-sort='descending'] .th-btn {
 .music__settings .music__tick {
   align-self: flex-start;
 }
+
+/* Cortado's checks (team overview, My build): what's missing, not a score. */
+.checks {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 8px 0 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.checks__mascot {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.checks__body {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.checks__title {
+  font: 600 0.72rem var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.checks__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 0.88rem;
+}
+.checks__item {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.checks__icon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font: 700 0.72rem/1 var(--font-mono);
+  color: #fff;
+  background: #d9a03f;
+}
+.checks__item--bad .checks__icon {
+  background: #d9534f;
+}
+.checks__item--ok .checks__icon {
+  background: var(--good);
+}
+/* My Espers: a tick or an exclamation mark instead of a rank. */
+.myespers__check {
+  background: var(--good);
+  color: #fff;
+}
+.myespers__check.is-todo {
+  background: #d9a03f;
+}
+.myespers__todo {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--good) 22%, transparent);
+  font-weight: 600;
+}
+.myespers__todo--warn {
+  background: color-mix(in srgb, #d9a03f 26%, transparent);
+}
+.myespers__todo {
+  white-space: nowrap;
+}

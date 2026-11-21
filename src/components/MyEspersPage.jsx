@@ -11,8 +11,7 @@ import { suggestedBuild } from '../data/consoleBuilds.js';
 import { withBestModuleStats } from '../data/bestBuild.js';
 import { allMyBuilds, loadMyBuilds, readAnyCode, saveMyBuild } from '../lib/myBuilds.js';
 import { readImageCode, scanFrame } from '../lib/imageCode.js';
-import { reviewBuild } from '../lib/buildReview.js';
-import { SYNERGY_RANKS, SYNERGY_RANK_STOPS } from '../lib/synergy.js';
+import { buildChecks, issueCount } from '../lib/checks.js';
 import { navigate } from '../lib/route.js';
 import { startingBuild } from './MyBuildEditor.jsx';
 import ElementGlyph from './ElementGlyph.jsx';
@@ -34,8 +33,6 @@ const put = (k, v) => {
   }
 };
 const names = (ids) => ids.map((id) => CHARACTER_BY_ID[id]?.name ?? id).join(', ');
-const RANK_ORDER = SYNERGY_RANKS.map((r) => r.rank);
-const rankStyle = (r) => ({ '--r1': SYNERGY_RANK_STOPS[r][0], '--r2': SYNERGY_RANK_STOPS[r][2] });
 const savable = (id) => CHARACTER_BY_ID[id] && !CHARACTER_BY_ID[id].upcoming;
 
 // The suggested Console's layout without module stats: a team code carries no
@@ -232,7 +229,7 @@ export default function MyEspersPage({ onLoadTeam }) {
   const [version, setVersion] = useState(0);
   const mine = useMemo(() => loadMyBuilds(), [version]); // eslint-disable-line react-hooks/exhaustive-deps
   const builds = useMemo(() => allMyBuilds(mine).filter((b) => CHARACTER_BY_ID[b.characterId]), [mine]);
-  const [sort, setSort] = useState(() => get(SORT_KEY, 'name'));
+  const [sort, setSort] = useState(() => { const v = get(SORT_KEY, 'name'); return v === 'rating' ? 'todo' : v; });
   const [paste, setPaste] = useState('');
   const [error, setError] = useState('');
   const [found, setFound] = useState(null);
@@ -242,18 +239,17 @@ export default function MyEspersPage({ onLoadTeam }) {
   const fileRef = useRef(null);
 
   const rated = useMemo(
-    () => builds.map((b) => ({ ...b, review: reviewBuild(b.characterId, b.build) })),
+    () => builds.map((b) => ({ ...b, issues: issueCount(buildChecks(b.characterId, b.build)) })),
     [builds],
   );
   const shown = useMemo(() => {
     const list = [...rated];
     const name = (b) => CHARACTER_BY_ID[b.characterId].name;
     if (sort === 'recent') return list.sort((a, b) => b.savedAt - a.savedAt);
-    if (sort === 'rating')
-      return list.sort((a, b) => (b.review?.score ?? -1) - (a.review?.score ?? -1) || name(a).localeCompare(name(b)));
+    if (sort === 'todo') return list.sort((a, b) => b.issues - a.issues || name(a).localeCompare(name(b)));
     return list.sort((a, b) => name(a).localeCompare(name(b)));
   }, [rated, sort]);
-  const ranks = RANK_ORDER.map((r) => [r, rated.filter((b) => b.review?.rank === r).length]).filter(([, n]) => n);
+  const todo = rated.filter((b) => b.issues).length;
 
   const take = (text) => {
     const t = readAnyCode(text);
@@ -297,7 +293,7 @@ export default function MyEspersPage({ onLoadTeam }) {
       <header className="page__head">
         <h2 className="page__title">My Espers</h2>
         <p className="muted">
-          All your saved builds in one place, like shortcuts on a desktop, each rated by Cortado. Tap one to open it.
+          All your saved builds in one place, like shortcuts on a desktop, each checked by Cortado for anything missing. Tap one to open it.
           Builds are kept in this browser only.
         </p>
       </header>
@@ -306,13 +302,10 @@ export default function MyEspersPage({ onLoadTeam }) {
         <div className="myagents__bar">
           <span className="muted small">
             {shown.length ? `${shown.length} Esper${shown.length > 1 ? 's' : ''}` : 'No builds yet'}
-            {ranks.length > 0 && (
+            {rated.length > 0 && (
               <span className="myespers__ranks">
-                {ranks.map(([r, n]) => (
-                  <span key={r} className="myespers__rankchip" style={rankStyle(r)}>
-                    {n} × {r}
-                  </span>
-                ))}
+                <span className="myespers__todo">{rated.length - todo} all set</span>
+                {todo > 0 && <span className="myespers__todo myespers__todo--warn">{todo} to finish</span>}
               </span>
             )}
           </span>
@@ -327,7 +320,7 @@ export default function MyEspersPage({ onLoadTeam }) {
                 }}
               >
                 <option value="name">By name</option>
-                <option value="rating">By rating</option>
+                <option value="todo">Missing something first</option>
                 <option value="recent">Recently saved</option>
               </select>
             </label>
@@ -338,10 +331,9 @@ export default function MyEspersPage({ onLoadTeam }) {
             {shown.map((b) => {
               const c = CHARACTER_BY_ID[b.characterId];
               const el = ELEMENT_BY_ID[c.element]?.color ?? '#888';
-              const r = b.review;
-              const verdict = r?.rank
-                ? `Cortado’s rating: ${r.rank}, ${r.score}/100${r.hasSubs ? '' : ' (main stat only so far)'}`
-                : 'Not rated yet: add the Cartridge stats';
+              const verdict = b.issues
+                ? `${b.issues} thing${b.issues > 1 ? 's' : ''} missing`
+                : 'All set';
               return (
                 <li key={b.characterId}>
                   <button
@@ -358,11 +350,9 @@ export default function MyEspersPage({ onLoadTeam }) {
                       <span className="myagents__art">
                         <Portrait character={c} size="lg" backdrop />
                       </span>
-                      {r?.rank && (
-                        <span className="myespers__rank" style={rankStyle(r.rank)} aria-hidden="true">
-                          {r.rank}
-                        </span>
-                      )}
+                      <span className={`myespers__rank myespers__check${b.issues ? ' is-todo' : ''}`} aria-hidden="true">
+                        {b.issues ? '!' : '✓'}
+                      </span>
                       <span className="myespers__el" aria-hidden="true">
                         <ElementGlyph element={c.element} size={18} />
                       </span>
@@ -370,7 +360,7 @@ export default function MyEspersPage({ onLoadTeam }) {
                     <span className="myagents__label">
                       <span className="myagents__name">{c.name}</span>
                       <span className="myagents__build">
-                        {r?.rank ? `${r.score}/100${r.hasSubs ? '' : ' · main only'}` : 'Not rated yet'}
+                        {verdict}
                       </span>
                     </span>
                   </button>
@@ -385,8 +375,8 @@ export default function MyEspersPage({ onLoadTeam }) {
         )}
         {shown.length > 0 && (
           <p className="muted small myespers__how">
-            Cortado rates each build’s Cartridge main stat (40%) and the Cartridge and Console sub stats (60%) against
-            what that Esper favours. Open a build to see his notes.
+            Cortado checks each build for anything missing: an Arc, the Cartridge set and main stat, Console modules,
+            or stats without values. Open a build to see what.
           </p>
         )}
       </section>
