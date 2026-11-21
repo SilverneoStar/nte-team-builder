@@ -6,7 +6,10 @@
 import { CHARACTER_BY_ID } from './characters.js';
 import { bestBuild } from './bestBuild.js';
 
-export const PRESETS = [
+// Every team, community and kit idea. The kit ideas are hidden for now (Nov
+// 2026): players found some of them don't work in practice, so the site only
+// shows teams community guides recommend. They stay here to revisit.
+export const ALL_PRESETS = [
   { name: 'Mono Blossom', members: ['nanally', 'jiuyuan', 'zero', 'hotori'] },
   { name: 'Chaos Charge', members: ['chaos', 'jiuyuan', 'zero', 'hathor'] },
   { name: 'Shinku Charge', members: ['shinku', 'iroi', 'zero', 'hathor'] },
@@ -83,6 +86,9 @@ export const PRESETS = [
   { name: 'Exe Scorch', members: ['exe', 'sakiri', 'haniel', 'adler'], idea: true,
     why: 'Pre-release idea: Exe’s Chaos with Sakiri’s Scorch and Haniel’s Nova for Discord; Adler shields while the summons work.' },
 ];
+
+/** The teams the site shows: community-recommended ones only. */
+export const PRESETS = ALL_PRESETS.filter((p) => !p.idea);
 
 /**
  * Each member's recommended kit: signature (or top) Arc, recommended Cartridge

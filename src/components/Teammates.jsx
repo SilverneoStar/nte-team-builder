@@ -1,6 +1,6 @@
-// An Esper's Teammates tab: good partners grouped by reason (often teamed
-// with, each reaction partner, Instant Cycle starters, same faction), a few
-// each with "show more" for the rest. Strongest examples first.
+// An Esper's Teammates tab: who they're teamed with in community teams first.
+// Element, Instant Cycle and faction links follow, folded away: they're facts
+// about the kits, not recommendations (players found them too broad).
 import { useState } from 'react';
 import { CHARACTERS } from '../data/characters.js';
 import { ELEMENT_BY_ID, PAIR_REACTIONS } from '../data/elements.js';
@@ -44,15 +44,20 @@ export default function Teammates({ character: c }) {
   return (
     <section className="mates">
       <h3 className="mini-title">Teammates</h3>
-      {c.element === 'unknown' ? (
-        <p className="muted small">{c.name}’s element isn’t announced yet, so reaction partners are unknown.</p>
+      {often.length ? (
+        <Group title="Teamed with in community teams" note="From the teams on the Teams tab." list={often} counts={pairs} />
       ) : (
-        <p className="muted small">
-          Reactions need neighbouring elements on the Esper Cycle; a team with three neighbours in a row also gets a
-          trio bonus.
-        </p>
+        <p className="muted small">No community teams with {c.name} yet.</p>
       )}
-      <Group title="Often teamed with" note="From the featured teams." list={often} counts={pairs} />
+      <details className="mates__more-links">
+        <summary>Element and faction links</summary>
+        <p className="muted small">
+          Who shares a reaction, starts the Esper Cycle or comes from the same faction. These aren’t recommendations:
+          a link here doesn’t mean the team works.
+        </p>
+        {c.element === 'unknown' && (
+          <p className="muted small">{c.name}’s element isn’t announced yet, so reaction partners are unknown.</p>
+        )}
       {reactions.map(({ r, el, list }) => (
         <Group
           key={r.id}
@@ -75,6 +80,7 @@ export default function Teammates({ character: c }) {
       />
       {unit.length > 0 && <Group title={`Same squad · ${c.unit}`} list={unit} counts={pairs} />}
       <Group title={`Same faction · ${c.faction}`} list={faction.filter((x) => !unit.includes(x))} counts={pairs} />
+      </details>
     </section>
   );
 }

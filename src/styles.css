@@ -10145,3 +10145,13 @@ th[aria-sort='descending'] .th-btn {
 .myespers__todo {
   white-space: nowrap;
 }
+
+/* Teammates: element and faction links folded away under community partners. */
+.mates__more-links {
+  margin-top: 12px;
+}
+.mates__more-links > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
