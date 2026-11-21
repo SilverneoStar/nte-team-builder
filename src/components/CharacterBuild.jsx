@@ -282,9 +282,10 @@ function ArcRow({ arc: a, character: c, free = false }) {
 
 const TEAMS_SHOWN = 4;
 
-/** Featured teams with this character: community teams first, then kit ideas. */
+/** Community teams with this character: the ones built around them (listed first in the team) lead. */
 export function teamsWith(id) {
-  return PRESETS.filter((p) => p.members.includes(id)).sort((a, b) => Number(!!a.idea) - Number(!!b.idea));
+  const lead = (p) => (p.members[0] === id ? 0 : 1);
+  return PRESETS.filter((p) => p.members.includes(id)).sort((a, b) => lead(a) - lead(b));
 }
 
 export function CharacterTeams({ character: c, onLoadTeam }) {

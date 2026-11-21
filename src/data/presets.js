@@ -1,4 +1,4 @@
-// Community team archetypes (Mobalytics team guide, Nov 2026, and Game Rant's Elyms teams; Icy Veins team pages for Edgar, Mint, Skia and Aurelia),, then kit-based ideas marked `idea: true` (Mobalytics team guide, Sep 2026; Blackbird,
+// Community team archetypes (Game8 Best Team Compositions, Nov 2026; Mobalytics team guide, Nov 2026, and Game Rant's Elyms teams; Icy Veins team pages for Edgar, Mint, Skia and Aurelia),, then kit-based ideas marked `idea: true` (Mobalytics team guide, Sep 2026; Blackbird,
 // Aurelia, Mint and Skia teams from Kaiden, Icy Veins, GameWith and other community guides,
 // Oct 2026; Akane Rin teams from Gurugamer, mone.gg and TopUpLive, Oct 2026,
 // pre-release ideas until she is out on global). Loading one copies it into the team you're editing, with each
@@ -10,12 +10,26 @@ import { bestBuild } from './bestBuild.js';
 // 2026): players found some of them don't work in practice, so the site only
 // shows teams community guides recommend. They stay here to revisit.
 export const ALL_PRESETS = [
+  // Game8's Best Team Compositions (screenshots from the project owner, Nov
+  // 21, 2026). Teams it shares with the guides below are listed once, there.
+  { name: 'Akane Rin Synced', members: ['akane', 'blackbird', 'linko', 'elyms'], why: 'Akane Rin stays on field building String Energy; Blackbird enables Stain, Linko adds Synced Strikes and Elyms supports Remora. Hathor can take Elyms’s place.' },
+  { name: 'Blackbird Stain', members: ['blackbird', 'chaos', 'hathor', 'elyms'], why: 'Blackbird leads on field with Chaos and Hathor on Lakshana reactions; Elyms speeds up Cycles and keeps Remora up. Esper Zero can take Elyms’s place.' },
+  { name: 'Linko Hexed', members: ['linko', 'zankou', 'sakiri', 'iroi'], why: 'Linko’s Synced Strikes and RES shred for Zankou’s Hexed team; Sakiri buffs and Iroi heals. Daffodill can take Iroi’s place.' },
+  { name: 'Zankou Scorch', members: ['zankou', 'lacrimosa', 'sakiri', 'iroi'], why: 'Sustained Scorch and DoT: Lacrimosa adds Nightmare, Sakiri DoT pressure and Iroi healing. Linko is an offensive option for Iroi.' },
+  { name: 'Chaos Stain', members: ['chaos', 'blackbird', 'elyms', 'fadia'], why: 'Room for Chaos’s Lakshana attacks: Blackbird enables Stain, Elyms adds Cycle support and Fadia protects.' },
+  { name: 'Hotori Time Stop', members: ['hotori', 'nanally', 'iroi', 'elyms'], why: 'Hotori records and replays allied skills; Nanally deals steady damage, Elyms buffs and Iroi enables Blossom. Esper Zero can take Elyms’s place.' },
+  { name: 'Nanally Follow-Up', members: ['nanally', 'linko', 'elyms', 'sakiri'], why: 'Follow-Up hypercarry: Linko’s Synced Strikes, Elyms’s off-field attacks and Sakiri’s Hexed and ATK.' },
+  { name: 'Hathor Stain Charge', members: ['hathor', 'blackbird', 'iroi', 'elyms'], why: 'Blackbird enables Stain, Elyms helps with Remora and fast Cycles, Iroi brings Blossom and healing. Esper Zero can take Elyms’s place.' },
+  { name: 'Mint F2P', members: ['mint', 'zero', 'skia', 'adler'], why: 'Budget Anima team: Zero and Skia set up Blossom, Remora and Charge; Adler shields.' },
+  { name: 'Skia F2P Charge', members: ['skia', 'mint', 'zero', 'haniel'], why: 'Mint and Zero produce Blossom and Remora; Haniel boosts ATK and adds Stain.' },
+  { name: 'Chiz F2P Charge', members: ['chiz', 'skia', 'mint', 'haniel'], why: 'Starter Charge team: Skia brings Remora, Mint Blossom and Haniel ATK buffs. Adler can take Haniel’s place for shields.' },
+  { name: 'Esper Zero F2P', members: ['zero', 'mint', 'haniel', 'sakiri'], why: 'Beginner Blossom and Hexed team around Zero’s fast Cycles.' },
   // Version 1.5 teams (Mobalytics team guide, Nov 2026; Game Rant's Elyms
   // teams, Nov 11, 2026).
   { name: 'Mono Blossom (Elyms)', members: ['nanally', 'jiuyuan', 'elyms', 'hotori'], why: 'Blossom team for the upper half of the Esper Cycle; pairs with Shinku Charge.' },
   { name: 'Shinku Charge (Elyms)', members: ['shinku', 'iroi', 'elyms', 'akane'], why: 'Elyms gives Shinku a Charge boost and keeps energy flowing; Akane Rin extends Remora and Iroi heals and buffs.' },
   { name: 'Hyper Chiz', members: ['chiz', 'iroi', 'akane', 'elyms'], why: 'Charge team built around Chiz.' },
-  { name: 'Elyms Remora', members: ['elyms', 'akane', 'blackbird', 'iroi'], why: 'Elyms and Akane Rin keep Remora up; Blackbird buffs Lakshana DMG and triggers Stain with Akane Rin.' },
+  { name: 'Elyms Remora', members: ['elyms', 'akane', 'blackbird', 'iroi'], why: 'Elyms and Akane Rin keep Remora up; Blackbird buffs Lakshana DMG and triggers Stain with Akane Rin. Game8 has it too, with Esper Zero as a swap for Elyms.' },
   { name: 'Elyms F2P', members: ['elyms', 'chiz', 'hathor', 'jiuyuan'], why: 'Chiz deals the damage; Hathor extends Remora and Jiuyuan doubles Blossom’s Vita Buds.' },
   { name: 'Lacrimosa Discord', members: ['lacrimosa', 'sakiri', 'zankou', 'blackbird'], why: 'Scorch, Nova and Discord for the lower half of the Esper Cycle.' },
   { name: 'Zankou Hexed (Lacrimosa)', members: ['zankou', 'linko', 'lacrimosa', 'sakiri'], why: 'Hexed with Scorch on the side.' },
@@ -57,7 +71,7 @@ export const ALL_PRESETS = [
     why: 'Shinku’s Lone Stride feeds Charge; her CSU-2 squadmates Mint and Iroi add Blossom and healing, and Hathor completes the trio.' },
   { name: 'Eibon Antique Shop', members: ['nanally', 'sakiri', 'hotori', 'edgar'], idea: true,
     why: 'The antique shop crew: Nanally’s Blossom, Sakiri’s Hexed, Hotori’s buffs and Edgar’s healing.' },
-  { name: 'Zankou Scorch', members: ['zankou', 'daffodill', 'sakiri', 'adler'], idea: true,
+  { name: 'Zankou Scorch (idea)', members: ['zankou', 'daffodill', 'sakiri', 'adler'], idea: true,
     why: 'Zankou’s Silent Sunset stacks Scorch; Sakiri and Adler make the target take more DoT, and Adler shields.' },
   { name: 'Zankou Discord', members: ['zankou', 'lacrimosa', 'haniel', 'adler'], idea: true,
     why: 'A Discord trio with Lacrimosa; Haniel’s Nova drain lifts ATK and Adler keeps the team shielded.' },
