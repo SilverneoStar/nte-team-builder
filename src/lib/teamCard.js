@@ -20,7 +20,7 @@ import { skillIconUrl } from './skillIcons.js';
 import { encodeCardCode, splitCardCode } from './cardCode.js';
 import { drawQR, qrText } from './qr.js';
 import { consoleStats } from '../data/console.js';
-import { SYNERGY_MOODS, SYNERGY_RANK_STOPS, synergyScore } from './synergy.js';
+import { SHOW_TEAM_SYNERGY, SYNERGY_MOODS, SYNERGY_RANK_STOPS, synergyScore } from './synergy.js';
 
 export const CARD_W = 1200;
 export const CARD_H = 675;
@@ -915,6 +915,7 @@ export async function renderTeamCard(team, { base = '/', layout = 'row', scale =
   // Full teams: Cortado shows the synergy rank on its face screen, with the
   // score above the role counts.
   const syn =
+    SHOW_TEAM_SYNERGY &&
     members.every(Boolean) &&
     synergyScore(team.members, Object.fromEntries(team.members.map((id) => [id, loadoutOf(team, id)])));
   if (syn) {

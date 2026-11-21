@@ -46,6 +46,12 @@ import { areNeighbours } from './analyze.js';
 import { isBeta, showBeta } from './betaState.js';
 
 /** Rank letters from best to worst, with the lowest score for each. */
+// The team synergy score is hidden for now (Nov 2026): players found it
+// rewarded fitting in as many reactions as possible over teams that are
+// actually strong. The code stays so it can come back once reworked.
+// Per-build ratings (My Espers, My build) are separate and stay on.
+export const SHOW_TEAM_SYNERGY = false;
+
 export const SYNERGY_RANKS = [
   { rank: 'S+', min: 90 },
   { rank: 'S', min: 75 },

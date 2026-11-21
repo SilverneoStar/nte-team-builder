@@ -5,6 +5,7 @@ import ElementGlyph from './ElementGlyph.jsx';
 import { roleIconUrl } from '../lib/icons.js';
 import StatText from './StatText.jsx';
 import SynergyScore from './SynergyScore.jsx';
+import { SHOW_TEAM_SYNERGY } from '../lib/synergy.js';
 
 export default function Analysis({ analysis, members = [], loadouts = {} }) {
   const { elementCounts, reactions, trios, roleCounts, notes } = analysis;
@@ -12,9 +13,9 @@ export default function Analysis({ analysis, members = [], loadouts = {} }) {
   return (
     <section className="analysis" aria-labelledby="analysis-title">
       <h2 id="analysis-title" className="section-title">
-        Synergy
+        {SHOW_TEAM_SYNERGY ? 'Synergy' : 'Team overview'}
       </h2>
-      <SynergyScore members={members} loadouts={loadouts} />
+      {SHOW_TEAM_SYNERGY && <SynergyScore members={members} loadouts={loadouts} />}
       <div className="analysis__grid">
         <EsperCycle elementCounts={elementCounts} reactions={reactions} trios={trios} />
 
