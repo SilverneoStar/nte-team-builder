@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const TAU = Math.PI * 2;
 // Canvas styles that draw the levels as a spectrum (audioMotion-style looks).
-export const SPECTRUM = new Set(['led', 'mirror', 'curve', 'radial']);
+export const SPECTRUM = new Set(['led', 'curve', 'radial']);
 // A steady pseudo-random number in 0..1 for a whole number.
 const hash = (n) => {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;

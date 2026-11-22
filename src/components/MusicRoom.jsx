@@ -111,7 +111,9 @@ const ROOM_DEFAULTS = { order: 'file', awake: false, hide: [], hidden: [], showH
 function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
-      const v = JSON.parse(localStorage.getItem(ROOM_KEY) || '{}');
+      let v = JSON.parse(localStorage.getItem(ROOM_KEY) || '{}');
+      // Mirror was dropped: show Bars instead.
+      if (v.viz === 'mirror') v = { ...v, viz: 'bars' };
       // Old names, and the short-lived character colour row (c-…), map to today's styles.
       const bars = String(v.bars ?? '').startsWith('c-') ? 'classic' : ({ pixel: 'digital', dots: 'y2k' }[v.bars] ?? v.bars);
       return {
@@ -829,7 +831,6 @@ export default function MusicRoom() {
                 { id: 'bloom', label: 'Bloom' },
                 { id: 'embers', label: 'Embers' },
                 { id: 'led', label: 'LED' },
-                { id: 'mirror', label: 'Mirror' },
                 { id: 'curve', label: 'Curve' },
                 { id: 'radial', label: 'Ring' },
               ]}
@@ -844,7 +845,7 @@ export default function MusicRoom() {
               <p className="muted small music__note">
                 {mic.error ||
                   (listen && !SPECTRUM.has(room.viz) && room.viz !== 'bars'
-                    ? 'Listening shows on Bars, LED, Mirror, Curve and Ring.'
+                    ? 'Listening shows on Bars, LED, Curve and Ring.'
                     : 'The page can’t hear YouTube directly, so this listens to your speakers through the mic. Nothing is recorded or sent anywhere. Won’t pick up headphones.')}
               </p>
             </div>
