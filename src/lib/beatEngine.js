@@ -723,7 +723,9 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         // All strokes share one slant, as from one hand; each varies a little.
         const SLANT = 0.32;
         for (let i = 0; i < n; i++) {
-          const bh = Math.max(bw * 0.5, L[i] * h * 0.95);
+          // Every stroke hangs a good way down even when quiet, and reaches
+          // the bottom of the strip on the loudest notes.
+          const bh = (0.45 + 0.53 * L[i]) * h;
           const tilt = bh * (SLANT + (hash(i * 4.1) - 0.5) * 0.12);
           // Centred on its slot, so the slant doesn't push strokes off the edge.
           const cx = i * (bw + gap) + bw / 2 - tilt / 2;
