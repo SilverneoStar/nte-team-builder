@@ -10377,11 +10377,21 @@ th[aria-sort='descending'] .th-btn {
     linear-gradient(162deg, transparent 46%, rgb(255 255 255 / 0.95) 49.4%, rgb(170 186 255 / 0.7) 50%, transparent 53%),
     linear-gradient(18deg, transparent 47%, rgb(220 228 255 / 0.85) 49.6%, transparent 51.5%),
     linear-gradient(174deg, transparent 48%, rgb(255 255 255 / 0.7) 49.8%, transparent 51%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   filter: drop-shadow(0 0 4px #a6b8f2);
   mix-blend-mode: screen;
 }
+/* One slash per beat, taking turns, each fading in on the beat and out after. */
 .music.is-playing .music__beat[data-bars='honed-edge']::before {
-  animation: room-slash var(--beat) ease-out infinite;
+  animation:
+    room-slash var(--beat) ease-out infinite,
+    room-slash-turn calc(var(--beat) * 3) steps(1) infinite;
+}
+@keyframes room-slash-turn {
+  0% { background-position: 0 0, 0 -999px, 0 -999px; }
+  33.333% { background-position: 0 -999px, 0 0, 0 -999px; }
+  66.666% { background-position: 0 -999px, 0 -999px, 0 0; }
 }
 .music__beat[data-bars='honed-edge']::after {
   inset: -34px 0 20% 0;
@@ -10395,10 +10405,9 @@ th[aria-sort='descending'] .th-btn {
   animation: room-ember calc(var(--beat) * 6) linear infinite;
 }
 @keyframes room-slash {
-  0% { opacity: 0; transform: translateX(-8%) scaleX(0.6); }
-  12% { opacity: 1; transform: translateX(0) scaleX(1); }
-  45% { opacity: 0.25; }
-  100% { opacity: 0; transform: translateX(6%) scaleX(1.05); }
+  0% { opacity: 0; transform: translateX(-4%); }
+  25% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(3%); }
 }
 @media (prefers-reduced-motion: reduce) {
   .music.is-playing .music__beat[data-bars='honed-edge']::before,
