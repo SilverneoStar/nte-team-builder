@@ -10211,64 +10211,80 @@ th[aria-sort='descending'] .th-btn {
   font-size: 0.9rem;
 }
 
-/* Character colours for the beat: bars and the canvas styles. */
-.music__beat[data-bars='c-daffodill'] span {
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(to top, #1d2550, #3158bb, #87b8f1, #e6f1ff);
-  box-shadow: 0 0 8px #87b8f188;
+@keyframes room-fall {
+  0% { transform: translateY(-14px) rotate(0deg); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 0.8; }
+  100% { transform: translateY(26px) rotate(90deg); opacity: 0; }
 }
-.music__beat[data-bars='c-daffodill'] .music__pulse {
-  --pulse-color: #87b8f1;
-  --pulse-stops: #1d2550, #3158bb, #87b8f1, #e6f1ff;
-  --pulse-glow: #87b8f1;
+@keyframes room-drip {
+  0% { transform: translateY(-6px) scaleY(0.8); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(34px) scaleY(1.2); opacity: 0; }
 }
-.music__beat[data-bars='c-sakiri'] span {
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(to top, #4a1418, #b43337, #eb5c5b, #bcd8f4);
-  box-shadow: 0 0 8px #eb5c5b88;
+@keyframes room-shot {
+  0% { transform: translateX(-40%); opacity: 0; }
+  10% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(60%); opacity: 0; }
 }
-.music__beat[data-bars='c-sakiri'] .music__pulse {
-  --pulse-color: #eb5c5b;
-  --pulse-stops: #4a1418, #b43337, #eb5c5b, #bcd8f4;
-  --pulse-glow: #eb5c5b;
+@keyframes room-glint {
+  0% { transform: translateX(-60%) skewX(-20deg); opacity: 0; }
+  30% { opacity: 0.9; }
+  60% { opacity: 0; }
+  100% { transform: translateX(160%) skewX(-20deg); opacity: 0; }
 }
-.music__beat[data-bars='c-hotori'] span {
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(to top, #2b1820, #751d26, #dc8179, #ffd9d2);
-  box-shadow: 0 0 8px #dc817988;
+
+/* Themed beat styles: Void Hunters' upgraded elements (ZZZ) and characters (NTE). */
+.music__beat[data-bars='lacrimosa'] span {
+  background: linear-gradient(to top, #3a0610, #9a1a26 45%, #e2342a 78%, #ff7a52);
+  border-radius: 45% 45% 2px 2px / 35% 35% 2px 2px;
+  box-shadow: 0 0 8px rgb(226 52 42 / 0.5), inset -2px 0 0 rgb(255 140 110 / 0.35);
 }
-.music__beat[data-bars='c-hotori'] .music__pulse {
-  --pulse-color: #dc8179;
-  --pulse-stops: #2b1820, #751d26, #dc8179, #ffd9d2;
-  --pulse-glow: #dc8179;
+.music__beat[data-bars='lacrimosa'] span:nth-child(3n + 1) {
+  background: linear-gradient(to top, #24030a, #7a0f1c 50%, #c62a2a 85%, #ff9a7a);
 }
-.music__beat[data-bars='c-nanally'] span {
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(to top, #4a1528, #b43c5b, #ee7d98, #ffe0ea);
-  box-shadow: 0 0 8px #ee7d9888;
+.music__beat[data-bars='lacrimosa'] .music__bars[data-flicker='1'] span:nth-child(7n + 2) {
+  background: linear-gradient(to top, #2a0d1a, #6a1f3a 50%, #d97488);
+  box-shadow: 0 0 10px #c63c61;
 }
-.music__beat[data-bars='c-nanally'] .music__pulse {
-  --pulse-color: #ee7d98;
-  --pulse-stops: #4a1528, #b43c5b, #ee7d98, #ffe0ea;
-  --pulse-glow: #ee7d98;
+.music__beat[data-bars='lacrimosa'] .music__pulse {
+  --pulse-color: #e2342a;
+  --pulse-stops: #5c0a14, #c62a2a, #ff7a52, #c62a2a, #5c0a14;
+  --pulse-glow: #e2342a;
+  --pulse-flicker: #f2b3c2;
 }
-.music__beat[data-bars='c-lacrimosa'] span {
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(to top, #1e0f18, #9a1a3c, #c63c61, #f2b3c2);
-  box-shadow: 0 0 8px #c63c6188;
+.music__beat[data-bars='lacrimosa']::before,
+.music__beat[data-bars='lacrimosa']::after {
+  content: '';
+  position: absolute;
+  inset: -34px 0 25% 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
 }
-.music__beat[data-bars='c-lacrimosa'] .music__pulse {
-  --pulse-color: #c63c61;
-  --pulse-stops: #1e0f18, #9a1a3c, #c63c61, #f2b3c2;
-  --pulse-glow: #c63c61;
+@media (prefers-reduced-motion: reduce) {
+  .music.is-playing .music__beat[data-bars='lacrimosa']::before,
+  .music.is-playing .music__beat[data-bars='lacrimosa']::after {
+    animation: none;
+    opacity: 0.7;
+  }
 }
-.music__beat[data-bars='c-baicang'] span {
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(to top, #1b2240, #3d4c7e, #528fcb, #d9c48a);
-  box-shadow: 0 0 8px #528fcb88;
+.music__beat[data-bars='lacrimosa']::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%23c62a2a'/%3E%3Cellipse cx='9.5' cy='14' rx='1.6' ry='2.4' fill='%23ffffff' opacity='0.45'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%23e2342a'/%3E%3Cellipse cx='9.5' cy='14' rx='1.6' ry='2.4' fill='%23ffffff' opacity='0.45'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%239a1a26'/%3E%3Cellipse cx='9.5' cy='14' rx='1.6' ry='2.4' fill='%23ffffff' opacity='0.45'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%23e2342a'/%3E%3Cellipse cx='9.5' cy='14' rx='1.6' ry='2.4' fill='%23ffffff' opacity='0.45'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%23c62a2a'/%3E%3Cellipse cx='9.5' cy='14' rx='1.6' ry='2.4' fill='%23ffffff' opacity='0.45'/%3E%3C/svg%3E");
+  background-position: 9% 10%, 31% 25%, 52% 8%, 73% 22%, 91% 12%;
+  background-size: 8px 10px, 6px 8px, 9px 11px, 7px 9px, 6px 8px;
+  background-repeat: no-repeat;
 }
-.music__beat[data-bars='c-baicang'] .music__pulse {
-  --pulse-color: #528fcb;
-  --pulse-stops: #1b2240, #3d4c7e, #528fcb, #d9c48a;
-  --pulse-glow: #528fcb;
+.music.is-playing .music__beat[data-bars='lacrimosa']::before {
+  animation: room-drip calc(var(--beat) * 6) linear  infinite;
+}
+.music__beat[data-bars='lacrimosa']::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 12 Q14 6 23 12 Q14 18 2 12Z' fill='%23e2342a'/%3E%3Cpath d='M23 12 L15 10.5 L15 13.5Z' fill='%23ffd6c9'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 12 Q14 6 23 12 Q14 18 2 12Z' fill='%23c62a2a'/%3E%3Cpath d='M23 12 L15 10.5 L15 13.5Z' fill='%23ffd6c9'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 12 Q14 6 23 12 Q14 18 2 12Z' fill='%23ff5a3c'/%3E%3Cpath d='M23 12 L15 10.5 L15 13.5Z' fill='%23ffd6c9'/%3E%3C/svg%3E");
+  background-position: 5% 30%, 30% 60%, 12% 85%;
+  background-size: 22px 9px, 18px 7px, 16px 7px;
+  background-repeat: no-repeat;
+}
+.music.is-playing .music__beat[data-bars='lacrimosa']::after {
+  animation: room-shot calc(var(--beat) * 6) linear calc(var(--beat) * -2) infinite;
 }

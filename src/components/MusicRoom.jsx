@@ -112,7 +112,8 @@ function useRoomSettings() {
   const [room, setRoom] = useState(() => {
     try {
       const v = JSON.parse(localStorage.getItem(ROOM_KEY) || '{}');
-      const bars = { pixel: 'digital', dots: 'y2k' }[v.bars] ?? v.bars;
+      // Old names, and the short-lived character colour row (c-…), map to today's styles.
+      const bars = String(v.bars ?? '').startsWith('c-') ? 'classic' : ({ pixel: 'digital', dots: 'y2k' }[v.bars] ?? v.bars);
       return {
         ...ROOM_DEFAULTS,
         ...v,
@@ -144,16 +145,6 @@ function useRoomSettings() {
 /** Instrumental versions of songs, going by the name ("(Instrumental)", 伴奏). */
 const isInstrumental = (x) => /instrumental|伴奏|karaoke|off vocal/i.test(x.name);
 
-// Colours from the characters (their own --pulse and bar colours in styles.css).
-const CHAR_STYLES = [
-  { id: 'c-daffodill', label: 'Daffodill' },
-  { id: 'c-sakiri', label: 'Sakiri' },
-  { id: 'c-hotori', label: 'Hotori' },
-  { id: 'c-nanally', label: 'Nanally' },
-  { id: 'c-lacrimosa', label: 'Lacrimosa' },
-  { id: 'c-baicang', label: 'Baicang' },
-];
-
 const BAR_STYLES = [
   { id: 'classic', label: 'Classic' },
   { id: 'neon', label: 'Neon' },
@@ -163,6 +154,7 @@ const BAR_STYLES = [
   { id: 'elements', label: 'Elements' },
   { id: 'illusion', label: 'Illusion' },
   { id: 'sunbringer', label: 'Sunchaser' },
+  { id: 'lacrimosa', label: 'Lacrimosa' },
 ];
 
 /** A row of buttons where one is picked. */
@@ -843,7 +835,6 @@ export default function MusicRoom() {
               ]}
             />
             <Choice label="Style" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
-            <Choice label="Character colours" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={CHAR_STYLES} />
             <div className="music__choice">
               <span className="music__choice-label">Listen</span>
               <label className="music__tick">
