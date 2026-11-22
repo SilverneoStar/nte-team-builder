@@ -10704,3 +10704,12 @@ th[aria-sort='descending'] .th-btn {
 .music__beat[data-viz='brush'] .music__pulse {
   filter: drop-shadow(0 0 2px var(--pulse-glow, transparent));
 }
+
+/* Auric Ink: the gold swoosh gets a dark ink edge to match the black stroke's gold edge, and both strokes sit behind the bars. */
+.music__beat[data-bars='auric-ink']::before,
+.music__beat[data-bars='auric-ink']::after {
+  z-index: -1;
+}
+.music__beat[data-bars='auric-ink']::after {
+  filter: drop-shadow(0 0 1.5px rgb(20 16 12 / 0.95)) drop-shadow(0 0 2.5px rgb(20 16 12 / 0.8));
+}
