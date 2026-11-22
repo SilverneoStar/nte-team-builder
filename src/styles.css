@@ -10288,3 +10288,174 @@ th[aria-sort='descending'] .th-btn {
 .music.is-playing .music__beat[data-bars='lacrimosa']::after {
   animation: room-shot calc(var(--beat) * 6) linear calc(var(--beat) * -2) infinite;
 }
+.music__beat[data-bars='frost'] span {
+  background: linear-gradient(to top, #0c3a52, #2c9ac2 45%, #9feaf6 80%, #ffffff);
+  clip-path: polygon(0 100%, 0 14%, 50% 0, 100% 14%, 100% 100%);
+  box-shadow: 0 0 8px rgb(143 230 238 / 0.6);
+}
+.music__beat[data-bars='frost'] span:nth-child(4n + 1) {
+  background: linear-gradient(to top, #0a2c40, #1f7ea6 50%, #c9f6ff);
+}
+.music__beat[data-bars='frost'] .music__bars[data-flicker='1'] span:nth-child(9n + 4) {
+  background: linear-gradient(to top, #7a0f1c, #e0384a 60%, #ffd6da);
+  box-shadow: 0 0 10px #ff5468;
+}
+.music__beat[data-bars='frost'] .music__pulse {
+  --pulse-color: #9feaf6;
+  --pulse-stops: #1f7ea6, #8fe6ee, #ffffff, #8fe6ee, #1f7ea6;
+  --pulse-glow: #8fe6ee;
+  --pulse-flicker: #e0384a;
+}
+.music__beat[data-bars='frost']::before,
+.music__beat[data-bars='frost']::after {
+  content: '';
+  position: absolute;
+  inset: -34px 0 25% 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .music.is-playing .music__beat[data-bars='frost']::before,
+  .music.is-playing .music__beat[data-bars='frost']::after {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+.music__beat[data-bars='frost']::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%23e9fbff' stroke-width='1.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7'/%3E%3Cpath d='M9.5 3.8 12 6l2.5-2.2M9.5 20.2 12 18l2.5 2.2'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%239feaf6' stroke-width='1.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7'/%3E%3Cpath d='M9.5 3.8 12 6l2.5-2.2M9.5 20.2 12 18l2.5 2.2'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 15 12 12 23 9 12Z' fill='%23bff3fb' stroke='%23ffffff' stroke-width='0.8'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7'/%3E%3Cpath d='M9.5 3.8 12 6l2.5-2.2M9.5 20.2 12 18l2.5 2.2'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%239feaf6' stroke-width='1.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7'/%3E%3Cpath d='M9.5 3.8 12 6l2.5-2.2M9.5 20.2 12 18l2.5 2.2'/%3E%3C/g%3E%3C/svg%3E");
+  background-position: 8% 20%, 27% 40%, 46% 15%, 63% 35%, 84% 22%;
+  background-size: 11px 11px, 8px 8px, 6px 10px, 10px 10px, 9px 9px;
+  background-repeat: no-repeat;
+}
+.music.is-playing .music__beat[data-bars='frost']::before {
+  animation: room-fall calc(var(--beat) * 6) linear  infinite;
+}
+.music__beat[data-bars='frost']::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%239feaf6' stroke-width='1.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7'/%3E%3Cpath d='M9.5 3.8 12 6l2.5-2.2M9.5 20.2 12 18l2.5 2.2'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 15 12 12 23 9 12Z' fill='%23e9fbff' stroke='%23ffffff' stroke-width='0.8'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%23e9fbff' stroke-width='1.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7'/%3E%3Cpath d='M9.5 3.8 12 6l2.5-2.2M9.5 20.2 12 18l2.5 2.2'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%23bff3fb' stroke-width='1.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7'/%3E%3Cpath d='M9.5 3.8 12 6l2.5-2.2M9.5 20.2 12 18l2.5 2.2'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 15 12 12 23 9 12Z' fill='%239feaf6' stroke='%23ffffff' stroke-width='0.8'/%3E%3C/svg%3E");
+  background-position: 17% 30%, 38% 45%, 55% 18%, 76% 42%, 94% 28%;
+  background-size: 9px 9px, 5px 9px, 8px 8px, 11px 11px, 6px 10px;
+  background-repeat: no-repeat;
+}
+.music.is-playing .music__beat[data-bars='frost']::after {
+  animation: room-fall calc(var(--beat) * 6) linear calc(var(--beat) * -3) infinite;
+}
+.music__beat[data-bars='honed-edge'] span {
+  /* Ye Shunguang's Honed Edge: silvery white blades with a periwinkle sword-light glow. */
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / 0.8), transparent 22%, transparent 78%, rgb(255 255 255 / 0.8)),
+    linear-gradient(to top, #6e78b8, #b9c3f2 40%, #eef1ff 78%, #ffffff);
+  clip-path: polygon(0 100%, 0 10%, 50% 0, 100% 10%, 100% 100%, 50% 96%);
+  box-shadow: 0 0 8px rgb(166 184 242 / 0.75);
+}
+.music__beat[data-bars='honed-edge'] span:nth-child(3n) {
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / 0.7), transparent 25%, transparent 75%, rgb(255 255 255 / 0.7)),
+    linear-gradient(to top, #5a5fa8, #a3abe6 50%, #f2f4ff);
+}
+.music__beat[data-bars='honed-edge'] .music__bars[data-flicker='1'] span:nth-child(5n + 2) {
+  box-shadow: 0 0 14px #c8d2ff, 0 0 4px #ffffff;
+}
+.music__beat[data-bars='honed-edge'] .music__pulse {
+  --pulse-color: #c8d2ff;
+  --pulse-stops: #7f88d8, #b9c3f2, #ffffff, #b9c3f2, #7f88d8;
+  --pulse-glow: #a6b8f2;
+  --pulse-flicker: #ffffff;
+}
+/* Sword light: thin white slashes cutting across on the beat, like her blade
+   strikes, and the Honed Edge mark drifting faintly behind. */
+.music__beat[data-bars='honed-edge']::before,
+.music__beat[data-bars='honed-edge']::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+.music__beat[data-bars='honed-edge']::before {
+  inset: -30px -6% 0;
+  background:
+    linear-gradient(162deg, transparent 46%, rgb(255 255 255 / 0.95) 49.4%, rgb(170 186 255 / 0.7) 50%, transparent 53%),
+    linear-gradient(18deg, transparent 47%, rgb(220 228 255 / 0.85) 49.6%, transparent 51.5%),
+    linear-gradient(174deg, transparent 48%, rgb(255 255 255 / 0.7) 49.8%, transparent 51%);
+  filter: drop-shadow(0 0 4px #a6b8f2);
+  mix-blend-mode: screen;
+}
+.music.is-playing .music__beat[data-bars='honed-edge']::before {
+  animation: room-slash var(--beat) ease-out infinite;
+}
+.music__beat[data-bars='honed-edge']::after {
+  inset: -34px 0 20% 0;
+  --he-mark: url('data:image/webp;base64,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');
+  background-image: var(--he-mark), var(--he-mark), var(--he-mark);
+  background-position: 14% 30%, 52% 10%, 86% 40%;
+  background-size: 12px 12px, 9px 9px, 11px 11px;
+  background-repeat: no-repeat;
+}
+.music.is-playing .music__beat[data-bars='honed-edge']::after {
+  animation: room-ember calc(var(--beat) * 6) linear infinite;
+}
+@keyframes room-slash {
+  0% { opacity: 0; transform: translateX(-8%) scaleX(0.6); }
+  12% { opacity: 1; transform: translateX(0) scaleX(1); }
+  45% { opacity: 0.25; }
+  100% { opacity: 0; transform: translateX(6%) scaleX(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .music.is-playing .music__beat[data-bars='honed-edge']::before,
+  .music.is-playing .music__beat[data-bars='honed-edge']::after {
+    animation: none;
+    opacity: 0.4;
+  }
+}
+.music__beat[data-bars='auric-ink'] span {
+  background: linear-gradient(to top, #0d0b09, #2a221a 55%, #c99a3f 82%, #f3e0b0);
+  border-radius: 40% 60% 2px 2px / 30% 30% 2px 2px;
+  box-shadow: 0 0 6px rgb(201 154 63 / 0.45);
+}
+.music__beat[data-bars='auric-ink'] span:nth-child(5n + 2) {
+  border-radius: 60% 40% 2px 2px / 40% 30% 2px 2px;
+}
+.music__beat[data-bars='auric-ink'] .music__bars[data-flicker='1'] span:nth-child(6n + 3) {
+  background: linear-gradient(to top, #6b442e, #c99a3f 50%, #fff2c4);
+  box-shadow: 0 0 10px #f0c46a;
+}
+.music__beat[data-bars='auric-ink'] .music__pulse {
+  --pulse-color: #c99a3f;
+  --pulse-stops: #2a221a, #c99a3f, #f3e0b0, #c99a3f, #2a221a;
+  --pulse-glow: #c99a3f;
+  --pulse-flicker: #f3e0b0;
+}
+.music__beat[data-bars='auric-ink']::before,
+.music__beat[data-bars='auric-ink']::after {
+  content: '';
+  position: absolute;
+  inset: -34px 0 25% 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .music.is-playing .music__beat[data-bars='auric-ink']::before,
+  .music.is-playing .music__beat[data-bars='auric-ink']::after {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+.music__beat[data-bars='auric-ink']::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%2317130f'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23e3b35a'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%23c99a3f'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23f3e0b0'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%2317130f'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23c99a3f'/%3E%3C/svg%3E");
+  background-position: 10% 30%, 26% 52%, 43% 22%, 60% 48%, 78% 35%, 92% 55%;
+  background-size: 8px 10px, 4px 4px, 7px 9px, 3px 3px, 9px 11px, 4px 4px;
+  background-repeat: no-repeat;
+}
+.music.is-playing .music__beat[data-bars='auric-ink']::before {
+  animation: room-ember calc(var(--beat) * 6) linear  infinite;
+}
+.music__beat[data-bars='auric-ink']::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23c99a3f'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%23c99a3f'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23e3b35a'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z' fill='%2317130f'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23f3e0b0'/%3E%3C/svg%3E");
+  background-position: 18% 40%, 35% 55%, 52% 30%, 69% 50%, 86% 35%;
+  background-size: 3px 3px, 6px 8px, 4px 4px, 7px 9px, 3px 3px;
+  background-repeat: no-repeat;
+}
+.music.is-playing .music__beat[data-bars='auric-ink']::after {
+  animation: room-ember calc(var(--beat) * 6) linear calc(var(--beat) * -3) infinite;
+}
