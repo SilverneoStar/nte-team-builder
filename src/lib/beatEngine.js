@@ -8,11 +8,63 @@ import { useEffect, useRef, useState } from 'react';
 
 const TAU = Math.PI * 2;
 // Canvas styles that draw the levels as a spectrum (audioMotion-style looks).
-export const SPECTRUM = new Set(['led', 'curve', 'radial']);
+export const SPECTRUM = new Set(['led', 'curve', 'radial', 'brush']);
 // A steady pseudo-random number in 0..1 for a whole number.
 const hash = (n) => {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
+};
+
+// A dry-brush stroke along a centre line: pressed and solid at the start, then
+// splitting into bristles that each run out of ink at their own point, some
+// breaking into dashes near the tail. pt(t) gives [x, y, nx, ny] (point and
+// normal); reach (0..1) is how far the brush has travelled so far.
+const dryStroke = (ctx, pt, width, seed, reach = 1, bristles = 6) => {
+  if (reach <= 0 || width <= 0) return;
+  const SEG = 14;
+  // One tapered ribbon of a bristle, from a to b along the stroke.
+  const ribbon = (off, bw, a, b, end) => {
+    const left = [];
+    const right = [];
+    for (let k = 0; k <= SEG; k++) {
+      const t = a + ((b - a) * k) / SEG;
+      const [x, y, nx, ny] = pt(t);
+      // Full width through the body, thinning to a point where the ink runs out.
+      const r = (bw / 2) * Math.pow(Math.max(0, 1 - t / end), 0.45) * (1 - t * 0.25);
+      const o = off * (0.8 + 0.2 * (1 - t));
+      left.push([x + nx * (o + r), y + ny * (o + r)]);
+      right.push([x + nx * (o - r), y + ny * (o - r)]);
+    }
+    ctx.beginPath();
+    ctx.moveTo(left[0][0], left[0][1]);
+    for (const [x, y] of left) ctx.lineTo(x, y);
+    for (let k = right.length - 1; k >= 0; k--) ctx.lineTo(right[k][0], right[k][1]);
+    ctx.closePath();
+    ctx.fill();
+  };
+  for (let j = 0; j < bristles; j++) {
+    const r1 = hash(seed * 13.1 + j * 7.7);
+    const r2 = hash(seed * 5.3 + j * 3.1);
+    const r3 = hash(seed * 2.9 + j * 11.3);
+    const edge = Math.abs(j / (bristles - 1) - 0.5) * 2;
+    const off = (j / (bristles - 1) - 0.5) * width * 0.8;
+    const bw = (width / bristles) * (1.2 + r1 * 0.9);
+    // Outer bristles run dry first.
+    const end = 1 - r2 * 0.45 * (0.35 + edge);
+    const stop = Math.min(reach, end);
+    // Some bristles skip once near the tail, leaving a dry gap.
+    const gap = r3 < 0.5 ? end * (0.62 + r3 * 0.4) : 2;
+    if (gap < stop) {
+      ribbon(off, bw, 0, gap, end);
+      const g2 = gap + 0.04 + r1 * 0.05;
+      if (g2 < stop) ribbon(off, bw, g2, stop, end);
+    } else ribbon(off, bw, 0, stop, end);
+  }
+  // The pressed head.
+  const [hx, hy] = pt(0.02);
+  ctx.beginPath();
+  ctx.ellipse(hx, hy, width * 0.46, width * 0.22, 0, 0, Math.PI * 2);
+  ctx.fill();
 };
 // The pulse line at beat b: flat at the edges of each beat, a smooth swell of
 // waves in the middle. Each beat has its own number of waves and height, and
@@ -604,7 +656,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       const cv = canvasOf();
       if (!cv) return false;
       const { c, ctx, w, h, dpr } = cv;
-      const n = kind === 'radial' ? 48 : kind === 'curve' ? 40 : 28;
+      const n = kind === 'radial' ? 48 : kind === 'curve' ? 40 : kind === 'brush' ? 24 : 28;
       const moving = levels(n, dt);
       const p = paint(c, ctx, kind === 'radial' ? h : w);
       const L = st.levels;
@@ -651,6 +703,57 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
           }
         }
         ctx.shadowBlur = 0;
+      } else if (kind === 'brush') {
+        // Brush: each bar is an ink stroke pressed at the bottom that splits
+        // into dry bristles at its tip, and every two beats a wide stroke is
+        // painted across behind them, alternating direction.
+        ctx.strokeStyle = p.fill;
+        const gap = 5 * dpr;
+        const bw = (w - gap * (n - 1)) / n;
+        if (st.playing) {
+          const b = beatAt(st.clock) / 2;
+          const k = Math.floor(b);
+          const ph = b - k;
+          const fade = ph < 0.55 ? 1 : Math.max(0, 1 - (ph - 0.55) / 0.35);
+          const rtl = k % 2 === 1;
+          const y = h * (0.45 + 0.2 * hash(k * 1.9));
+          ctx.save();
+          ctx.globalAlpha = 0.42 * fade;
+          dryStroke(
+            ctx,
+            (t) => {
+              const u = rtl ? 1 - t : t;
+              return [w * (0.04 + 0.92 * u), y + Math.sin(u * Math.PI * 1.4 + k) * h * 0.08, 0, 1];
+            },
+            h * 0.34,
+            k + 101,
+            Math.min(1, ph / 0.3),
+            9,
+          );
+          ctx.restore();
+        }
+        for (let i = 0; i < n; i++) {
+          const cx = i * (bw + gap) + bw / 2;
+          const bh = Math.max(bw * 0.5, L[i] * h * 0.95);
+          const lean = (hash(i * 4.1) - 0.5) * bw * 0.6;
+          dryStroke(
+            ctx,
+            (t) => [cx + lean * t * t, h - bw * 0.35 - t * (bh - bw * 0.35), 1, 0],
+            bw * 0.75,
+            i + 1,
+            1,
+            7,
+          );
+          // A small dab of ink where the peak was.
+          const py = h - P[i].v * h * 0.95;
+          if (P[i].v > L[i] + 0.04) {
+            ctx.fillStyle = p.tip;
+            ctx.beginPath();
+            ctx.ellipse(cx + lean, py - 2 * dpr, bw * 0.28, 1.6 * dpr, -0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = p.fill;
+          }
+        }
       } else if (kind === 'curve') {
         // A smooth line through the levels, filled underneath.
         const pts = L.slice(0, n).map((v, i) => [(i / (n - 1)) * w, h - v * h * 0.92]);

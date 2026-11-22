@@ -10699,3 +10699,8 @@ th[aria-sort='descending'] .th-btn {
     opacity: 0.45;
   }
 }
+
+/* Brush beat: a soft glow in the style's own colour around the ink strokes. */
+.music__beat[data-viz='brush'] .music__pulse {
+  filter: drop-shadow(0 0 2px var(--pulse-glow, transparent));
+}
