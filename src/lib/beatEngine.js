@@ -704,36 +704,35 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         }
         ctx.shadowBlur = 0;
       } else if (kind === 'brush') {
-        // Brush: upright calligraphy strokes. Each bar is pressed at the
-        // bottom, sweeps up into a flick that splits into dry bristles, and on
-        // the beat the strongest strokes flick drops of ink off their tips.
+        // Brush: calligraphy downstrokes. Each bar is pressed in at the top and
+        // pulled down at a slight slant, splitting into dry bristles at its
+        // tail, and on the beat the strongest strokes spatter ink off their tips.
         const gap = 5 * dpr;
         const bw = (w - gap * (n - 1)) / n;
         st.ink = st.ink ?? [];
         const beat = Math.floor(beatAt(st.clock));
         const fresh = st.playing && beat !== st.inkBeat;
         st.inkBeat = beat;
-        // Which bars are loudest this beat: they throw ink.
+        // Which bars are loudest this beat: they spatter.
         const loud = fresh
           ? L.slice(0, n)
               .map((v, i) => [v, i])
               .sort((x, y) => y[0] - x[0])
               .slice(0, 3)
           : [];
+        // All strokes share one slant, as from one hand; each varies a little.
+        const SLANT = 0.32;
         for (let i = 0; i < n; i++) {
-          const cx = i * (bw + gap) + bw / 2;
           const bh = Math.max(bw * 0.5, L[i] * h * 0.95);
-          // Every stroke leans and hooks its own way, like a hand-written row.
-          const dir = hash(i * 4.1) < 0.5 ? -1 : 1;
-          // Short strokes stay nearly straight; tall ones hook further.
-          const lean = dir * bw * (0.35 + hash(i * 2.3) * 0.5) * Math.min(1, bh / (bw * 3));
+          const tilt = bh * (SLANT + (hash(i * 4.1) - 0.5) * 0.12);
+          // Centred on its slot, so the slant doesn't push strokes off the edge.
+          const cx = i * (bw + gap) + bw / 2 - tilt / 2;
+          const bow = bw * 0.18 * (hash(i * 2.3) - 0.5);
           const pt = (t) => {
-            const flick = Math.pow(t, 3) * lean;
-            const x = cx + Math.sin(t * Math.PI) * lean * 0.25 + flick;
-            const y = h - bw * 0.35 - t * (bh - bw * 0.35);
-            // The normal turns with the hook so the bristles follow it.
-            const dx = Math.cos(t * Math.PI) * Math.PI * lean * 0.25 + 3 * t * t * lean;
-            const dy = -(bh - bw * 0.35);
+            const x = cx + t * tilt + Math.sin(t * Math.PI) * bow;
+            const y = bw * 0.35 + t * (bh - bw * 0.35);
+            const dx = tilt + Math.cos(t * Math.PI) * Math.PI * bow;
+            const dy = bh - bw * 0.35;
             const len = Math.hypot(dx, dy) || 1;
             return [x, y, -dy / len, dx / len];
           };
@@ -746,16 +745,17 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
               st.ink.push({
                 x: tx,
                 y: ty,
-                vx: (dir * (0.25 + r * 0.6) * h) / dpr,
-                vy: (-(0.6 + r * 0.9) * h) / dpr,
+                // Spattered out from where the stroke ends, then falling.
+                vx: (((d % 2 ? 1 : -1) * (0.3 + r * 0.6) + SLANT * 0.5) * h) / dpr,
+                vy: (-(0.35 + r * 0.5) * h) / dpr,
                 r: (1 + r * 1.6) * dpr,
                 born: st.clock,
               });
             }
           }
         }
-        // Ink drops arc up off the tips and fall back, fading.
-        const life = 0.9;
+        // Ink spatters off the tips and falls, fading.
+        const life = 0.7;
         st.ink = st.ink.filter((q) => st.clock - q.born < life && q.y < h + 4 * dpr);
         ctx.fillStyle = p.tip;
         for (const q of st.ink) {
