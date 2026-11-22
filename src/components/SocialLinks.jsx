@@ -75,12 +75,15 @@ const LINKS = [
   },
 ];
 
-export default function SocialLinks() {
+// The footer's three columns: follow (with where to send requests), the
+// sister site, and the about notes the page passes in as children.
+export default function SocialLinks({ children }) {
   return (
-    <section className="social" aria-labelledby="social-title">
-      <h2 id="social-title" className="social__title">
-        Follow Cortado
-      </h2>
+    <div className="foot__grid">
+      <section className="foot__col social" aria-labelledby="social-title">
+        <h2 id="social-title" className="social__title">
+          Follow Cortado
+        </h2>
       <ul className="social__list">
         {LINKS.map((l) => (
           <li key={l.id}>
@@ -100,6 +103,14 @@ export default function SocialLinks() {
           </li>
         ))}
       </ul>
+        <p className="foot__ask">
+          <b>Got a suggestion or request?</b> Check the pinned posts on our socials and leave it there.
+        </p>
+      </section>
+      <section className="foot__col" aria-labelledby="sister-title">
+        <h2 id="sister-title" className="social__title">
+          Also by Cortado
+        </h2>
       <a
         className="sister"
         href="https://silverneostar.github.io/zzz-team-builder/"
@@ -108,7 +119,6 @@ export default function SocialLinks() {
       >
         <img className="sister__icon" src={`${import.meta.env.BASE_URL}mascot.svg`} alt="" width="36" height="36" />
         <span className="sister__text">
-          <span className="sister__kicker">Also by Cortado</span>
           <span className="sister__name">ZZZ Team Builder</span>
           <span className="sister__game">Teams, builds and farming for Zenless Zone Zero</span>
         </span>
@@ -116,10 +126,17 @@ export default function SocialLinks() {
           →
         </span>
       </a>
+      </section>
+      <section className="foot__col" aria-labelledby="about-title">
+        <h2 id="about-title" className="social__title">
+          About this site
+        </h2>
+        {children}
       <p className="social__note">
         These are the fan-run accounts and community server of this site, not official Neverness to Everness channels.
         For official news, follow the game&apos;s own accounts.
       </p>
-    </section>
+      </section>
+    </div>
   );
 }

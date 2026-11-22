@@ -283,13 +283,10 @@ export default function App() {
       )}
 
       <footer className="foot">
-        <SocialLinks />
-        <p className="foot__notes">
-          Your teams are saved only in this browser on this device. Nobody else can see or change them. Element
-          reactions follow the Esper Cycle: each element reacts with its two neighbours. Game data is compiled from
-          community sources and may lag behind patches. Neverness to Everness and all related content belong to Hotta
-          Studio and Perfect World Games.
-        </p>
+        <SocialLinks>
+          <p className="foot__notes">Your teams are saved only in this browser on this device. Nobody else can see or change them. Element reactions follow the Esper Cycle: each element reacts with its two neighbours. Game data is compiled from community sources and may lag behind patches.</p>
+        </SocialLinks>
+        <p className="foot__legal">Neverness to Everness and all related content belong to Hotta Studio and Perfect World Games. This is a fan-made site.</p>
       </footer>
     </div>
   );

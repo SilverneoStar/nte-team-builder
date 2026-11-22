@@ -1568,8 +1568,63 @@ button {
 }
 
 .foot__notes {
-  margin: 14px auto 0;
-  max-width: 70ch;
+  margin: 0;
+}
+/* Footer: three columns on wide screens (follow · also by · about), stacked
+   and centred on phones, with the legal line underneath. */
+.foot__grid {
+  display: grid;
+  gap: 22px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.foot__col {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 10px;
+}
+.foot__col .social__title {
+  margin: 0;
+}
+.foot__col .social__note {
+  margin: 0;
+}
+.foot__col .sister {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+.foot__ask {
+  margin: 0;
+  max-width: 44ch;
+  padding: 8px 12px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  color: var(--fg);
+}
+.foot__legal {
+  margin: 18px auto 0;
+  padding-top: 12px;
+  max-width: 1100px;
+  border-top: 1px solid var(--line);
+  font-size: 0.75rem;
+}
+@media (min-width: 900px) {
+  .foot__grid {
+    grid-template-columns: 1.25fr 1fr 1fr;
+    gap: 28px;
+    text-align: left;
+  }
+  .foot__col {
+    justify-items: start;
+  }
+  .foot__col .social__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: start;
+    width: 100%;
+  }
 }
 
 /* Fan-run social links in the footer */
