@@ -10818,3 +10818,32 @@ th[aria-sort='descending'] .th-btn {
   position: relative;
   z-index: 1;
 }
+
+/* Matcha's note at the top of the Tea Room. */
+.music__matcha-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, #7fbf5a 40%, var(--line));
+  border-radius: var(--radius);
+  background: color-mix(in srgb, #7fbf5a 9%, var(--surface));
+}
+.music__matcha-note img {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+.music__matcha-note p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+@media (max-width: 480px) {
+  .music__matcha-note img {
+    width: 44px;
+    height: 44px;
+  }
+}

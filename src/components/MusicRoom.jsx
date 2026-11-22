@@ -679,6 +679,17 @@ export default function MusicRoom() {
         </p>
       </header>
 
+      {/* A friendly reminder from Matcha: the room is for unwinding, not for skipping what matters or bothering anyone. */}
+      <aside className="music__matcha-note" aria-label="A note from Matcha">
+        <img src={`${BASE}matcha/wink.webp`} alt="" width="56" height="56" />
+        <p>
+          <strong>A little note from Matcha:</strong> I’m happy you’re here! Music goes best alongside your day, not in
+          place of it. Your studies, work, prayers, rest and the people around you come first, so pause me whenever
+          they need you. And please keep it kind: headphones or a low volume around others, and never use the room to
+          annoy or disrespect anyone.
+        </p>
+      </aside>
+
       <section className="music__stage" aria-label="Now playing">
         {/* Big screens: widen the stage to the full page; the controls and playlist move below. */}
         <button
