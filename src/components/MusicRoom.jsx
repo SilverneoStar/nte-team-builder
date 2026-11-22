@@ -173,6 +173,7 @@ const BAR_STYLES = [
   { id: 'frost', label: 'Frost' },
   { id: 'honed-edge', label: 'Honed Edge' },
   { id: 'auric-ink', label: 'Auric Ink' },
+  { id: 'lumiflux', label: 'Lumiflux' },
 ];
 
 /** A row of buttons where one is picked. */
