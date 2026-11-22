@@ -10776,3 +10776,45 @@ th[aria-sort='descending'] .th-btn {
   width: 54px;
   height: 54px;
 }
+
+/* Lacrimosa, take two: tomato balloons. A pair rises up from the strip on curly green strings,
+   bobs with the beat among sparkles, then pops away; each pair rises in a new spot beside the player. */
+.music__beat[data-bars='lacrimosa']::after {
+  top: -58px;
+  width: 52px;
+  height: 61px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 140'%3E%3Cdefs%3E%3CradialGradient id='t' cx='0.38' cy='0.35' r='0.75'%3E%3Cstop offset='0' stop-color='%23ff8a5c'/%3E%3Cstop offset='0.55' stop-color='%23e2342a'/%3E%3Cstop offset='1' stop-color='%238e0f16'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M38 74 C40 90 52 96 50 110 C49 118 54 124 52 132' stroke='%234aa548' stroke-width='1.3' fill='none'/%3E%3Cpath d='M80 70 C76 88 58 92 56 108 C55 118 50 124 52 132' stroke='%234aa548' stroke-width='1.3' fill='none'/%3E%3Cg transform='rotate(-12 38 48)'%3E%3Cpath d='M38 28.32 C26.299999999999997 22.799999999999997 10.7 31.200000000000003 12 46.8 C13.3 64.8 27.6 72 38 72 C48.4 72 62.7 64.8 64 46.8 C65.3 31.200000000000003 49.7 22.799999999999997 38 28.32Z' fill='url(%23t)'/%3E%3Cpath d='M38 30.0 C34.1 45.6 35.4 60.0 38 70.8' stroke='%23a8121a' stroke-width='1.6' fill='none' opacity='0.5'/%3E%3Cellipse cx='27.08' cy='39.6' rx='4.68' ry='7.199999999999999' fill='%23fff' opacity='0.55' transform='rotate(-20 27.08 39.6)'/%3E%3Cpath d='M38 28.799999999999997 l-9 -2 l7 -2 l-3 -6 l5 4 l4 -6 l1 7 l7 -2 l-5 5 l8 2 z' fill='%233f9a3a'/%3E%3Cpath d='M38 28.32 q1 -8 5 -11' stroke='%233f9a3a' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M36 73 l2 4 l2 -4 z' fill='%23c41f22'/%3E%3C/g%3E%3Cg transform='rotate(10 80 44)'%3E%3Cpath d='M80 24.32 C68.3 18.799999999999997 52.7 27.200000000000003 54 42.8 C55.3 60.8 69.6 68 80 68 C90.4 68 104.7 60.8 106 42.8 C107.3 27.200000000000003 91.7 18.799999999999997 80 24.32Z' fill='url(%23t)'/%3E%3Cpath d='M80 26.0 C76.1 41.6 77.4 56.0 80 66.8' stroke='%23a8121a' stroke-width='1.6' fill='none' opacity='0.5'/%3E%3Cellipse cx='69.08' cy='35.6' rx='4.68' ry='7.199999999999999' fill='%23fff' opacity='0.55' transform='rotate(-20 69.08 35.6)'/%3E%3Cpath d='M80 24.799999999999997 l-9 -2 l7 -2 l-3 -6 l5 4 l4 -6 l1 7 l7 -2 l-5 5 l8 2 z' fill='%233f9a3a'/%3E%3Cpath d='M80 24.32 q1 -8 5 -11' stroke='%233f9a3a' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M78 69 l2 4 l2 -4 z' fill='%23c41f22'/%3E%3C/g%3E%3Cpath d='M14 51 Q14 58 21 58 Q14 58 14 65 Q14 58 7 58 Q14 58 14 51Z' fill='%23ffe9a8'/%3E%3Cpath d='M102 38 Q102 44 108 44 Q102 44 102 50 Q102 44 96 44 Q102 44 102 38Z' fill='%23fff3c4'/%3E%3Cpath d='M26 92 Q26 96 30 96 Q26 96 26 100 Q26 96 22 96 Q26 96 26 92Z' fill='%23ffd27a'/%3E%3Cpath d='M92 87 Q92 92 97 92 Q92 92 92 97 Q92 92 87 92 Q92 92 92 87Z' fill='%23ffe9a8'/%3E%3Cpath d='M66 118 Q66 122 70 122 Q66 122 66 126 Q66 122 62 122 Q66 122 66 118Z' fill='%23c8f59a'/%3E%3Cpath d='M42 113 Q42 116 45 116 Q42 116 42 119 Q42 116 39 116 Q42 116 42 113Z' fill='%23ffd27a'/%3E%3Ccircle cx='18' cy='30' r='2' fill='%23ffd27a'/%3E%3Ccircle cx='104' cy='72' r='1.8' fill='%23ffb36a'/%3E%3Ccircle cx='34' cy='132' r='1.6' fill='%23ffd27a'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 0 5px rgb(255 120 80 / 0.55));
+  transform-origin: 50% 100%;
+}
+.music.is-playing .music__beat[data-bars='lacrimosa']::after {
+  animation:
+    room-balloon calc(var(--beat) * 4) ease-in-out infinite,
+    room-tomato-hop calc(var(--beat) * 16) steps(1) infinite;
+}
+@keyframes room-balloon {
+  0% { transform: translateY(34px) scale(0.6); opacity: 0; }
+  15% { opacity: 1; }
+  35% { transform: translateY(0) scale(1) rotate(-3deg); opacity: 1; }
+  55% { transform: translateY(-3px) scale(1) rotate(3deg); }
+  75% { transform: translateY(0) scale(1) rotate(-2deg); opacity: 1; }
+  88% { transform: translateY(-4px) scale(1.12); opacity: 0.9; }
+  100% { transform: translateY(-6px) scale(1.35); opacity: 0; }
+}
+@keyframes room-tomato-hop {
+  0% { left: 18%; }
+  25% { left: 72%; }
+  50% { left: 24%; }
+  75% { left: 78%; }
+}
+/* Brush beat: a touch taller again for the longer strokes. */
+.music__beat[data-viz='brush'] {
+  height: 66px;
+  bottom: 2px;
+}
+
+/* The arc player sits in front of the beat effects too. */
+.music-arc {
+  position: relative;
+  z-index: 1;
+}
