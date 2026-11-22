@@ -704,56 +704,72 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         }
         ctx.shadowBlur = 0;
       } else if (kind === 'brush') {
-        // Brush: each bar is an ink stroke pressed at the bottom that splits
-        // into dry bristles at its tip, and every two beats a wide stroke is
-        // painted across behind them, alternating direction.
-        ctx.strokeStyle = p.fill;
+        // Brush: upright calligraphy strokes. Each bar is pressed at the
+        // bottom, sweeps up into a flick that splits into dry bristles, and on
+        // the beat the strongest strokes flick drops of ink off their tips.
         const gap = 5 * dpr;
         const bw = (w - gap * (n - 1)) / n;
-        if (st.playing) {
-          const b = beatAt(st.clock) / 2;
-          const k = Math.floor(b);
-          const ph = b - k;
-          const fade = ph < 0.55 ? 1 : Math.max(0, 1 - (ph - 0.55) / 0.35);
-          const rtl = k % 2 === 1;
-          const y = h * (0.45 + 0.2 * hash(k * 1.9));
-          ctx.save();
-          ctx.globalAlpha = 0.42 * fade;
-          dryStroke(
-            ctx,
-            (t) => {
-              const u = rtl ? 1 - t : t;
-              return [w * (0.04 + 0.92 * u), y + Math.sin(u * Math.PI * 1.4 + k) * h * 0.08, 0, 1];
-            },
-            h * 0.34,
-            k + 101,
-            Math.min(1, ph / 0.3),
-            9,
-          );
-          ctx.restore();
-        }
+        st.ink = st.ink ?? [];
+        const beat = Math.floor(beatAt(st.clock));
+        const fresh = st.playing && beat !== st.inkBeat;
+        st.inkBeat = beat;
+        // Which bars are loudest this beat: they throw ink.
+        const loud = fresh
+          ? L.slice(0, n)
+              .map((v, i) => [v, i])
+              .sort((x, y) => y[0] - x[0])
+              .slice(0, 3)
+          : [];
         for (let i = 0; i < n; i++) {
           const cx = i * (bw + gap) + bw / 2;
           const bh = Math.max(bw * 0.5, L[i] * h * 0.95);
-          const lean = (hash(i * 4.1) - 0.5) * bw * 0.6;
-          dryStroke(
-            ctx,
-            (t) => [cx + lean * t * t, h - bw * 0.35 - t * (bh - bw * 0.35), 1, 0],
-            bw * 0.75,
-            i + 1,
-            1,
-            7,
-          );
-          // A small dab of ink where the peak was.
-          const py = h - P[i].v * h * 0.95;
-          if (P[i].v > L[i] + 0.04) {
-            ctx.fillStyle = p.tip;
-            ctx.beginPath();
-            ctx.ellipse(cx + lean, py - 2 * dpr, bw * 0.28, 1.6 * dpr, -0.2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = p.fill;
+          // Every stroke leans and hooks its own way, like a hand-written row.
+          const dir = hash(i * 4.1) < 0.5 ? -1 : 1;
+          // Short strokes stay nearly straight; tall ones hook further.
+          const lean = dir * bw * (0.35 + hash(i * 2.3) * 0.5) * Math.min(1, bh / (bw * 3));
+          const pt = (t) => {
+            const flick = Math.pow(t, 3) * lean;
+            const x = cx + Math.sin(t * Math.PI) * lean * 0.25 + flick;
+            const y = h - bw * 0.35 - t * (bh - bw * 0.35);
+            // The normal turns with the hook so the bristles follow it.
+            const dx = Math.cos(t * Math.PI) * Math.PI * lean * 0.25 + 3 * t * t * lean;
+            const dy = -(bh - bw * 0.35);
+            const len = Math.hypot(dx, dy) || 1;
+            return [x, y, -dy / len, dx / len];
+          };
+          dryStroke(ctx, pt, bw * 0.78, i + 1, 1, 7);
+          for (const [v, k] of loud) {
+            if (k !== i || v < 0.2) continue;
+            const [tx, ty] = pt(1);
+            for (let d = 0; d < 3; d++) {
+              const r = hash(beat * 3.3 + i * 1.7 + d * 9.1);
+              st.ink.push({
+                x: tx,
+                y: ty,
+                vx: (dir * (0.25 + r * 0.6) * h) / dpr,
+                vy: (-(0.6 + r * 0.9) * h) / dpr,
+                r: (1 + r * 1.6) * dpr,
+                born: st.clock,
+              });
+            }
           }
         }
+        // Ink drops arc up off the tips and fall back, fading.
+        const life = 0.9;
+        st.ink = st.ink.filter((q) => st.clock - q.born < life && q.y < h + 4 * dpr);
+        ctx.fillStyle = p.tip;
+        for (const q of st.ink) {
+          q.vy += h * 3.2 * dt / dpr;
+          q.x += q.vx * dt * dpr;
+          q.y += q.vy * dt * dpr;
+          ctx.globalAlpha = Math.max(0, 1 - (st.clock - q.born) / life);
+          ctx.beginPath();
+          ctx.ellipse(q.x, q.y, q.r, q.r * 0.8, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = p.fill;
+        if (st.ink.length) return true;
       } else if (kind === 'curve') {
         // A smooth line through the levels, filled underneath.
         const pts = L.slice(0, n).map((v, i) => [(i / (n - 1)) * w, h - v * h * 0.92]);
