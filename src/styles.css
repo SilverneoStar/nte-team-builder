@@ -10210,3 +10210,65 @@ th[aria-sort='descending'] .th-btn {
   font-weight: 600;
   font-size: 0.9rem;
 }
+
+/* Character colours for the beat: bars and the canvas styles. */
+.music__beat[data-bars='c-daffodill'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, #1d2550, #3158bb, #87b8f1, #e6f1ff);
+  box-shadow: 0 0 8px #87b8f188;
+}
+.music__beat[data-bars='c-daffodill'] .music__pulse {
+  --pulse-color: #87b8f1;
+  --pulse-stops: #1d2550, #3158bb, #87b8f1, #e6f1ff;
+  --pulse-glow: #87b8f1;
+}
+.music__beat[data-bars='c-sakiri'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, #4a1418, #b43337, #eb5c5b, #bcd8f4);
+  box-shadow: 0 0 8px #eb5c5b88;
+}
+.music__beat[data-bars='c-sakiri'] .music__pulse {
+  --pulse-color: #eb5c5b;
+  --pulse-stops: #4a1418, #b43337, #eb5c5b, #bcd8f4;
+  --pulse-glow: #eb5c5b;
+}
+.music__beat[data-bars='c-hotori'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, #2b1820, #751d26, #dc8179, #ffd9d2);
+  box-shadow: 0 0 8px #dc817988;
+}
+.music__beat[data-bars='c-hotori'] .music__pulse {
+  --pulse-color: #dc8179;
+  --pulse-stops: #2b1820, #751d26, #dc8179, #ffd9d2;
+  --pulse-glow: #dc8179;
+}
+.music__beat[data-bars='c-nanally'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, #4a1528, #b43c5b, #ee7d98, #ffe0ea);
+  box-shadow: 0 0 8px #ee7d9888;
+}
+.music__beat[data-bars='c-nanally'] .music__pulse {
+  --pulse-color: #ee7d98;
+  --pulse-stops: #4a1528, #b43c5b, #ee7d98, #ffe0ea;
+  --pulse-glow: #ee7d98;
+}
+.music__beat[data-bars='c-lacrimosa'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, #1e0f18, #9a1a3c, #c63c61, #f2b3c2);
+  box-shadow: 0 0 8px #c63c6188;
+}
+.music__beat[data-bars='c-lacrimosa'] .music__pulse {
+  --pulse-color: #c63c61;
+  --pulse-stops: #1e0f18, #9a1a3c, #c63c61, #f2b3c2;
+  --pulse-glow: #c63c61;
+}
+.music__beat[data-bars='c-baicang'] span {
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(to top, #1b2240, #3d4c7e, #528fcb, #d9c48a);
+  box-shadow: 0 0 8px #528fcb88;
+}
+.music__beat[data-bars='c-baicang'] .music__pulse {
+  --pulse-color: #528fcb;
+  --pulse-stops: #1b2240, #3d4c7e, #528fcb, #d9c48a;
+  --pulse-glow: #528fcb;
+}

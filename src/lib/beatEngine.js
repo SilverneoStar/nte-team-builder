@@ -4,9 +4,11 @@
 // itself), so it keeps the song's tempo and makes each beat a little
 // different: every fourth beat is stronger, low bars take the kick, high bars
 // shimmer, and everything rises fast and falls back slowly like a real meter.
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const TAU = Math.PI * 2;
+// Canvas styles that draw the levels as a spectrum (audioMotion-style looks).
+export const SPECTRUM = new Set(['led', 'mirror', 'curve', 'radial']);
 // A steady pseudo-random number in 0..1 for a whole number.
 const hash = (n) => {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
@@ -81,13 +83,16 @@ const strength = (k) => (k % 4 === 0 ? 0.9 + 0.1 * hash(k) : 0.45 + 0.4 * hash(k
  * `canvasRef`) at `bpm` while `playing`. Writes transforms and pixels straight
  * to the page, so React doesn't redraw anything each frame.
  */
-export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 'steady', progress }) {
+export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 'steady', progress, live = null }) {
   const s = useRef({ clock: 0, beat0: 0, at: 0, bpm, levels: [], last: 0, shape: 1, polled: 0 });
   s.current.mood = MOODS[mood] ?? MOODS.steady;
   s.current.progress = progress;
   // With reduced motion asked for, the bars rest and the line stays still.
   const still = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  s.current.playing = playing && !still;
+  // Listen mode: an AnalyserNode on the microphone. While it's on, the bars
+  // show what it hears (even with the player paused).
+  s.current.live = live;
+  s.current.playing = (playing || !!live) && !still;
 
   // A new tempo carries on from the current beat, so nothing jumps.
   useEffect(() => {
@@ -103,34 +108,75 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
     st.last = performance.now();
     const beatAt = (t) => st.beat0 + (t - st.at) * (st.bpm / 60);
 
-    const drawBars = (dt) => {
-      const bars = barsRef.current ? [...barsRef.current.children] : [];
-      const n = bars.length;
-      if (!n) return false;
+    // Live levels: n bands spread on a log scale from 40 Hz to 16 kHz, each the
+    // loudest bin in its band (the analyser already maps -85..-25 dB to 0..255).
+    const liveLevels = (n) => {
+      const an = st.live;
+      if (!an) return null;
+      if (!st.bins || st.bins.length !== an.frequencyBinCount) st.bins = new Uint8Array(an.frequencyBinCount);
+      an.getByteFrequencyData(st.bins);
+      const hz = an.context.sampleRate / 2 / an.frequencyBinCount;
+      const out = [];
+      for (let i = 0; i < n; i++) {
+        const f0 = 40 * Math.pow(400, i / n);
+        const f1 = 40 * Math.pow(400, (i + 1) / n);
+        let a = Math.floor(f0 / hz);
+        const b = Math.max(a + 1, Math.ceil(f1 / hz));
+        let m = 0;
+        for (; a < b && a < st.bins.length; a++) m = Math.max(m, st.bins[a]);
+        out.push(0.04 + 0.96 * Math.pow(m / 255, 1.4));
+      }
+      return out;
+    };
+
+    // Each bar's level this frame: live when listening, else the beat's guess.
+    // Rises fast and falls back slowly, like a real meter; peaks hold, then drop.
+    const levels = (n, dt) => {
+      const live = liveLevels(n);
       const b = beatAt(st.clock);
       const k = Math.floor(b);
       const since = (b - k) * (60 / st.bpm);
       const kick = st.playing ? strength(k) * Math.exp(-since / ((60 / st.bpm) * 0.32)) * Math.min(1.2, st.energy) : 0;
       let moving = false;
-      bars.forEach((el, i) => {
+      if (!st.peaks) st.peaks = [];
+      for (let i = 0; i < n; i++) {
         const f = i / (n - 1);
         const t = st.clock;
         const shimmer = 0.5 + 0.5 * (0.6 * Math.sin(t * (2.1 + 3.7 * hash(i)) + i) + 0.4 * Math.sin(t * (5.3 + 4.1 * hash(i + 40)) + 2 * i));
-        const target = st.playing
-          ? Math.min(
-              1,
-              0.08 +
-                0.85 * kick * (0.35 + 0.65 * (1 - f)) * (0.65 + 0.6 * hash(i * 7 + k)) +
-                0.45 * shimmer * (0.4 + 0.6 * f) * (0.45 + 0.55 * kick) * Math.min(1.1, 0.4 + 0.6 * st.energy),
-            )
-          : 0.1;
+        const target = live
+          ? live[i]
+          : st.playing
+            ? Math.min(
+                1,
+                0.08 +
+                  0.85 * kick * (0.35 + 0.65 * (1 - f)) * (0.65 + 0.6 * hash(i * 7 + k)) +
+                  0.45 * shimmer * (0.4 + 0.6 * f) * (0.45 + 0.55 * kick) * Math.min(1.1, 0.4 + 0.6 * st.energy),
+              )
+            : 0.1;
         const cur = st.levels[i] ?? 0.1;
-        // Rise fast, fall back slowly.
-        const rate = target > cur ? 22 : 5;
+        const rate = target > cur ? (live ? 30 : 22) : live ? 8 : 5;
         const next = cur + (target - cur) * Math.min(1, rate * dt);
         st.levels[i] = next;
         if (Math.abs(next - target) > 0.002) moving = true;
-        el.style.transform = `scaleY(${next.toFixed(3)})`;
+        // Peak caps: jump to a new high, hang a moment, then fall.
+        const pk = st.peaks[i] ?? { v: 0.1, hold: 0 };
+        if (next >= pk.v) {
+          pk.v = next;
+          pk.hold = 0.5;
+        } else if ((pk.hold -= dt) <= 0) pk.v = Math.max(next, pk.v - 0.9 * dt);
+        if (pk.v - next > 0.002) moving = true;
+        st.peaks[i] = pk;
+      }
+      return moving;
+    };
+
+    const drawBars = (dt) => {
+      const bars = barsRef.current ? [...barsRef.current.children] : [];
+      const n = bars.length;
+      if (!n) return false;
+      const moving = levels(n, dt);
+      bars.forEach((el, i) => {
+        el.style.transform = `scaleY(${st.levels[i].toFixed(3)})`;
       });
       // Styles that flicker (Illusion) pick this up from the page.
       const fl = st.flicker ? '1' : '';
@@ -552,6 +598,122 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       return st.playing || st.sparks.length > 0;
     };
 
+    // Spectrum styles, after audioMotion's looks: LED segments with peak caps,
+    // mirrored bars with a reflection, a filled frequency curve, and a ring.
+    const drawSpectrum = (kind, dt) => {
+      const cv = canvasOf();
+      if (!cv) return false;
+      const { c, ctx, w, h, dpr } = cv;
+      const n = kind === 'radial' ? 48 : kind === 'curve' ? 40 : 28;
+      const moving = levels(n, dt);
+      const p = paint(c, ctx, kind === 'radial' ? h : w);
+      const L = st.levels;
+      const P = st.peaks;
+      ctx.fillStyle = p.fill;
+      if (kind === 'led' || kind === 'mirror') {
+        const gap = 3 * dpr;
+        const bw = (w - gap * (n - 1)) / n;
+        const base = kind === 'mirror' ? h * 0.62 : h;
+        const top = kind === 'mirror' ? base : h;
+        if (p.glow) {
+          ctx.shadowColor = p.glow;
+          ctx.shadowBlur = (p.blur * dpr) / 2;
+        }
+        for (let i = 0; i < n; i++) {
+          const x = i * (bw + gap);
+          if (kind === 'led') {
+            // Stacked segments, lit up to the level; the peak cap above.
+            const seg = 3 * dpr;
+            const sgap = 1.5 * dpr;
+            const rows = Math.floor(h / (seg + sgap));
+            const lit = Math.round(L[i] * rows);
+            for (let r = 0; r < lit; r++) ctx.fillRect(x, h - (r + 1) * (seg + sgap) + sgap, bw, seg);
+            const pr = Math.round(P[i].v * rows);
+            if (pr > lit) {
+              ctx.globalAlpha = 0.9;
+              ctx.fillStyle = p.tip;
+              ctx.fillRect(x, h - pr * (seg + sgap) + sgap, bw, seg);
+              ctx.fillStyle = p.fill;
+              ctx.globalAlpha = 1;
+            }
+          } else {
+            const bh = L[i] * top * 0.96;
+            ctx.fillRect(x, base - bh, bw, bh);
+            ctx.fillStyle = p.tip;
+            ctx.fillRect(x, base - P[i].v * top * 0.96 - 2 * dpr, bw, 2 * dpr);
+            ctx.fillStyle = p.fill;
+            // The reflection below, fading out.
+            ctx.save();
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 0.28;
+            ctx.fillRect(x, base + 2 * dpr, bw, bh * 0.55);
+            ctx.restore();
+          }
+        }
+        ctx.shadowBlur = 0;
+      } else if (kind === 'curve') {
+        // A smooth line through the levels, filled underneath.
+        const pts = L.slice(0, n).map((v, i) => [(i / (n - 1)) * w, h - v * h * 0.92]);
+        ctx.beginPath();
+        ctx.moveTo(0, h);
+        ctx.lineTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < n; i++) {
+          const [x0, y0] = pts[i - 1];
+          const [x1, y1] = pts[i];
+          ctx.quadraticCurveTo(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+        }
+        ctx.lineTo(w, pts[n - 1][1]);
+        ctx.lineTo(w, h);
+        ctx.closePath();
+        ctx.globalAlpha = 0.35;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < n; i++) {
+          const [x0, y0] = pts[i - 1];
+          const [x1, y1] = pts[i];
+          ctx.quadraticCurveTo(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+        }
+        ctx.lineTo(w, pts[n - 1][1]);
+        glowStroke(ctx, p, 2.2, dpr);
+      } else {
+        // A ring of bars around the middle.
+        const cx = w / 2;
+        const cy = h / 2;
+        const r0 = Math.min(w, h) * 0.2;
+        const span = Math.min(w, h) * 0.3;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = p.fill;
+        ctx.lineWidth = Math.max(2, ((TAU * r0) / n) * 0.5);
+        if (p.glow) {
+          ctx.shadowColor = p.glow;
+          ctx.shadowBlur = (p.blur * dpr) / 2;
+        }
+        for (let i = 0; i < n; i++) {
+          // Mirror left and right so low notes sit at the bottom.
+          const a = Math.PI / 2 + (i / n) * Math.PI;
+          for (const side of [1, -1]) {
+            const ang = Math.PI / 2 + side * (a - Math.PI / 2);
+            const len = L[i] * span;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(ang) * r0, cy + Math.sin(ang) * r0);
+            ctx.lineTo(cx + Math.cos(ang) * (r0 + len), cy + Math.sin(ang) * (r0 + len));
+            ctx.stroke();
+          }
+        }
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r0 * 0.82, 0, TAU);
+        ctx.lineWidth = 1.5 * dpr;
+        ctx.strokeStyle = p.tip;
+        ctx.globalAlpha = 0.6;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      return st.playing || moving;
+    };
+
     const frame = (time) => {
       const dt = Math.min(0.05, (time - st.last) / 1000);
       st.last = time;
@@ -581,7 +743,9 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
                 ? drawBloom(dt)
                 : viz === 'embers'
                   ? drawEmbers(dt)
-                  : drawBars(dt);
+                  : SPECTRUM.has(viz)
+                    ? drawSpectrum(viz, dt)
+                    : drawBars(dt);
       // Keep going while playing, or until the bars have settled after a pause.
       raf = keep ? requestAnimationFrame(frame) : 0;
     };
@@ -603,8 +767,59 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
     };
   }, [viz, barsRef, canvasRef]);
 
-  // Wake the engine when playback starts or stops.
+  // Wake the engine when playback or listening starts or stops.
   useEffect(() => {
     s.current.start?.();
-  }, [playing]);
+  }, [playing, live]);
+}
+
+/**
+ * Listen mode: the microphone through an analyser, only while `on`. Returns
+ * { analyser, error }. Nothing is recorded or sent anywhere; the sound only
+ * feeds the bars, and the microphone is released when it's switched off.
+ */
+export function useMicAnalyser(on) {
+  const [state, setState] = useState({ analyser: null, error: '' });
+  useEffect(() => {
+    if (!on) {
+      setState({ analyser: null, error: '' });
+      return undefined;
+    }
+    let stream = null;
+    let ctx = null;
+    let gone = false;
+    (async () => {
+      try {
+        if (!navigator.mediaDevices?.getUserMedia) throw new Error('unsupported');
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+        });
+        if (gone) return stream.getTracks().forEach((t) => t.stop());
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const an = ctx.createAnalyser();
+        an.fftSize = 4096;
+        an.smoothingTimeConstant = 0.55;
+        an.minDecibels = -85;
+        an.maxDecibels = -25;
+        ctx.createMediaStreamSource(stream).connect(an);
+        setState({ analyser: an, error: '' });
+      } catch (e) {
+        setState({
+          analyser: null,
+          error:
+            e?.name === 'NotAllowedError'
+              ? 'Microphone access was blocked. Allow it in your browser’s site settings to listen.'
+              : e?.message === 'unsupported'
+                ? 'This browser can’t listen through the microphone.'
+                : 'No microphone found.',
+        });
+      }
+    })();
+    return () => {
+      gone = true;
+      stream?.getTracks().forEach((t) => t.stop());
+      ctx?.close();
+    };
+  }, [on]);
+  return state;
 }

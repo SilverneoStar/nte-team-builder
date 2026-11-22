@@ -7,7 +7,7 @@
 // player), so it pulses at a steady tempo while a track plays.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { parsePlaylist, thumb, usePlaylistPlayer } from '../lib/youtube.js';
-import { MOODS, guessMood, useBeatEngine } from '../lib/beatEngine.js';
+import { MOODS, SPECTRUM, guessMood, useBeatEngine, useMicAnalyser } from '../lib/beatEngine.js';
 import { navigate } from '../lib/route.js';
 import { Tail } from './Mascot.jsx';
 
@@ -143,6 +143,16 @@ function useRoomSettings() {
 
 /** Instrumental versions of songs, going by the name ("(Instrumental)", 伴奏). */
 const isInstrumental = (x) => /instrumental|伴奏|karaoke|off vocal/i.test(x.name);
+
+// Colours from the characters (their own --pulse and bar colours in styles.css).
+const CHAR_STYLES = [
+  { id: 'c-daffodill', label: 'Daffodill' },
+  { id: 'c-sakiri', label: 'Sakiri' },
+  { id: 'c-hotori', label: 'Hotori' },
+  { id: 'c-nanally', label: 'Nanally' },
+  { id: 'c-lacrimosa', label: 'Lacrimosa' },
+  { id: 'c-baicang', label: 'Baicang' },
+];
 
 const BAR_STYLES = [
   { id: 'classic', label: 'Classic' },
@@ -612,7 +622,11 @@ export default function MusicRoom() {
     const { [song.id]: _, ...rest } = room.moods;
     setRoom({ moods: n === guessMood(song) ? rest : { ...rest, [song.id]: n } });
   };
-  useBeatEngine({ barsRef, canvasRef: pulseRef, viz: room.viz, bpm, playing: yt.playing, mood, progress: yt.progress });
+  // Listen: real bars from the microphone. Off on every visit, so the browser
+  // only asks when the listener switches it on.
+  const [listen, setListen] = useState(false);
+  const mic = useMicAnalyser(listen);
+  useBeatEngine({ barsRef, canvasRef: pulseRef, viz: room.viz, bpm, playing: yt.playing, mood, progress: yt.progress, live: mic.analyser });
   const tap = () => {
     if (!song) return;
     const now = performance.now();
@@ -822,9 +836,27 @@ export default function MusicRoom() {
                 { id: 'ripples', label: 'Ripples' },
                 { id: 'bloom', label: 'Bloom' },
                 { id: 'embers', label: 'Embers' },
+                { id: 'led', label: 'LED' },
+                { id: 'mirror', label: 'Mirror' },
+                { id: 'curve', label: 'Curve' },
+                { id: 'radial', label: 'Ring' },
               ]}
             />
             <Choice label="Style" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
+            <Choice label="Character colours" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={CHAR_STYLES} />
+            <div className="music__choice">
+              <span className="music__choice-label">Listen</span>
+              <label className="music__tick">
+                <input type="checkbox" checked={listen} onChange={(e) => setListen(e.target.checked)} />
+                Real bars from your microphone
+              </label>
+              <p className="muted small music__note">
+                {mic.error ||
+                  (listen && !SPECTRUM.has(room.viz) && room.viz !== 'bars'
+                    ? 'Listening shows on Bars, LED, Mirror, Curve and Ring.'
+                    : 'The page can’t hear YouTube directly, so this listens to your speakers through the mic. Nothing is recorded or sent anywhere. Won’t pick up headphones.')}
+              </p>
+            </div>
             {canKeepAwake && (
               <div className="music__choice">
                 <span className="music__choice-label">Screen</span>
