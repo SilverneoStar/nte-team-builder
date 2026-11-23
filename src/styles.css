@@ -10978,3 +10978,11 @@ th[aria-sort='descending'] .th-btn {
     opacity: 0.6;
   }
 }
+
+/* Frost's snow and frost patches sit behind the bars. */
+.music__beat[data-bars='frost']::before,
+.music__beat[data-bars='frost']::after,
+.music__beat[data-bars='frost'] .music__fx::before,
+.music__beat[data-bars='frost'] .music__fx::after {
+  z-index: -1;
+}
