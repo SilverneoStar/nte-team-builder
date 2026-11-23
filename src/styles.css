@@ -11095,3 +11095,11 @@ th[aria-sort='descending'] .th-btn {
 .music__beat[data-bars='lumiflux'] .music__fx::before {
   filter: drop-shadow(0 0 4px rgb(214 190 255 / 0.9));
 }
+
+/* Every style's special effects sit behind the beat itself (bars or canvas). */
+.music .music__beat[data-bars]::before,
+.music .music__beat[data-bars]::after,
+.music .music__beat[data-bars] .music__fx::before,
+.music .music__beat[data-bars] .music__fx::after {
+  z-index: -1;
+}
