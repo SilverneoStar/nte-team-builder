@@ -1,6 +1,6 @@
 // The Glossary page: game terms, reactions and statuses explained, plus an
 // Items section (each material with its icon, use, where to get it and who uses it).
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ELEMENT_BY_ID, PAIR_REACTIONS, TRIO_REACTIONS } from '../data/elements.js';
 import { GLOSSARY, GLOSSARY_CATEGORIES } from '../data/glossary.js';
 import ElementGlyph from './ElementGlyph.jsx';
@@ -71,6 +71,15 @@ export default function GlossaryPage() {
       .filter((x) => x.items.length);
   }, [query, category, itemGroup]);
 
+  // Topics fold away so the page stays short on a phone. They start closed
+  // and open by themselves while you search or pick a topic.
+  const filtering = !!query.trim() || category !== 'all';
+  const [folds, setFolds] = useState({});
+  useEffect(() => setFolds({}), [query, category]);
+  const isOpen = (cat) => folds[cat] ?? filtering;
+  const toggle = (cat) => setFolds((f) => ({ ...f, [cat]: !isOpen(cat) }));
+  const foldAll = (open) => setFolds(Object.fromEntries(groups.map((g) => [g.cat, open])));
+
   return (
     <div className="page">
       <header className="page__head">
@@ -127,11 +136,33 @@ export default function GlossaryPage() {
 
       {groups.length === 0 && itemGroups.length === 0 && <p className="empty">No terms match “{query}”.</p>}
 
+      {groups.length > 1 && (
+        <div className="gloss-folds">
+          <button type="button" className="btn btn--quiet btn--small" onClick={() => foldAll(true)}>
+            Open all
+          </button>
+          <button type="button" className="btn btn--quiet btn--small" onClick={() => foldAll(false)}>
+            Close all
+          </button>
+          <button
+            type="button"
+            className="btn btn--quiet btn--small"
+            onClick={() => document.getElementById('g-handbook')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Handbook ↓
+          </button>
+        </div>
+      )}
+
       {groups.map((g) => (
         <section key={g.cat} className="gloss-group" aria-labelledby={`g-${slug(g.cat)}`}>
           <h3 id={`g-${slug(g.cat)}`} className="gloss-group__title">
-            {g.cat}
+            <button type="button" className="gloss-group__toggle" aria-expanded={isOpen(g.cat)} onClick={() => toggle(g.cat)}>
+              {g.cat}
+              <span className="chip__n">{g.entries.length}</span>
+            </button>
           </h3>
+          {isOpen(g.cat) && (
           <dl className="gloss">
             {g.entries.map((e) => (
               <div key={e.term} className="gloss__item">
@@ -162,6 +193,7 @@ export default function GlossaryPage() {
               </div>
             ))}
           </dl>
+          )}
         </section>
       ))}
 
