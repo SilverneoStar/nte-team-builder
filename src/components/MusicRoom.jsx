@@ -865,6 +865,7 @@ export default function MusicRoom() {
                 { id: 'curve', label: 'Curve' },
                 { id: 'radial', label: 'Ring' },
                 { id: 'brush', label: 'Brush' },
+                { id: 'globe', label: 'Crystal ball' },
                 // { id: 'wings', label: 'Wings' }, hidden for now while it's being refined.
               ]}
             />
@@ -878,7 +879,7 @@ export default function MusicRoom() {
               <p className="muted small music__note">
                 {mic.error ||
                   (listen && !SPECTRUM.has(room.viz) && room.viz !== 'bars'
-                    ? 'Listening shows on Bars, LED, Curve, Ring and Brush.'
+                    ? 'Listening shows on Bars, LED, Curve, Ring, Brush and Crystal ball.'
                     : 'The page can’t hear YouTube directly, so this listens to your speakers through the mic. Nothing is recorded or sent anywhere. Won’t pick up headphones.')}
               </p>
             </div>
