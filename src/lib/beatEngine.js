@@ -1035,13 +1035,13 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       st.rings = st.rings.filter((r) => st.clock - r.born < life);
       const p = paint(c, ctx, w);
       const cx = w / 2;
-      const cy = h * 0.62;
+      const cy = h * 0.5;
       ctx.lineCap = 'round';
       for (const r of st.rings) {
         const a = (st.clock - r.born) / life;
         const e = 1 - (1 - a) ** 3;
         ctx.beginPath();
-        ctx.ellipse(cx, cy, w * (0.04 + 0.46 * e), h * (0.08 + 0.5 * e), 0, 0, TAU);
+        ctx.ellipse(cx, cy, w * (0.04 + 0.44 * e), h * (0.06 + 0.4 * e), 0, 0, TAU);
         ctx.strokeStyle = p.fill;
         ctx.globalAlpha = Math.max(0, (1 - a) ** 1.6 * Math.min(1, r.s));
         ctx.lineWidth = (0.8 + 2.4 * (1 - a)) * dpr;
@@ -1089,8 +1089,8 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       if (st.playing) st.spin = (st.spin ?? 0) + dt * 0.22;
       const spin = st.spin ?? 0;
       const cx = w / 2;
-      const cy = h * 0.56;
-      const R = Math.min(h * 0.5, w * 0.22) * (0.84 + 0.2 * throb);
+      const cy = h * 0.5;
+      const R = Math.min(h * 0.4, w * 0.22) * (0.84 + 0.2 * throb);
       st.petals = st.petals ?? [];
       if (st.playing && kb !== st.lastBloom) {
         st.lastBloom = kb;
@@ -1282,7 +1282,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       const cv = canvasOf();
       if (!cv) return false;
       const { c, ctx, w, h, dpr } = cv;
-      const n = kind === 'radial' ? 48 : kind === 'curve' ? 40 : kind === 'brush' || kind === 'wings' || kind === 'globe' ? 24 : 28;
+      const n = kind === 'radial' ? 30 : kind === 'curve' ? 40 : kind === 'brush' || kind === 'wings' || kind === 'globe' ? 24 : 28;
       const moving = levels(n, dt);
       const p = paint(c, ctx, kind === 'radial' ? h : w);
       const L = st.levels;
@@ -1435,36 +1435,67 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         ctx.lineTo(w, pts[n - 1][1]);
         glowStroke(ctx, p, 2.2, dpr);
       } else {
-        // A ring of bars around the middle.
+        // A ring of bars around the middle, mirrored left and right so low
+        // notes sit at the bottom. It kicks on the beat: the ring swells, the
+        // bars reach further and a glowing core flashes.
+        const beatSec = 60 / st.bpm;
+        const b = beatAt(st.clock);
+        const kb = Math.floor(b);
+        const kick = st.playing ? Math.exp(-((b - kb) * beatSec) / (beatSec * 0.3)) * strength(kb) * lift() : 0;
         const cx = w / 2;
         const cy = h / 2;
-        const r0 = Math.min(w, h) * 0.2;
-        const span = Math.min(w, h) * 0.3;
+        const m = Math.min(w, h);
+        const r0 = m * (0.16 + 0.03 * kick);
+        const span = m * 0.3;
+        // Glowing core.
+        const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, r0 * 1.1);
+        core.addColorStop(0, p.tip);
+        core.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.globalAlpha = 0.25 + 0.55 * kick;
+        ctx.fillStyle = core;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r0 * 1.1, 0, TAU);
+        ctx.fill();
+        ctx.globalAlpha = 1;
         ctx.lineCap = 'round';
         ctx.strokeStyle = p.fill;
-        ctx.lineWidth = Math.max(2, ((TAU * r0) / n) * 0.5);
+        // Each side has n bars over half the circle, so keep them slim enough to stay apart.
+        ctx.lineWidth = Math.max(2 * dpr, ((Math.PI * r0) / n) * 0.55);
         if (p.glow) {
           ctx.shadowColor = p.glow;
-          ctx.shadowBlur = (p.blur * dpr) / 2;
+          ctx.shadowBlur = p.blur * dpr * (0.8 + kick);
         }
         for (let i = 0; i < n; i++) {
-          // Mirror left and right so low notes sit at the bottom.
           const a = Math.PI / 2 + (i / n) * Math.PI;
+          // Louder, with a floor so quiet bars still show, and a push on the beat.
+          const lv = Math.min(1, 0.12 + L[i] * 1.25 + kick * 0.25);
           for (const side of [1, -1]) {
             const ang = Math.PI / 2 + side * (a - Math.PI / 2);
-            const len = L[i] * span;
+            const len = lv * span;
             ctx.beginPath();
             ctx.moveTo(cx + Math.cos(ang) * r0, cy + Math.sin(ang) * r0);
             ctx.lineTo(cx + Math.cos(ang) * (r0 + len), cy + Math.sin(ang) * (r0 + len));
             ctx.stroke();
           }
         }
+        // Peak dots riding just outside each bar.
+        ctx.fillStyle = p.tip;
+        for (let i = 0; i < n; i++) {
+          const a = Math.PI / 2 + (i / n) * Math.PI;
+          const pk = Math.min(1, 0.12 + P[i].v * 1.25) * span + 3 * dpr;
+          for (const side of [1, -1]) {
+            const ang = Math.PI / 2 + side * (a - Math.PI / 2);
+            ctx.beginPath();
+            ctx.arc(cx + Math.cos(ang) * (r0 + pk), cy + Math.sin(ang) * (r0 + pk), 1.3 * dpr, 0, TAU);
+            ctx.fill();
+          }
+        }
         ctx.shadowBlur = 0;
         ctx.beginPath();
         ctx.arc(cx, cy, r0 * 0.82, 0, TAU);
-        ctx.lineWidth = 1.5 * dpr;
+        ctx.lineWidth = (1.5 + 1.5 * kick) * dpr;
         ctx.strokeStyle = p.tip;
-        ctx.globalAlpha = 0.6;
+        ctx.globalAlpha = 0.6 + 0.4 * kick;
         ctx.stroke();
         ctx.globalAlpha = 1;
       }
