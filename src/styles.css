@@ -11302,3 +11302,72 @@ th[aria-sort='descending'] .th-btn {
 .music__beat[data-bars='lacrimosa'] {
   background: radial-gradient(ellipse 60% 90% at 50% 100%, rgb(110 90 220 / 0.14), transparent 70%);
 }
+
+/* Brush beat: longer strokes on bigger screens, where the player and mascots are larger too. */
+@media (min-width: 700px) {
+  .music__beat[data-viz='brush'] {
+    height: 96px;
+  }
+  .music:has(.music__beat[data-viz='brush']) .music__pal,
+  .music:has(.music__beat[data-viz='brush']) .music-disc,
+  .music:has(.music__beat[data-viz='brush']) .music-deck,
+  .music:has(.music__beat[data-viz='brush']) .music-arc {
+    margin-bottom: 106px;
+  }
+  .music.is-wide .music__beat[data-viz='brush'] {
+    height: 112px;
+  }
+  .music.is-wide:has(.music__beat[data-viz='brush']) .music__pal,
+  .music.is-wide:has(.music__beat[data-viz='brush']) .music-disc,
+  .music.is-wide:has(.music__beat[data-viz='brush']) .music-deck,
+  .music.is-wide:has(.music__beat[data-viz='brush']) .music-arc {
+    margin-bottom: 122px;
+  }
+}
+
+/* Phones: the mascots stand in front of the player's lower corners (positioned, not in the row), so each beat
+   look lifts them and the player by its strip's height instead of using the desktop spacing. */
+.music:has(.music__beat[data-viz='pulse']) {
+  --beat-room: 64px;
+}
+.music:has(.music__beat[data-viz='wave']) {
+  --beat-room: 72px;
+}
+.music:has(.music__beat[data-viz='ripples']) {
+  --beat-room: 100px;
+}
+.music:has(.music__beat[data-viz='bloom']) {
+  --beat-room: 104px;
+}
+.music:has(.music__beat[data-viz='embers']) {
+  --beat-room: 84px;
+}
+.music:has(.music__beat[data-viz='curve']) {
+  --beat-room: 72px;
+}
+.music:has(.music__beat[data-viz='led']) {
+  --beat-room: 64px;
+}
+.music:has(.music__beat[data-viz='radial']) {
+  --beat-room: 140px;
+}
+.music:has(.music__beat[data-viz='brush']) {
+  --beat-room: 76px;
+}
+.music:has(.music__beat[data-viz='globe']) {
+  --beat-room: 150px;
+}
+.music:has(.music__beat[data-viz='wings']) {
+  --beat-room: 170px;
+}
+@media (max-width: 560px) {
+  .music:has(.music__beat[data-viz]) .music__stage .music__pal {
+    margin-bottom: 0;
+    bottom: calc(var(--beat-room, 44px) + 6px);
+  }
+  .music:has(.music__beat[data-viz]) .music__stage .music-deck,
+  .music:has(.music__beat[data-viz]) .music__stage .music-arc,
+  .music:has(.music__beat[data-viz]) .music__stage .music-disc {
+    margin-bottom: calc(var(--beat-room, 44px) + 48px);
+  }
+}

@@ -1361,7 +1361,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
           // Every stroke hangs a good way down even when quiet, and reaches
           // the bottom of the strip on the loudest notes.
           // Each stroke has its own length, like a hand-made row.
-          const bh = Math.min(h * 0.98, (0.52 + 0.48 * L[i]) * h * (0.72 + 0.4 * hash(i * 7.7)));
+          const bh = Math.min(h * 0.98, (0.6 + 0.4 * L[i]) * h * (0.75 + 0.35 * hash(i * 7.7)));
           const tilt = bh * (SLANT + (hash(i * 4.1) - 0.5) * 0.12);
           // Centred on its slot, so the slant doesn't push strokes off the edge.
           const cx = i * (bw + gap) + bw / 2 - tilt / 2;
