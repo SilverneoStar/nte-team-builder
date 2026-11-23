@@ -11107,12 +11107,12 @@ th[aria-sort='descending'] .th-btn {
 /* Wings beat (Remielle's three pairs of wings and her feather ball): a taller strip, with the
    player and the mascots raised to make room so the wings stay below them. */
 .music__beat[data-viz='wings'] {
-  height: 112px;
+  height: 128px;
   bottom: 4px;
 }
 .music:has(.music__beat[data-viz='wings']) .music__pal,
 .music:has(.music__beat[data-viz='wings']) .music-disc,
 .music:has(.music__beat[data-viz='wings']) .music-deck,
 .music:has(.music__beat[data-viz='wings']) .music-arc {
-  margin-bottom: 122px;
+  margin-bottom: 138px;
 }

@@ -15,9 +15,15 @@ const hash = (n) => {
   return x - Math.floor(x);
 };
 
-// Wings: Remielle's three pairs of wings as glowing neon lines (like a neon
-// sign), each pair opening and lifting with its part of the music, around a
-// ball of curved feather blades like her W-Engine that pulses with the bass.
+// Wings: Remielle's three pairs of wings drawn as glowing neon lines, each pair
+// moving with its own part of the music, around a ball wrapped in curved
+// feather blades like her W-Engine.
+//  - Upper pair: her big mechanical wings. A swept leading edge with four long
+//    panels hanging from it, each with a round light at its base; the panels
+//    fan open with the bass.
+//  - Middle pair: feathered wings, drawn like a neon sign: an edge with
+//    scalloped feather lobes under it that reach out with the mids.
+//  - Lower pair: small pointed feathers angled down, with the highs.
 // Exported on its own so it can be drawn and checked outside the room.
 export const drawWings = (ctx, w, h, dpr, L, p, clock) => {
   const band = (a, b) => {
@@ -25,108 +31,199 @@ export const drawWings = (ctx, w, h, dpr, L, p, clock) => {
     for (let i = a; i < b; i++) s += L[i] || 0;
     return s / (b - a);
   };
+  const lo = band(0, 8);
+  const mid = band(8, 16);
+  const hi = band(16, 24);
   const cx = w / 2;
-  const cy = h * 0.52;
-  const R = h * 0.15;
+  const cy = h * 0.54;
+  const R = h * 0.13;
+  const sx = h * 1.05;
+  const sy = h * 0.5;
+  const breathe = Math.sin(clock * 1.5);
+  const neon = (width = 1.6) => {
+    ctx.lineWidth = width * dpr;
+    ctx.strokeStyle = p.fill;
+    if (p.glow) {
+      ctx.shadowColor = p.glow;
+      ctx.shadowBlur = p.blur * dpr * 0.9;
+    }
+  };
   ctx.save();
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.strokeStyle = p.fill;
-  ctx.lineWidth = 1.8 * dpr;
-  if (p.glow) {
-    ctx.shadowColor = p.glow;
-    ctx.shadowBlur = p.blur * dpr * 0.9;
-  }
-  // Upper pair: the big wings, swept up. Middle pair: spread level. Lower
-  // pair: small, angled down. Each listens to its own third of the spectrum.
-  const PAIRS = [
-    { y: -0.14, lift: 0.3, len: 1.0, feathers: 3, from: 0, to: 8 },
-    { y: 0.04, lift: -0.15, len: 0.78, feathers: 2, from: 8, to: 16 },
-    { y: 0.2, lift: -0.55, len: 0.55, feathers: 2, from: 16, to: 24 },
-  ];
-  const sx = h * 1.45; // wings reach out further than they rise
-  const sy = h * 0.36;
-  for (const pr of PAIRS) {
-    const v = band(pr.from, pr.to);
-    const len = pr.len * (0.88 + 0.2 * v);
-    const lift = pr.lift + (v - 0.3) * 0.2 + Math.sin(clock * 1.6 + pr.y * 9) * 0.03;
+  // Map wing space (u out from the body, v up) to the canvas for one side,
+  // with the pair's own root height, lift and size.
+  const mapper = (side, rootY, lift, size) => {
     const cs = Math.cos(lift);
     const sn = Math.sin(lift);
-    const ry = cy + pr.y * h;
-    for (const side of [-1, 1]) {
-      // Wing space: u runs out from the root, v up; rotated by the lift,
-      // mirrored for the left wing, then stretched onto the canvas.
-      const at = (u, vv) => {
-        const ru = (u * cs - vv * sn) * len;
-        const rv = (u * sn + vv * cs) * len;
-        return [cx + side * (R * 1.2 + ru * sx), ry - rv * sy];
-      };
-      const path = (pts) => {
-        // A start point, then groups of three: two controls and an end.
-        const q = pts.map((t) => at(t[0], t[1]));
+    return (u, v) => {
+      const ru = (u * cs - v * sn) * size;
+      const rv = (u * sn + v * cs) * size;
+      return [cx + side * (R * 1.15 + ru * sx), rootY - rv * sy];
+    };
+  };
+  const curve = (at, pts, close = false, fillAlpha = 0) => {
+    const q = pts.map((t) => at(t[0], t[1]));
+    ctx.beginPath();
+    ctx.moveTo(q[0][0], q[0][1]);
+    for (let k = 1; k + 1 < q.length; k += 2) ctx.quadraticCurveTo(q[k][0], q[k][1], q[k + 1][0], q[k + 1][1]);
+    if (close) ctx.closePath();
+    if (fillAlpha) {
+      ctx.save();
+      ctx.globalAlpha = fillAlpha;
+      ctx.fillStyle = p.fill;
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.stroke();
+  };
+  // A long pointed blade from a to b, widest a third of the way along.
+  const blade = (at, a, b, width, fillAlpha = 0.12) => {
+    const du = b[0] - a[0];
+    const dv = b[1] - a[1];
+    const n = Math.hypot(du, dv) || 1;
+    const nu = (-dv / n) * width;
+    const nv = (du / n) * width;
+    const m = [a[0] + du * 0.35, a[1] + dv * 0.35];
+    curve(at, [a, [m[0] + nu, m[1] + nv], b, [m[0] - nu, m[1] - nv], a], true, fillAlpha);
+  };
+  for (const side of [-1, 1]) {
+    // Upper pair: mechanical wings.
+    {
+      const at = mapper(side, cy - h * 0.06, 0.2 + lo * 0.1 + breathe * 0.02, 0.92 + lo * 0.1);
+      neon(1.8);
+      // Leading edge: a slim swept arm up to a sharp tip.
+      blade(at, [0, 0], [1.1, 0.6], 0.06, 0.2);
+      const spread = 0.22 + lo * 0.2;
+      for (let k = 0; k < 4; k++) {
+        const t = 0.22 + 0.2 * k;
+        const base = [t * 1.0, t * 0.5];
+        const ang = -0.75 + spread * (k - 1.5) * 0.5;
+        const len = (0.42 + 0.12 * k) * (0.9 + 0.25 * (L[k * 2] || 0));
+        const tip = [base[0] + Math.cos(ang) * len, base[1] + Math.sin(ang) * len];
+        neon(1.5);
+        blade(at, base, tip, 0.075, 0.14);
+        // The round light near the panel's base, glowing brighter with its band.
+        const dot = at(base[0] + Math.cos(ang) * 0.14, base[1] + Math.sin(ang) * 0.14);
+        ctx.save();
+        ctx.shadowColor = '#ff4f7a';
+        ctx.shadowBlur = p.blur * dpr * (0.6 + (L[k * 2] || 0));
+        ctx.globalAlpha = 0.6 + 0.4 * (L[k * 2] || 0);
+        ctx.fillStyle = '#ff6f93';
         ctx.beginPath();
-        ctx.moveTo(q[0][0], q[0][1]);
-        for (let k = 1; k + 2 < q.length; k += 3) {
-          ctx.bezierCurveTo(q[k][0], q[k][1], q[k + 1][0], q[k + 1][1], q[k + 2][0], q[k + 2][1]);
-        }
-        ctx.stroke();
-      };
-      // The leading edge: up from the body, then sweeping out to the tip.
-      path([
-        [0, 0],
-        [0.1, 0.3],
-        [0.5, 0.5],
-        [1, 0.5],
-      ]);
-      // Under it, the feathers as lobes, like a neon sign: each bulges out at
-      // the wing's outer edge, then sweeps back in toward the body, lower and
-      // longer as they go down. How far each reaches follows the music.
-      for (let k = 0; k < pr.feathers; k++) {
-        const ext = 0.75 + 0.4 * (L[pr.from + ((k * 3 + 1) % 8)] || 0);
-        const au = 1 - 0.08 * k;
-        const av = 0.5 - 0.2 * k;
-        const nu = au - 0.06;
-        const nv = av - 0.18;
+        ctx.arc(dot[0], dot[1], R * 0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffe3ec';
+        ctx.beginPath();
+        ctx.arc(dot[0], dot[1], R * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+    // Middle pair: feathered, neon-sign lobes.
+    {
+      const at = mapper(side, cy + h * 0.06, -0.12 + mid * 0.1 - breathe * 0.02, 0.72 + mid * 0.1);
+      neon(1.6);
+      curve(at, [[0, 0], [0.45, 0.35], [1, 0.3]]);
+      for (let k = 0; k < 4; k++) {
+        const ext = 0.75 + 0.4 * (L[8 + k * 2] || 0);
+        const au = 1 - 0.07 * k;
+        const av = 0.3 - 0.16 * k;
+        const nu = au - 0.04;
+        const nv = av - 0.15;
         const eu = nu - (0.32 + 0.1 * k) * ext;
-        path([
-          [au, av],
-          [au + 0.1, av - 0.02],
-          [au + 0.08, nv + 0.01],
-          [nu, nv],
-          [nu - 0.2, nv - 0.01],
-          [eu + 0.1, nv + 0.01],
-          [eu, nv + 0.03],
-        ]);
+        // Out along the edge to a feather point, then back in toward the body.
+        curve(at, [[au, av], [au + 0.12, av - 0.06], [nu, nv], [nu - 0.25, nv - 0.01], [eu, nv + 0.04]]);
+      }
+    }
+    // Lower pair: small feathers angled down.
+    {
+      const at = mapper(side, cy + h * 0.16, -0.62 + hi * 0.12 + breathe * 0.02, 0.5 + hi * 0.1);
+      neon(1.4);
+      for (let k = 0; k < 3; k++) {
+        const ang = -0.05 - 0.28 * k;
+        const len = (0.9 - 0.15 * k) * (0.85 + 0.3 * (L[16 + k * 3] || 0));
+        blade(at, [0.04 * k, -0.03 * k], [Math.cos(ang) * len, Math.sin(ang) * len], 0.06, 0.1);
       }
     }
   }
-  // The feather ball: a bright core wrapped in curved blades that turn slowly.
-  const bass = band(0, 4);
-  const r = R * (0.9 + 0.25 * bass);
-  ctx.shadowBlur = p.blur * dpr * 1.4;
-  const g = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r);
+  // The feather ball: a pale orb with fine cracks, wrapped in three long
+  // curved blades that sway, and a small pink-violet star at the top, like
+  // her W-Engine. It swells with the bass.
+  const r = R * (0.92 + 0.22 * lo);
+  ctx.shadowColor = p.glow || '#ffffff';
+  ctx.shadowBlur = p.blur * dpr * 1.3;
+  const g = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.35, r * 0.1, cx, cy, r);
   g.addColorStop(0, '#ffffff');
+  g.addColorStop(0.7, '#eceaf6');
   g.addColorStop(1, p.tip);
   ctx.fillStyle = g;
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = p.tip;
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 0.8 * dpr;
-  ctx.globalAlpha = 0.8;
-  for (let k = 0; k < 4; k++) {
-    const a = clock * 0.5 + (k * Math.PI * 2) / 4;
-    // A crescent blade: the outer arc and a tighter inner arc set off-centre.
-    const ox = -Math.cos(a + 0.9) * r * 0.5;
-    const oy = -Math.sin(a + 0.9) * r * 0.5;
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = 'rgba(120, 110, 160, 0.45)';
+  ctx.lineWidth = 0.7 * dpr;
+  for (let k = 0; k < 6; k++) {
+    const a = k * 1.05 + 0.4;
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.7, a, a + 1.8);
-    ctx.arc(cx + ox, cy + oy, r * 1.25, a + 1.7, a + 0.1, true);
-    ctx.closePath();
-    ctx.fill();
+    ctx.moveTo(cx + Math.cos(a) * r * 0.15, cy + Math.sin(a) * r * 0.15);
+    ctx.lineTo(cx + Math.cos(a + 0.3) * r * 0.55, cy + Math.sin(a + 0.3) * r * 0.55);
+    ctx.lineTo(cx + Math.cos(a + 0.1) * r * 0.85, cy + Math.sin(a + 0.1) * r * 0.85);
     ctx.stroke();
   }
+  const sway = Math.sin(clock * 0.9) * 0.12;
+  for (let k = 0; k < 3; k++) {
+    // Each blade: a crescent sweeping round the orb, thick in the middle and
+    // tapering to points, on a tall oval like the W-Engine's blades.
+    const a0 = -2.4 + k * 2.1 + sway;
+    const a1 = a0 + 2.3;
+    const ro = r * (1.6 + 0.12 * k);
+    const thick = r * 0.5;
+    const pt = (a, rad) => [cx + Math.cos(a) * rad * 0.85, cy + Math.sin(a) * rad * 1.12];
+    ctx.beginPath();
+    for (let j = 0; j <= 24; j++) {
+      const [x, y] = pt(a0 + ((a1 - a0) * j) / 24, ro);
+      if (j) ctx.lineTo(x, y);
+      else ctx.moveTo(x, y);
+    }
+    for (let j = 24; j >= 0; j--) {
+      const t = j / 24;
+      const [x, y] = pt(a0 + (a1 - a0) * t, ro - thick * Math.sin(Math.PI * t) ** 0.8);
+      ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.save();
+    ctx.globalAlpha = 0.92;
+    ctx.fillStyle = '#f4f3fa';
+    ctx.shadowColor = p.glow || '#ffffff';
+    ctx.shadowBlur = p.blur * dpr * 0.8;
+    ctx.fill();
+    ctx.restore();
+    ctx.strokeStyle = p.fill;
+    ctx.lineWidth = 1.1 * dpr;
+    ctx.stroke();
+  }
+  // The little four-point star where the blades meet at the top.
+  const st = [cx - r * 0.5, cy - r * 1.85];
+  const sr = r * (0.42 + 0.15 * hi);
+  const sg = ctx.createLinearGradient(st[0] - sr, st[1] - sr, st[0] + sr, st[1] + sr);
+  sg.addColorStop(0, '#7b5cff');
+  sg.addColorStop(1, '#ff4f9a');
+  ctx.fillStyle = sg;
+  ctx.shadowColor = '#ff4f9a';
+  ctx.shadowBlur = 6 * dpr;
+  ctx.beginPath();
+  for (let k = 0; k < 8; k++) {
+    const a = (k * Math.PI) / 4 + clock * 0.4;
+    const rr = k % 2 ? sr * 0.28 : sr;
+    const x = st[0] + Math.cos(a) * rr;
+    const y = st[1] + Math.sin(a) * rr;
+    if (k) ctx.lineTo(x, y);
+    else ctx.moveTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fill();
   ctx.restore();
 };
 
