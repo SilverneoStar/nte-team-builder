@@ -8,11 +8,126 @@ import { useEffect, useRef, useState } from 'react';
 
 const TAU = Math.PI * 2;
 // Canvas styles that draw the levels as a spectrum (audioMotion-style looks).
-export const SPECTRUM = new Set(['led', 'curve', 'radial', 'brush']);
+export const SPECTRUM = new Set(['led', 'curve', 'radial', 'brush', 'wings']);
 // A steady pseudo-random number in 0..1 for a whole number.
 const hash = (n) => {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
+};
+
+// Wings: Remielle's three pairs of wings as glowing neon lines (like a neon
+// sign), each pair opening and lifting with its part of the music, around a
+// ball of curved feather blades like her W-Engine that pulses with the bass.
+// Exported on its own so it can be drawn and checked outside the room.
+export const drawWings = (ctx, w, h, dpr, L, p, clock) => {
+  const band = (a, b) => {
+    let s = 0;
+    for (let i = a; i < b; i++) s += L[i] || 0;
+    return s / (b - a);
+  };
+  const cx = w / 2;
+  const cy = h * 0.52;
+  const R = h * 0.15;
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = p.fill;
+  ctx.lineWidth = 1.8 * dpr;
+  if (p.glow) {
+    ctx.shadowColor = p.glow;
+    ctx.shadowBlur = p.blur * dpr * 0.9;
+  }
+  // Upper pair: the big wings, swept up. Middle pair: spread level. Lower
+  // pair: small, angled down. Each listens to its own third of the spectrum.
+  const PAIRS = [
+    { y: -0.14, lift: 0.3, len: 1.0, feathers: 3, from: 0, to: 8 },
+    { y: 0.04, lift: -0.15, len: 0.78, feathers: 2, from: 8, to: 16 },
+    { y: 0.2, lift: -0.55, len: 0.55, feathers: 2, from: 16, to: 24 },
+  ];
+  const sx = h * 1.45; // wings reach out further than they rise
+  const sy = h * 0.36;
+  for (const pr of PAIRS) {
+    const v = band(pr.from, pr.to);
+    const len = pr.len * (0.88 + 0.2 * v);
+    const lift = pr.lift + (v - 0.3) * 0.2 + Math.sin(clock * 1.6 + pr.y * 9) * 0.03;
+    const cs = Math.cos(lift);
+    const sn = Math.sin(lift);
+    const ry = cy + pr.y * h;
+    for (const side of [-1, 1]) {
+      // Wing space: u runs out from the root, v up; rotated by the lift,
+      // mirrored for the left wing, then stretched onto the canvas.
+      const at = (u, vv) => {
+        const ru = (u * cs - vv * sn) * len;
+        const rv = (u * sn + vv * cs) * len;
+        return [cx + side * (R * 1.2 + ru * sx), ry - rv * sy];
+      };
+      const path = (pts) => {
+        // A start point, then groups of three: two controls and an end.
+        const q = pts.map((t) => at(t[0], t[1]));
+        ctx.beginPath();
+        ctx.moveTo(q[0][0], q[0][1]);
+        for (let k = 1; k + 2 < q.length; k += 3) {
+          ctx.bezierCurveTo(q[k][0], q[k][1], q[k + 1][0], q[k + 1][1], q[k + 2][0], q[k + 2][1]);
+        }
+        ctx.stroke();
+      };
+      // The leading edge: up from the body, then sweeping out to the tip.
+      path([
+        [0, 0],
+        [0.1, 0.3],
+        [0.5, 0.5],
+        [1, 0.5],
+      ]);
+      // Under it, the feathers as lobes, like a neon sign: each bulges out at
+      // the wing's outer edge, then sweeps back in toward the body, lower and
+      // longer as they go down. How far each reaches follows the music.
+      for (let k = 0; k < pr.feathers; k++) {
+        const ext = 0.75 + 0.4 * (L[pr.from + ((k * 3 + 1) % 8)] || 0);
+        const au = 1 - 0.08 * k;
+        const av = 0.5 - 0.2 * k;
+        const nu = au - 0.06;
+        const nv = av - 0.18;
+        const eu = nu - (0.32 + 0.1 * k) * ext;
+        path([
+          [au, av],
+          [au + 0.1, av - 0.02],
+          [au + 0.08, nv + 0.01],
+          [nu, nv],
+          [nu - 0.2, nv - 0.01],
+          [eu + 0.1, nv + 0.01],
+          [eu, nv + 0.03],
+        ]);
+      }
+    }
+  }
+  // The feather ball: a bright core wrapped in curved blades that turn slowly.
+  const bass = band(0, 4);
+  const r = R * (0.9 + 0.25 * bass);
+  ctx.shadowBlur = p.blur * dpr * 1.4;
+  const g = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r);
+  g.addColorStop(0, '#ffffff');
+  g.addColorStop(1, p.tip);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = p.tip;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 0.8 * dpr;
+  ctx.globalAlpha = 0.8;
+  for (let k = 0; k < 4; k++) {
+    const a = clock * 0.5 + (k * Math.PI * 2) / 4;
+    // A crescent blade: the outer arc and a tighter inner arc set off-centre.
+    const ox = -Math.cos(a + 0.9) * r * 0.5;
+    const oy = -Math.sin(a + 0.9) * r * 0.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.7, a, a + 1.8);
+    ctx.arc(cx + ox, cy + oy, r * 1.25, a + 1.7, a + 0.1, true);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+  ctx.restore();
 };
 
 // A dry-brush stroke along a centre line: pressed and solid at the start, then
@@ -656,7 +771,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       const cv = canvasOf();
       if (!cv) return false;
       const { c, ctx, w, h, dpr } = cv;
-      const n = kind === 'radial' ? 48 : kind === 'curve' ? 40 : kind === 'brush' ? 24 : 28;
+      const n = kind === 'radial' ? 48 : kind === 'curve' ? 40 : kind === 'brush' || kind === 'wings' ? 24 : 28;
       const moving = levels(n, dt);
       const p = paint(c, ctx, kind === 'radial' ? h : w);
       const L = st.levels;
@@ -703,6 +818,8 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
           }
         }
         ctx.shadowBlur = 0;
+      } else if (kind === 'wings') {
+        drawWings(ctx, w, h, dpr, L, p, st.clock);
       } else if (kind === 'brush') {
         // Brush: calligraphy downstrokes. Each bar is pressed in at the top and
         // pulled down at a slight slant, splitting into dry bristles at its
