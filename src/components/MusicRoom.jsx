@@ -724,6 +724,8 @@ export default function MusicRoom() {
               ))}
             </div>
           )}
+          {/* Spare layer for style effects that need more than the strip's two pseudo-elements. */}
+          <i className="music__fx" />
         </div>
       </section>
 
