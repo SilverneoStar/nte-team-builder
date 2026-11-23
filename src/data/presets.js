@@ -29,6 +29,14 @@ export const ALL_PRESETS = [
   { name: 'Edgar Blossom Support', members: ['edgar', 'nanally', 'zero', 'jiuyuan'], why: 'Blossom team: Edgar heals, Esper Zero triggers Blossom and Jiuyuan strengthens it. Mint can take Nanally’s place.' },
   { name: 'Chaos Remora', members: ['chaos', 'hathor', 'zero', 'haniel'], why: 'Chaos’s best team: his explosion grows with Remora’s duration, which Hathor extends. Skia can take Hathor’s place; Fadia Haniel’s for more survival.' },
   { name: 'Chaos Stain (Haniel)', members: ['chaos', 'zero', 'fadia', 'haniel'], why: 'Stain raises the Lakshana DMG Chaos spends his field time on; Haniel buffs and Fadia protects. Game8’s text also suggests Blackbird for Stain.' },
+  // Exe teams from @Nteupdates' Exe guide (Nov 2026), ahead of his release.
+  // Its "prediction" team with unreleased Espers is left out.
+  { name: 'Exe Synced', members: ['exe', 'blackbird', 'linko', 'sakiri'], why: 'Blackbird and Sakiri support Exe’s Chaos damage; Linko adds Synced Strikes.' },
+  { name: 'Exe Sustain', members: ['exe', 'blackbird', 'sakiri', 'iroi'], why: 'Iroi heals and buffs the team.' },
+  { name: 'Exe Scorch', members: ['exe', 'blackbird', 'zankou', 'sakiri'], why: 'Zankou adds Scorch and Blackbird Nova for Discord.' },
+  { name: 'Exe Hootie', members: ['exe', 'haniel', 'sakiri', 'iroi'], why: 'Haniel buffs ATK and summons Hootie; Iroi heals.' },
+  { name: 'Exe Break', members: ['exe', 'daffodill', 'sakiri', 'adler'], why: 'Daffodill breaks and Adler shields.' },
+  { name: 'Exe Nova', members: ['exe', 'blackbird', 'fadia', 'sakiri'], why: 'Fadia protects while Blackbird and Sakiri support.' },
   { name: 'Esper Zero F2P', members: ['zero', 'mint', 'haniel', 'sakiri'], why: 'Beginner Blossom and Hexed team around Zero’s fast Cycles.' },
   // Version 1.5 teams (Mobalytics team guide, Nov 2026; Game Rant's Elyms
   // teams, Nov 11, 2026).
@@ -121,7 +129,7 @@ export const ALL_PRESETS = [
     why: 'Pre-release idea: Elyms bursts and buffs inside a Charge trio, with Nanally’s Blossom, Hathor’s Remora and Iroi’s healing.' },
   { name: 'Exe Discord', members: ['exe', 'sakiri', 'blackbird', 'fadia'], idea: true,
     why: 'Pre-release idea: Exe as the main damage in a Discord trio; Blackbird adds Instant Cycle, Sakiri Scorch and Fadia keeps the team alive.' },
-  { name: 'Exe Scorch', members: ['exe', 'sakiri', 'haniel', 'adler'], idea: true,
+  { name: 'Exe Scorch (idea)', members: ['exe', 'sakiri', 'haniel', 'adler'], idea: true,
     why: 'Pre-release idea: Exe’s Chaos with Sakiri’s Scorch and Haniel’s Nova for Discord; Adler shields while the summons work.' },
 ];
 

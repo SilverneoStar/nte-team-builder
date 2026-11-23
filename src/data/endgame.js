@@ -85,6 +85,13 @@ export const ENDGAME = {
     subs: 'HP % > HP > Cycle Intensity > Break Intensity',
     cartridges: ["Thea's Night Tavern", 'Speedy Hedgehog'],
   },
+  // Exe: @Nteupdates' guide (Nov 2026), ahead of his release.
+  exe: {
+    slug: 'exe',
+    main: 'Chaos DMG > Crit Rate > Crit DMG',
+    subs: 'Crit Rate > Crit DMG > ATK',
+    cartridges: ['Diabolos', 'Shadow Creed'],
+  },
   fadia: {
     slug: 'fadia',
     endgame: { hp: '60,000+', atk: '1200+', def: '1200+', critRate: '5%+', critDmg: '50%+', universal: '20%+' },

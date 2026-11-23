@@ -27,6 +27,8 @@ export const SKILL_PRIORITY = {
   chaos: p('B > U > S > P', 'His Final Verdict Basic Attack does a big chunk of his damage.'),
   daffodill: p('S > U > B > P', 'Her Skill does most of her Break.'),
   edgar: p('S = U > P > B', 'He heals almost only with his Skill and Ultimate.'),
+  // Exe: @Nteupdates' guide (Nov 2026), ahead of his release.
+  exe: p('U = B > S > P', 'His Ultimate and Basic Attacks do most of his damage.'),
   elyms: p('U > S > B > P', 'Her Ultimate carries the team buff. Unlock the Support Skill’s bonus nodes as soon as you can.'),
   fadia: p('U > S > B > P', 'Her Ultimate is her main damage and her own healing.'),
   haniel: p('S > U > B > P', 'Her Skill and Ultimate both give team ATK% that grows with level.'),

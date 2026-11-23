@@ -192,7 +192,9 @@ export const RECOMMENDED = {
   // Pre-release picks (this site, Oct 2026): Arcs of their type whose
   // passives fit their role tags. Revisit once their kits are out.
   elyms: ['the-rain-that-shook-the-world', 'marching-beyond-time', 'fluff-of-fearlessness'],
-  exe: ['raging-flames', 'fluff-of-fortitude', 'oraora'],
+  // Exe: @Nteupdates' guide (Nov 2026): Ready-Ready as the alternative,
+  // Fluff of Fortitude for universal DMG, Oraora! free.
+  exe: ['ready-ready', 'fluff-of-fortitude', 'oraora'],
   fadia: ['eternal-waltz', 'the-good-the-bad-the-bitter', 'a-time-will-come'],
   haniel: ['blow-up-the-crowd', 'time-bandit', 'day-off'],
   hathor: ['raging-flames', 'fluff-of-fortitude', 'song-of-the-whale'],
