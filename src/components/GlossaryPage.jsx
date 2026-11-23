@@ -183,10 +183,32 @@ export default function GlossaryPage() {
           ))}
         </section>
       )}
+
+      <section className="gloss-handbook" aria-labelledby="g-handbook">
+        <img src={`${BASE}mascot.svg`} alt="" width="56" height="56" />
+        <div>
+          <h3 id="g-handbook" className="gloss-group__title">
+            Glossary handbook
+          </h3>
+          <p className="muted small">
+            Every term on this page as a phone-sized PDF, mapped by topic, to read offline or translate. The term
+            sheet lists each term with an ID, plus the official Esper, Arc and item names in every game language.
+          </p>
+          <div className="gloss-handbook__actions">
+            <a className="btn" href={`${BASE}handbook/NTE-Glossary-Handbook.pdf`} download>
+              Download handbook (PDF)
+            </a>
+            <a className="btn btn--quiet" href={`${BASE}handbook/NTE-Glossary-Terms.csv`} download>
+              Term sheet for translators (CSV)
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
 
+const BASE = import.meta.env.BASE_URL;
 const USED_SHOWN = 8;
 
 // Items that come in tiers (1 → 3, listed in a row) share one card, like the

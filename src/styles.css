@@ -11377,3 +11377,20 @@ th[aria-sort='descending'] .th-btn {
   --pulse-stops: #7dffb0, #3df5d0, #22d3e6, #3df5d0, #7dffb0;
   --pulse-glow: rgb(34 211 230 / 0.5);
 }
+
+/* Glossary handbook download, at the foot of the Glossary page. */
+.gloss-handbook {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.gloss-handbook img { flex: none; }
+.gloss-handbook__actions a.btn { color: var(--fg); text-decoration: none; display: inline-flex; align-items: center; }
+.gloss-handbook__actions a.btn:first-child { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.gloss-handbook .gloss-group__title { margin-top: 0; }
+.gloss-handbook__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
