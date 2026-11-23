@@ -10,6 +10,11 @@
 #   [Album name | fan upload] marks its songs as fan uploads (left out by "Official only"),
 #   "| game OST" marks in-game music (the "Game OST" filter),
 #   and "| AI-assisted" tags songs the channel likely made with AI.
+# - A whole YouTube playlist works too: Name | https://www.youtube.com/playlist?list=PL...
+#   When the site is built, each of its songs is listed in its place (with YouTube's
+#   titles, leaving out any that only play on YouTube); the build reruns weekly to pick
+#   up new ones. If YouTube can't be read then, it shows as one row that plays the
+#   whole playlist instead.
 # - Lines starting with # are notes and are skipped.
 # - Some labels block their songs on other sites; the room skips those and
 #   shows them with a link to play on YouTube instead.
@@ -213,3 +218,7 @@ Whatever it Says (Reimagined) | https://youtu.be/uovPyklGjoI
 Time Stands Still / 静止 (Original fan song) | https://youtu.be/QezC9R48AjI
 Magical Lights (Unplugged) | https://youtu.be/hi2eGymDE_M
 Afterglow (Reimagined) | https://youtu.be/CfqbPQyDAQc
+
+# Fan uploads of the game's music: a YouTube playlist, listed song by song when the site is built.
+[NTE OST (fan uploads) | fan upload | game OST]
+NTE OST playlist | https://youtube.com/playlist?list=PLjt1riIlLJTEQJiTrMVPbE7-ziqR_LFyW

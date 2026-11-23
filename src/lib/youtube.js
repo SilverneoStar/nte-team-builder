@@ -36,6 +36,39 @@ export function videoId(link) {
   return m ? m[1] : null;
 }
 
+/** The playlist id in a link to a whole YouTube playlist (not a single video), or null. */
+export function playlistId(link) {
+  const t = (link ?? '').trim();
+  if (videoId(t) && !/[?&]list=/.test(t)) return null;
+  if (/[?&]v=|youtu\.be\//.test(t)) return null;
+  const m = t.match(/[?&]list=([\w-]{12,})/);
+  return m ? m[1] : null;
+}
+
+// The first video of each YouTube playlist the reader has played, kept so its
+// row can show a cover next time (the page can't look inside a playlist itself).
+const COVERS_KEY = 'tea-room:playlistCovers';
+let covers = null;
+export function playlistCover(list) {
+  if (!covers) {
+    try {
+      covers = JSON.parse(localStorage.getItem(COVERS_KEY) || '{}');
+    } catch {
+      covers = {};
+    }
+  }
+  return covers[list] ?? null;
+}
+function rememberCover(list, id) {
+  if (!id || playlistCover(list) === id) return;
+  covers[list] = id;
+  try {
+    localStorage.setItem(COVERS_KEY, JSON.stringify(covers));
+  } catch {
+    /* not kept: fine */
+  }
+}
+
 /**
  * The songs in a playlist text file: one per line, "Song name | link", with an
  * optional tempo after it ("| 128", beats per minute); the name can be left out. "[Album]" on its own line heads the songs after it
@@ -72,6 +105,13 @@ export function parsePlaylist(text) {
     const bpm = parts.length > 1 && /^\d{2,3}$/.test(parts[parts.length - 1]) ? +parts.pop() : null;
     const link = parts.pop();
     const name = parts.join(' | ');
+    // A whole YouTube playlist ("…playlist?list=PL…" with no video in it): one row
+    // that plays every song in it, in YouTube's order, keeping up with its changes.
+    const list = playlistId(link);
+    if (list) {
+      songs.push({ id: list, list, name, album, fan, game, ai, date, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
+      continue;
+    }
     const id = videoId(link);
     if (id) songs.push({ id, name, album, fan, game, ai, date, bpm: bpm >= 40 && bpm <= 240 ? bpm : null });
   }
@@ -94,8 +134,9 @@ export function usePlaylistPlayer(hostRef, songs) {
   const groups = [];
   songs.forEach((x, i) => {
     const last = groups[groups.length - 1];
-    if (last && songs[i - 1].album === x.album) last.end = i + 1;
-    else groups.push({ start: i, end: i + 1 });
+    // A whole YouTube playlist is loaded on its own.
+    if (last && !x.list && !songs[i - 1].list && songs[i - 1].album === x.album) last.end = i + 1;
+    else groups.push({ start: i, end: i + 1, list: x.list || null });
   });
   const ref = useRef({});
   ref.current.ids = ids;
@@ -108,6 +149,7 @@ export function usePlaylistPlayer(hostRef, songs) {
     playing: false,
     waiting: false,
     index: -1,
+    videoId: '',
     title: '',
     author: '',
     blocked: [],
@@ -128,13 +170,30 @@ export function usePlaylistPlayer(hostRef, songs) {
       return;
     }
     loaded.current = k;
+    if (g.list) {
+      const opts = { listType: 'playlist', list: g.list, index: 0 };
+      if (play) p.loadPlaylist(opts);
+      else p.cuePlaylist(opts);
+      return;
+    }
     const list = ref.current.ids.slice(g.start, g.end);
     if (play) p.loadPlaylist(list, i - g.start);
     else p.cuePlaylist(list, i - g.start);
   };
+  // Inside a whole YouTube playlist: where we are in it, and how long it is.
+  const inPlaylist = () => {
+    const p = player.current;
+    const g = ref.current.groups[loaded.current];
+    if (!p || !g?.list) return null;
+    return { at: p.getPlaylistIndex?.() ?? 0, count: p.getPlaylist?.()?.length ?? 0 };
+  };
   const step = (dir) => {
     const n = ref.current.ids.length;
     if (!n) return;
+    // In a YouTube playlist, next and back move through its songs first.
+    const pl = !shuffleRef.current && inPlaylist();
+    if (pl && dir > 0 && pl.at < pl.count - 1) return player.current.nextVideo();
+    if (pl && dir < 0 && pl.at > 0) return player.current.previousVideo();
     const cur = stRef.current.index;
     const at = cur < 0 || cur >= n ? (dir > 0 ? -1 : 0) : cur;
     if (shuffleRef.current && n > 1) {
@@ -166,7 +225,11 @@ export function usePlaylistPlayer(hostRef, songs) {
       const data = p.getVideoData?.() ?? {};
       const g = ref.current.groups[loaded.current];
       let index = -1;
-      if (g) {
+      if (g?.list) {
+        // A whole YouTube playlist is one row; the song on is whatever it's playing.
+        index = g.start;
+        rememberCover(g.list, p.getPlaylist?.()?.[0]);
+      } else if (g) {
         const at = data.video_id ? ref.current.ids.slice(g.start, g.end).indexOf(data.video_id) : -1;
         index = at >= 0 ? g.start + at : g.start + Math.max(0, p.getPlaylistIndex?.() ?? 0);
       } else if (data.video_id) {
@@ -180,7 +243,7 @@ export function usePlaylistPlayer(hostRef, songs) {
       stillFor = still ? stillFor + 1 : 0;
       lastT = t;
       setSt((s) => {
-        const n = { ...s, index, title: data.title || '', author: data.author || '', waiting: stillFor >= 2, ...patch };
+        const n = { ...s, index, videoId: data.video_id || '', title: data.title || '', author: data.author || '', waiting: stillFor >= 2, ...patch };
         return Object.keys(n).every((k) => n[k] === s[k]) ? s : n;
       });
     };
@@ -208,11 +271,18 @@ export function usePlaylistPlayer(hostRef, songs) {
               // song (or on shuffle), pick the next song here.
               if (e.data === YT.PlayerState.ENDED) {
                 const g = ref.current.groups[loaded.current];
-                if (shuffleRef.current || loaded.current < 0 || !g || stRef.current.index >= g.end - 1) step(1);
+                const pl = inPlaylist();
+                // YouTube moves on inside its own playlist; after its last song, go on here.
+                if (pl) {
+                  if (shuffleRef.current || pl.at >= pl.count - 1) step(1);
+                } else if (shuffleRef.current || loaded.current < 0 || !g || stRef.current.index >= g.end - 1) step(1);
               }
             },
             // A song its label won't let play outside YouTube: note it and skip it.
             onError: () => {
+              const pl = inPlaylist();
+              // A song inside a YouTube playlist that won't play here: skip to the next one in it.
+              if (pl && pl.at < pl.count - 1 && ++skips < 10) return player.current.nextVideo();
               const id = player.current?.getVideoData?.()?.video_id || ref.current.ids[stRef.current.index];
               setSt((s) => ({ ...s, blocked: s.blocked.includes(id) ? s.blocked : [...s.blocked, id] }));
               if (++skips < Math.min(10, ref.current.ids.length)) step(1);

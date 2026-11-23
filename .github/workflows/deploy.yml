@@ -6,6 +6,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Once a week, so songs newly added to the room's YouTube playlists show up.
+  schedule:
+    - cron: '23 3 * * 1'
 
 permissions:
   contents: read
@@ -27,6 +30,12 @@ jobs:
       # Exact package versions from package-lock.json when it exists, and no
       # install scripts, so a hijacked package can't run code during the build.
       - run: if [ -f package-lock.json ]; then npm ci --ignore-scripts; else npm install --ignore-scripts; fi
+      # The Tea Room's whole YouTube playlists: list each of their songs (titles and
+      # ids only). If YouTube can't be read, the room plays them as one row instead.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet yt-dlp && python tools/expand_playlists.py || echo "Playlists left as one row each"
       # The site lives under /nte-team-builder/, so asset paths need that prefix.
       - run: npm run build -- --base=/nte-team-builder/
       # File sizes of the built scripts and styles, shown as notes on the run.
