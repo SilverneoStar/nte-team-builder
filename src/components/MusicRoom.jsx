@@ -125,7 +125,8 @@ function useRoomSettings() {
         /* no shared settings yet */
       }
       // Mirror was dropped: show Bars instead.
-      if (v.viz === 'mirror') v = { ...v, viz: 'bars' };
+      // Wings is hidden for now while it's being refined.
+      if (v.viz === 'mirror' || v.viz === 'wings') v = { ...v, viz: 'bars' };
       // Old names, and the short-lived character colour row (c-…), map to today's styles.
       const bars = String(v.bars ?? '').startsWith('c-') ? 'classic' : ({ pixel: 'digital', dots: 'y2k' }[v.bars] ?? v.bars);
       return {
@@ -864,7 +865,7 @@ export default function MusicRoom() {
                 { id: 'curve', label: 'Curve' },
                 { id: 'radial', label: 'Ring' },
                 { id: 'brush', label: 'Brush' },
-                { id: 'wings', label: 'Wings' },
+                // { id: 'wings', label: 'Wings' }, hidden for now while it's being refined.
               ]}
             />
             <Choice label="Style" value={room.bars} onChange={(v) => setRoom({ bars: v })} options={BAR_STYLES} />
@@ -877,7 +878,7 @@ export default function MusicRoom() {
               <p className="muted small music__note">
                 {mic.error ||
                   (listen && !SPECTRUM.has(room.viz) && room.viz !== 'bars'
-                    ? 'Listening shows on Bars, LED, Curve, Ring, Brush and Wings.'
+                    ? 'Listening shows on Bars, LED, Curve, Ring and Brush.'
                     : 'The page can’t hear YouTube directly, so this listens to your speakers through the mic. Nothing is recorded or sent anywhere. Won’t pick up headphones.')}
               </p>
             </div>
