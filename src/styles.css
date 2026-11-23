@@ -11371,3 +11371,9 @@ th[aria-sort='descending'] .th-btn {
     margin-bottom: calc(var(--beat-room, 44px) + 48px);
   }
 }
+
+/* Neon: the canvas looks run green into turquoise instead of ending in purple. */
+.music__beat[data-bars='neon'] .music__pulse {
+  --pulse-stops: #7dffb0, #3df5d0, #22d3e6, #3df5d0, #7dffb0;
+  --pulse-glow: rgb(34 211 230 / 0.5);
+}
