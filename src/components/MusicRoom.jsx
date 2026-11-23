@@ -6,6 +6,7 @@
 // The beat bar can't hear the music (a page can't read sound from YouTube's
 // player), so it pulses at a steady tempo while a track plays.
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { songAgents, AGENT_NAMES } from '../lib/songAgents.js';
 import { parsePlaylist, thumb, usePlaylistPlayer, playlistCover } from '../lib/youtube.js';
 import { MOODS, SPECTRUM, guessMood, useBeatEngine, useMicAnalyser } from '../lib/beatEngine.js';
 import { navigate } from '../lib/route.js';
@@ -298,7 +299,7 @@ function albumsOf(songs) {
  * Albums in a swipeable carousel; the chosen album's songs below it, which can
  * be folded away. Follows the album that's playing until the reader picks one.
  */
-function Playlist({ songs, yt, room, setRoom, total, mineCount, hiddenCount, albumNames }) {
+function Playlist({ songs, yt, room, setRoom, total, mineCount, hiddenCount, albumNames, find, setFind, agent, setAgent, agentCounts }) {
   const mine = new Set(room.mine);
   const toggleHidden = (id) =>
     setRoom({ hidden: room.hidden.includes(id) ? room.hidden.filter((x) => x !== id) : [...room.hidden, id] });
@@ -333,6 +334,33 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount, hiddenCount, alb
           {songs.length === total ? `${songs.length} songs` : `${songs.length} of ${total} songs`}
         </span>
       </div>
+      <div className="music__finders">
+        <label className="music__find">
+          <span className="sr-only">Find a song</span>
+          <input
+            type="search"
+            placeholder="Find a song or album…"
+            value={find}
+            onChange={(e) => setFind(e.target.value)}
+          />
+        </label>
+        {agentCounts.length > 0 && (
+          <label className="music__agentpick">
+            <span className="music__choice-label">Character</span>
+            <select value={agent} onChange={(e) => setAgent(e.target.value)}>
+              <option value="">All characters</option>
+              {agentCounts.map(([id, n]) => (
+                <option key={id} value={id}>
+                  {AGENT_NAMES[id]} ({n})
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+      </div>
+      {(find || agent) && !songs.length && (
+        <p className="muted small">No songs match. Try another name, or clear the search.</p>
+      )}
       <div className="music__filters">
         <Choice label="Order" value={room.order} onChange={(v) => setRoom({ order: v })} options={ORDERS} />
         <Choice
@@ -594,6 +622,17 @@ export default function MusicRoom() {
     };
   }, []);
   const [room, setRoom] = useRoomSettings();
+  // Finding songs: by words in the song or album name, and by character. Not kept
+  // between visits.
+  const [find, setFind] = useState('');
+  const [agent, setAgent] = useState('');
+  const agentsBySong = useMemo(() => new Map((songs ?? []).map((x) => [x, songAgents(x)])), [songs]);
+  // Characters with songs, most songs first.
+  const agentCounts = useMemo(() => {
+    const n = new Map();
+    for (const ids of agentsBySong.values()) for (const id of ids) n.set(id, (n.get(id) || 0) + 1);
+    return [...n].sort((a, b) => b[1] - a[1] || AGENT_NAMES[a[0]].localeCompare(AGENT_NAMES[b[0]]));
+  }, [agentsBySong]);
   // The songs under the Play and Songs choices.
   const filtered = useMemo(() => {
     let list = songs ?? [];
@@ -606,11 +645,14 @@ export default function MusicRoom() {
     // Hidden songs aren't played (or listed) unless the reader shows them.
     if (!room.showHidden) list = list.filter((x) => !isHiddenSong(room, x));
     // Lyrical / instrumental versions of the songs; OST: the music from inside the game.
+    const words = find.toLowerCase().split(/\s+/).filter(Boolean);
+    if (words.length) list = list.filter((x) => words.every((w) => `${x.name} ${x.album}`.toLowerCase().includes(w)));
+    if (agent) list = list.filter((x) => agentsBySong.get(x)?.includes(agent));
     if (room.kind === 'vocal') list = list.filter((x) => !x.game && !isInstrumental(x));
     if (room.kind === 'inst') list = list.filter((x) => !x.game && isInstrumental(x));
     if (room.kind === 'game') list = list.filter((x) => x.game);
     return sortSongs(list, room.order, room.source !== 'mine');
-  }, [songs, room.source, room.kind, room.mine, room.order, room.hide, room.hidden, room.showHidden]);
+  }, [songs, room.source, room.kind, room.mine, room.order, room.hide, room.hidden, room.showHidden, find, agent, agentsBySong]);
   // The albums the picker offers: those with songs under those choices.
   const albumNames = useMemo(() => [...new Set(filtered.map((x) => x.album).filter(Boolean))], [filtered]);
   // Picked albums only (none picked, or none of them here: every album), played one after another.
@@ -939,6 +981,11 @@ export default function MusicRoom() {
           setRoom={setRoom}
           total={songs.length}
           mineCount={room.mine.filter((id) => songs.some((x) => x.id === id)).length}
+          find={find}
+          setFind={setFind}
+          agent={agent}
+          setAgent={setAgent}
+          agentCounts={agentCounts}
           hiddenCount={songs.filter((x) => isHiddenSong(room, x)).length}
           albumNames={albumNames}
         />
