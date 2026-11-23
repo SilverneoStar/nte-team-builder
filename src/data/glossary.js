@@ -432,6 +432,7 @@ export const GLOSSARY = [
   // Combat
   {
     term: 'Break',
+    also: 'Broken state',
     category: 'Combat',
     text: 'Enemies have a break bar. Emptying it staggers them and leaves them open to much higher damage for a short time.',
   },
@@ -754,5 +755,101 @@ export const GLOSSARY = [
     category: 'City & currency',
     text: 'The item used, with Fons, to level up life skills. Bought from the Mall (the in-game shop) and earned from daily tasks.',
     related: ['Life skill', 'Fons'],
+  },
+  // Terms from skill, Arc, item and achievement texts that were missing
+  // (audit, Nov 23, 2026). Written from the site's own data texts.
+  {
+    term: 'Anomaly',
+    also: 'Oddity, Bio Anomaly, Object Anomaly, Bureau of Anomaly Control',
+    category: 'City & currency',
+    text: 'The strange phenomena Hunters deal with in Hethereau, and the creatures behind them. A Bio Anomaly is a person hosting an Oddity (like the Arbiter); an Object Anomaly is a thing come alive (like Teehee Bear). The Bureau of Anomaly Control looks after them, and most bosses are Anomalies.',
+    related: ['Anomaly Hunt', 'Anomaly Commissions'],
+  },
+  {
+    term: 'Hunter Level',
+    category: 'City & currency',
+    text: 'Your account level as a Hunter. It goes up as you play and unlocks more of the game; achievements ask you to reach set levels.',
+  },
+  {
+    term: 'Scarborough Fair',
+    also: 'Character banners',
+    category: 'City & currency',
+    text: 'The character banners: where you pull for Espers. Limited Espers get their own board for a few weeks.',
+    related: ['Arc Research Program'],
+  },
+  {
+    term: 'Arc Research Program',
+    also: 'Arc banners, Limited Arc banner, Tri-Keys',
+    category: 'City & currency',
+    text: 'The Arc banners. Each limited Esper comes with a limited Arc banner (“… Special”) alongside their own, pulled with Tri-Keys.',
+    related: ['Scarborough Fair', 'Signature Arc'],
+  },
+  {
+    term: 'Arc Shop',
+    also: 'Arc Exchange, U-00NE',
+    category: 'City & currency',
+    text: 'The Arc Exchange: a shop that sells Arcs, including the A-rank ones, for U-00NE, which anomaly bosses drop.',
+  },
+  {
+    term: 'Circle Bounty',
+    also: 'Bounty Rank, Elite Hunter Supplies',
+    category: 'City & currency',
+    text: 'The season pass. Playing raises your Bounty Rank for rewards; the paid track, Elite Hunter Supplies, lets you pick any S-rank Arc at Bounty Rank 30.',
+  },
+  {
+    term: 'Hunter Exchange',
+    category: 'City & currency',
+    text: 'A shop paid in Fons that sells material selection boxes and Expansion Cores.',
+    related: ['Fons', 'Selection boxes', 'Expansion Core'],
+  },
+  {
+    term: 'Warp Exchange',
+    also: 'Warp Pieces',
+    category: 'City & currency',
+    text: 'A shop paid in Warp Pieces.',
+  },
+  {
+    term: 'Mall',
+    category: 'City & currency',
+    text: 'The in-game shop: paid packs, plus items for Beetle Coins and other currencies, including Dreamless Seeds.',
+  },
+  {
+    term: 'Heterogeneous Unit',
+    category: 'Gear',
+    text: 'An item that stands in for missing copies of an Arc when raising its copies (M1 to M5).',
+    related: ['Arc copies', 'Expansion Core'],
+  },
+  {
+    term: 'EXP items',
+    also: 'Character EXP, Arc EXP, Module EXP',
+    category: 'Characters',
+    text: 'Items that level things up: Character EXP for Espers, Arc EXP for Arcs and Module EXP for Console modules and Cartridges. Each comes in three tiers.',
+  },
+  {
+    term: 'Affection',
+    also: 'Affection Lv, Bond, Affinity',
+    category: 'Characters',
+    text: 'How close you are with an Esper. Gifts raise it: every gift gives some to anyone, and more to the Espers who favour it. Achievements ask for set Affection levels.',
+  },
+  {
+    term: 'Arc Effect',
+    also: 'Tuned Arc',
+    category: 'Gear',
+    text: 'An extra ability some Arcs unlock, like Officer Whisker, Silent Garden, Eclipse or the Black Tome. It works on its own timer once its condition is met.',
+    related: ['Summoner'],
+  },
+  {
+    term: 'DMG types',
+    also: 'Basic Attack DMG, Ultimate DMG, Redirect Skill DMG, Esper Ability DMG, Attachment DMG, Mental DMG, Break DMG',
+    category: 'Stats',
+    text: 'Bonuses often only boost one kind of damage: Basic Attack, Redirect Skill or Ultimate DMG; Esper Ability DMG of one element; Break DMG; or the Attachment and Mental DMG some Espers’ attacks deal. A bonus only helps if the Esper deals that kind.',
+    related: ['Element DMG Bonus', 'Universal DMG Bonus', 'DoT'],
+  },
+  {
+    term: 'Upgrade stages',
+    also: 'Bubble Can Factory, Houdinii’s Schemes, Houdinii’s Magic Stage',
+    category: 'Modes',
+    text: 'Anomaly Zones that cost Character Pixels: Bubble Can Factory drops Arc materials and Houdinii’s Schemes skill books; Houdinii’s Magic Stage is another.',
+    related: ['Anomaly Zones', 'Character Pixels'],
   },
 ];
