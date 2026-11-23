@@ -1282,7 +1282,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       const cv = canvasOf();
       if (!cv) return false;
       const { c, ctx, w, h, dpr } = cv;
-      const n = kind === 'radial' ? 30 : kind === 'curve' ? 40 : kind === 'brush' || kind === 'wings' || kind === 'globe' ? 24 : 28;
+      const n = kind === 'radial' ? 30 : kind === 'curve' ? 40 : kind === 'brush' ? Math.max(24, Math.min(44, Math.round(w / dpr / 30))) : kind === 'wings' || kind === 'globe' ? 24 : 28;
       const moving = levels(n, dt);
       const p = paint(c, ctx, kind === 'radial' ? h : w);
       const L = st.levels;
@@ -1362,22 +1362,27 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
           // eased so it flows up and down smoothly, from a short dab when quiet
           // to the bottom of the strip on the loudest notes; each one varies a
           // little, like a hand-made row.
-          st.brushL = st.brushL || new Array(n).fill(0);
-          st.brushL[i] += (L[i] - st.brushL[i]) * Math.min(1, (dt || 0.016) * 14);
-          const bh = Math.max(bw * 0.6, Math.min(h * 0.98, h * (0.14 + 0.84 * st.brushL[i]) * (0.92 + 0.16 * hash(i * 7.7))));
+          if (!st.brushL || st.brushL.length !== n) st.brushL = new Array(n).fill(0.3);
+          st.brushL[i] += (L[i] - st.brushL[i]) * Math.min(1, (dt || 0.016) * 18);
+          // The full range, like the bars: a short dab when quiet, all the way
+          // down the strip on the loud notes, with neighbours free to differ.
+          const lv = Math.min(1, st.brushL[i] * 1.3);
+          const bh = Math.min(h * 0.98, h * (0.1 + 0.88 * lv) * (0.94 + 0.12 * hash(i * 7.7)));
           const tilt = bh * (SLANT + (hash(i * 4.1) - 0.5) * 0.12);
           // Centred on its slot, so the slant doesn't push strokes off the edge.
           const cx = i * (bw + gap) + bw / 2 - tilt / 2;
-          const bow = bw * 0.18 * (hash(i * 2.3) - 0.5);
+          // Slim strokes whatever the screen width, so they read as brush strokes, not blobs.
+          const sw = Math.min(bw * 0.78, h * 0.13);
+          const bow = sw * 0.25 * (hash(i * 2.3) - 0.5);
           const pt = (t) => {
             const x = cx + t * tilt + Math.sin(t * Math.PI) * bow;
-            const y = bw * 0.35 + t * (bh - bw * 0.35);
+            const y = sw * 0.45 + t * (bh - sw * 0.45);
             const dx = tilt + Math.cos(t * Math.PI) * Math.PI * bow;
-            const dy = bh - bw * 0.35;
+            const dy = bh - sw * 0.45;
             const len = Math.hypot(dx, dy) || 1;
             return [x, y, -dy / len, dx / len];
           };
-          dryStroke(ctx, pt, bw * 0.78, i + 1, 1, 7);
+          dryStroke(ctx, pt, sw, i + 1, 1, 7);
           for (const [v, k] of loud) {
             if (k !== i || v < 0.2) continue;
             const [tx, ty] = pt(1);
