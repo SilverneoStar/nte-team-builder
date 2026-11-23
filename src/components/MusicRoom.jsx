@@ -6,7 +6,7 @@
 // The beat bar can't hear the music (a page can't read sound from YouTube's
 // player), so it pulses at a steady tempo while a track plays.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { songAgents, AGENT_NAMES } from '../lib/songAgents.js';
+import { songAgents, songFactions, songVersions, AGENT_NAMES } from '../lib/songAgents.js';
 import { parsePlaylist, thumb, usePlaylistPlayer, playlistCover } from '../lib/youtube.js';
 import { MOODS, SPECTRUM, guessMood, useBeatEngine, useMicAnalyser } from '../lib/beatEngine.js';
 import { navigate } from '../lib/route.js';
@@ -299,7 +299,7 @@ function albumsOf(songs) {
  * Albums in a swipeable carousel; the chosen album's songs below it, which can
  * be folded away. Follows the album that's playing until the reader picks one.
  */
-function Playlist({ songs, yt, room, setRoom, total, mineCount, hiddenCount, albumNames, find, setFind, agent, setAgent, agentCounts }) {
+function Playlist({ songs, yt, room, setRoom, total, mineCount, hiddenCount, albumNames, find, setFind, agent, setAgent, agentCounts, faction, setFaction, factionCounts, version, setVersion, versionCounts }) {
   const mine = new Set(room.mine);
   const toggleHidden = (id) =>
     setRoom({ hidden: room.hidden.includes(id) ? room.hidden.filter((x) => x !== id) : [...room.hidden, id] });
@@ -357,8 +357,34 @@ function Playlist({ songs, yt, room, setRoom, total, mineCount, hiddenCount, alb
             </select>
           </label>
         )}
+        {versionCounts.length > 0 && (
+          <label className="music__agentpick">
+            <span className="music__choice-label">Version</span>
+            <select value={version} onChange={(e) => setVersion(e.target.value)}>
+              <option value="">All versions</option>
+              {versionCounts.map(([v, n]) => (
+                <option key={v} value={v}>
+                  {v} ({n})
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        {factionCounts.length > 0 && (
+          <label className="music__agentpick">
+            <span className="music__choice-label">Faction</span>
+            <select value={faction} onChange={(e) => setFaction(e.target.value)}>
+              <option value="">All factions</option>
+              {factionCounts.map(([f, n]) => (
+                <option key={f} value={f}>
+                  {f} ({n})
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
       </div>
-      {(find || agent) && !songs.length && (
+      {(find || agent || faction || version) && !songs.length && (
         <p className="muted small">No songs match. Try another name, or clear the search.</p>
       )}
       <div className="music__filters">
@@ -622,11 +648,33 @@ export default function MusicRoom() {
     };
   }, []);
   const [room, setRoom] = useRoomSettings();
-  // Finding songs: by words in the song or album name, and by character. Not kept
+  // Finding songs: by words in the song or album name, by character, faction and game version. Not kept
   // between visits.
   const [find, setFind] = useState('');
   const [agent, setAgent] = useState('');
   const agentsBySong = useMemo(() => new Map((songs ?? []).map((x) => [x, songAgents(x)])), [songs]);
+  const [faction, setFaction] = useState('');
+  const factionsBySong = useMemo(
+    () => new Map([...agentsBySong].map(([x, ids]) => [x, songFactions(x, ids)])),
+    [agentsBySong],
+  );
+  const [version, setVersion] = useState('');
+  const versionsBySong = useMemo(
+    () => new Map([...agentsBySong].map(([x, ids]) => [x, songVersions(x, ids)])),
+    [agentsBySong],
+  );
+  // Versions with songs, newest first.
+  const versionCounts = useMemo(() => {
+    const n = new Map();
+    for (const vs of versionsBySong.values()) for (const v of vs) n.set(v, (n.get(v) || 0) + 1);
+    return [...n].sort((a, b) => b[0].localeCompare(a[0], undefined, { numeric: true }));
+  }, [versionsBySong]);
+  // Factions with songs, most songs first.
+  const factionCounts = useMemo(() => {
+    const n = new Map();
+    for (const fs of factionsBySong.values()) for (const f of fs) n.set(f, (n.get(f) || 0) + 1);
+    return [...n].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, [factionsBySong]);
   // Characters with songs, most songs first.
   const agentCounts = useMemo(() => {
     const n = new Map();
@@ -648,11 +696,13 @@ export default function MusicRoom() {
     const words = find.toLowerCase().split(/\s+/).filter(Boolean);
     if (words.length) list = list.filter((x) => words.every((w) => `${x.name} ${x.album}`.toLowerCase().includes(w)));
     if (agent) list = list.filter((x) => agentsBySong.get(x)?.includes(agent));
+    if (faction) list = list.filter((x) => factionsBySong.get(x)?.includes(faction));
+    if (version) list = list.filter((x) => versionsBySong.get(x)?.includes(version));
     if (room.kind === 'vocal') list = list.filter((x) => !x.game && !isInstrumental(x));
     if (room.kind === 'inst') list = list.filter((x) => !x.game && isInstrumental(x));
     if (room.kind === 'game') list = list.filter((x) => x.game);
     return sortSongs(list, room.order, room.source !== 'mine');
-  }, [songs, room.source, room.kind, room.mine, room.order, room.hide, room.hidden, room.showHidden, find, agent, agentsBySong]);
+  }, [songs, room.source, room.kind, room.mine, room.order, room.hide, room.hidden, room.showHidden, find, agent, agentsBySong, faction, factionsBySong, version, versionsBySong]);
   // The albums the picker offers: those with songs under those choices.
   const albumNames = useMemo(() => [...new Set(filtered.map((x) => x.album).filter(Boolean))], [filtered]);
   // Picked albums only (none picked, or none of them here: every album), played one after another.
@@ -986,6 +1036,12 @@ export default function MusicRoom() {
           agent={agent}
           setAgent={setAgent}
           agentCounts={agentCounts}
+          faction={faction}
+          setFaction={setFaction}
+          factionCounts={factionCounts}
+          version={version}
+          setVersion={setVersion}
+          versionCounts={versionCounts}
           hiddenCount={songs.filter((x) => isHiddenSong(room, x)).length}
           albumNames={albumNames}
         />
