@@ -222,3 +222,7 @@ Afterglow (Reimagined) | https://youtu.be/CfqbPQyDAQc
 # Fan uploads of the game's music: a YouTube playlist, listed song by song when the site is built.
 [NTE OST (fan uploads) | fan upload | game OST]
 NTE OST playlist | https://youtube.com/playlist?list=PLjt1riIlLJTEQJiTrMVPbE7-ziqR_LFyW
+
+# Fan lofi remixes: Chika's "[NTE] Lofi Remix" playlist, listed song by song when the site is built.
+[NTE Lofi Remix (Chika) | fan upload]
+NTE Lofi Remix playlist | https://youtube.com/playlist?list=PLjM7Otxtp2B0V286qPJQYEpOPig9Ohvx7
