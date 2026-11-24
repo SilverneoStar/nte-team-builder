@@ -960,7 +960,8 @@ export const GLOSSARY = [
   {
     term: 'Appraiser',
     category: 'City & currency',
-    text: 'What the game calls you, the player.',
+    text: 'What the game calls you, the player, as the protagonist Esper Zero.',
+    who: ['zero'],
   },
   {
     term: 'Districts',
