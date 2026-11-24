@@ -121,7 +121,7 @@ export const GLOSSARY_ICONS = {
 };
 
 export const TOPIC_ICONS = {
-  "Characters": "icons/skills/zero/A1.webp",
+  "Characters": "icons/ui/character.webp",
   "City & currency": "icons/materials/fons.webp",
   "Combat": "icons/achievements/fight.webp",
   "Combat tech": "icons/tags/break-boost.webp",
