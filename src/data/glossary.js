@@ -613,6 +613,7 @@ export const GLOSSARY = [
   },
   {
     term: 'Main and sub stats',
+    also: 'Main Attributes, Sub Attributes',
     category: 'Gear',
     text: 'A Cartridge has 1 main stat and 4 sub stats; a module has 2 main stats (flat ATK and HP) and 4 sub stats. Sub stats switch on at levels 5, 10, 15 and 20.',
   },
@@ -762,7 +763,8 @@ export const GLOSSARY = [
   {
     term: 'Hethereau Hobbies',
     category: 'City & currency',
-    text: 'City minigames such as Mahjong, racing, deliveries, Fight Club and fishing that spend City Stamina for Fons.',
+    text: 'The city minigames menu: City Delivery, Races, Owner’s Selection (the cafe), Swift Cab, Pink Paws Heist, Sea Angler (fishing) and more, such as Mahjong and Fight Club. They spend City Stamina for Fons, and the menu tracks the Tycoon Incentive Fund, a two-week Fons goal.',
+    related: ['Races', 'The Cafe by Origen', 'Pink Paws Heist', 'Tycoon Level'],
   },
   {
     term: 'The Cafe by Origen',
@@ -927,15 +929,15 @@ export const GLOSSARY = [
   },
   {
     term: 'Property',
-    also: 'Stillmeadow House, Figurine Cabinet',
+    also: 'Stillmeadow House, Figurine Cabinet, Comfort, Collection',
     category: 'City & currency',
-    text: 'Homes you buy with Fons and decorate, like Stillmeadow House (1.3), where crops you grow sell for Fons. Figurines can stand anywhere on it.',
+    text: 'Homes you buy with Fons and decorate, like Stillmeadow House (1.3), where crops you grow sell for Fons. Furniture adds Collection for each piece you own and Comfort when it’s displayed at home. Figurines can stand anywhere on it.',
   },
   {
     term: 'Vehicles',
     also: 'Mystery Boxes, liveries',
     category: 'City & currency',
-    text: 'Cars and bikes for getting around Hethereau, bought with Fons or won from Mystery Box events, with liveries and tire effects to customise them. 1.5 added auto-drive.',
+    text: 'Cars and bikes for getting around Hethereau, bought with Fons or won from Mystery Box events, with liveries and tire effects to customise them. Each one is a Key Fob in your Important Items: use it on the road to summon it. 1.5 added auto-drive.',
   },
   {
     term: 'Volley Star',
@@ -983,8 +985,8 @@ export const GLOSSARY = [
     term: 'Kool Express Logistics Hub',
     also: 'Logistics Hub',
     category: 'Places',
-    text: 'Kool Express’s depot for cargo sorting, fleet dispatch and planning. Its goal: to rule Hethereau’s delivery business.',
-    related: ['Sterry Express'],
+    text: 'Kool Express’s depot for cargo sorting, fleet dispatch and planning. Its goal: to rule Hethereau’s delivery business. The City Delivery hobby drives its vans.',
+    related: ['Sterry Express', 'Hethereau Hobbies'],
   },
   {
     term: 'Sterry Express',
@@ -996,7 +998,8 @@ export const GLOSSARY = [
     term: 'Swift Cab',
     also: 'Taxi Service',
     category: 'Places',
-    text: 'Hethereau’s largest taxi company, running the Swift Cab app for getting around the city.',
+    text: 'Hethereau’s largest taxi company, running the Swift Cab app. Driving for it is one of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies'],
   },
   {
     term: 'Leon Estate Group',
@@ -1026,7 +1029,20 @@ export const GLOSSARY = [
   {
     term: 'The Witch’s House',
     category: 'Places',
-    text: 'A map spot you can teleport to. “If you ever feel lost… the witch can show you the way.”',
-    related: ['St. Arbor'],
+    text: 'Where you bring Oracle Stones to claim rewards (and have their misfortune lifted). “If you ever feel lost… the witch can show you the way.”',
+    related: ['Oracle Stone', 'St. Arbor'],
+  },
+  {
+    term: 'Oracle Stone',
+    category: 'City & currency',
+    text: 'A Key Item: gems dropped by blind, lost ravens, said to bring misfortune. Collect enough and take them to The Witch’s House to claim rewards.',
+    related: ['The Witch’s House'],
+  },
+  {
+    term: 'Food',
+    also: 'Ingredients',
+    category: 'City & currency',
+    text: 'The Food tab of your inventory: dishes and snacks that heal the current character (Puka Chocoa Classic heals 40% Max HP), many also usable as gifts. Ingredients such as Fresh Beef come from shops like Uncle Prime’s Butcher Shop and are made into dishes to sell in your own shop.',
+    related: ['Affection', 'The Cafe by Origen'],
   },
 ];
