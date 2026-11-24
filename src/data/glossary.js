@@ -481,6 +481,25 @@ export const GLOSSARY = [
     related: ['Character Pixels', 'Ascension'],
   },
   {
+    term: 'Sea Angler',
+    also: 'Fishing',
+    category: 'Modes',
+    text: 'The fishing hobby, one of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies'],
+  },
+  {
+    term: 'City Delivery',
+    category: 'Modes',
+    text: 'The delivery hobby: driving Kool Express vans around the city. One of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies', 'Kool Express Logistics Hub'],
+  },
+  {
+    term: 'Owner’s Selection',
+    category: 'Modes',
+    text: 'The cafe hobby, run at The Cafe by Origen. One of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies', 'The Cafe by Origen'],
+  },
+  {
     term: 'Races',
     also: 'Challenge',
     category: 'Modes',
@@ -843,7 +862,21 @@ export const GLOSSARY = [
   {
     term: 'Mall',
     category: 'City & currency',
-    text: 'The in-game shop: paid packs, plus items for Beetle Coins and other currencies, including Dreamless Seeds.',
+    text: 'The in-game shop: paid packs, plus items for Beetle Coins and other currencies, including Dreamless Seeds. Its tabs are Gift Center, Arc Shop, Fashion Shop, Fair Exchange, Hunter Exchange, Riftcrystal Extract and Mode Shop.',
+    related: ['Arc Shop', 'Hunter Exchange', 'Scarborough Fair'],
+  },
+  {
+    term: 'Inventory',
+    category: 'City & currency',
+    text: 'Your bag, in tabs: Item, Console (modules), Arc, Material (cooking ingredients), Food, Important Items (Key Items and vehicle Key Fobs) and Furniture.',
+    related: ['Key Item', 'Food', 'Console'],
+  },
+  {
+    term: 'Key Item',
+    also: 'Important Items',
+    category: 'City & currency',
+    text: 'Items kept in the Important Items tab, such as Oracle Stones and the Key Fobs that summon your vehicles.',
+    related: ['Oracle Stone', 'Vehicles'],
   },
   {
     term: 'Heterogeneous Unit',
