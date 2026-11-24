@@ -3,7 +3,7 @@
 // AllThings.how guides.
 // Each entry: { term, also?, category, text, related?, who? } (`who`: character ids)
 export const GLOSSARY_CATEGORIES = [
-  'Esper Cycle', 'Reactions', 'Characters', 'Skills & kit', 'Esper mechanics', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Combat tech', 'Modes', 'City & currency',
+  'Esper Cycle', 'Reactions', 'Characters', 'Skills & kit', 'Esper mechanics', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Combat tech', 'Modes', 'City & currency', 'Places',
 ];
 
 export const GLOSSARY = [
@@ -16,9 +16,15 @@ export const GLOSSARY = [
   },
   {
     term: 'Element',
-    also: 'Attribute',
+    also: 'Attribute, Esper Types',
     category: 'Esper Cycle',
     text: 'Every character deals one of six elements. A character’s element decides which reactions they can take part in.',
+  },
+  {
+    term: 'Esper Types',
+    category: 'Esper Cycle',
+    text: 'The game’s own name for the elements: a classification of Espers’ and Anomalies’ abilities by where they come from. Cosmos comes from maintaining order, Chaos from disrupting it, Anima from nature and life (no medium needed), Lakshana from the physical realm (the body is the medium), Incantation from language (and can summon beings from other dimensions), and Psyche from the mind.',
+    related: ['Element'],
   },
   {
     term: 'Esper Meter',
@@ -54,6 +60,12 @@ export const GLOSSARY = [
     term: 'Esper',
     category: 'Characters',
     text: 'A person with supernatural abilities. Playable characters are Espers, each with a named Esper ability.',
+  },
+  {
+    term: 'Faction',
+    also: 'Factions',
+    category: 'Characters',
+    text: 'The group an Esper belongs to, such as the Bureau of Anomaly Control, Eibon Antique Shop, Sterry Express, StarSign, the Dvořák Family, Yggash Court and the Tamamochi Street Resident Association. The Index has a Factions tab.',
   },
   {
     term: 'Rank',
@@ -470,15 +482,47 @@ export const GLOSSARY = [
     term: 'Beyond the Rails',
     category: 'Modes',
     also: 'Anomaly Express',
-    text: 'Train-themed endgame gauntlet of Stops. From the 6th Stop on, each Stop has Inbound and Outbound halves needing two teams with no character in common. Enemy weaknesses are shown in advance; faster clears earn up to 3 Seals.',
+    text: 'An Anomaly Zone aboard Hethereau’s Anomaly Metro, the “Ghost Train”: a train-themed endgame gauntlet of Stops. Each circle (such as Howling Circle or Frozen Circle) has 12 stages and 36 Seals and runs for a limited time. From the 6th Stop on, each Stop has Inbound and Outbound halves needing two teams with no character in common. Enemy weaknesses are shown in advance; faster clears earn up to 3 Seals.',
     related: ['Special Route'],
   },
   {
     term: 'Anomaly Hunt',
     category: 'Modes',
     also: 'Map boss',
-    text: 'Open-world bosses you can re-fight by spending Character Pixels. The main source of each character’s boss material for ascension, such as Tear of the Sea from Sea Prisoner.',
+    text: 'Open-world bosses you can re-fight, such as Sea Prisoner, Nestbound Bird, Black Tome and Serenetti. Claiming the rewards costs 60 Character Pixels. The main source of each character’s boss material for ascension, such as Tear of the Sea from Sea Prisoner, and some drop an Arc of their own.',
     related: ['Character Pixels', 'Ascension'],
+  },
+  {
+    term: 'Sea Angler',
+    also: 'Fishing',
+    category: 'Modes',
+    text: 'The fishing hobby, one of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies'],
+  },
+  {
+    term: 'City Delivery',
+    category: 'Modes',
+    text: 'The delivery hobby: driving Kool Express vans around the city. One of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies', 'Kool Express Logistics Hub'],
+  },
+  {
+    term: 'Owner’s Selection',
+    category: 'Modes',
+    text: 'The cafe hobby, run at The Cafe by Origen. One of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies', 'The Cafe by Origen'],
+  },
+  {
+    term: 'Races',
+    also: 'Challenge',
+    category: 'Modes',
+    text: 'Street races run by a team of retired professional racers formed by Misha. Open daily from 19:00 to 7:00; each race series has Stars to earn (such as 18 for Uncrowned King) that unlock Star Rewards.',
+    related: ['Hethereau Hobbies'],
+  },
+  {
+    term: 'Terminal Depths',
+    category: 'Modes',
+    text: 'A second Anomaly Zone on the Anomaly Metro line, already on the map but not open yet (“Event not available yet”).',
+    related: ['Beyond the Rails'],
   },
   {
     term: 'Hethereau',
@@ -600,6 +644,7 @@ export const GLOSSARY = [
   },
   {
     term: 'Main and sub stats',
+    also: 'Main Attributes, Sub Attributes',
     category: 'Gear',
     text: 'A Cartridge has 1 main stat and 4 sub stats; a module has 2 main stats (flat ATK and HP) and 4 sub stats. Sub stats switch on at levels 5, 10, 15 and 20.',
   },
@@ -661,7 +706,7 @@ export const GLOSSARY = [
     term: 'Anomaly Pilgrimage',
     also: 'Weekly bosses',
     category: 'Modes',
-    text: 'Harder bosses such as Morphix (and Amber Broodmother from 1.5), claimable three times a week with Character Pixels, for advanced skill upgrade materials.',
+    text: 'Weekly bosses: Morphix (in Pawn Moonlight, its own space), Debt Collector and The Never-ending Arachne, plus Amber Broodmother from 1.5. Claiming the rewards costs 60 Character Pixels, up to 3 times a week, for advanced skill upgrade materials.',
   },
   {
     term: 'Anomaly Zones',
@@ -669,6 +714,12 @@ export const GLOSSARY = [
     category: 'Modes',
     text: 'Stages that cost Character Pixels for upgrade materials: Houdinii’s Magic Stage (character EXP, Beetle Coin, Arc EXP), Houdinii’s Schemes (skill materials) and Bubble Can Factory (Arc ascension).',
     related: ['Rabbit Hole'],
+  },
+  {
+    term: 'Rewind',
+    category: 'Gear',
+    text: 'Where Carrota from the Rabbit Hole is spent to roll new Console modules.',
+    related: ['Rabbit Hole', 'Console'],
   },
   {
     term: 'Rabbit Hole',
@@ -743,7 +794,8 @@ export const GLOSSARY = [
   {
     term: 'Hethereau Hobbies',
     category: 'City & currency',
-    text: 'City minigames such as Mahjong, racing, deliveries, Fight Club and fishing that spend City Stamina for Fons.',
+    text: 'The city minigames menu: City Delivery, Races, Owner’s Selection (the cafe), Swift Cab, Pink Paws Heist, Sea Angler (fishing) and more, such as Mahjong and Fight Club. They spend City Stamina for Fons, and the menu tracks the Tycoon Incentive Fund, a two-week Fons goal.',
+    related: ['Races', 'The Cafe by Origen', 'Pink Paws Heist', 'Tycoon Level'],
   },
   {
     term: 'The Cafe by Origen',
@@ -775,6 +827,18 @@ export const GLOSSARY = [
     category: 'City & currency',
     text: 'The strange phenomena Hunters deal with in Hethereau, and the creatures behind them. A Bio Anomaly is a person hosting an Oddity (like the Arbiter); an Object Anomaly is a thing come alive (like Teehee Bear). The Bureau of Anomaly Control looks after them, and most bosses are Anomalies.',
     related: ['Anomaly Hunt', 'Anomaly Commissions'],
+  },
+  {
+    term: 'Wertheimer Index',
+    category: 'City & currency',
+    text: 'The reading used to detect Anomalies and measure their strength. Code Zero and the Esper Zero don’t register on it at all.',
+    related: ['Anomaly', 'Code Zero'],
+  },
+  {
+    term: 'Code Zero',
+    category: 'City & currency',
+    text: 'A mysterious, powerful Anomaly first found at the Hypervortex disaster site in New Helios. It seems to appear alongside other powerful Anomalies and vanish when those acting as “bridges” are neutralized, and it’s tied to the Esper Zero.',
+    related: ['Anomaly', 'Wertheimer Index'],
   },
   {
     term: 'Hunter Level',
@@ -815,14 +879,42 @@ export const GLOSSARY = [
   },
   {
     term: 'Warp Exchange',
+    category: 'City & currency',
+    text: 'A shop paid in Warp Pieces, selling items such as A Handwritten Letter (60 Warp Pieces).',
+    related: ['Warp Piece'],
+  },
+  {
+    term: 'Warp Piece',
     also: 'Warp Pieces',
     category: 'City & currency',
-    text: 'A shop paid in Warp Pieces.',
+    text: 'A gold chess-piece currency, filed in the game with the dice used on the boards. Spent at the Warp Exchange.',
+    related: ['Warp Exchange', 'Lost Piece', 'Limited board'],
+  },
+  {
+    term: 'Lost Piece',
+    also: 'Lost Pieces',
+    category: 'City & currency',
+    text: 'A silver chess-piece currency, the Warp Piece’s counterpart, also filed with the board dice.',
+    related: ['Warp Piece', 'Limited board'],
   },
   {
     term: 'Mall',
     category: 'City & currency',
-    text: 'The in-game shop: paid packs, plus items for Beetle Coins and other currencies, including Dreamless Seeds.',
+    text: 'The in-game shop: paid packs, plus items for Beetle Coins and other currencies, including Dreamless Seeds. Its tabs are Gift Center, Arc Shop, Fashion Shop, Fair Exchange, Hunter Exchange, Riftcrystal Extract and Mode Shop.',
+    related: ['Arc Shop', 'Hunter Exchange', 'Scarborough Fair'],
+  },
+  {
+    term: 'Inventory',
+    category: 'City & currency',
+    text: 'Your bag, in tabs: Item, Console (modules), Arc, Material (cooking ingredients), Food, Important Items (Key Items and vehicle Key Fobs) and Furniture.',
+    related: ['Key Item', 'Food', 'Console'],
+  },
+  {
+    term: 'Key Item',
+    also: 'Important Items',
+    category: 'City & currency',
+    text: 'Items kept in the Important Items tab, such as Oracle Stones and the Key Fobs that summon your vehicles.',
+    related: ['Oracle Stone', 'Vehicles'],
   },
   {
     term: 'Heterogeneous Unit',
@@ -868,7 +960,8 @@ export const GLOSSARY = [
   {
     term: 'Appraiser',
     category: 'City & currency',
-    text: 'What the game calls you, the player.',
+    text: 'What the game calls you, the player, as the protagonist Esper Zero.',
+    who: ['zero'],
   },
   {
     term: 'Districts',
@@ -908,15 +1001,15 @@ export const GLOSSARY = [
   },
   {
     term: 'Property',
-    also: 'Stillmeadow House, Figurine Cabinet',
+    also: 'Stillmeadow House, Figurine Cabinet, Comfort, Collection',
     category: 'City & currency',
-    text: 'Homes you buy with Fons and decorate, like Stillmeadow House (1.3), where crops you grow sell for Fons. Figurines can stand anywhere on it.',
+    text: 'Homes you buy with Fons and decorate, like Stillmeadow House (1.3), where crops you grow sell for Fons. Furniture adds Collection for each piece you own and Comfort when it’s displayed at home. Figurines can stand anywhere on it.',
   },
   {
     term: 'Vehicles',
     also: 'Mystery Boxes, liveries',
     category: 'City & currency',
-    text: 'Cars and bikes for getting around Hethereau, bought with Fons or won from Mystery Box events, with liveries and tire effects to customise them. 1.5 added auto-drive.',
+    text: 'Cars and bikes for getting around Hethereau, bought with Fons or won from Mystery Box events, with liveries and tire effects to customise them. Each one is a Key Fob in your Important Items: use it on the road to summon it. 1.5 added auto-drive.',
   },
   {
     term: 'Volley Star',
@@ -947,6 +1040,12 @@ export const GLOSSARY = [
     text: 'The in-game social app: posts, sharing and Bagel furniture and decor.',
   },
   {
+    term: 'Limited-Time events',
+    category: 'Modes',
+    text: 'The Limited-Time list in the Event menu. At the time of writing: Circle Gift, Market Opening Rehearsal, Fortune’s Bounty, Open Roads Ahead, City Logistics, Full Tank Ahead, Gold Clash, Hunter’s Crucible: Breakthrough, Fishing Frenzy and Beyond the Rails.',
+    related: ['Recurring events', 'Hunter’s Crucible', 'Beyond the Rails'],
+  },
+  {
     term: 'Recurring events',
     also: 'Circle Gifts, Pixel Surge, Stamina Recharge, Gold Clash, Fons Rush',
     category: 'Modes',
@@ -958,5 +1057,70 @@ export const GLOSSARY = [
     category: 'City & currency',
     text: 'Since 1.5, City Stamina over the cap goes to the City Stamina Reserve and extra Character Pixels to the Photo Paper Supply, instead of being lost.',
     related: ['City Stamina', 'Character Pixels'],
+  },
+  // Places on the map (names and descriptions from the game's map)
+  {
+    term: 'Kool Express Logistics Hub',
+    also: 'Logistics Hub',
+    category: 'Places',
+    text: 'Kool Express’s depot for cargo sorting, fleet dispatch and planning. Its goal: to rule Hethereau’s delivery business. The City Delivery hobby drives its vans.',
+    related: ['Sterry Express', 'Hethereau Hobbies'],
+  },
+  {
+    term: 'Sterry Express',
+    also: 'Delivery Shop',
+    category: 'Places',
+    text: 'A delivery shop that promises your parcel arrives on time, anytime, anywhere, anomalies or not, as long as the money is right.',
+  },
+  {
+    term: 'Swift Cab',
+    also: 'Taxi Service',
+    category: 'Places',
+    text: 'Hethereau’s largest taxi company, running the Swift Cab app. Driving for it is one of the Hethereau Hobbies.',
+    related: ['Hethereau Hobbies'],
+  },
+  {
+    term: 'Leon Estate Group',
+    also: 'Property Agency',
+    category: 'Places',
+    text: 'The property agency (on Whitetail Ridge Road) for buying homes, from penthouses to manors.',
+    related: ['Property'],
+  },
+  {
+    term: 'Moby-Dick Bookstore',
+    also: 'Bookstore',
+    category: 'Places',
+    text: 'Hethereau’s biggest bookstore chain, with everything from monthly manga to non-fiction. One branch is on Ginkgo Street.',
+  },
+  {
+    term: 'Midnight Catzebo',
+    also: 'Newsstand',
+    category: 'Places',
+    text: 'A newsstand run by cat clerks, selling magazines and books with vouchers thrown in.',
+  },
+  {
+    term: 'DSD',
+    also: 'Pop Toys Shop',
+    category: 'Places',
+    text: 'A pop toy store with collabs with shows such as “Gen Z” and “Fleeting: A Gala under the Moonlight”.',
+  },
+  {
+    term: 'The Witch’s House',
+    category: 'Places',
+    text: 'Where you bring Oracle Stones to claim rewards (and have their misfortune lifted). “If you ever feel lost… the witch can show you the way.”',
+    related: ['Oracle Stone', 'St. Arbor'],
+  },
+  {
+    term: 'Oracle Stone',
+    category: 'City & currency',
+    text: 'A Key Item: gems dropped by blind, lost ravens, said to bring misfortune. Collect enough and take them to The Witch’s House to claim rewards.',
+    related: ['The Witch’s House'],
+  },
+  {
+    term: 'Food',
+    also: 'Ingredients',
+    category: 'City & currency',
+    text: 'The Food tab of your inventory: dishes and snacks that heal the current character (Puka Chocoa Classic heals 40% Max HP), many also usable as gifts. Ingredients such as Fresh Beef come from shops like Uncle Prime’s Butcher Shop and are made into dishes to sell in your own shop.',
+    related: ['Affection', 'The Cafe by Origen'],
   },
 ];
