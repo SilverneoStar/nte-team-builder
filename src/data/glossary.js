@@ -16,9 +16,15 @@ export const GLOSSARY = [
   },
   {
     term: 'Element',
-    also: 'Attribute',
+    also: 'Attribute, Esper Types',
     category: 'Esper Cycle',
     text: 'Every character deals one of six elements. A character’s element decides which reactions they can take part in.',
+  },
+  {
+    term: 'Esper Types',
+    category: 'Esper Cycle',
+    text: 'The game’s own name for the elements: a classification of Espers’ and Anomalies’ abilities by where they come from. Cosmos comes from maintaining order, Chaos from disrupting it, Anima from nature and life (no medium needed), Lakshana from the physical realm (the body is the medium), Incantation from language (and can summon beings from other dimensions), and Psyche from the mind.',
+    related: ['Element'],
   },
   {
     term: 'Esper Meter',
@@ -54,6 +60,12 @@ export const GLOSSARY = [
     term: 'Esper',
     category: 'Characters',
     text: 'A person with supernatural abilities. Playable characters are Espers, each with a named Esper ability.',
+  },
+  {
+    term: 'Faction',
+    also: 'Factions',
+    category: 'Characters',
+    text: 'The group an Esper belongs to, such as the Bureau of Anomaly Control, Eibon Antique Shop, Sterry Express, StarSign, the Dvořák Family, Yggash Court and the Tamamochi Street Resident Association. The Index has a Factions tab.',
   },
   {
     term: 'Rank',
@@ -817,6 +829,18 @@ export const GLOSSARY = [
     related: ['Anomaly Hunt', 'Anomaly Commissions'],
   },
   {
+    term: 'Wertheimer Index',
+    category: 'City & currency',
+    text: 'The reading used to detect Anomalies and measure their strength. Code Zero and the Esper Zero don’t register on it at all.',
+    related: ['Anomaly', 'Code Zero'],
+  },
+  {
+    term: 'Code Zero',
+    category: 'City & currency',
+    text: 'A mysterious, powerful Anomaly first found at the Hypervortex disaster site in New Helios. It seems to appear alongside other powerful Anomalies and vanish when those acting as “bridges” are neutralized, and it’s tied to the Esper Zero.',
+    related: ['Anomaly', 'Wertheimer Index'],
+  },
+  {
     term: 'Hunter Level',
     category: 'City & currency',
     text: 'Your account level as a Hunter. It goes up as you play and unlocks more of the game; achievements ask you to reach set levels.',
@@ -1013,6 +1037,12 @@ export const GLOSSARY = [
     term: 'Bagel',
     category: 'City & currency',
     text: 'The in-game social app: posts, sharing and Bagel furniture and decor.',
+  },
+  {
+    term: 'Limited-Time events',
+    category: 'Modes',
+    text: 'The Limited-Time list in the Event menu. At the time of writing: Circle Gift, Market Opening Rehearsal, Fortune’s Bounty, Open Roads Ahead, City Logistics, Full Tank Ahead, Gold Clash, Hunter’s Crucible: Breakthrough, Fishing Frenzy and Beyond the Rails.',
+    related: ['Recurring events', 'Hunter’s Crucible', 'Beyond the Rails'],
   },
   {
     term: 'Recurring events',
