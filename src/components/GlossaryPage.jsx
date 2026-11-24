@@ -9,6 +9,23 @@ import Portrait from './Portrait.jsx';
 import { ITEMS, ITEM_GROUPS } from '../data/items.js';
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { ARC_BY_ID } from '../data/arcs.js';
+import { GLOSSARY_ICONS, LIGHT_ICONS, TOPIC_ICONS } from '../data/glossaryIcons.js';
+
+const ICON_BASE = import.meta.env.BASE_URL;
+// A term's icon (from the game where it has one), on a small dark tile.
+function TermIcon({ src }) {
+  return (
+    <img
+      className={`gloss__icon${LIGHT_ICONS.has(src) ? ' is-light' : ''}`}
+      src={`${ICON_BASE}${src}`}
+      width={28}
+      height={28}
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
 
 // Reaction entries come straight from the game data so they never drift apart.
 const REACTION_ENTRIES = [
@@ -158,6 +175,7 @@ export default function GlossaryPage() {
         <section key={g.cat} className="gloss-group" aria-labelledby={`g-${slug(g.cat)}`}>
           <h3 id={`g-${slug(g.cat)}`} className="gloss-group__title">
             <button type="button" className="gloss-group__toggle" aria-expanded={isOpen(g.cat)} onClick={() => toggle(g.cat)}>
+              {TOPIC_ICONS[g.cat] && <TermIcon src={TOPIC_ICONS[g.cat]} />}
               {g.cat}
               <span className="chip__n">{g.entries.length}</span>
             </button>
@@ -174,6 +192,7 @@ export default function GlossaryPage() {
                       ))}
                     </span>
                   )}
+                  {!e.elements && GLOSSARY_ICONS[e.term] && <TermIcon src={GLOSSARY_ICONS[e.term]} />}
                   <span className="gloss__term">{e.term}</span>
                   {e.also && <span className="gloss__also">{e.also}</span>}
                   {e.who?.map((id) =>

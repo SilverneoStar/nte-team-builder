@@ -11457,3 +11457,15 @@ th[aria-sort='descending'] .th-btn {
   font: inherit;
   max-width: 60vw;
 }
+
+/* Glossary term and topic icons (game icons on a small dark tile). */
+.gloss__icon {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: 3px;
+  border-radius: 7px;
+  background: #2b1d15;
+  object-fit: contain;
+}
+.gloss__icon.is-light { background: #fffaf0; border: 1px solid var(--line); }
