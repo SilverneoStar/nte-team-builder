@@ -855,9 +855,23 @@ export const GLOSSARY = [
   },
   {
     term: 'Warp Exchange',
+    category: 'City & currency',
+    text: 'A shop paid in Warp Pieces, selling items such as A Handwritten Letter (60 Warp Pieces).',
+    related: ['Warp Piece'],
+  },
+  {
+    term: 'Warp Piece',
     also: 'Warp Pieces',
     category: 'City & currency',
-    text: 'A shop paid in Warp Pieces.',
+    text: 'A gold chess-piece currency, filed in the game with the dice used on the boards. Spent at the Warp Exchange.',
+    related: ['Warp Exchange', 'Lost Piece', 'Limited board'],
+  },
+  {
+    term: 'Lost Piece',
+    also: 'Lost Pieces',
+    category: 'City & currency',
+    text: 'A silver chess-piece currency, the Warp Piece’s counterpart, also filed with the board dice.',
+    related: ['Warp Piece', 'Limited board'],
   },
   {
     term: 'Mall',
