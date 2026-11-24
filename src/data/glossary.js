@@ -671,6 +671,12 @@ export const GLOSSARY = [
     related: ['Rabbit Hole'],
   },
   {
+    term: 'Rewind',
+    category: 'Gear',
+    text: 'Where Carrota from the Rabbit Hole is spent to roll new Console modules.',
+    related: ['Rabbit Hole', 'Console'],
+  },
+  {
     term: 'Rabbit Hole',
     category: 'Modes',
     text: 'The Anomaly Zone for Console gear: it drops Cartridges and Carrota, which is spent on Rewind to roll modules.',
