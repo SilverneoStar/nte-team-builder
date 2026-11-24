@@ -3,7 +3,7 @@
 // AllThings.how guides.
 // Each entry: { term, also?, category, text, related?, who? } (`who`: character ids)
 export const GLOSSARY_CATEGORIES = [
-  'Esper Cycle', 'Reactions', 'Characters', 'Skills & kit', 'Esper mechanics', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Combat tech', 'Modes', 'City & currency',
+  'Esper Cycle', 'Reactions', 'Characters', 'Skills & kit', 'Esper mechanics', 'Roles & tags', 'Gear', 'Stats', 'Combat', 'Combat tech', 'Modes', 'City & currency', 'Places',
 ];
 
 export const GLOSSARY = [
@@ -470,15 +470,28 @@ export const GLOSSARY = [
     term: 'Beyond the Rails',
     category: 'Modes',
     also: 'Anomaly Express',
-    text: 'Train-themed endgame gauntlet of Stops. From the 6th Stop on, each Stop has Inbound and Outbound halves needing two teams with no character in common. Enemy weaknesses are shown in advance; faster clears earn up to 3 Seals.',
+    text: 'An Anomaly Zone aboard Hethereau’s Anomaly Metro, the “Ghost Train”: a train-themed endgame gauntlet of Stops. Each circle (such as Howling Circle or Frozen Circle) has 12 stages and 36 Seals and runs for a limited time. From the 6th Stop on, each Stop has Inbound and Outbound halves needing two teams with no character in common. Enemy weaknesses are shown in advance; faster clears earn up to 3 Seals.',
     related: ['Special Route'],
   },
   {
     term: 'Anomaly Hunt',
     category: 'Modes',
     also: 'Map boss',
-    text: 'Open-world bosses you can re-fight by spending Character Pixels. The main source of each character’s boss material for ascension, such as Tear of the Sea from Sea Prisoner.',
+    text: 'Open-world bosses you can re-fight, such as Sea Prisoner, Nestbound Bird, Black Tome and Serenetti. Claiming the rewards costs 60 Character Pixels. The main source of each character’s boss material for ascension, such as Tear of the Sea from Sea Prisoner, and some drop an Arc of their own.',
     related: ['Character Pixels', 'Ascension'],
+  },
+  {
+    term: 'Races',
+    also: 'Challenge',
+    category: 'Modes',
+    text: 'Street races run by a team of retired professional racers formed by Misha. Open daily from 19:00 to 7:00; each race series has Stars to earn (such as 18 for Uncrowned King) that unlock Star Rewards.',
+    related: ['Hethereau Hobbies'],
+  },
+  {
+    term: 'Terminal Depths',
+    category: 'Modes',
+    text: 'A second Anomaly Zone on the Anomaly Metro line, already on the map but not open yet (“Event not available yet”).',
+    related: ['Beyond the Rails'],
   },
   {
     term: 'Hethereau',
@@ -661,7 +674,7 @@ export const GLOSSARY = [
     term: 'Anomaly Pilgrimage',
     also: 'Weekly bosses',
     category: 'Modes',
-    text: 'Harder bosses such as Morphix (and Amber Broodmother from 1.5), claimable three times a week with Character Pixels, for advanced skill upgrade materials.',
+    text: 'Weekly bosses: Morphix (in Pawn Moonlight, its own space), Debt Collector and The Never-ending Arachne, plus Amber Broodmother from 1.5. Claiming the rewards costs 60 Character Pixels, up to 3 times a week, for advanced skill upgrade materials.',
   },
   {
     term: 'Anomaly Zones',
@@ -964,5 +977,56 @@ export const GLOSSARY = [
     category: 'City & currency',
     text: 'Since 1.5, City Stamina over the cap goes to the City Stamina Reserve and extra Character Pixels to the Photo Paper Supply, instead of being lost.',
     related: ['City Stamina', 'Character Pixels'],
+  },
+  // Places on the map (names and descriptions from the game's map)
+  {
+    term: 'Kool Express Logistics Hub',
+    also: 'Logistics Hub',
+    category: 'Places',
+    text: 'Kool Express’s depot for cargo sorting, fleet dispatch and planning. Its goal: to rule Hethereau’s delivery business.',
+    related: ['Sterry Express'],
+  },
+  {
+    term: 'Sterry Express',
+    also: 'Delivery Shop',
+    category: 'Places',
+    text: 'A delivery shop that promises your parcel arrives on time, anytime, anywhere, anomalies or not, as long as the money is right.',
+  },
+  {
+    term: 'Swift Cab',
+    also: 'Taxi Service',
+    category: 'Places',
+    text: 'Hethereau’s largest taxi company, running the Swift Cab app for getting around the city.',
+  },
+  {
+    term: 'Leon Estate Group',
+    also: 'Property Agency',
+    category: 'Places',
+    text: 'The property agency (on Whitetail Ridge Road) for buying homes, from penthouses to manors.',
+    related: ['Property'],
+  },
+  {
+    term: 'Moby-Dick Bookstore',
+    also: 'Bookstore',
+    category: 'Places',
+    text: 'Hethereau’s biggest bookstore chain, with everything from monthly manga to non-fiction. One branch is on Ginkgo Street.',
+  },
+  {
+    term: 'Midnight Catzebo',
+    also: 'Newsstand',
+    category: 'Places',
+    text: 'A newsstand run by cat clerks, selling magazines and books with vouchers thrown in.',
+  },
+  {
+    term: 'DSD',
+    also: 'Pop Toys Shop',
+    category: 'Places',
+    text: 'A pop toy store with collabs with shows such as “Gen Z” and “Fleeting: A Gala under the Moonlight”.',
+  },
+  {
+    term: 'The Witch’s House',
+    category: 'Places',
+    text: 'A map spot you can teleport to. “If you ever feel lost… the witch can show you the way.”',
+    related: ['St. Arbor'],
   },
 ];
