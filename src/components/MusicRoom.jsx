@@ -179,20 +179,21 @@ const BAR_STYLES = [
   { id: 'starlight-knight', label: 'Starlight' },
 ];
 
-// Starlight's shooting stars: each new flight gets a random size, kept within
-// 0.7x to 1.4x (and a touch bigger when the music is loud), and its own start
-// and end points along a wide arc.
+// Starlight's shooting stars: each new fall gets its own random start along the
+// strip, slant, size (0.85x to 1.15x, a touch bigger when the music is loud)
+// and length (1 to 4 beats), so they rain down out of step with each other.
 const newStarSize = (e) => {
-  if (!e.animationName.startsWith('room-star-wide')) return;
+  if (!e.animationName.startsWith('room-star-rain')) return;
   const k = (e.target.classList?.contains('music__fx') ? 2 : 0) + (e.pseudoElement === '::after' ? 1 : 0);
-  const loud = parseFloat(getComputedStyle(e.currentTarget).getPropertyValue('--star-glow')) || 0.75;
-  const size = Math.min(1.4, Math.max(0.7, 0.7 + Math.random() * 0.5 + (loud - 0.5) * 0.4));
-  e.currentTarget.style.setProperty(`--sk-s${k}`, size.toFixed(2));
-  // And its own path: where it rises on the left and lands on the right, and a little shift sideways.
   const st = e.currentTarget.style;
-  st.setProperty(`--sk-a${k}`, `${-(20 + Math.random() * 22).toFixed(1)}deg`);
-  st.setProperty(`--sk-b${k}`, `${(20 + Math.random() * 22).toFixed(1)}deg`);
-  st.setProperty(`--sk-x${k}`, `${((Math.random() - 0.5) * 24).toFixed(1)}%`);
+  const loud = parseFloat(getComputedStyle(e.currentTarget).getPropertyValue('--star-glow')) || 0.75;
+  st.setProperty(`--sk-s${k}`, Math.min(1.15, Math.max(0.85, 0.85 + Math.random() * 0.22 + (loud - 0.5) * 0.16)).toFixed(2));
+  st.setProperty(`--sk-x${k}`, `${(Math.random() * 85).toFixed(1)}%`);
+  st.setProperty(`--sk-a${k}`, `${(18 + Math.random() * 22).toFixed(1)}deg`);
+  st.setProperty(`--sk-d${k}`, String([1, 1.5, 2, 3, 4][Math.floor(Math.random() * 5)]));
+  // Start the next fall afresh (the same fall under its other name).
+  st.setProperty(`--sk-n${k}`, e.animationName === 'room-star-rain' ? 'room-star-rain-b' : 'room-star-rain');
+  st.setProperty(`--sk-w${k}`, '0s');
 };
 
 /** A row of buttons where one is picked. */
