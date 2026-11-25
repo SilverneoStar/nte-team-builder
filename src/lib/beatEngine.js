@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const TAU = Math.PI * 2;
 // Canvas styles that draw the levels as a spectrum (audioMotion-style looks).
-export const SPECTRUM = new Set(['led', 'curve', 'radial', 'brush', 'wings', 'globe']);
+export const SPECTRUM = new Set(['led', 'curve', 'radial', 'brush', 'wings', 'globe', 'star']);
 // A steady pseudo-random number in 0..1 for a whole number.
 const hash = (n) => {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
@@ -1282,7 +1282,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       const cv = canvasOf();
       if (!cv) return false;
       const { c, ctx, w, h, dpr } = cv;
-      const n = kind === 'radial' ? 30 : kind === 'curve' ? 40 : kind === 'brush' ? Math.max(24, Math.min(44, Math.round(w / dpr / 30))) : kind === 'wings' || kind === 'globe' ? 24 : 28;
+      const n = kind === 'radial' ? 30 : kind === 'curve' ? 40 : kind === 'brush' ? Math.max(24, Math.min(44, Math.round(w / dpr / 30))) : kind === 'wings' || kind === 'globe' ? 24 : kind === 'star' ? 30 : 28;
       const moving = levels(n, dt);
       const p = paint(c, ctx, kind === 'radial' ? h : w);
       const L = st.levels;
@@ -1329,6 +1329,112 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
           }
         }
         ctx.shadowBlur = 0;
+      } else if (kind === 'star') {
+        // Star: a hero's emblem. A faceted gold star in the middle swells and
+        // flashes on the beat, beams of light shoot out around it with the
+        // music, and on every beat little stars are thrown out and fall away.
+        const beatSec = 60 / st.bpm;
+        const b = beatAt(st.clock);
+        const kb = Math.floor(b);
+        const kick = st.playing ? Math.exp(-((b - kb) * beatSec) / (beatSec * 0.3)) * strength(kb) * lift() : 0;
+        const cx = w / 2;
+        const cy = h / 2;
+        const m = Math.min(w, h);
+        const R = m * (0.2 + 0.04 * kick);
+        const turn = st.clock * 0.25;
+        const starPath = (x, y, r, a0) => {
+          ctx.beginPath();
+          for (let k = 0; k < 10; k++) {
+            const a = a0 + (k * Math.PI) / 5;
+            const rr = k % 2 ? r * 0.42 : r;
+            const px = x + Math.cos(a) * rr;
+            const py = y + Math.sin(a) * rr;
+            if (k) ctx.lineTo(px, py);
+            else ctx.moveTo(px, py);
+          }
+          ctx.closePath();
+        };
+        // Beams: one per band, round the star, longer when louder.
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = p.fill;
+        if (p.glow) {
+          ctx.shadowColor = p.glow;
+          ctx.shadowBlur = p.blur * dpr * (0.8 + kick);
+        }
+        const span = m * 0.3;
+        for (let i = 0; i < n; i++) {
+          const a = -Math.PI / 2 + (i / n) * Math.PI * 2 + turn * 0.2;
+          const lv = Math.min(1, 0.1 + L[i] * 1.25 + kick * 0.2);
+          const r0 = R * 1.15;
+          ctx.lineWidth = Math.max(1.5 * dpr, ((Math.PI * 2 * r0) / n) * (i % 2 ? 0.25 : 0.45));
+          ctx.beginPath();
+          ctx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0);
+          ctx.lineTo(cx + Math.cos(a) * (r0 + lv * span), cy + Math.sin(a) * (r0 + lv * span));
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+        // Thrown stars.
+        st.stars = st.stars ?? [];
+        if (st.playing && kb !== st.starBeat) {
+          st.starBeat = kb;
+          for (let k = 0; k < 3; k++) {
+            const a = hash(kb * 3.1 + k * 7.7) * Math.PI * 2;
+            const v = (0.5 + hash(kb + k * 2.3) * 0.6) * m;
+            st.stars.push({ x: cx, y: cy, vx: Math.cos(a) * v * 1.6, vy: Math.sin(a) * v - m * 0.3, r: m * (0.035 + 0.03 * hash(kb * 5 + k)), a: a, born: st.clock });
+          }
+        }
+        st.stars = st.stars.filter((q) => st.clock - q.born < 1.1);
+        for (const q of st.stars) {
+          q.vy += m * 2.2 * (dt || 0.016);
+          q.x += q.vx * (dt || 0.016);
+          q.y += q.vy * (dt || 0.016);
+          q.a += 4 * (dt || 0.016);
+          ctx.globalAlpha = Math.max(0, 1 - (st.clock - q.born) / 1.1);
+          ctx.fillStyle = p.tip;
+          starPath(q.x, q.y, q.r, q.a);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        // The emblem: a gold star, each point folded light and dark, with an
+        // outline, a ring, and a white flash on the beat.
+        ctx.strokeStyle = p.tip;
+        ctx.lineWidth = 1.5 * dpr;
+        ctx.globalAlpha = 0.5 + 0.5 * kick;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * 1.08, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        const a0 = -Math.PI / 2 + Math.sin(turn) * 0.15;
+        ctx.shadowColor = '#ffd84a';
+        ctx.shadowBlur = (6 + 14 * kick) * dpr;
+        for (let k = 0; k < 10; k += 2) {
+          const tip = a0 + (k * Math.PI) / 5;
+          const side = (d) => [cx + Math.cos(tip + d * (Math.PI / 5)) * R * 0.42, cy + Math.sin(tip + d * (Math.PI / 5)) * R * 0.42];
+          const t = [cx + Math.cos(tip) * R, cy + Math.sin(tip) * R];
+          for (const [d, col] of [[-1, '#ffe27a'], [1, '#c9961f']]) {
+            const sp = side(d);
+            ctx.fillStyle = col;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(sp[0], sp[1]);
+            ctx.lineTo(t[0], t[1]);
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+        ctx.shadowBlur = 0;
+        starPath(cx, cy, R, a0);
+        ctx.strokeStyle = '#8a5a0c';
+        ctx.lineWidth = 1.2 * dpr;
+        ctx.stroke();
+        if (kick > 0.05) {
+          ctx.globalAlpha = kick * 0.6;
+          ctx.fillStyle = '#ffffff';
+          starPath(cx, cy, R * 0.55, a0);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+        return true;
       } else if (kind === 'globe') {
         // The snow globe gets a shake on every beat while music plays.
         const beatNow = Math.floor(beatAt(st.clock));
@@ -1527,6 +1633,16 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
         const kb = Math.floor(b);
         const ph = b - kb;
         st.flicker = st.playing && hash(kb * 3.7 + 11) < 0.17 && ph > 0.08 && ph < 0.42 && Math.sin(st.clock * 70) > -0.2;
+      }
+      // How loud the music is now, for styles' own effects to follow (--star-glow:
+      // 0.5 when quiet up to 1 when loud); written only when it changes.
+      {
+        const host = (barsRef.current || canvasRef.current)?.closest?.('.music__beat');
+        const g = Math.round((0.5 + 0.5 * Math.min(1, st.playing ? st.energy : 0)) * 20) / 20;
+        if (host && st.glowSet !== g) {
+          st.glowSet = g;
+          host.style.setProperty('--star-glow', String(g));
+        }
       }
       const keep =
         viz === 'pulse'

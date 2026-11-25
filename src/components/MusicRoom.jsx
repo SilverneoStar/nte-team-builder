@@ -176,6 +176,7 @@ const BAR_STYLES = [
   { id: 'honed-edge', label: 'Honed Edge' },
   { id: 'auric-ink', label: 'Auric Ink' },
   { id: 'lumiflux', label: 'Lumiflux' },
+  { id: 'starlight-knight', label: 'Starlight' },
 ];
 
 /** A row of buttons where one is picked. */
@@ -973,6 +974,7 @@ export default function MusicRoom() {
                 { id: 'radial', label: 'Ring' },
                 { id: 'brush', label: 'Brush' },
                 { id: 'globe', label: 'Crystal ball' },
+                { id: 'star', label: 'Starlight' },
                 // { id: 'wings', label: 'Wings' }, hidden for now while it's being refined.
               ]}
             />
@@ -986,7 +988,7 @@ export default function MusicRoom() {
               <p className="muted small music__note">
                 {mic.error ||
                   (listen && !SPECTRUM.has(room.viz) && room.viz !== 'bars'
-                    ? 'Listening shows on Bars, LED, Curve, Ring, Brush and Crystal ball.'
+                    ? 'Listening shows on Bars, LED, Curve, Ring, Brush, Crystal ball and Starlight.'
                     : 'The page can’t hear YouTube directly, so this listens to your speakers through the mic. Nothing is recorded or sent anywhere. Won’t pick up headphones.')}
               </p>
             </div>
