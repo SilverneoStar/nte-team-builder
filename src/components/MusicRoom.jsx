@@ -179,6 +179,22 @@ const BAR_STYLES = [
   { id: 'starlight-knight', label: 'Starlight' },
 ];
 
+// Starlight's shooting stars: each new flight gets a random size, kept within
+// 0.7x to 1.4x (and a touch bigger when the music is loud), and its own start
+// and end points along a wide arc.
+const newStarSize = (e) => {
+  if (!e.animationName.startsWith('room-star-wide')) return;
+  const k = (e.target.classList?.contains('music__fx') ? 2 : 0) + (e.pseudoElement === '::after' ? 1 : 0);
+  const loud = parseFloat(getComputedStyle(e.currentTarget).getPropertyValue('--star-glow')) || 0.75;
+  const size = Math.min(1.4, Math.max(0.7, 0.7 + Math.random() * 0.5 + (loud - 0.5) * 0.4));
+  e.currentTarget.style.setProperty(`--sk-s${k}`, size.toFixed(2));
+  // And its own path: where it rises on the left and lands on the right, and a little shift sideways.
+  const st = e.currentTarget.style;
+  st.setProperty(`--sk-a${k}`, `${-(20 + Math.random() * 22).toFixed(1)}deg`);
+  st.setProperty(`--sk-b${k}`, `${(20 + Math.random() * 22).toFixed(1)}deg`);
+  st.setProperty(`--sk-x${k}`, `${((Math.random() - 0.5) * 24).toFixed(1)}%`);
+};
+
 /** A row of buttons where one is picked. */
 function Choice({ label, value, options, onChange }) {
   return (
@@ -823,7 +839,7 @@ export default function MusicRoom() {
             alt={yt.playing ? 'Matcha, enjoying the music' : 'Matcha'}
           />
         </span>
-        <div className="music__beat" data-bars={room.bars} data-viz={room.viz} aria-hidden="true">
+        <div className="music__beat" data-bars={room.bars} data-viz={room.viz} onAnimationIteration={newStarSize} aria-hidden="true">
           {room.viz !== 'bars' ? (
             <canvas className="music__pulse" ref={pulseRef} />
           ) : (

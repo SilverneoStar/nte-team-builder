@@ -1380,7 +1380,7 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
           for (let k = 0; k < 3; k++) {
             const a = hash(kb * 3.1 + k * 7.7) * Math.PI * 2;
             const v = (0.5 + hash(kb + k * 2.3) * 0.6) * m;
-            st.stars.push({ x: cx, y: cy, vx: Math.cos(a) * v * 1.6, vy: Math.sin(a) * v - m * 0.3, r: m * (0.035 + 0.03 * hash(kb * 5 + k)), a: a, born: st.clock });
+            st.stars.push({ x: cx, y: cy, vx: Math.cos(a) * v * 1.6, vy: Math.sin(a) * v - m * 0.3, r: m * (0.025 + 0.07 * hash(kb * 5 + k) ** 1.5), a: a, born: st.clock });
           }
         }
         st.stars = st.stars.filter((q) => st.clock - q.born < 1.1);
