@@ -11749,30 +11749,45 @@ th[aria-sort='descending'] .th-btn {
 .music.is-wobble .music__glow {
   display: block;
   position: absolute;
-  bottom: 34%;
+  /* Held in the hand: the stick's base sits on the hand (--hx, --hy) and it swings from there. */
+  left: calc(var(--hx) - 2.5%);
+  bottom: calc(100% - var(--hy));
   width: 5%;
   min-width: 4px;
   height: 30%;
   border-radius: 99px;
   transform-origin: 50% 100%;
-  background: linear-gradient(to top, #2b2b33 0 16%, #ffffff 20%, var(--gl) 38%, var(--gl) 92%, #ffffff);
+  background: linear-gradient(to top, #2b2b33 0 12%, #ffffff 16%, var(--gl) 34%, var(--gl) 92%, #ffffff);
   box-shadow: 0 0 6px var(--gl), 0 0 14px var(--gl);
   opacity: 0.75;
   pointer-events: none;
   z-index: 2;
 }
+/* The fingers wrapped round the base, in the hand's colour. */
+.music.is-wobble .music__glow::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -14%;
+  width: 230%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--hand);
+  box-shadow: inset 0 0 0 1.5px var(--hand-line);
+}
 .music__glow--l {
-  left: 3%;
   rotate: -24deg;
 }
 .music__glow--r {
-  right: 3%;
   rotate: 24deg;
 }
-.music__pal--cortado .music__glow--l { --gl: #7dff6a; }
-.music__pal--cortado .music__glow--r { --gl: #ff5fd2; }
-.music__pal--matcha .music__glow--l { --gl: #5ff3ff; }
-.music__pal--matcha .music__glow--r { --gl: #ffe45f; }
+.music__pal--cortado .music__glow { --hand: #e9d5bd; --hand-line: #3b2a20; --hy: 74%; }
+.music__pal--matcha .music__glow { --hand: #eef0de; --hand-line: #2c3a2a; --hy: 81%; }
+.music__pal--cortado .music__glow--l { --hx: 13%; --gl: #7dff6a; }
+.music__pal--cortado .music__glow--r { --hx: 87%; --gl: #ff5fd2; }
+.music__pal--matcha .music__glow--l { --hx: 7%; --gl: #5ff3ff; }
+.music__pal--matcha .music__glow--r { --hx: 83%; --gl: #ffe45f; }
 .music.is-wobble.is-playing .music__glow {
   opacity: 1;
   animation: music-glow-wave var(--beat) ease-in-out infinite alternate;
