@@ -855,6 +855,8 @@ export function useBeatEngine({ barsRef, canvasRef, viz, bpm, playing, mood = 's
       const moving = levels(n, dt);
       bars.forEach((el, i) => {
         el.style.transform = `scaleY(${st.levels[i].toFixed(3)})`;
+        // Also as a number, for styles that move something up and down instead of stretching the bar.
+        el.style.setProperty('--lv', st.levels[i].toFixed(3));
       });
       // Styles that flicker (Illusion) pick this up from the page.
       const fl = st.flicker ? '1' : '';

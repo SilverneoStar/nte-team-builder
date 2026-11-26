@@ -11715,3 +11715,28 @@ th[aria-sort='descending'] .th-btn {
     margin-bottom: 110px;
   }
 }
+
+/* Starlight bars: the star on top is silver, with a small gold lightning bolt set in its centre. */
+.music__beat[data-bars='starlight-knight'] span {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 50L38.2 33.7L50.0 2.0Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L50.0 2.0L61.8 33.7Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L61.8 33.7L95.7 35.2Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L95.7 35.2L69.2 56.2Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L69.2 56.2L78.2 88.8Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L78.2 88.8L50.0 70.2Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L50.0 70.2L21.8 88.8Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L21.8 88.8L30.8 56.2Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L30.8 56.2L4.3 35.2Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L4.3 35.2L38.2 33.7Z' fill='%23a9b0bd'/%3E%3Cpath d='M50.0 2.0 L61.8 33.7 L95.7 35.2 L69.2 56.2 L78.2 88.8 L50.0 70.2 L21.8 88.8 L30.8 56.2 L4.3 35.2 L38.2 33.7Z' fill='none' stroke='%235d6472' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M53 30 L41 52 L49 52 L45 70 L59 46 L51 46 Z' fill='%23ffd84a' stroke='%238a5a0c' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M52 33 L44 49' stroke='%23fff3b0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"),
+    linear-gradient(90deg, transparent 58%, #d9dde4 58% 76%, transparent 76%),
+    linear-gradient(to bottom, transparent 6px, #1a1416 6px 14px, transparent 14px),
+    linear-gradient(90deg, #8f0d14, #e0262c 35%, #ff5148 55%, #b5141c);
+}
+
+/* Starlight with the Bars look: each bar is a silver star (with its gold bolt) that rises and falls with
+   the music (moved, not stretched, so it keeps its shape), leaving a glowing gold-to-red trail beneath
+   it down to the floor. The stars are a fixed mini size, so they keep their shape on any screen. No armour, visor band or cheek plate. */
+.music__beat[data-bars='starlight-knight'] span,
+.music__beat[data-bars='starlight-knight'] span:nth-child(n) {
+  height: 100%;
+  transform: none !important;
+  border-radius: 0;
+  box-shadow: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 50L38.2 33.7L50.0 2.0Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L50.0 2.0L61.8 33.7Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L61.8 33.7L95.7 35.2Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L95.7 35.2L69.2 56.2Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L69.2 56.2L78.2 88.8Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L78.2 88.8L50.0 70.2Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L50.0 70.2L21.8 88.8Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L21.8 88.8L30.8 56.2Z' fill='%23a9b0bd'/%3E%3Cpath d='M50 50L30.8 56.2L4.3 35.2Z' fill='%23f4f6fa'/%3E%3Cpath d='M50 50L4.3 35.2L38.2 33.7Z' fill='%23a9b0bd'/%3E%3Cpath d='M50.0 2.0 L61.8 33.7 L95.7 35.2 L69.2 56.2 L78.2 88.8 L50.0 70.2 L21.8 88.8 L30.8 56.2 L4.3 35.2 L38.2 33.7Z' fill='none' stroke='%235d6472' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M53 30 L41 52 L49 52 L45 70 L59 46 L51 46 Z' fill='%23ffd84a' stroke='%238a5a0c' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M52 33 L44 49' stroke='%23fff3b0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center calc((1 - var(--lv, 0.2)) * 100%) / min(100%, 15px) auto no-repeat,
+    linear-gradient(to bottom, rgb(255 216 74 / 0.95), rgb(255 59 48 / 0.7) 45%, rgb(255 59 48 / 0)) bottom center / 4px calc(var(--lv, 0.2) * 100% - 6px) no-repeat,
+    linear-gradient(to bottom, rgb(255 140 90 / 0.35), rgb(255 59 48 / 0) 80%) bottom center / min(80%, 12px) calc(var(--lv, 0.2) * 100% - 6px) no-repeat;
+  filter: drop-shadow(0 0 4px rgb(255 216 74 / 0.6));
+}
