@@ -619,6 +619,9 @@ function Cortado({ chill }) {
         </svg>
       )}
       <img src={`${BASE}mascot.svg`} alt={chill ? 'Cortado, chilling to the music' : 'Cortado'} />
+      {/* Glow sticks, waved in the Wobble mode. */}
+      <i className="music__glow music__glow--l" aria-hidden="true" />
+      <i className="music__glow music__glow--r" aria-hidden="true" />
       {chill && (
         <svg className="music-cortado__layer" viewBox="0 0 64 64" aria-hidden="true">
           <defs>
@@ -784,7 +787,7 @@ export default function MusicRoom() {
 
   return (
     <div
-      className={`page music${yt.playing ? ' is-playing' : ''}${room.moving ? '' : ' is-still'}${room.wide ? ' is-wide' : ''}`}
+      className={`page music${yt.playing ? ' is-playing' : ''}${room.moving === 'wobble' ? ' is-wobble' : room.moving ? '' : ' is-still'}${room.wide ? ' is-wide' : ''}`}
       style={{ '--beat': `${(60 / bpm).toFixed(3)}s` }}
     >
       <header className="page__head music__head">
@@ -839,6 +842,8 @@ export default function MusicRoom() {
             src={`${BASE}matcha/body-${yt.playing ? 'starry' : 'neutral'}.webp`}
             alt={yt.playing ? 'Matcha, enjoying the music' : 'Matcha'}
           />
+          <i className="music__glow music__glow--l" aria-hidden="true" />
+          <i className="music__glow music__glow--r" aria-hidden="true" />
         </span>
         <div className="music__beat" data-bars={room.bars} data-viz={room.viz} onAnimationIteration={newStarSize} aria-hidden="true">
           {room.viz !== 'bars' ? (
@@ -968,10 +973,11 @@ export default function MusicRoom() {
           <div className="music__settings-body">
             <Choice
               label="Matcha & Cortado"
-              value={room.moving ? 'move' : 'still'}
-              onChange={(v) => setRoom({ moving: v === 'move' })}
+              value={room.moving === 'wobble' ? 'wobble' : room.moving ? 'move' : 'still'}
+              onChange={(v) => setRoom({ moving: v === 'wobble' ? 'wobble' : v === 'move' })}
               options={[
                 { id: 'move', label: 'Dance' },
+                { id: 'wobble', label: 'Wobble' },
                 { id: 'still', label: 'Stay still' },
               ]}
             />
