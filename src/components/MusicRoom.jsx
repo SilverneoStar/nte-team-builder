@@ -167,7 +167,7 @@ const BAR_STYLES = [
   { id: 'neon', label: 'Neon' },
   { id: 'digital', label: 'Digital' },
   { id: 'y2k', label: 'Y2K' },
-  { id: 'rainbow', label: 'Rainbow' },
+  { id: 'rainbow', label: 'Galaxy' },
   { id: 'elements', label: 'Elements' },
   { id: 'illusion', label: 'Illusion' },
   { id: 'sunbringer', label: 'Sunchaser' },
