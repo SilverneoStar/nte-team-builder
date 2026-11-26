@@ -11741,6 +11741,41 @@ th[aria-sort='descending'] .th-btn {
   filter: drop-shadow(0 0 4px rgb(255 216 74 / 0.6));
 }
 
+/* Light / dark switch in the header. */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+.masthead__tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  border-color: var(--muted);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.theme-toggle svg {
+  width: 15px;
+  height: 15px;
+}
+
 /* Wobble: a third way for Matcha and Cortado to move. Each holds two glow sticks and waves them to
    the beat, swinging from one side to the other on every beat, while rocking and bouncing along. */
 .music__glow {
@@ -11965,6 +12000,17 @@ th[aria-sort='descending'] .th-btn {
   }
   .music:has(.music__beat[data-viz='bars'][data-bars='honed-edge']) :is(.music__pal, .music-disc, .music-deck, .music-arc) {
     margin-bottom: 110px;
+  }
+}
+/* Light theme: white fog would vanish on the pale page, so it is drawn a darker silver there. */
+:root:not([data-theme='dark']) .music__beat[data-bars='honed-edge']::before,
+:root:not([data-theme='dark']) .music__beat[data-bars='honed-edge'] .music__fx::before {
+  filter: brightness(0.7) contrast(1.15);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .music__beat[data-bars='honed-edge']::before,
+  :root:not([data-theme='light']) .music__beat[data-bars='honed-edge'] .music__fx::before {
+    filter: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
