@@ -312,7 +312,7 @@ export const SKILLS = {
       s(B, 'Brute-Force Hacking', 'The Hand of Y attacks up to 5 times for Chaos DMG; the last hit can spend 10 Frames to summon 1 Digital Echo. Hold Basic Attack for Network Penetration, which resets the combo; in Shader Compile it executes the non-Boss enemy with the lowest HP once it drops below 15%, extending Shader Compile. His Critical Riposte (Zero-Latency Response) also spends 10 Frames for an Echo.'),
       s(R, 'Data Exfiltration', 'Spends a large number of Frames to summon up to 5 Digital Echoes at once and rapidly raises his Rating.'),
       s(U, 'Mesh Collision', 'Puts Exe into the Shader Compile state and summons several Digital Echoes; while it lasts, all his attacks can spend Frames to summon Digital Echoes.'),
-      s(S, null, null),
+      s(S, 'Remote Control', 'Streams of data bind the target, then a data surge on entry deals 1 instance of Chaos DMG; Exe can spend 10 Frames to summon 1 Digital Echo as he comes in.'),
     ],
     // Closed-beta text (machine-translated), Nov 2026. Name not published yet.
     life: [

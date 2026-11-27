@@ -28,7 +28,7 @@ export const SKILL_PRIORITY = {
   daffodill: p('S > U > B > P', 'Her Skill does most of her Break.'),
   edgar: p('S = U > P > B', 'He heals almost only with his Skill and Ultimate.'),
   // Exe: @Nteupdates' guide (Nov 2026), ahead of his release.
-  exe: p('U = B > S > P', 'His Ultimate and Basic Attacks do most of his damage.'),
+  exe: p('U = B > S > P', 'His Ultimate and Basic Attacks do most of his damage. Fit his Support Skill (Remote Control) into the rotation too: it drops another Digital Echo as he enters, which pays off most when teammates also gain from frequent Support Skills.'),
   elyms: p('U > S > B > P', 'Her Ultimate carries the team buff. Unlock the Support Skill’s bonus nodes as soon as you can.'),
   fadia: p('U > S > B > P', 'Her Ultimate is her main damage and her own healing.'),
   haniel: p('S > U > B > P', 'Her Skill and Ultimate both give team ATK% that grows with level.'),
