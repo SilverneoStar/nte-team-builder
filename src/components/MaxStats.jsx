@@ -62,7 +62,7 @@ export default function MaxStats({ stats }) {
   ];
   const healing = [
     ['healing', 'Healing Bonus', pct(stats.healing)],
-    ['healing', 'Healing Received Bonus', pct(stats.healingReceived)],
+    ['healingReceived', 'Healing Received Bonus', pct(stats.healingReceived)],
   ];
   const dmg = DMG_TYPES.map((t) => [t, stats.dmg[t] ?? 0]);
   const res = DMG_TYPES.map((t) => [t, stats.res[t] ?? 0]);
@@ -87,7 +87,9 @@ export default function MaxStats({ stats }) {
         <th scope="row">
           <span className="stat-label">
             {t === 'mental' ? (
-              <StatIcon stat={prefix === 'res' ? 'res' : 'dmgBonus'} />
+              <StatIcon stat={prefix === 'res' ? 'mentalRes' : 'mentalDmg'} />
+            ) : prefix === 'res' ? (
+              <StatIcon stat={`res-${t}`} />
             ) : (
               <ElementGlyph element={t} size={16} />
             )}

@@ -1,6 +1,8 @@
 // Recommended endgame stats and Cartridge stat priorities from the build guides.
 import { ELEMENT_BY_ID } from '../data/elements.js';
 import { ENDGAME, ENDGAME_STATS, parsePriority } from '../data/endgame.js';
+import ElementGlyph from './ElementGlyph.jsx';
+import StatIcon from './StatIcon.jsx';
 
 const label = (key, c) =>
   key === 'element' ? `${ELEMENT_BY_ID[c.element].name} DMG` : ENDGAME_STATS.find(([k]) => k === key)[1];
@@ -10,7 +12,10 @@ function StatList({ stats, character }) {
     <dl className="endgame__list">
       {ENDGAME_STATS.filter(([k]) => stats[k]).map(([k]) => (
         <div key={k}>
-          <dt>{label(k, character)}</dt>
+          <dt>
+            {k === 'element' ? <ElementGlyph element={character.element} size={14} /> : <StatIcon stat={label(k, character)} size={14} />}{' '}
+            {label(k, character)}
+          </dt>
           <dd>{stats[k]}</dd>
         </div>
       ))}

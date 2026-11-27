@@ -2,6 +2,7 @@
 import { fillCartValues } from '../data/cartValues.js';
 import { fillModuleValues, moduleHasEmptyValues } from '../data/bestBuild.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import StatIcon from './StatIcon.jsx';
 import { decodeConsoleCode, encodeConsoleCode } from '../lib/consoleCode.js';
 import { CHARACTERS, CHARACTER_BY_ID } from '../data/characters.js';
 import {
@@ -493,7 +494,10 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
               return totals.length ? (
                 <ul className="console-totals">
                   {totals.map((t) => (
-                    <li key={t.stat}>{formatStat(t.stat, t.value)}</li>
+                    <li key={t.stat}>
+                      <StatIcon stat={t.stat} />
+                      {formatStat(t.stat, t.value)}
+                    </li>
                   ))}
                 </ul>
               ) : (
