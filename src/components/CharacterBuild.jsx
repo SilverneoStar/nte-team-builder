@@ -203,7 +203,10 @@ export function CharacterBuild({ character: c, inActiveTeam, onApply }) {
 
       {order && (
         <>
-          <h4 className="micro-title">Awakening order · one per duplicate</h4>
+          <h4 className="micro-title">
+            Awakening order · one per duplicate
+            {AWAKENING_ORDER[c.id]?.speculation && <span className="upcoming-note__tag"> Speculation</span>}
+          </h4>
           <ol className="awaken-chain build__awaken" aria-label="Unlock order">
             {order.map((id, i) => (
               <li key={id}>

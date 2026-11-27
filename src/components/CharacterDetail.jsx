@@ -206,6 +206,11 @@ export default function CharacterDetail({
                   </li>
                 ))}
               </ol>
+              {AWAKENING_ORDER[c.id].speculation && (
+                <p className="muted small">
+                  <span className="upcoming-note__tag">Speculation</span> {AWAKENING_ORDER[c.id].speculation}
+                </p>
+              )}
               {AWAKENING_ORDER[c.id].alt && <p className="muted small">{AWAKENING_ORDER[c.id].alt}</p>}
             </div>
           )}
