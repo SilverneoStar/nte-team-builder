@@ -81,7 +81,8 @@ export const CHARACTER_CONSOLE = {
   // in-game Character Guide; his bonus ("Increases CRIT Rate by 8% for each Type III
   // Module equipped") from a beta Console screen in a video (project owner, Nov 27, 2026).
   // Every bonus here matches two sources (Nov 27, 2026): NTEBuild's build pages and
-  // kaiden.gg's in-game specialization text (all but Elyms, who has neither yet).
+  // kaiden.gg's in-game specialization text; Elyms's from her in-game Console screen
+  // (project owner, Nov 27, 2026).
   elyms: c('C', 3, 'CRIT Rate', 8),
   exe: c('B', 3, 'CRIT Rate', 8),
   fadia: c('C', 2, 'HP', 6),
