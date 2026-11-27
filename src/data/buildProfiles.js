@@ -55,8 +55,8 @@ export const BUILD_PROFILES = {
   },
   // Exe: from his confirmed kit (Nov 2026).
   exe: {
-    note: 'Diabolos ×4 is his best set: his Passive 1 triggers Nova, so its 4-piece ignores 24% Chaos RES for most of the fight on top of the 2-piece Chaos DMG. His damage scales with ATK (A2 gives up to +30% at SSS Rating, Dotted Horizon +28%) and with summon DMG, so ATK% and DMG% come right after CRIT. Shadow Creed ×4 is the backup: Burst Overclock keeps his Redirect Skill coming back fast, which keeps its ATK +25% up.',
-    altMain: ['CRIT Rate', 'On Dotted Horizon (CRIT DMG 48% base stat plus +28% from its passive) his CRIT DMG is already high, so a CRIT Rate main stat balances it better than another DMG stat.'],
+    note: 'Diabolos ×4 is his best set: his Passive 1 triggers Nova, so its 4-piece ignores 24% Chaos RES for most of the fight on top of the 2-piece Chaos DMG. His damage scales with ATK (A2 gives up to +30% at SSS Rating, Dotted Horizon +28%) and with summon DMG, so his CRIT Rate matters more than extra DMG: Dotted Horizon already gives plenty of CRIT DMG. ATK% and DMG% come after CRIT. Shadow Creed ×4 is the backup: Burst Overclock keeps his Redirect Skill coming back fast, which keeps its ATK +25% up.',
+    altMain: ['Chaos DMG', 'CRIT Rate comes first: on Dotted Horizon (CRIT DMG 48% base stat plus +28% from its passive) his CRIT DMG is already high. Once sub stats bring his CRIT Rate to about 70–80%, a Chaos DMG main stat is the next best.'],
   },
 };
 

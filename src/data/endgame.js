@@ -90,7 +90,9 @@ export const ENDGAME = {
   // summon DMG (A4, Burst Overclock) and Nova from his Passive 1 for Diabolos.
   exe: {
     slug: 'exe',
-    main: 'Chaos DMG > Crit Rate > Crit DMG',
+    // CRIT Rate first (project owner, Nov 2026): Dotted Horizon already brings
+    // a lot of CRIT DMG, so CRIT Rate is what his damage is short of.
+    main: 'Crit Rate > Chaos DMG > Crit DMG',
     subs: 'Crit Rate > Crit DMG > ATK % > DMG % > ATK',
     cartridges: ['Diabolos', 'Shadow Creed'],
   },

@@ -12355,3 +12355,15 @@ th[aria-sort='descending'] .th-btn {
     animation: none;
   }
 }
+
+/* Kit checks: something a teammate would switch on (not a problem). */
+.checks__item--tip .checks__icon {
+  background: var(--accent);
+}
+.checks__sub {
+  margin-top: 6px;
+  font: 600 0.7rem/1.2 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
