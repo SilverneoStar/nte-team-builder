@@ -1,20 +1,21 @@
 // Console gear: Cartridge sets and Module types.
 // Sources (Oct 2026): Mobalytics cartridge guide (set bonuses), thegameswiki
 // Console page (module sizes, stat pool), character build guides.
-// Bonus text is summarised; check in-game for exact values.
+// Bonus text re-checked against nte.wiki's and NTEBuild's set lists (Nov 27, 2026).
+// fourStat: the part of a 4-piece bonus that is always on, added to Console totals.
 import { ENDGAME } from './endgame.js';
 
 export const CARTRIDGES = [
-  { id: 'crimson-twin-butterflies', name: 'Crimson: Twin Butterflies', two: 'Incantation DMG +10%', four: 'ATK +6% each time a nearby enemy takes Incantation DMG from the team, up to 6 stacks (10s).' },
+  { id: 'crimson-twin-butterflies', name: 'Crimson: Twin Butterflies', two: 'Incantation DMG +10%', four: 'ATK +6% each time a nearby enemy takes Incantation DMG from the team, up to 6 stacks (10s). Works off-field.' },
   { id: 'devils-blood-curse', name: "Devil's Blood: Curse", two: 'Psyche DMG +10%', four: 'DMG +18%, rising to 36% against enemies affected by Nova or Stain.' },
   { id: 'diabolos', name: 'Diabolos', two: 'Chaos DMG +10%', four: 'Ignores 12% Chaos RES; 24% for 20s after the wearer takes part in Nova or Scorch.' },
-  { id: 'fireflies-and-the-forest', name: 'Fireflies and the Forest', two: 'Anima DMG +10%', four: 'Crit DMG +8% each time a nearby enemy takes Anima DMG from the team, up to 7 stacks (10s).' },
+  { id: 'fireflies-and-the-forest', name: 'Fireflies and the Forest', two: 'Anima DMG +10%', four: 'Crit DMG +8% each time a nearby enemy takes Anima DMG from the team, up to 7 stacks (10s). Works off-field.' },
   { id: 'kingdoms-guard', name: "Kingdom's Guard", two: 'DEF +15%', four: 'Shields from the wearer +20%.' },
-  { id: 'lost-radiance', name: 'Lost Radiance', two: 'Cosmos DMG +10%', four: 'Ignores 25% enemy DEF for 20s after the wearer casts Ultimate.' },
+  { id: 'lost-radiance', name: 'Lost Radiance', two: 'Cosmos DMG +10%', four: 'Ignores 25% enemy DEF for 20s after the wearer casts Ultimate. Doesn’t stack.' },
   { id: 'quiet-manor', name: 'Quiet Manor', two: 'Mental DMG +10%', four: 'Mental DMG +12% per Basic Attack, up to 3 stacks (6s).' },
-  { id: 'shadow-creed', name: 'Shadow Creed', two: 'ATK +10%', four: 'ATK +25% for 20s after casting a Skill.' },
+  { id: 'shadow-creed', name: 'Shadow Creed', two: 'ATK +10%', four: 'ATK +25% for 20s after casting a Skill. Doesn’t stack.' },
   { id: 'speedy-hedgehog', name: 'Speedy Hedgehog', two: 'Charge Efficiency +12%', four: 'All allies’ ATK +15% for 20s after the wearer casts Ultimate. Doesn’t stack: only one Speedy Hedgehog per team counts.', onePerTeam: true },
-  { id: 'street-boxer', name: 'Street Boxer', two: 'Lakshana DMG +10%', four: 'Crit Rate up; the bonus increases for 20s after the team triggers Remora or Stain.' },
+  { id: 'street-boxer', name: 'Street Boxer', two: 'Lakshana DMG +10%', four: 'CRIT Rate +14%; another +14% for 20s after the team triggers Remora or Stain.', fourStat: { stat: 'CRIT Rate', value: 14 } },
   { id: 'theas-night-tavern', name: "Thea's Night Tavern", two: 'HP +10%', four: 'Healing Bonus +20%.' },
   { id: 'tiny-big-adventure', name: 'Tiny Big Adventure', two: 'HP +10%', four: 'Max HP +4% when taking damage, up to 10 stacks (10s); Ultimate grants all 10.' },
 ];

@@ -46,7 +46,10 @@ export const SHAPES = {
 
 export const SHAPE_ORDER = Object.keys(SHAPES);
 
-// The 4 shapes each Cartridge set counts.
+// The 4 shapes each Cartridge set counts. Re-checked Nov 27, 2026 against
+// kaiden.gg's "Required Modules" for 9 sets (all match) and NTEBuild's module
+// Types for Shadow Creed, Devil's Blood: Curse and Speedy Hedgehog; Diabolos
+// also matches the in-game layout the project owner shared.
 export const SET_SHAPES = {
   diabolos: ['Shu2', 'ZhiJiao2', 'ZhiJiao4', 'Hen4'],
   'fireflies-and-the-forest': ['Hen2', 'Shu3', 'ZhiJiao1', 'Z4'],
@@ -150,7 +153,8 @@ const specStatName = (stat) => SPEC_STAT[stat] ?? (stat.endsWith('DMG') && !stat
 
 /**
  * Everything the Console adds: module main and sub stats, the character's
- * per-module bonus and the Cartridge set's 2-piece bonus once it is active.
+ * per-module bonus, the Cartridge set's 2-piece bonus once it is active, and
+ * the always-on part of its 4-piece bonus (Street Boxer's CRIT Rate).
  * Returns [{ stat, value, from }].
  */
 export function consoleStats(characterId, pieces, cartridgeId) {
@@ -171,6 +175,8 @@ export function consoleStats(characterId, pieces, cartridgeId) {
   if (cartridgeId && setProgress(cartridgeId, pieces ?? []).two) {
     const b = parseSetBonus(CARTRIDGE_BY_ID[cartridgeId]?.two);
     if (b) out.push({ ...b, from: 'set' });
+    const four = CARTRIDGE_BY_ID[cartridgeId]?.fourStat;
+    if (four && setProgress(cartridgeId, pieces ?? []).four) out.push({ ...four, from: 'set' });
   }
   return out;
 }
