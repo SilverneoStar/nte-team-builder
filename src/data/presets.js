@@ -29,6 +29,10 @@ export const ALL_PRESETS = [
   { name: 'Edgar Blossom Support', members: ['edgar', 'nanally', 'zero', 'jiuyuan'], why: 'Blossom team: Edgar heals, Esper Zero triggers Blossom and Jiuyuan strengthens it. Mint can take Nanally’s place.' },
   { name: 'Chaos Remora', members: ['chaos', 'hathor', 'zero', 'haniel'], why: 'Chaos’s best team: his explosion grows with Remora’s duration, which Hathor extends. Skia can take Hathor’s place; Fadia Haniel’s for more survival.' },
   { name: 'Chaos Stain (Haniel)', members: ['chaos', 'zero', 'fadia', 'haniel'], why: 'Stain raises the Lakshana DMG Chaos spends his field time on; Haniel buffs and Fadia protects. Game8’s text also suggests Blackbird for Stain.' },
+  // Exe teams from the project owner (Nov 2026): a premium pick with his
+  // current limited teammates and a free-to-play one for new players.
+  { name: 'Exe Premium', members: ['exe', 'blackbird', 'sakiri', 'haniel'], why: 'His current best team: Blackbird and Sakiri support his Chaos damage and Haniel buffs ATK, with Hootie adding another summon for Burst Overclock’s DMG stacks. Iroi can take Haniel’s place for healing.' },
+  { name: 'Exe F2P', members: ['exe', 'sakiri', 'haniel', 'daffodill'], why: 'Free-to-play option for new players: Sakiri and Haniel buff him (Hootie also counts as a summon for his DMG stacks) and Daffodill breaks enemies for the team.' },
   // Exe teams from @Nteupdates' Exe guide (Nov 2026), ahead of his release.
   // Its "prediction" team with unreleased Espers is left out.
   { name: 'Exe Synced', members: ['exe', 'blackbird', 'linko', 'sakiri'], why: 'Blackbird and Sakiri support Exe’s Chaos damage; Linko adds Synced Strikes.' },

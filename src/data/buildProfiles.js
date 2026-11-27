@@ -53,9 +53,10 @@ export const BUILD_PROFILES = {
     // her CRIT Rate gets near 90% without a CRIT Rate main stat.
     altMain: ['CRIT DMG', 'With her signature Arc (or another CRIT Rate Arc) her CRIT Rate can reach about 90% without a CRIT Rate main stat, so a CRIT DMG main stat works well too.'],
   },
-  // Pre-release (1.5 preview stream tags): an early pick until the kit is out.
+  // Exe: from his confirmed kit (Nov 2026).
   exe: {
-    note: 'The in-game Character Guide recommends Diabolos ×4 with Chaos DMG, CRIT Rate, CRIT DMG, ATK% and DMG%. His hits build Frames that his skills spend on Digital Echoes, and his Rating rises as he keeps attacking.',
+    note: 'Diabolos ×4 is his best set: his Passive 1 triggers Nova, so its 4-piece ignores 24% Chaos RES for most of the fight on top of the 2-piece Chaos DMG. His damage scales with ATK (A2 gives up to +30% at SSS Rating, Dotted Horizon +28%) and with summon DMG, so ATK% and DMG% come right after CRIT. Shadow Creed ×4 is the backup: Burst Overclock keeps his Redirect Skill coming back fast, which keeps its ATK +25% up.',
+    altMain: ['CRIT Rate', 'On Dotted Horizon (CRIT DMG 48% base stat plus +28% from its passive) his CRIT DMG is already high, so a CRIT Rate main stat balances it better than another DMG stat.'],
   },
 };
 

@@ -85,11 +85,13 @@ export const ENDGAME = {
     subs: 'HP % > HP > Cycle Intensity > Break Intensity',
     cartridges: ["Thea's Night Tavern", 'Speedy Hedgehog'],
   },
-  // Exe: @Nteupdates' guide (Nov 2026), ahead of his release.
+  // Exe: the in-game Character Guide and @Nteupdates' guide (Nov 2026), checked
+  // against his confirmed kit: Chaos DMG (A1), ATK by Rating (A2, Dotted Horizon),
+  // summon DMG (A4, Burst Overclock) and Nova from his Passive 1 for Diabolos.
   exe: {
     slug: 'exe',
     main: 'Chaos DMG > Crit Rate > Crit DMG',
-    subs: 'Crit Rate > Crit DMG > ATK',
+    subs: 'Crit Rate > Crit DMG > ATK % > DMG % > ATK',
     cartridges: ['Diabolos', 'Shadow Creed'],
   },
   fadia: {

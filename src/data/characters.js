@@ -141,7 +141,7 @@ export const CHARACTERS = [
     id: 'exe', name: 'Exe', rarity: 'S', version: '1.5', element: 'chaos', roles: ['Damage'],
     arcType: 'Plasma', faction: 'Bureau of Anomaly Control', unit: 'ETD-6', ability: null,
     summons: 'Digital Echoes',
-    tags: ['Main DPS', 'Summoner'], stats: null, upcoming: true,
+    tags: ['Main DPS', 'Summoner'], stats: null, upcoming: true, kitConfirmed: true, // kit posted by CN-server players, Nov 2026
     banner: { name: 'Offline Equations', from: 'Dec 2 (after update)', to: 'Dec 23, 05:59' },
   },
   // Version 1.6 (expected): shown in the official 1.4 preview stream

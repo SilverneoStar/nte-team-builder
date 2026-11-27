@@ -166,7 +166,9 @@ export default function CharacterDetail({
   const upcomingNote = c.upcoming ? (
     <p className="upcoming-note">
       <span className="upcoming-note__tag">Subject to change</span>
-      {c.name} isn’t out yet. Details here come from announcements and may change at release; builds are early picks from the role tags.
+      {c.kitConfirmed
+        ? `${c.name} isn’t out yet. His kit is confirmed from the CN server, so any change would come as a hotfix; builds follow the kit.`
+        : `${c.name} isn’t out yet. Details here come from announcements and may change at release; builds are early picks from the role tags.`}
     </p>
   ) : null;
   const stats = (

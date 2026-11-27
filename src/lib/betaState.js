@@ -35,9 +35,6 @@ export const subscribeBeta = (fn) => {
 // What comes from beta information (closed-beta text, leaks), per Esper and
 // per Arc. Official info (stream, PVs, banners) always shows.
 export const BETA = {
-  // Exe's awakenings and passives are confirmed (kit posted by CN players, Nov 2026);
-  // only his overworld ability still comes from the beta.
-  exe: { life: true },
   // Datamined kit crumbs (src/data/leaks.js).
   nitsa: { leaks: true },
   ellie: { leaks: true },
