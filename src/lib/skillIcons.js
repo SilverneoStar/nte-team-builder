@@ -1,6 +1,6 @@
 // Official skill, passive, awakening and Resonance icons, where we have them
 // (white marks on transparent, in public/icons/skills/<character>/).
-// Keys: basic, redirect, ultimate, support, p1, p2, trait, A1–A6, and life1/life2
+// Keys: basic, redirect, ultimate, support, p1, p2, trait, core, A1–A6, and life1/life2
 // for the overworld (city) abilities in the order data/skills.js lists them.
 // Resonance uses one shared icon for every character (icons/skills/resonance.webp).
 // Source: icons from the game (provided by the project owner, Nov 2026);
@@ -8,7 +8,7 @@
 // character kit pages on NTEBuild (https://www.ntebuild.com).
 const BASE = import.meta.env.BASE_URL;
 // Bump when icon files are replaced, so browsers fetch the new ones.
-const V = 2;
+const V = 3;
 
 const HAVE = {
   edgar: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1'],
@@ -36,7 +36,7 @@ const HAVE = {
   linko: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'],
   akane: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'trait', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'],
   elyms: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'life1', 'life2'], // cut from the NTE Official CC kit slides
-  exe: ['basic', 'redirect', 'ultimate', 'support'], // in-game Character Guide (global, Nov 2026); order assumed
+  exe: ['basic', 'redirect', 'ultimate', 'support', 'p1', 'p2', 'core', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'], // kit icons posted by CN players (Nov 2026)
 };
 
 // Skill types as written in data/skills.js, to their icon keys.

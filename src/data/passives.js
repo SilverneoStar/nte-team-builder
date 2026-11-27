@@ -19,11 +19,12 @@ export const PASSIVES = {
     p2: p('Pity System', 'Crit DMG +10%.'),
     trait: p('Are You There?', 'While Elyms is idle, there’s a chance she greets you with a small gift, once a day.'),
   },
-  // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).
+  // Exe: kit posted by CN-server players (Nov 2026), so confirmed; any change
+  // would come as a hotfix. Values marked X aren't published yet.
   exe: {
-    p1: p('Bonus Points', 'When Exe triggers a Chaos Esper Cycle (“Dark Star” in the beta text) below SS Rating, his Rating jumps straight to SS.'),
-    p2: p('Temporary Overclock', 'Each Digital Echo hit cuts the Redirect Skill cooldown by Xs. Whenever a summon on the team deals DMG, Exe gains X% DMG (stacking per summoner, up to a cap) for the rest of the battle.'),
-    core: p('Quantization Algorithm', 'Hits earn Frames. His Rating (B, A, S, SS, SSS) climbs with hits, skills, his Ultimate, Support Skill, perfect dodges and counters, and each team Esper Cycle; higher Ratings earn Frames faster. Rating drains over time when idle and drops sharply when he is hit.'),
+    p1: p('Extra Score', 'When Exe triggers Nova while his Rating is below SS, his Rating rises to SS at once.', 'Nova'),
+    p2: p('Burst Overclock', 'Each time a Digital Echo’s attack deals DMG, Exe’s Redirect Skill cooldown goes down by Xs, until the remaining cooldown falls below Xs. Whenever an allied summon deals DMG, Exe gains a stack of X% DMG Bonus until the end of the battle, with a cap per summon and a total cap.'),
+    core: p('Quantization Algorithm', 'Exe gains Frames by landing attacks. His Rating is a five-tier gauge (B, A, S, SS, SSS) that rises when he lands hits, uses his Redirect Skill, Ultimate or Support Skill, or triggers a Critical Dodge, Critical Riposte or Parry Attack, and each time the team triggers an Esper Cycle. When the gauge fills he moves up a tier, and higher tiers raise his Frame gain. Rating slowly decays when it stops rising and drops sharply when he takes a hit.'),
   },
   adler: {
     p1: p('Temperance', 'Whenever Scorch is inflicted, the target also gets one of three random debuffs for 15s: ATK -20%, Esper Resistance -10% or Break Efficiency +10%. The same debuff doesn’t stack.', 'Scorch'),

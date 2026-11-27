@@ -107,7 +107,11 @@ export default function SkillsSection({ character }) {
           <>
             <h3 className="mini-title skill-life-title">Core mechanic</h3>
             <p className="small">
-              <b>{pas.core.name}.</b> <StatText>{pas.core.text}</StatText>
+              <b className="skill-name">
+                <SkillIcon character={character.id} k="core" />
+                {pas.core.name}.
+              </b>{' '}
+              <StatText>{pas.core.text}</StatText>
             </p>
           </>
         )}

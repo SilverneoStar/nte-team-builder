@@ -214,15 +214,14 @@ export const AWAKENINGS = {
     ['304: Nothing Has Changed', 'Counting Electric Sheep multiplier +100%; starts battle with 100 Cycle value (once per battle, 30s cooldown).'],
     ['301: Moved Permanently', 'Remembrance DMG +25% per Optical Illusion stack spent before casting Do You Get Deja Vu.'],
   ),
-  // Exe: closed-beta text (machine-translated, values not out yet; Nov 2026).
-  // Skill names follow the 1.5 stream: Data Exfiltration, Shader Compile, Digital Echoes.
+  // Exe: kit posted by CN-server players (Nov 2026), so confirmed; X = not published yet.
   exe: a(
-    ['Hello, Minecraft', 'Chaos DMG +X% while his Rating is SS or higher.'],
+    ['print Hello, My World!', 'Chaos DMG +X% while his Rating is SS or higher.'],
     ['define X/Y', 'ATK +10% / 12% / 15% / 20% / 30% at Rating B / A / S / SS / SSS.'],
-    ['For Playing Together Forever', 'Data Exfiltration pulls nearby enemies in and lowers their Chaos RES by X% for Xs.'],
-    ['kill process', 'Summons on the field deal X% more DMG, and Digital Echoes a further X%.'],
-    ['null pointer', 'In Shader Compile, Digital Echoes hit nearby enemies as they vanish for X% of ATK.'],
-    ['Log-Driven Skeleton Code', 'Gaining Frames heals him (Rating points gained × X% ATK); spending Frames adds extra Rating.'],
+    ['for Playing Together Forever', 'Data Exfiltration pulls in enemies within range and lowers their Chaos RES by X% for Xs.'],
+    ['kill Process', 'Summons on the field deal X% more DMG, and Digital Echoes gain a further X% DMG Bonus.'],
+    ['null Pointer', 'While Shader Compile from Mesh Collision is active, Digital Echoes release a shockwave when they vanish, dealing X% of Exe’s ATK to targets in range.'],
+    ['log Bone-Animating Code', 'Each time Exe gains Frames he restores HP (X% of ATK per Rating point gained); each time he spends Frames he gains extra Rating, a multiple of the Rating gained.'],
   ),
 };
 
