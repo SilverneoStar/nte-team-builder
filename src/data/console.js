@@ -80,7 +80,8 @@ export const CHARACTER_CONSOLE = {
   // Elyms: grid and bonus from the global game (Nov 2026). Exe: grid from the
   // in-game Character Guide; his bonus ("Increases CRIT Rate by 8% for each Type III
   // Module equipped") from a beta Console screen in a video (project owner, Nov 27, 2026).
-  // All other bonuses re-checked against NTEBuild's character build pages (Nov 27, 2026).
+  // Every bonus here matches two sources (Nov 27, 2026): NTEBuild's build pages and
+  // kaiden.gg's in-game specialization text (all but Elyms, who has neither yet).
   elyms: c('C', 3, 'CRIT Rate', 8),
   exe: c('B', 3, 'CRIT Rate', 8),
   fadia: c('C', 2, 'HP', 6),
