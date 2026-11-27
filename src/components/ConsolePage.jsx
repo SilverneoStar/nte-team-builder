@@ -470,7 +470,7 @@ export default function ConsolePage({ characterId, activeTeam, onEquip }) {
           {spec && (
             <section aria-labelledby="console-spec">
               <h3 id="console-spec" className="mini-title">
-                {character.name} bonus
+                {character.name}’s Console Development
               </h3>
               <p className="console-spec">
                 +{spec.value}% {spec.stat} per {TYPE_NAMES[spec.type]} module

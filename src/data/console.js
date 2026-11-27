@@ -75,7 +75,8 @@ export const CHARACTER_CONSOLE = {
   daffodill: c('C', 3, 'Chaos DMG', 10),
   edgar: c('A', 3, 'HP', 10),
   // Elyms: grid and bonus from the global game (Nov 2026). Exe: grid from
-  // the in-game Character Guide; his module bonus is still a guess.
+  // the in-game Character Guide, bonus from his Console Development screen (Nov 2026).
+  // All other bonuses re-checked against NTEBuild's character build pages (Nov 27, 2026).
   elyms: c('C', 3, 'CRIT Rate', 8),
   exe: c('B', 3, 'Chaos DMG', 10),
   fadia: c('C', 2, 'HP', 6),

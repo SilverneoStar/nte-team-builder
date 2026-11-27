@@ -88,6 +88,13 @@ const LAYOUTS = {
   'D:3:tiny-big-adventure': '001003010012314220530241',
 };
 
+// Layouts for one character and set, used instead of the shared search result.
+// Exe + Diabolos: the in-game layout the project owner marked as best (Nov 2026):
+// Hen2, ZhiJiao2, ZhiJiao4, Shu2, Hen4, ZhiJiao1, ZhiJiao3 (4 Type III, Diabolos x4).
+const CHARACTER_LAYOUTS = {
+  'exe:diabolos': '000510702104821431632',
+};
+
 const decodeLayout = (str) =>
   (str.match(/.{3}/g) ?? []).map(([sh, r, col]) => ({ shape: SHAPE_ORDER[parseInt(sh, 16)], r: Number(r), c: Number(col) }));
 
@@ -100,7 +107,7 @@ export function suggestedBuild(characterId, cartridgeId) {
   const info = CHARACTER_CONSOLE[characterId];
   if (!c || !info) return null;
   const cartridge = cartridgeId || cartridgesFor(c)[0];
-  const layout = LAYOUTS[`${info.layout}:${info.spec.type}:${cartridge}`];
+  const layout = CHARACTER_LAYOUTS[`${characterId}:${cartridge}`] ?? LAYOUTS[`${info.layout}:${info.spec.type}:${cartridge}`];
   if (!layout) return null;
   return {
     id: `suggested-${characterId}-${cartridge}`,
